@@ -1,19 +1,15 @@
 // prop collections
 
-import React from 'react'
+import React, {useState} from 'react'
 import {Switch} from '../switch'
 
-class Toggle extends React.Component {
-  state = {on: false}
-  toggle = () =>
-    this.setState(
-      ({on}) => ({on: !on}),
-      () => this.props.onToggle(this.state.on),
-    )
-  getStateAndHelpers() {
+const Toggle = (props) => {
+  const [state, setState] = useState({on: false})
+  const toggle = () => setState(({on}) => ({on: !on}))
+  const getStateAndHelpers = () => {
     return {
-      on: this.state.on,
-      toggle: this.toggle,
+      on: state.on,
+      toggle: toggle,
       // In our last usage example, you'll notice that we had some
       // common props (`onClick`, and we're also missing `aria-pressed`
       // value on the `button`). Because most users will want these
@@ -23,11 +19,13 @@ class Toggle extends React.Component {
       // 🐨 Add a `togglerProps` object that has an `aria-pressed` (should
       // be set to the value of the `on` state), and an `onClick` assigned
       // to the toggle function.
+      togglerProps: {
+        onClick: toggle,
+        'aria-pressed': state.on,
+      },
     }
   }
-  render() {
-    return this.props.children(this.getStateAndHelpers())
-  }
+  return props.children(getStateAndHelpers())
 }
 
 // Don't make changes to the Usage component. It's here to show you how your

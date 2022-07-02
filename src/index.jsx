@@ -5,17 +5,10 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom'
+import {QueryParamProvider} from 'use-query-params'
 
-// import App from './App.jsx';
-// import App from './App.Redirect.jsx';
-// import App from './App.Authentication.jsx';
-// import App from './App.Nested.jsx';
-// import App from './App.Descendant.jsx';
-// import App from './App.QueryParams.jsx';
-// import App from './App.LazyLoading.jsx'
 import App from './App.PlayNest.jsx'
 
-// use-query-params adapeter for React Router 6
 const RouteAdapter = ({children}) => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -37,7 +30,9 @@ const RouteAdapter = ({children}) => {
 const Root = () => {
   return (
     <BrowserRouter>
-      <App />
+      <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+        <App />
+      </QueryParamProvider>
     </BrowserRouter>
   )
 }

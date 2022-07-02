@@ -1,0 +1,206 @@
+:root {
+  /* visually confirm here
+   * To size the main-view, use to mark to top and bottom
+   * of the main-view.inner div (should be sum of margins) */
+  --main-view-top: 50px;
+  --main-view-bottom: 10px;
+  --main-view-min-width: 400px;
+
+  /* computed value to set the height of main-view */
+  --main-view-height: calc(
+    100vh - var(--main-view-top) - var(--main-view-bottom)
+  );
+
+  /* ⬜ Decide on which box to set margin; rest set to zero
+   * customize here
+   * use to set outer margins */
+  --root-margin: 0px;
+  --main-margin: 0px;
+  --main-padding: 0px;
+  --main-wrapper-margin: 0px;
+  --top-bar-height: 50px;
+  --main-view-margin: 0px; /* keep at zero; used in a couple of layers */
+  --main-view-padding: 0px; /* keep at zero; used in a couple of layers */
+
+  /* flexbox - menue, controller & main views
+   *
+   * within main,
+   * 👉 main-menu
+   * 👉 main-view */
+  --main-menu-flex: 1 1 auto;
+  --main-view-flex: 6 1 auto;
+
+  /* within main-controller-root
+   * 👉 main-controller
+   * 👉 main-view.inner */
+  --controller-flex: 1 1 30%;
+  --main-view-inner: 5 1 70%;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.box {
+  margin: 10px;
+  padding: 10px;
+  border: solid 1px;
+  box-sizing: border-box;
+}
+
+.box.root {
+  display: flex;
+  position: relative;
+  margin: var(--root-margin);
+  padding: 0;
+}
+
+.box.root > .inner {
+  flex-grow: 1;
+}
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+/* can sometimes be substituted with display: block */
+.nostack {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 10px;
+}
+.main.wrapper {
+  margin: var(--main-wrapper-margin);
+}
+.main {
+  margin: var(--main-margin);
+  padding-top: var(--main-padding);
+  width: 100%;
+}
+/* item exposed to container dynamics
+ * inner reserved for layout of item */
+.main-menu {
+  margin: 0;
+  padding: 0;
+  flex: var(--main-menu-flex);
+  margin-right: auto;
+  max-width: 240px;
+}
+
+.main-controller-root {
+  gap: 0;
+}
+.main-controller {
+  margin: 0;
+  padding: 0;
+  flex: var(--controller-flex);
+  margin-right: auto;
+  max-width: 350px;
+}
+/* exposed to container dynamics
+ * inner reserved for layout of item */
+.main-view {
+  flex: var(--main-view-flex);
+  margin: var(--main-view-margin);
+  padding: var(--main-view-padding);
+}
+.main-view.inner {
+  flex: var(--main-view-inner);
+  min-width: var(--main-view-min-width);
+}
+
+/* 🔖 🔑 The top is not 0 but lower on the screen.
+ *    Also consider, you are pushing parents with
+ *    margins and padding down; we need to consider
+ *    the cummulative size of the bottom margins.
+ */
+.main-view.sizing-frame {
+  height: var(--main-view-height);
+}
+.bottom-navigation.positioning-frame {
+  margin-top: auto;
+}
+/*
+ * Debugging markers
+ */
+.marker {
+  position: absolute;
+  width: 50px;
+  height: 2px;
+  /* border-radius: 50%; */
+  z-index: 99;
+}
+.marker.top {
+  right: 4px;
+  background: cyan;
+  top: var(--main-view-top);
+}
+.marker.bottom {
+  right: 4px;
+  background: #f433ff;
+  bottom: var(--main-view-bottom);
+}
+.marker.top.computed {
+  top: calc(0vh + var(--main-view-top));
+  right: 24px;
+  background: #000;
+}
+/* ---------------------------------------- */
+.project-view {
+  flex-grow: 1;
+  flex-wrap: nowrap;
+}
+.message {
+  color: grey;
+  font-size: 30px;
+}
+/* Style the navbar */
+.topbar {
+  overflow: hidden;
+  background-color: blue;
+  height: var(--top-bar-height);
+}
+
+/* Navbar links */
+.topbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+/* Page content */
+.content {
+  padding: 16px;
+}
+
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
+.sticky + .content {
+  padding-top: 60px;
+}

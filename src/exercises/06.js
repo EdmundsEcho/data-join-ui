@@ -15,6 +15,9 @@ import {Switch} from '../switch'
 // 💰 Here's a little utility that might come in handy
 // const callAll = (...fns) => (...args) => fns.forEach(fn => fn && fn(...args))
 
+const callAll = (...fns) => (...args) =>
+  fns.forEach((fn) => fn && fn(...args))
+
 class Toggle extends React.Component {
   state = {on: false}
   toggle = () =>
@@ -26,12 +29,17 @@ class Toggle extends React.Component {
     return {
       on: this.state.on,
       toggle: this.toggle,
-      togglerProps: {
-        'aria-pressed': this.state.on,
-        onClick: this.toggle,
-      },
+      getTogglerProps: this.getTogglerProps,
     }
   }
+
+  getTogglerProps = ({onClick, className, ...childProps}) => ({
+    'aria-pressed': this.state.on,
+    onClick: callAll(onClick, this.toggle),
+    className: `${className} our-custom-class-name`,
+    ...childProps,
+  })
+
   render() {
     return this.props.children(this.getStateAndHelpers())
   }
@@ -42,7 +50,7 @@ class Toggle extends React.Component {
 // You can make all the tests pass by updating the Toggle component.
 function Usage({
   onToggle = (...args) => console.log('onToggle', ...args),
-  onButtonClick = () => console.log('onButtonClick'),
+  onButtonClick = () => alert('onButtonClick'),
 }) {
   return (
     <Toggle onToggle={onToggle}>
@@ -52,9 +60,10 @@ function Usage({
           <hr />
           <button
             {...getTogglerProps({
-              'aria-label': 'custom-button',
-              onClick: onButtonClick,
               id: 'custom-button-id',
+              onClick: onButtonClick,
+              'aria-label': 'custom-button',
+              className: 'child-class-name',
             })}
           >
             {on ? 'on' : 'off'}

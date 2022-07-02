@@ -5,11 +5,11 @@ import {
 } from 'react-dom/test-utils'
 import chalk from 'chalk'
 import {fireEvent, renderToggle} from '../../test/utils'
-import Usage, {Toggle} from '../exercises-final/10'
-// import Usage, {Toggle} from '../exercises/10'
+// import Usage, {Toggle} from '../exercises-final/10'
+import Usage, {Toggle} from '../exercises/10'
 
-const findToggleInstances = rootInstance =>
-  findAllInRenderedTree(rootInstance, c =>
+const findToggleInstances = (rootInstance) =>
+  findAllInRenderedTree(rootInstance, (c) =>
     isCompositeComponentWithType(c, Toggle),
   )
 

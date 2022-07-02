@@ -5,6 +5,7 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom'
+import {QueryParamProvider} from 'use-query-params'
 
 // import App from './App.jsx';
 // import App from './App.Redirect.jsx';
@@ -34,11 +35,11 @@ const RouteAdapter = ({children}) => {
   return children({history: adaptedHistory, location})
 }
 
-const Root = () => {
-  return (
-    <BrowserRouter>
+ReactDOM.render(
+  <BrowserRouter>
+    <QueryParamProvider ReactRouterRoute={RouteAdapter}>
       <App />
-    </BrowserRouter>
-  )
-}
-ReactDOM.render(<Root />, document.getElementById('root'))
+    </QueryParamProvider>
+  </BrowserRouter>,
+  document.getElementById('root'),
+)

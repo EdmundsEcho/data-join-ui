@@ -4,7 +4,7 @@ import React from 'react'
 import {Switch} from '../switch'
 
 const callAll = (...fns) => (...args) =>
-  fns.forEach(fn => fn && fn(...args))
+  fns.forEach((fn) => fn && fn(...args))
 
 class Toggle extends React.Component {
   static defaultProps = {
@@ -12,10 +12,17 @@ class Toggle extends React.Component {
     onReset: () => {},
     stateReducer: (state, changes) => changes,
   }
+  static stateChangeTypes = {
+    reset: '__reset__',
+    toggle: '__toggle__',
+    force: '__force__',
+  }
   initialState = {on: this.props.initialOn}
   state = this.initialState
   internalSetState(changes, callback) {
-    this.setState(state => {
+    // remove type from capacity to force a re-render when state changes
+    // do so by removing type from the state object.
+    this.setState((state) => {
       // handle function setState call
       const changesObject =
         typeof changes === 'function' ? changes(state) : changes
@@ -24,23 +31,23 @@ class Toggle extends React.Component {
         this.props.stateReducer(state, changesObject) || {}
       // 🐨  in addition to what we've done, let's pluck off the `type`
       // property and return an object only if the state changes
+      const {type: ignoreType, ...changesForRerender} = reducedChanges
       // 💰 to remove the `type`, you can destructure the changes:
       // `{type, ...c}`
-      return Object.keys(reducedChanges).length
-        ? reducedChanges
-        : null
+      return changesForRerender
     }, callback)
   }
   reset = () =>
     // 🐨 add a `type` string property to this call
-    this.internalSetState(this.initialState, () =>
-      this.props.onReset(this.state.on),
+    this.internalSetState(
+      {...this.initialState, type: Toggle.stateChangeTypes.reset},
+      () => this.props.onReset(this.state.on),
     )
   // 🐨 accept a `type` property here and give it a default value
-  toggle = () =>
+  toggle = ({type = Toggle.stateChangeTypes.toggle} = {}) =>
     this.internalSetState(
       // pass the `type` string to this object
-      ({on}) => ({on: !on}),
+      ({on}) => ({on: !on, type}),
       () => this.props.onToggle(this.state.on),
     )
   getTogglerProps = ({onClick, ...props} = {}) => ({
@@ -84,7 +91,9 @@ class Usage extends React.Component {
     this.props.onReset(...args)
   }
   toggleStateReducer = (state, changes) => {
-    if (changes.type === 'forced') {
+    if (changes.type === Toggle.stateChangeTypes.force) {
+      // note the type of change (not all changes are treated the same)
+      // so now, how support this API feature?
       return changes
     }
     if (this.state.timesClicked >= 4) {
@@ -112,7 +121,11 @@ class Usage extends React.Component {
               <div data-testid="notice">
                 Whoa, you clicked too much!
                 <br />
-                <button onClick={() => toggle({type: 'forced'})}>
+                <button
+                  onClick={() =>
+                    toggle({type: Toggle.stateChangeTypes.force})
+                  }
+                >
                   Force Toggle
                 </button>
                 <br />

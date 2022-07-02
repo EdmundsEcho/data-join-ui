@@ -1,7 +1,7 @@
 // The provider pattern
 import React, {Fragment} from 'react'
 // 🐨 you're going to need this :)
-// import hoistNonReactStatics from 'hoist-non-react-statics'
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import {Switch} from '../switch'
 
 const ToggleContext = React.createContext()
@@ -22,7 +22,6 @@ class Toggle extends React.Component {
 }
 
 function withToggle(Component) {
-  return Component
   // The `withToggle` function is called a "Higher Order Component"
   // It's another way to share code and allows you to statically
   // create new components to render.
@@ -35,6 +34,20 @@ function withToggle(Component) {
   // 1. 🐨 create and return a function component called "Wrapper" which renders
   //    a <Toggle.Consumer> with a child function that renders <Component />
   //    with the props Wrapper is given as well as a toggle prop
+  const Wrapper = (props, ref) => (
+    <Toggle.Consumer>
+      {(toggleContext) => (
+        <Component toggle={toggleContext} ref={ref} {...props} />
+      )}
+    </Toggle.Consumer>
+  )
+
+  Wrapper.displayName = `withToggle(${
+    Component.displayName || Component.name
+  })`
+
+  return hoistNonReactStatics(React.forwardRef(Wrapper), Component)
+
   // 2. 🐨 Handle `ref`s properly by using React.forwardRef:
   //    https://reactjs.org/docs/forwarding-refs.html
   //    💰 You can make your Wrapper function accept a second argument called

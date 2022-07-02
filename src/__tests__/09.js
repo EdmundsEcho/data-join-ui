@@ -1,7 +1,7 @@
 import React from 'react'
 import {renderToggle, fireEvent} from '../../test/utils'
-import Usage from '../exercises-final/09'
-// import Usage from '../exercises/09'
+// import Usage from '../exercises-final/09'
+import Usage from '../exercises/09'
 
 test('renders a toggle component', () => {
   const handleToggle = jest.fn()
@@ -29,7 +29,7 @@ test('can click too much', () => {
     <Usage
       onToggle={handleToggle}
       onReset={handleReset}
-      toggleRef={t => (toggleInstance = t)}
+      toggleRef={(t) => (toggleInstance = t)}
     />,
   )
   expect(toggleButton).toBeOff()
