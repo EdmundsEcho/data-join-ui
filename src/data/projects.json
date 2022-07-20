@@ -2,7 +2,7 @@
   {
     "project_id": "e24ecf6a-f162-4a81-832f-1bc6a6938162",
     "name": "project 1",
-    "description": null,
+    "description": "analyze this",
     "project_meta": {
       "version": "0.3.5",
       "meta": {
@@ -28,7 +28,7 @@
   {
     "project_id": "b2baeb45-a0a5-4fb8-ae48-c35b89e8b93f",
     "name": "project 3",
-    "description": null,
+    "description": "great project",
     "project_meta": {
       "version": "0.3.5",
       "meta": {
@@ -49,6 +49,20 @@
         "status": "EMPTY"
       }
     },
+    "permission": "owner"
+  },
+  {
+    "project_id": "1a2e9d71-0fbf-4540-96e1-7a99d14e42cb",
+    "name": "project-share",
+    "description": "Will share this project with another user",
+    "project_meta": null,
+    "permission": "owner"
+  },
+  {
+    "project_id": "314ff3f6-aca3-470b-88ec-6648c8e53126",
+    "name": "project-share",
+    "description": "Will share this project with another user",
+    "project_meta": null,
     "permission": "owner"
   }
 ]

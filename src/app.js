@@ -1,3 +1,6 @@
+/**
+ * Sample code not part of app
+ */
 import React from 'react'
 import {Route, Switch} from 'react-router'
 import {BrowserRouter, Link} from 'react-router-dom'
@@ -39,7 +42,7 @@ const pages = files.reduce((p, filename, index, fullArray) => {
   return p
 }, {})
 
-const filesAndTitles = files.map(filename => ({
+const filesAndTitles = files.map((filename) => ({
   title: pages[filename].title,
   filename,
 }))
@@ -220,8 +223,8 @@ class Isolated extends React.Component {
       return this.props.type === 'exercise'
         ? import(`./exercises/${moduleName}`)
         : this.props.type === 'final'
-          ? import(`./exercises-final/${moduleName}`)
-          : null
+        ? import(`./exercises-final/${moduleName}`)
+        : null
     },
     loading: () => <div>Loading...</div>,
   })
@@ -281,23 +284,23 @@ function App() {
         />
         <Route
           path={`/:exerciseId/exercise`}
-          render={props => <FullPage {...props} type="exercise" />}
+          render={(props) => <FullPage {...props} type="exercise" />}
           exact={true}
         />
         <Route
           path={`/:exerciseId/final`}
-          render={props => <FullPage {...props} type="final" />}
+          render={(props) => <FullPage {...props} type="final" />}
           exact={true}
         />
         <Route
           path={`/isolated/exercises/:moduleName`}
           exact={true}
-          render={props => <Isolated {...props} type="exercise" />}
+          render={(props) => <Isolated {...props} type="exercise" />}
         />
         <Route
           path={`/isolated/exercises-final/:moduleName`}
           exact={true}
-          render={props => <Isolated {...props} type="final" />}
+          render={(props) => <Isolated {...props} type="final" />}
         />
         <Route
           render={() => (

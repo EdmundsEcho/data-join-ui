@@ -1,3 +1,6 @@
+/**
+ * Sample code not part of the app
+ */
 import * as React from 'react'
 import {
   Routes,

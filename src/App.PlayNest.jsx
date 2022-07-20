@@ -1,11 +1,20 @@
-import React, {useState, useEffect} from 'react'
-import {Routes, Route, Link, Outlet} from 'react-router-dom'
-import axios from 'axios'
+import React from 'react'
 
-import listProjects from './data/projects.json'
+import { Routes, Route, Link, Outlet, useParams } from 'react-router-dom'
+// import axios from 'axios'
+
+import LoginPage from './pages/LoginPage'
+import RedirectPage from './pages/RedirectPage'
+// summary view of projects and component when a project is not selected
+import Projects from './Projects'
+import NewProjectForm from './forms/ProjectForm'
+import ProjectsListProvider from './contexts/ProjectsContext'
 
 import './index.css'
 
+const Loading = () => {
+  return <p>Loading...</p>
+}
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/jsx-no-undef */
 
@@ -17,95 +26,63 @@ const App = () => {
   return (
     <div className="root box stack">
       <div className="root inner">
-        <TopBar>t</TopBar>
+        <TopBar />
         <div className="main wrapper nostack">
           {/* Main menu - controls what is displayed in main-viewport */}
           <div className="main box nostack">
             <div className="main-menu box">
               <div className="main-menu inner stack">
-                <h1>React Router</h1>
-                <nav className="stack">
-                  {/* to must map to first-level of Routes */}
-                  <Link to="/home">Home</Link>
-                  <Link to="/user-profile">User Profile</Link>
-                  <Link to="/users">Users</Link>
-                  <Link to="/shared-drives">Shared Drives</Link>
-                  <Link to="/projects">Project View</Link>
-                </nav>
+                <div className="box">
+                  <h1>React Router</h1>
+                  <nav className="stack">
+                    {/* to must map to first-level of Routes */}
+                    <Link to="/home">Home</Link>
+                    <Link to="/user-profile">User Profile</Link>
+                    <Link to="/users">Users</Link>
+                    <Link to="/shared-drives">Shared Drives</Link>
+                    <Link to="/projects">Project View</Link>
+                  </nav>
+                </div>
+              </div>
+              <div className="box next-steps">
+                <ul title="Next steps">
+                  <li className="done">
+                    Browser URL triggers fetchProject(id)
+                  </li>
+                  <li className="done">Update url to show project id</li>
+                  <li className="done">
+                    Context for data cache and ability ot update the cache
+                  </li>
+                  <li>Render the core app</li>
+                  <li>Add User-Profile page</li>
+                  <li>Core app read projectId prop</li>
+                </ul>
               </div>
             </div>
 
             {/* Main viewport */}
+            {/* //prettier-ignore */}
             <div className="main-view box">
               <Routes>
-                <Route index element={<Home />} />
+                <Route index element={<RedirectPage />} />
+                <Route path="login" element={<LoginPage />} />
                 <Route path="home" element={<Home />} />
-                <Route
-                  path="user-profile"
-                  element={<UserProfile />}
-                />
+                <Route path="user-profile" element={<UserProfile />} />
                 <Route path="users" element={<Users />} />
-                <Route
-                  path="shared-drives"
-                  element={<SharedDrives />}
-                />
+                <Route path="shared-drives" element={<SharedDrives />} />
                 <Route
                   path="projects"
                   element={
-                    <WithViewController>
-                      <ProjectView />
-                    </WithViewController>
+                    <ProjectsListProvider>
+                      <Projects />
+                    </ProjectsListProvider>
                   }
                 >
-                  <Route
-                    index
-                    element={
-                      <WithCoreAppMain>
-                        <SummaryView />
-                      </WithCoreAppMain>
-                    }
-                  />
-                  <Route
-                    path="summary-view"
-                    element={
-                      <WithCoreAppMain>
-                        <SummaryView />
-                      </WithCoreAppMain>
-                    }
-                  />
-                  <Route
-                    path="header-view"
-                    element={
-                      <WithCoreAppMain>
-                        <HeaderView />
-                      </WithCoreAppMain>
-                    }
-                  />
-                  <Route
-                    path="etl-view"
-                    element={
-                      <WithCoreAppMain>
-                        <EtlView />
-                      </WithCoreAppMain>
-                    }
-                  />
-                  <Route
-                    path="workbench"
-                    element={
-                      <WithCoreAppMain>
-                        <Workbench />
-                      </WithCoreAppMain>
-                    }
-                  />
-                  <Route
-                    path="data-preview"
-                    element={
-                      <WithCoreAppMain>
-                        <Matrix />
-                      </WithCoreAppMain>
-                    }
-                  />
-                  <Route path="*" element={<NoMatch />} />
+                  {/* this element renders after Projects in Projects Outlet */}
+                  {/* it should be a substitute for main project view when no project is selected  */}
+                  {/* ⬜ Figure out a way to update the meta (show the form) */}
+                  <Route index element={<NewProjectForm />} />
+                  <Route path=":projectId" element={<ProjectView />} />
                 </Route>
                 <Route path="*" element={<NoMatch />} />
               </Routes>
@@ -120,63 +97,52 @@ const App = () => {
     </div>
   )
 }
+/*
+ *
 
+                <Route path="projects" element={ <WithViewControllerV2 lookupBy="project_id"><Projects /></WithViewControllerV2> } >
+                  <Route index element={ <WithCoreAppMain> <SummaryView /> </WithCoreAppMain> } /><Route path="summary-view" element={ <WithCoreAppMain> <SummaryView /> </WithCoreAppMain> } />
+                  <Route path="header-view" element={ <WithCoreAppMain> <HeaderView /> </WithCoreAppMain> } />
+                  <Route path="etl-view" element={ <WithCoreAppMain> <EtlView /> </WithCoreAppMain> } />
+                  <Route path="workbench" element={ <WithCoreAppMain> <Workbench /> </WithCoreAppMain> } />
+                  <Route path="data-preview" element={ <WithCoreAppMain> <Matrix /> </WithCoreAppMain> } />
+                  <Route path="*" element={<NoMatch />} />
+                  */
 function TopBar() {
   return <div className="topbar">topbar</div>
 }
 
-/**
- * WIP 🚧 4 states
- *
- * 1. floating button
- * 2. list of mini-cards
- * 3. larger-cards
- * 4. largest-card + list
- *
- * May wish to generalize the messaging
- * -> N choices in controller : 1 main view
- * -> Customizable components for each state
- *
- */
-function WithViewController({children}) {
-  const [list, setList] = useState([])
-  const data = listProjects
-  useEffect(() => {
-    setList(data)
-  }, [])
-
-  return (
-    <div className="main-controller-root nostack">
-      <div className="main-controller">
-        <div className="main-controller inner stack box">
-          {list.map(({name, project_id: projectId}) => (
-            <div
-              key={`card-${projectId}`}
-              className="project-mini-card box"
-            >
-              {name}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="main-view inner">
-        <div className="main-view sizing-frame stack">{children}</div>
-      </div>
-    </div>
-  )
-}
 // --------------------------------------------------------------------------
 /**
  * Core App View
+ *
+ * ⬜ Add some sort of wrapper to
+ *    👉 isolate Outlet (although, core-app itself should use Outlet)
+ *    👉 indirection for setting the itemId
+ *
+ * 🚧 Interface between dashboard and core-app
+ *    * core-app needs to get the link to prefix (e.g., projects)
+ *    * core-app needs to get the project_id
+ *    * core-app needs to know how to load and save a store
+ *
+ * 📖 The app needs to know how to save and load; maybe wrapper to deal with
+ *    loading state.
+ *
  */
-function ProjectView() {
-  return (
+function ProjectView(props) {
+  let { projectId = undefined } = useParams()
+  // fetch the project
+
+  return projectId ? (
     <>
       <div className="box stack project-view">
+        <p>{projectId}</p>
         <Outlet />
         <div className="bottom-navigation positioning-frame">
           <h2>Project View</h2>
           <nav className="nostack">
+            {/* to with nested url is required to point to nested
+                location of where to render the project */}
             <Link to="/projects/summary-view">SummaryView</Link>
             <Link to="/projects/header-view">HeaderView</Link>
             <Link to="/projects/etl-view">EtlView</Link>
@@ -186,58 +152,10 @@ function ProjectView() {
         </div>
       </div>
     </>
+  ) : (
+    <Loading />
   )
 }
-/**
- * Core-app children
- */
-function WithCoreAppMain({children}) {
-  return <div className="Core-app-main">{children}</div>
-}
-function SummaryView() {
-  return (
-    <>
-      <h2>SummaryView</h2>
-      <p className="message">Snapshot of progress</p>
-    </>
-  )
-}
-function HeaderView() {
-  return (
-    <>
-      <h2>HeaderView</h2>
-      <p className="message">
-        Select data sources; map fields to purpose
-      </p>
-    </>
-  )
-}
-function EtlView() {
-  return (
-    <>
-      <h2>EtlView</h2>
-      <p className="message">Find and stack related data</p>
-    </>
-  )
-}
-function Workbench() {
-  return (
-    <>
-      <h2>Workbench</h2>
-      <p className="message">Select data & more</p>
-    </>
-  )
-}
-function Matrix() {
-  return (
-    <>
-      <h2>Matrix</h2>
-      <p className="message">Data requested from data warehouse</p>
-    </>
-  )
-}
-// END Core app
-
 // --------------------------------------------------------------------------
 function Home() {
   return (
@@ -279,8 +197,7 @@ function NoMatch() {
     <>
       <h2>NoMatch</h2>
       <p className="message">
-        The navigation took us somewhere where a component has not
-        been mapped.
+        The navigation took us somewhere where a component has not been mapped.
       </p>
     </>
   )
