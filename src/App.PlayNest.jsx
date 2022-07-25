@@ -4,11 +4,15 @@ import { Routes, Route, Link, Outlet, useParams } from 'react-router-dom'
 // import axios from 'axios'
 
 import LoginPage from './pages/LoginPage'
+import ErrorPage from './pages/RedirectPage'
 import RedirectPage from './pages/RedirectPage'
 // summary view of projects and component when a project is not selected
 import Projects from './Projects'
+import ErrorBoundary from './components/shared/ErrorBoundary'
 import NewProjectForm from './forms/ProjectForm'
 import ProjectsListProvider from './contexts/ProjectsContext'
+import SubApp from './SubApp'
+import CoreApp from './core-app/App'
 
 import './index.css'
 
@@ -56,6 +60,14 @@ const App = () => {
                   <li>Render the core app</li>
                   <li>Add User-Profile page</li>
                   <li>Core app read projectId prop</li>
+                  <li>
+                    Optimize list rerender by lifting child that does not change
+                    into parent prop
+                  </li>
+                  <li>
+                    Context interface - data, error, isLoading, isFetching,
+                    refetch }
+                  </li>
                 </ul>
               </div>
             </div>
@@ -82,8 +94,16 @@ const App = () => {
                   {/* it should be a substitute for main project view when no project is selected  */}
                   {/* ⬜ Figure out a way to update the meta (show the form) */}
                   <Route index element={<NewProjectForm />} />
-                  <Route path=":projectId" element={<ProjectView />} />
+                  <Route
+                    path=":projectId"
+                    element={
+                      <ErrorBoundary>
+                        <ProjectView />
+                      </ErrorBoundary>
+                    }
+                  />
                 </Route>
+                <Route path="error" element={<ErrorPage />} />
                 <Route path="*" element={<NoMatch />} />
               </Routes>
             </div>
@@ -132,30 +152,39 @@ function TopBar() {
 function ProjectView(props) {
   let { projectId = undefined } = useParams()
   // fetch the project
+  console.debug(`1️⃣  ProjectView: ${projectId}`)
 
   return projectId ? (
     <>
       <div className="box stack project-view">
-        <p>{projectId}</p>
-        <Outlet />
-        <div className="bottom-navigation positioning-frame">
-          <h2>Project View</h2>
-          <nav className="nostack">
-            {/* to with nested url is required to point to nested
-                location of where to render the project */}
-            <Link to="/projects/summary-view">SummaryView</Link>
-            <Link to="/projects/header-view">HeaderView</Link>
-            <Link to="/projects/etl-view">EtlView</Link>
-            <Link to="/projects/workbench">Workbench</Link>
-            <Link to="/projects/data-preview">Matrix</Link>
-          </nav>
-        </div>
+        <SubApp>
+          <p>{projectId}</p>
+          <CoreApp projectId={projectId} />
+        </SubApp>
+        {/* placeholder for Outlet and footer navigation */}
       </div>
     </>
   ) : (
     <Loading />
   )
 }
+
+// Core-App footer with navigation
+//         <p>{projectId}</p>
+//        <Outlet />
+//        <div className="bottom-navigation positioning-frame">
+//          <h2>Project View</h2>
+//          <nav className="nostack">
+//            {/* to with nested url is required to point to nested
+//                location of where to render the project */}
+//            <Link to="/projects/summary-view">SummaryView</Link>
+//            <Link to="/projects/header-view">HeaderView</Link>
+//            <Link to="/projects/etl-view">EtlView</Link>
+//            <Link to="/projects/workbench">Workbench</Link>
+//            <Link to="/projects/data-preview">Matrix</Link>
+//          </nav>
+//        </div>
+
 // --------------------------------------------------------------------------
 function Home() {
   return (

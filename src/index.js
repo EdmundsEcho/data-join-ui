@@ -7,11 +7,13 @@ import App from './App.PlayNest.jsx'
 
 const Root = () => {
   return (
-    <SnackbarProvider maxSnack={3}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </SnackbarProvider>
+    <React.StrictMode>
+      <SnackbarProvider maxSnack={3}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </SnackbarProvider>
+    </React.StrictMode>
   )
 }
 ReactDOM.render(<Root />, document.getElementById('root'))

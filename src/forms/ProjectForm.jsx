@@ -46,7 +46,6 @@ const ProjectForm = () => {
 
       try {
         const data = {
-          project: {},
           ...validValues,
         }
         // alert(JSON.stringify(data, null, 2));

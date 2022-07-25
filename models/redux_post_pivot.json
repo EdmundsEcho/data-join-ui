@@ -1,0 +1,2625 @@
+{
+  "etlView": {
+    "etlObject": {
+      "etlUnits": {
+        "Spec": {
+          "type": "quality",
+          "subject": "NPI Number",
+          "codomain": "Spec",
+          "codomain-reducer": "FIRST"
+        },
+        "state": {
+          "type": "quality",
+          "subject": "NPI Number",
+          "codomain": "state",
+          "codomain-reducer": "FIRST"
+        },
+        "Unit Count": {
+          "type": "mvalue",
+          "subject": "NPI Number",
+          "mspan": "Year-Month",
+          "mcomps": ["Payment Type Group", "product"],
+          "codomain": "Unit Count",
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "engagement": {
+          "type": "mvalue",
+          "subject": "NPI Number",
+          "mspan": "eng-date",
+          "mcomps": ["eng-type"],
+          "codomain": "engagement",
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "target-measurement": {
+          "type": "mvalue",
+          "subject": "NPI Number",
+          "mspan": "MM-YYYY",
+          "mcomps": [],
+          "codomain": "target-measurement",
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        }
+      },
+      "etlFields": {
+        "NPI Number": {
+          "idx": 0,
+          "name": "NPI Number",
+          "purpose": "subject",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": null,
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 0,
+              "default-name": "NPI Number",
+              "field-alias": "NPI Number",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 6645,
+              "nrows": 50764,
+              "filename": "/data/productA_Units.csv",
+              "null-value-count": 0
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 0,
+              "default-name": "NPI Number",
+              "field-alias": "NPI Number",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 3405,
+              "nrows": 81270,
+              "filename": "/data/productComp_Units_short.csv",
+              "null-value-count": 0,
+              "map-weights": {
+                "arrows": {}
+              }
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 0,
+              "default-name": "npi",
+              "field-alias": "NPI Number",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 2361,
+              "nrows": 2370,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "null-value-count": 9
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 0,
+              "default-name": "npi",
+              "field-alias": "NPI Number",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 2618,
+              "nrows": 2634,
+              "filename": "/data/target_list/target_list_short.csv",
+              "null-value-count": 18
+            }
+          ]
+        },
+        "Spec": {
+          "idx": 1,
+          "name": "Spec",
+          "purpose": "quality",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "Spec",
+          "format": null,
+          "null-value-expansion": "unknown",
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 1,
+              "default-name": "Spec Desc",
+              "field-alias": "Spec",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 32,
+              "nrows": 50764,
+              "filename": "/data/productA_Units.csv",
+              "null-value-count": 0,
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 2,
+              "default-name": "Primary Specialty Desc",
+              "field-alias": "Spec",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 31,
+              "nrows": 81270,
+              "filename": "/data/productComp_Units_short.csv",
+              "null-value-count": 0,
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "codomain-reducer": "FIRST",
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "state": {
+          "idx": 2,
+          "name": "state",
+          "purpose": "quality",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "state",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 2,
+              "default-name": "Customer State",
+              "field-alias": "state",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 52,
+              "nrows": 50764,
+              "filename": "/data/productA_Units.csv",
+              "null-value-count": 0,
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 3,
+              "default-name": "Practitioner State",
+              "field-alias": "state",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 52,
+              "nrows": 81270,
+              "filename": "/data/productComp_Units_short.csv",
+              "null-value-count": 0,
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "codomain-reducer": "FIRST",
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "Payment Type Group": {
+          "idx": 3,
+          "name": "Payment Type Group",
+          "purpose": "mcomp",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "Unit Count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 4,
+              "default-name": "Payment Type Group",
+              "field-alias": "Payment Type Group",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 3,
+              "nrows": 50764,
+              "filename": "/data/productA_Units.csv",
+              "null-value-count": 0,
+              "map-weights": {
+                "arrows": {}
+              }
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 5,
+              "default-name": "Payment Type Group",
+              "field-alias": "Payment Type Group",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 3,
+              "nrows": 81270,
+              "filename": "/data/productComp_Units_short.csv",
+              "null-value-count": 0,
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "Year-Month": {
+          "idx": 4,
+          "name": "Year-Month",
+          "purpose": "mspan",
+          "levels": [
+            ["2015-02", 3642],
+            ["2015-03", 4344],
+            ["2015-04", 4548],
+            ["2015-05", 4822],
+            ["2015-06", 5102],
+            ["2015-07", 5458],
+            ["2015-08", 5646],
+            ["2015-09", 5868],
+            ["2015-10", 6148],
+            ["2015-11", 6169],
+            ["2015-12", 6428],
+            ["2016-01", 6434],
+            ["2016-02", 6293],
+            ["2016-03", 6427],
+            ["2016-04", 6300],
+            ["2016-05", 6399],
+            ["2016-06", 6436],
+            ["2016-07", 6359],
+            ["2016-08", 6433],
+            ["2016-09", 6180],
+            ["2016-10", 6253],
+            ["2015-01", 3550],
+            ["2014-12", 3434],
+            ["2014-11", 3406]
+          ],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "Unit Count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 5,
+              "default-name": "Year-Month",
+              "field-alias": "Year-Month",
+              "purpose": "mspan",
+              "null-value": null,
+              "format": "YYYY-MM",
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                ["2015-02", 289],
+                ["2015-03", 908],
+                ["2015-04", 1171],
+                ["2015-05", 1428],
+                ["2015-06", 1720],
+                ["2015-07", 2034],
+                ["2015-08", 2266],
+                ["2015-09", 2467],
+                ["2015-10", 2781],
+                ["2015-11", 2828],
+                ["2015-12", 3054],
+                ["2016-01", 2963],
+                ["2016-02", 2948],
+                ["2016-03", 3041],
+                ["2016-04", 2993],
+                ["2016-05", 3031],
+                ["2016-06", 3087],
+                ["2016-07", 2991],
+                ["2016-08", 3042],
+                ["2016-09", 2832],
+                ["2016-10", 2911]
+              ],
+              "nlevels": 21,
+              "nrows": 50764,
+              "filename": "/data/productA_Units.csv",
+              "null-value-count": 0,
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2015-02",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 21,
+                  "reduced": false
+                }
+              ]
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 6,
+              "default-name": "Year-Month",
+              "field-alias": "Year-Month",
+              "purpose": "mspan",
+              "null-value": null,
+              "format": "YYYY-MM",
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                ["2015-01", 3550],
+                ["2016-01", 3471],
+                ["2015-03", 3436],
+                ["2014-12", 3434],
+                ["2015-07", 3424],
+                ["2014-11", 3406],
+                ["2015-09", 3401],
+                ["2015-05", 3394],
+                ["2016-08", 3391],
+                ["2016-03", 3386],
+                ["2015-06", 3382],
+                ["2015-08", 3380],
+                ["2015-04", 3377],
+                ["2015-12", 3374],
+                ["2016-05", 3368],
+                ["2016-07", 3368],
+                ["2015-10", 3367],
+                ["2015-02", 3353],
+                ["2016-06", 3349],
+                ["2016-09", 3348],
+                ["2016-02", 3345],
+                ["2016-10", 3342],
+                ["2015-11", 3341],
+                ["2016-04", 3307]
+              ],
+              "nlevels": 24,
+              "nrows": 81270,
+              "filename": "/data/productComp_Units_short.csv",
+              "null-value-count": 0,
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2014-11",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 24,
+                  "reduced": false
+                }
+              ]
+            }
+          ],
+          "time": {
+            "interval": {
+              "unit": "M",
+              "count": 1
+            },
+            "reference": {
+              "idx": 7,
+              "value": "2014-11",
+              "isoFormat": "YYYY-MM"
+            }
+          },
+          "levels-mspan": [
+            {
+              "rangeStart": 7,
+              "rangeLength": 24,
+              "reduced": false
+            }
+          ]
+        },
+        "Unit Count": {
+          "idx": 5,
+          "name": "Unit Count",
+          "purpose": "mvalue",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "Unit Count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 6,
+              "default-name": "Unit Count",
+              "field-alias": "Unit Count",
+              "purpose": "mvalue",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 16,
+              "nrows": 50764,
+              "filename": "/data/productA_Units.csv",
+              "null-value-count": 0,
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 7,
+              "default-name": "Unit Count",
+              "field-alias": "Unit Count",
+              "purpose": "mvalue",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 81269,
+              "nrows": 81270,
+              "filename": "/data/productComp_Units_short.csv",
+              "null-value-count": 0,
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            }
+          ],
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "eng-date": {
+          "idx": 6,
+          "name": "eng-date",
+          "purpose": "mspan",
+          "levels": [
+            ["2014-05", 2370],
+            ["2014-04", 2370],
+            ["2014-06", 4740],
+            ["2014-07", 2370]
+          ],
+          "map-symbols": {},
+          "etl-unit": "engagement",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2014-04",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "format": "YYYY-MM",
+              "map-fieldnames": {
+                "arrows": {
+                  "Send2014_05": "2014-05",
+                  "Send2014_04": "2014-04",
+                  "Send2014_06": "2014-06",
+                  "Open2014_06": "2014-06",
+                  "Click2014_07": "2014-07"
+                }
+              },
+              "levels": [
+                ["2014-05", 2370],
+                ["2014-04", 2370],
+                ["2014-06", 4740],
+                ["2014-07", 2370]
+              ],
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "eng-date",
+              "header-idx": null,
+              "purpose": "mspan",
+              "header-idxs": [3, 4, 5, 6, 7],
+              "field-aliases": [
+                "Send2014_05",
+                "Send2014_04",
+                "Send2014_06",
+                "Open2014_06",
+                "Click2014_07"
+              ],
+              "alias-idx-map": {
+                "Send2014_05": 3,
+                "Send2014_04": 4,
+                "Send2014_06": 5,
+                "Open2014_06": 6,
+                "Click2014_07": 7
+              },
+              "nlevels": 5,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 4,
+                  "reduced": false
+                },
+                {
+                  "rangeStart": 5,
+                  "rangeLength": 1,
+                  "reduced": false
+                }
+              ]
+            }
+          ],
+          "time": {
+            "interval": {
+              "unit": "M",
+              "count": 1
+            },
+            "reference": {
+              "idx": 0,
+              "value": "2014-04",
+              "isoFormat": "YYYY-MM"
+            }
+          },
+          "levels-mspan": [
+            {
+              "rangeStart": 0,
+              "rangeLength": 4,
+              "reduced": false
+            },
+            {
+              "rangeStart": 5,
+              "rangeLength": 1,
+              "reduced": false
+            }
+          ]
+        },
+        "engagement": {
+          "idx": 7,
+          "name": "engagement",
+          "purpose": "mvalue",
+          "levels": [],
+          "map-symbols": {},
+          "etl-unit": "engagement",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "engagement",
+              "header-idx": null,
+              "purpose": "mvalue",
+              "format": null,
+              "header-idxs": [3, 4, 5, 6, 7],
+              "field-aliases": [
+                "Send2014_05",
+                "Send2014_04",
+                "Send2014_06",
+                "Open2014_06",
+                "Click2014_07"
+              ],
+              "alias-idx-map": {
+                "Send2014_05": 3,
+                "Send2014_04": 4,
+                "Send2014_06": 5,
+                "Open2014_06": 6,
+                "Click2014_07": 7
+              },
+              "levels": [],
+              "nlevels": null,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            }
+          ],
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "eng-type": {
+          "idx": 8,
+          "name": "eng-type",
+          "purpose": "mcomp",
+          "levels": [],
+          "map-symbols": {},
+          "etl-unit": "engagement",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "format": null,
+              "map-fieldnames": {
+                "arrows": {
+                  "Send2014_05": "Send",
+                  "Send2014_04": "Send",
+                  "Send2014_06": "Send",
+                  "Open2014_06": "Open",
+                  "Click2014_07": "Click"
+                }
+              },
+              "levels": [
+                ["Send", 7110],
+                ["Open", 2370],
+                ["Click", 2370]
+              ],
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "eng-type",
+              "header-idx": null,
+              "purpose": "mcomp",
+              "header-idxs": [3, 4, 5, 6, 7],
+              "field-aliases": [
+                "Send2014_05",
+                "Send2014_04",
+                "Send2014_06",
+                "Open2014_06",
+                "Click2014_07"
+              ],
+              "alias-idx-map": {
+                "Send2014_05": 3,
+                "Send2014_04": 4,
+                "Send2014_06": 5,
+                "Open2014_06": 6,
+                "Click2014_07": 7
+              },
+              "nlevels": 5,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "MM-YYYY": {
+          "idx": 9,
+          "name": "MM-YYYY",
+          "purpose": "mspan",
+          "levels": [
+            ["16-Mar", 150],
+            ["16-Feb", 147],
+            ["16-Apr", 122],
+            ["16-May", 92],
+            ["16-Jun", 45],
+            ["16-Jul", 24],
+            ["16-Jan", 10],
+            ["16-Aug", 7]
+          ],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "target-measurement",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 8,
+              "default-name": "MM-YYYY",
+              "field-alias": "MM-YYYY",
+              "purpose": "mspan",
+              "null-value": null,
+              "format": "YY-MMM",
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                ["16-Mar", 150],
+                ["16-Feb", 147],
+                ["16-Apr", 122],
+                ["16-May", 92],
+                ["16-Jun", 45],
+                ["16-Jul", 24],
+                ["16-Jan", 10],
+                ["16-Aug", 7]
+              ],
+              "nlevels": 9,
+              "nrows": 2634,
+              "filename": "/data/target_list/target_list_short.csv",
+              "null-value-count": 2046,
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "16-Jan",
+                  "isoFormat": "YY-MMM"
+                }
+              },
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 8,
+                  "reduced": false
+                }
+              ]
+            }
+          ],
+          "time": {
+            "interval": {
+              "unit": "M",
+              "count": 1
+            },
+            "reference": {
+              "idx": 21,
+              "value": "16-Jan",
+              "isoFormat": "YY-MMM"
+            }
+          },
+          "levels-mspan": [
+            {
+              "rangeStart": 21,
+              "rangeLength": 8,
+              "reduced": false
+            }
+          ]
+        },
+        "target-measurement": {
+          "idx": 10,
+          "name": "target-measurement",
+          "purpose": "mvalue",
+          "levels": [],
+          "map-symbols": {},
+          "etl-unit": "target-measurement",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "IMPLIED",
+              "field-alias": "target-measurement",
+              "header-idx": null,
+              "purpose": "mvalue",
+              "format": null,
+              "null-value": null,
+              "map-implied": {
+                "domain": "MM-YYYY",
+                "codomain": 1
+              },
+              "levels": [],
+              "nlevels": 1,
+              "filename": "/data/target_list/target_list_short.csv",
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            }
+          ],
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "product": {
+          "idx": 11,
+          "name": "product",
+          "enabled": true,
+          "purpose": "mcomp",
+          "levels": [
+            ["A", 50764],
+            ["C", 81270]
+          ],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "Unit Count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": {
+            "arrows": {
+              "/data/productA_Units.csv": "A",
+              "/data/productComp_Units_short.csv": "C"
+            }
+          },
+          "sources": [
+            {
+              "enabled": true,
+              "map-implied": {
+                "domain": "NPI Number",
+                "codomain": "A"
+              },
+              "header-idx": null,
+              "field-alias": "product",
+              "source-type": "IMPLIED",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [["A", 50764]],
+              "nlevels": 1,
+              "filename": "/data/productA_Units.csv",
+              "map-weights": {
+                "arrows": {
+                  "A": 1
+                }
+              }
+            },
+            {
+              "enabled": true,
+              "map-implied": {
+                "domain": "NPI Number",
+                "codomain": "C"
+              },
+              "header-idx": null,
+              "field-alias": "product",
+              "source-type": "IMPLIED",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [["C", 81270]],
+              "nlevels": 1,
+              "filename": "/data/productComp_Units_short.csv",
+              "map-weights": {
+                "arrows": {
+                  "C": 1
+                }
+              }
+            }
+          ],
+          "map-weights": {
+            "arrows": {
+              "A": 1,
+              "C": 1
+            }
+          }
+        }
+      }
+    },
+    "etlFieldChanges": {
+      "__derivedFields": {
+        "product": {
+          "idx": 11,
+          "name": "product",
+          "enabled": true,
+          "purpose": "mcomp",
+          "levels": [
+            ["A", 50764],
+            ["C", 81270]
+          ],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "Unit Count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": {
+            "arrows": {
+              "/data/productA_Units.csv": "A",
+              "/data/productComp_Units_short.csv": "C"
+            }
+          },
+          "sources": [
+            {
+              "enabled": true,
+              "map-implied": {
+                "domain": "NPI Number",
+                "codomain": "A"
+              },
+              "header-idx": null,
+              "field-alias": "product",
+              "source-type": "IMPLIED",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [["A", 50764]],
+              "nlevels": 1,
+              "filename": "/data/productA_Units.csv",
+              "map-weights": {
+                "arrows": {
+                  "A": 1
+                }
+              }
+            },
+            {
+              "enabled": true,
+              "map-implied": {
+                "domain": "NPI Number",
+                "codomain": "C"
+              },
+              "header-idx": null,
+              "field-alias": "product",
+              "source-type": "IMPLIED",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [["C", 81270]],
+              "nlevels": 1,
+              "filename": "/data/productComp_Units_short.csv",
+              "map-weights": {
+                "arrows": {
+                  "C": 1
+                }
+              }
+            }
+          ],
+          "map-weights": {
+            "arrows": {
+              "A": 1,
+              "C": 1
+            }
+          }
+        }
+      },
+      "Spec": {
+        "null-value-expansion": "unknown"
+      }
+    },
+    "etlViewErrors": []
+  },
+  "fileView": {
+    "path": "/data",
+    "files": [
+      {
+        "created_at": "2022-02-18 00:58:56.990990",
+        "display_name": "campaign_activity_series_wide.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 00:58:56.990990",
+        "path": "/data/campaign_activity_series_wide.csv",
+        "size": 109165
+      },
+      {
+        "created_at": "2022-02-18 00:58:58.479044",
+        "display_name": "productA_Units.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 00:58:58.479044",
+        "path": "/data/productA_Units.csv",
+        "size": 3084372
+      },
+      {
+        "created_at": "2022-02-18 00:59:28.160133",
+        "display_name": "productComp_Units.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 00:59:28.160133",
+        "path": "/data/productComp_Units.csv",
+        "size": 86687042
+      },
+      {
+        "created_at": "2022-02-18 01:13:44.783824",
+        "display_name": "productComp_Units_short.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 01:13:44.783824",
+        "path": "/data/productComp_Units_short.csv",
+        "size": 6522541
+      },
+      {
+        "created_at": "2022-02-18 00:59:29.152169",
+        "display_name": "target_list",
+        "is_directory": true,
+        "modified_at": "2022-02-18 00:59:29.100167",
+        "path": "/data/target_list",
+        "size": 4096
+      }
+    ],
+    "filteredFiles": [
+      {
+        "created_at": "2022-02-18 00:58:56.990990",
+        "display_name": "campaign_activity_series_wide.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 00:58:56.990990",
+        "path": "/data/campaign_activity_series_wide.csv",
+        "size": 109165
+      },
+      {
+        "created_at": "2022-02-18 00:58:58.479044",
+        "display_name": "productA_Units.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 00:58:58.479044",
+        "path": "/data/productA_Units.csv",
+        "size": 3084372
+      },
+      {
+        "created_at": "2022-02-18 00:59:28.160133",
+        "display_name": "productComp_Units.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 00:59:28.160133",
+        "path": "/data/productComp_Units.csv",
+        "size": 86687042
+      },
+      {
+        "created_at": "2022-02-18 01:13:44.783824",
+        "display_name": "productComp_Units_short.csv",
+        "is_directory": false,
+        "modified_at": "2022-02-18 01:13:44.783824",
+        "path": "/data/productComp_Units_short.csv",
+        "size": 6522541
+      },
+      {
+        "created_at": "2022-02-18 00:59:29.152169",
+        "display_name": "target_list",
+        "is_directory": true,
+        "modified_at": "2022-02-18 00:59:29.100167",
+        "path": "/data/target_list",
+        "size": 4096
+      }
+    ],
+    "filterText": "",
+    "readdirErrors": []
+  },
+  "headerView": {
+    "selected": [
+      "/data/productA_Units.csv",
+      "/data/productComp_Units_short.csv",
+      "/data/campaign_activity_series_wide.csv",
+      "/data/target_list/target_list_short.csv"
+    ],
+    "fileInspectionErrors": [],
+    "headerViews": {
+      "/data/productA_Units.csv": {
+        "filename": "/data/productA_Units.csv",
+        "header": [
+          "NPI Number",
+          "Spec Desc",
+          "Customer State",
+          "Customer Zip Code",
+          "Payment Type Group",
+          "Year-Month",
+          "Unit Count"
+        ],
+        "enabled": true,
+        "nrows": 50764,
+        "fields": [
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 0,
+            "default-name": "NPI Number",
+            "field-alias": "NPI Number",
+            "purpose": "subject",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 6645,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 1,
+            "default-name": "Spec Desc",
+            "field-alias": "Spec",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 32,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 2,
+            "default-name": "Customer State",
+            "field-alias": "state",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 52,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 3,
+            "default-name": "Customer Zip Code",
+            "field-alias": "Customer Zip Code",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2891,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 4,
+            "default-name": "Payment Type Group",
+            "field-alias": "Payment Type Group",
+            "purpose": "mcomp",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0,
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 5,
+            "default-name": "Year-Month",
+            "field-alias": "Year-Month",
+            "purpose": "mspan",
+            "null-value": null,
+            "format": "YYYY-MM",
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [
+              ["2015-02", 289],
+              ["2015-03", 908],
+              ["2015-04", 1171],
+              ["2015-05", 1428],
+              ["2015-06", 1720],
+              ["2015-07", 2034],
+              ["2015-08", 2266],
+              ["2015-09", 2467],
+              ["2015-10", 2781],
+              ["2015-11", 2828],
+              ["2015-12", 3054],
+              ["2016-01", 2963],
+              ["2016-02", 2948],
+              ["2016-03", 3041],
+              ["2016-04", 2993],
+              ["2016-05", 3031],
+              ["2016-06", 3087],
+              ["2016-07", 2991],
+              ["2016-08", 3042],
+              ["2016-09", 2832],
+              ["2016-10", 2911]
+            ],
+            "nlevels": 21,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0,
+            "time": {
+              "interval": {
+                "unit": "M",
+                "count": 1
+              },
+              "reference": {
+                "idx": 0,
+                "value": "2015-02",
+                "isoFormat": "YYYY-MM"
+              }
+            },
+            "levels-mspan": [
+              {
+                "rangeStart": 0,
+                "rangeLength": 21,
+                "reduced": false
+              }
+            ]
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 6,
+            "default-name": "Unit Count",
+            "field-alias": "Unit Count",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 16,
+            "nrows": 50764,
+            "filename": "/data/productA_Units.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "SUM",
+            "slicing-reducer": "SUM"
+          }
+        ]
+      },
+      "/data/productComp_Units_short.csv": {
+        "filename": "/data/productComp_Units_short.csv",
+        "header": [
+          "NPI Number",
+          "ID",
+          "Primary Specialty Desc",
+          "Practitioner State",
+          "Practitioner Zip Code",
+          "Payment Type Group",
+          "Year-Month",
+          "Unit Count"
+        ],
+        "enabled": true,
+        "nrows": 81270,
+        "fields": [
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 0,
+            "default-name": "NPI Number",
+            "field-alias": "NPI Number",
+            "purpose": "subject",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3405,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 1,
+            "default-name": "ID",
+            "field-alias": "ID",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3405,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 2,
+            "default-name": "Primary Specialty Desc",
+            "field-alias": "Spec",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 31,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 3,
+            "default-name": "Practitioner State",
+            "field-alias": "state",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 52,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 4,
+            "default-name": "Practitioner Zip Code",
+            "field-alias": "Practitioner Zip Code",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2442,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 5,
+            "default-name": "Payment Type Group",
+            "field-alias": "Payment Type Group",
+            "purpose": "mcomp",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 6,
+            "default-name": "Year-Month",
+            "field-alias": "Year-Month",
+            "purpose": "mspan",
+            "null-value": null,
+            "format": "YYYY-MM",
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [
+              ["2015-01", 3550],
+              ["2016-01", 3471],
+              ["2015-03", 3436],
+              ["2014-12", 3434],
+              ["2015-07", 3424],
+              ["2014-11", 3406],
+              ["2015-09", 3401],
+              ["2015-05", 3394],
+              ["2016-08", 3391],
+              ["2016-03", 3386],
+              ["2015-06", 3382],
+              ["2015-08", 3380],
+              ["2015-04", 3377],
+              ["2015-12", 3374],
+              ["2016-05", 3368],
+              ["2016-07", 3368],
+              ["2015-10", 3367],
+              ["2015-02", 3353],
+              ["2016-06", 3349],
+              ["2016-09", 3348],
+              ["2016-02", 3345],
+              ["2016-10", 3342],
+              ["2015-11", 3341],
+              ["2016-04", 3307]
+            ],
+            "nlevels": 24,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "time": {
+              "interval": {
+                "unit": "M",
+                "count": 1
+              },
+              "reference": {
+                "idx": 0,
+                "value": "2014-11",
+                "isoFormat": "YYYY-MM"
+              }
+            },
+            "levels-mspan": [
+              {
+                "rangeStart": 0,
+                "rangeLength": 24,
+                "reduced": false
+              }
+            ]
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 7,
+            "default-name": "Unit Count",
+            "field-alias": "Unit Count",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 81269,
+            "nrows": 81270,
+            "filename": "/data/productComp_Units_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "SUM",
+            "slicing-reducer": "SUM"
+          }
+        ]
+      },
+      "/data/campaign_activity_series_wide.csv": {
+        "filename": "/data/campaign_activity_series_wide.csv",
+        "header": [
+          "npi",
+          "Brand",
+          "Themes",
+          "Send2014_05",
+          "Send2014_04",
+          "Send2014_06",
+          "Open2014_06",
+          "Click2014_07",
+          "Click2014_09",
+          "Reach"
+        ],
+        "enabled": true,
+        "nrows": 2370,
+        "fields": [
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 0,
+            "default-name": "npi",
+            "field-alias": "NPI Number",
+            "purpose": "subject",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2361,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 9
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 1,
+            "default-name": "Brand",
+            "field-alias": "Brand",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 2,
+            "default-name": "Themes",
+            "field-alias": "Themes",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 3,
+            "default-name": "Send2014_05",
+            "field-alias": "Send2014_05",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "slicing-reducer": "SUM"
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 4,
+            "default-name": "Send2014_04",
+            "field-alias": "Send2014_04",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "slicing-reducer": "SUM"
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 5,
+            "default-name": "Send2014_06",
+            "field-alias": "Send2014_06",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "slicing-reducer": "SUM"
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 6,
+            "default-name": "Open2014_06",
+            "field-alias": "Open2014_06",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "slicing-reducer": "SUM"
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 7,
+            "default-name": "Click2014_07",
+            "field-alias": "Click2014_07",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "slicing-reducer": "SUM"
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 8,
+            "default-name": "Click2014_09",
+            "field-alias": "Click2014_09",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "slicing-reducer": "SUM"
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 9,
+            "default-name": "Reach",
+            "field-alias": "Reach",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2370,
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          }
+        ],
+        "wideToLongFields": {
+          "config": {
+            "mvalue": "engagement",
+            "field-aliases": [
+              "Send2014_05",
+              "Send2014_04",
+              "Send2014_06",
+              "Open2014_06",
+              "Click2014_07"
+            ],
+            "header-idxs": [3, 4, 5, 6, 7],
+            "alias-idx-map": {
+              "Send2014_05": 3,
+              "Send2014_04": 4,
+              "Send2014_06": 5,
+              "Open2014_06": 6,
+              "Click2014_07": 7
+            },
+            "filename": "/data/campaign_activity_series_wide.csv",
+            "nrows": 2370,
+            "factors": [
+              {
+                "id": 0,
+                "name": "eng-date",
+                "purpose": "mspan"
+              },
+              {
+                "id": 1,
+                "name": "eng-type",
+                "purpose": "mcomp"
+              }
+            ]
+          },
+          "fields": {
+            "eng-date": {
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2014-04",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "format": "YYYY-MM",
+              "map-fieldnames": {
+                "arrows": {
+                  "Send2014_05": "2014-05",
+                  "Send2014_04": "2014-04",
+                  "Send2014_06": "2014-06",
+                  "Open2014_06": "2014-06",
+                  "Click2014_07": "2014-07"
+                }
+              },
+              "levels": [
+                ["2014-05", 2370],
+                ["2014-04", 2370],
+                ["2014-06", 4740],
+                ["2014-07", 2370]
+              ],
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "eng-date",
+              "header-idx": null,
+              "purpose": "mspan",
+              "header-idxs": [3, 4, 5, 6, 7],
+              "field-aliases": [
+                "Send2014_05",
+                "Send2014_04",
+                "Send2014_06",
+                "Open2014_06",
+                "Click2014_07"
+              ],
+              "alias-idx-map": {
+                "Send2014_05": 3,
+                "Send2014_04": 4,
+                "Send2014_06": 5,
+                "Open2014_06": 6,
+                "Click2014_07": 7
+              },
+              "nlevels": 5,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 4,
+                  "reduced": false
+                },
+                {
+                  "rangeStart": 5,
+                  "rangeLength": 1,
+                  "reduced": false
+                }
+              ]
+            },
+            "engagement": {
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "engagement",
+              "header-idx": null,
+              "purpose": "mvalue",
+              "format": null,
+              "header-idxs": [3, 4, 5, 6, 7],
+              "field-aliases": [
+                "Send2014_05",
+                "Send2014_04",
+                "Send2014_06",
+                "Open2014_06",
+                "Click2014_07"
+              ],
+              "alias-idx-map": {
+                "Send2014_05": 3,
+                "Send2014_04": 4,
+                "Send2014_06": 5,
+                "Open2014_06": 6,
+                "Click2014_07": 7
+              },
+              "levels": [],
+              "nlevels": null,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            },
+            "eng-type": {
+              "format": null,
+              "map-fieldnames": {
+                "arrows": {
+                  "Send2014_05": "Send",
+                  "Send2014_04": "Send",
+                  "Send2014_06": "Send",
+                  "Open2014_06": "Open",
+                  "Click2014_07": "Click"
+                }
+              },
+              "levels": [
+                ["Send", 7110],
+                ["Open", 2370],
+                ["Click", 2370]
+              ],
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "eng-type",
+              "header-idx": null,
+              "purpose": "mcomp",
+              "header-idxs": [3, 4, 5, 6, 7],
+              "field-aliases": [
+                "Send2014_05",
+                "Send2014_04",
+                "Send2014_06",
+                "Open2014_06",
+                "Click2014_07"
+              ],
+              "alias-idx-map": {
+                "Send2014_05": 3,
+                "Send2014_04": 4,
+                "Send2014_06": 5,
+                "Open2014_06": 6,
+                "Click2014_07": 7
+              },
+              "nlevels": 5,
+              "filename": "/data/campaign_activity_series_wide.csv",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          }
+        }
+      },
+      "/data/target_list/target_list_short.csv": {
+        "filename": "/data/target_list/target_list_short.csv",
+        "header": [
+          "npi",
+          "specialty",
+          "state",
+          "zip",
+          "sf",
+          "sf_calls",
+          "brand_seg",
+          "in-network",
+          "MM-YYYY"
+        ],
+        "enabled": true,
+        "nrows": 2634,
+        "fields": [
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 0,
+            "default-name": "npi",
+            "field-alias": "NPI Number",
+            "purpose": "subject",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2618,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 18
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 1,
+            "default-name": "specialty",
+            "field-alias": "specialty",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 17,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 2,
+            "default-name": "state",
+            "field-alias": "state",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 52,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 3,
+            "default-name": "zip",
+            "field-alias": "zip",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 1974,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 4,
+            "default-name": "sf",
+            "field-alias": "sf",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 4,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 5,
+            "default-name": "sf_calls",
+            "field-alias": "sf_calls",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 5,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 6,
+            "default-name": "brand_seg",
+            "field-alias": "brand_seg",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 7,
+            "default-name": "in-network",
+            "field-alias": "in-network",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 8,
+            "default-name": "MM-YYYY",
+            "field-alias": "MM-YYYY",
+            "purpose": "mspan",
+            "null-value": null,
+            "format": "YY-MMM",
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [
+              ["16-Mar", 150],
+              ["16-Feb", 147],
+              ["16-Apr", 122],
+              ["16-May", 92],
+              ["16-Jun", 45],
+              ["16-Jul", 24],
+              ["16-Jan", 10],
+              ["16-Aug", 7]
+            ],
+            "nlevels": 9,
+            "nrows": 2634,
+            "filename": "/data/target_list/target_list_short.csv",
+            "null-value-count": 2046,
+            "time": {
+              "interval": {
+                "unit": "M",
+                "count": 1
+              },
+              "reference": {
+                "idx": 0,
+                "value": "16-Jan",
+                "isoFormat": "YY-MMM"
+              }
+            },
+            "levels-mspan": [
+              {
+                "rangeStart": 0,
+                "rangeLength": 8,
+                "reduced": false
+              }
+            ]
+          }
+        ],
+        "implied-mvalue": {
+          "config": {
+            "mvalue": "target-measurement",
+            "mspan": "MM-YYYY"
+          },
+          "field": {
+            "enabled": true,
+            "source-type": "IMPLIED",
+            "field-alias": "target-measurement",
+            "header-idx": null,
+            "purpose": "mvalue",
+            "format": null,
+            "null-value": null,
+            "map-implied": {
+              "domain": "MM-YYYY",
+              "codomain": 1
+            },
+            "levels": [],
+            "nlevels": 1,
+            "filename": "/data/target_list/target_list_short.csv",
+            "codomain-reducer": "SUM",
+            "slicing-reducer": "SUM"
+          }
+        }
+      }
+    },
+    "headerViewFixes": {
+      "RAW": {},
+      "WIDE": {},
+      "IMPLIED": {}
+    }
+  },
+  "modal": {
+    "modalType": null,
+    "modalProps": {},
+    "modalActions": {}
+  },
+  "notifications": [
+    {
+      "id": 840,
+      "message": "Processing an async action"
+    }
+  ],
+  "pendingRequests": {
+    "INSPECTION": {},
+    "EXTRACTION": {}
+  },
+  "stepper": {
+    "isHidden": true,
+    "isPrevDisabled": true,
+    "isNextDisabled": true,
+    "registeredNextStep": {},
+    "steps": [
+      {
+        "route": "/",
+        "displayName": "Overview",
+        "showStepper": false,
+        "showNavigation": false
+      },
+      {
+        "route": "/campaigns/1/files",
+        "displayName": "Select Files",
+        "showStepper": true,
+        "showNavigation": true
+      },
+      {
+        "route": "/campaigns/1/fields",
+        "displayName": "Configure Fields",
+        "showStepper": true,
+        "showNavigation": true
+      },
+      {
+        "route": "/campaigns/1/pending",
+        "displayName": "Building ETL",
+        "canBacktrack": false,
+        "showStepper": true,
+        "showNavigation": true
+      },
+      {
+        "route": "/campaigns/1/workbench",
+        "displayName": "Workbench",
+        "showStepper": true,
+        "showNavigation": true
+      }
+    ]
+  },
+  "ui": {
+    "loading": false
+  },
+  "workbench": {
+    "tree": {
+      "0": {
+        "id": 0,
+        "type": "root",
+        "height": 0,
+        "parent": null,
+        "data": {},
+        "index": null,
+        "childIds": [1, 2],
+        "listeners": []
+      },
+      "1": {
+        "id": 1,
+        "type": "palette",
+        "height": 1,
+        "parent": 0,
+        "data": {},
+        "index": 0,
+        "childIds": [3],
+        "listeners": []
+      },
+      "2": {
+        "id": 2,
+        "type": "canvas",
+        "height": 1,
+        "parent": 0,
+        "data": {},
+        "index": 1,
+        "childIds": [12, 13, 14],
+        "listeners": []
+      },
+      "3": {
+        "id": 3,
+        "type": "palette",
+        "height": 2,
+        "parent": 1,
+        "data": {},
+        "index": 0,
+        "childIds": [4, 6, 8, 10],
+        "listeners": []
+      },
+      "4": {
+        "id": 4,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "source": "palette",
+          "type": "group",
+          "etlUnitType": "etlUnit::quality",
+          "displayType": "subjectUniverse",
+          "groupTag": "q_customerstate"
+        },
+        "index": 0,
+        "childIds": [5],
+        "listeners": []
+      },
+      "5": {
+        "id": 5,
+        "type": "palette",
+        "height": 4,
+        "parent": 4,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_customerstate",
+            "displayName": "Customer State",
+            "palette-name": "Customer State",
+            "canvas-alias": "Customer State",
+            "tag": "txtValues",
+            "count": 52,
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": [],
+        "listeners": []
+      },
+      "6": {
+        "id": 6,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "source": "palette",
+          "type": "group",
+          "etlUnitType": "etlUnit::quality",
+          "displayType": "subjectUniverse",
+          "groupTag": "q_customerzipcode"
+        },
+        "index": 1,
+        "childIds": [7],
+        "listeners": []
+      },
+      "7": {
+        "id": 7,
+        "type": "palette",
+        "height": 4,
+        "parent": 6,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_customerzipcode",
+            "displayName": "Customer Zip Code",
+            "palette-name": "Customer Zip Code",
+            "canvas-alias": "Customer Zip Code",
+            "tag": "txtValues",
+            "count": 2891,
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": [],
+        "listeners": []
+      },
+      "8": {
+        "id": 8,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "source": "palette",
+          "type": "group",
+          "etlUnitType": "etlUnit::quality",
+          "displayType": "subjectUniverse",
+          "groupTag": "q_spec"
+        },
+        "index": 2,
+        "childIds": [9],
+        "listeners": []
+      },
+      "9": {
+        "id": 9,
+        "type": "palette",
+        "height": 4,
+        "parent": 8,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_spec",
+            "displayName": "Spec",
+            "palette-name": "Spec",
+            "canvas-alias": "Spec",
+            "tag": "txtValues",
+            "count": 32,
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": [],
+        "listeners": []
+      },
+      "10": {
+        "id": 10,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "source": "palette",
+          "type": "group",
+          "etlUnitType": "etlUnit::measurement",
+          "displayType": "empty",
+          "groupTag": "m_unitcount"
+        },
+        "index": 3,
+        "childIds": [11],
+        "listeners": []
+      },
+      "11": {
+        "id": 11,
+        "type": "palette",
+        "height": 4,
+        "parent": 10,
+        "data": {
+          "type": "etlUnit::measurement",
+          "value": {
+            "request": true,
+            "measurementType": "m_unitcount",
+            "displayName": "Unit Count",
+            "palette-name": "Unit Count",
+            "canvas-alias": "Unit Count",
+            "values": {
+              "0": {
+                "request": false,
+                "componentName": "paymenttypegroup",
+                "displayName": "Payment Type Group",
+                "palette-name": "Payment Type Group",
+                "canvas-alias": "Payment Type Group",
+                "reduced": true,
+                "tag": "txtValues",
+                "count": 3,
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                }
+              },
+              "1": {
+                "request": true,
+                "componentName": "time",
+                "displayName": "Year-Month",
+                "palette-name": "Year-Month",
+                "canvas-alias": "Year-Month",
+                "reduced": false,
+                "tag": "spanValues",
+                "count": 1,
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 0,
+                      "reduced": false,
+                      "rangeLength": 21
+                    }
+                  }
+                },
+                "timeProp": {
+                  "interval": {
+                    "unit": "M",
+                    "count": 1
+                  },
+                  "reference": {
+                    "idx": 0,
+                    "value": "2015-02",
+                    "isoFormat": "YYYY-MM"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": [],
+        "listeners": []
+      },
+      "12": {
+        "id": 12,
+        "type": "canvas",
+        "height": 2,
+        "parent": 2,
+        "data": {},
+        "index": 0,
+        "childIds": [15],
+        "listeners": []
+      },
+      "13": {
+        "id": 13,
+        "type": "canvas",
+        "height": 2,
+        "parent": 2,
+        "data": {},
+        "index": 1,
+        "childIds": [],
+        "listeners": []
+      },
+      "14": {
+        "id": 14,
+        "type": "canvas",
+        "height": 2,
+        "parent": 2,
+        "data": {},
+        "index": 2,
+        "childIds": [],
+        "listeners": []
+      },
+      "15": {
+        "id": 15,
+        "type": "canvas",
+        "height": 3,
+        "parent": 12,
+        "data": {
+          "source": "palette",
+          "type": "group",
+          "etlUnitType": "etlUnit::quality",
+          "displayType": "subjectUniverse",
+          "groupTag": "q_spec"
+        },
+        "index": 0,
+        "childIds": [16],
+        "listeners": []
+      },
+      "16": {
+        "id": 16,
+        "type": "canvas",
+        "height": 4,
+        "parent": 15,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_spec",
+            "displayName": "Spec",
+            "palette-name": "Spec",
+            "canvas-alias": "Spec",
+            "tag": "txtValues",
+            "count": 32,
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": [],
+        "listeners": []
+      }
+    },
+    "matrix": null,
+    "nowDragging": null,
+    "hostedWarehouseState": "STALE"
+  },
+  "_persist": {
+    "version": "0.3.0",
+    "rehydrated": true
+  }
+}

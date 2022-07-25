@@ -7,6 +7,8 @@
  */
 import axios from 'axios'
 
+import { ApiCallError } from '../errors'
+
 //------------------------------------------------------------------------------
 // Read the .env
 //------------------------------------------------------------------------------
@@ -14,7 +16,7 @@ import axios from 'axios'
 const DEBUG = true
 
 console.debug(
-  `🦀 dashboard api sending to: http://${window.location.hostname}:5005/v1`,
+  `✅ dashboard api sending to: http://${window.location.hostname}:5005/v1`,
 )
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
@@ -38,6 +40,66 @@ export const apiInstance = axios.create({
   },
   withCredentials: true,
 })
+
+/**
+ * Save the store
+ * TnC-py
+ * @projects_blueprint.route("/v1/project-store/<project_id>",
+ *   methods=['GET', 'POST'])  # noqa: E501
+ */
+export async function saveStore({ projectId, store }) {
+  //
+  console.debug(`Save project store: ${projectId}`)
+  console.dir(store)
+  //
+  if (typeof projectId === 'undefined') {
+    throw new ApiCallError('Missing projectId')
+  }
+  const axiosOptions = {
+    url: `/project-store/${projectId}`,
+    method: 'POST',
+    data: {
+      project_id: projectId,
+      new_store: store,
+    },
+  }
+  if (DEBUG) {
+    console.debug(
+      `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
+      'color:orange',
+    )
+  }
+  return apiInstance(axiosOptions)
+}
+
+/**
+ * fetch the redux store
+ * (core-app state)
+ *
+ * TnC-py (GET)
+ * @projects_blueprint.route("/v1/project-store/<project_id>",
+ *   methods=['GET', 'POST'])
+ */
+export async function fetchStore(projectId = undefined) {
+  //
+  console.debug(`Load project store: ${projectId}`)
+  //
+  if (typeof projectId === 'undefined') {
+    throw new ApiCallError('Missing projectId')
+  }
+  const axiosOptions = {
+    url: `/project-store/${projectId}`,
+    method: 'GET',
+  }
+  //
+  if (DEBUG) {
+    console.debug(
+      `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
+      'color:orange',
+    )
+  }
+  return apiInstance(axiosOptions)
+}
 
 /**
  * @KM: test endpoints

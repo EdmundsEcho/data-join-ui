@@ -1,13 +1,25 @@
 import React, { createContext, useState } from 'react'
+import PropTypes from 'prop-types'
+
 import { useNavigate } from 'react-router-dom'
 import { withSnackbar } from 'notistack'
-import PropTypes from 'prop-types'
+
 import {
   postNewProject,
   deleteProject,
-  fetchAllProjects,
+  fetchAllProjects as fetchFn,
 } from '../services/dashboard.api'
+import { useFetchApi } from '../hooks/use-fetch-api'
 
+// -----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true'
+// -----------------------------------------------------------------------------
+/* eslint-disable no-console */
+
+/**
+ * This is only relevant when we want to "configure" the
+ * context externally.
+ */
 export const Context = createContext({
   // state
   isFetching: false,
@@ -24,6 +36,9 @@ export const Context = createContext({
   fetch: () => {
     console.warn('Not configured - fetch projects')
   },
+  callback: () => {
+    console.warn('Not configured - fetch projects')
+  },
 })
 
 /**
@@ -31,45 +46,40 @@ export const Context = createContext({
  */
 const Provider = (props) => {
   //
-  // limit to redirect to login on error
+  const { enqueueSnackbar, children } = props
+  let navigate = useNavigate()
   //
-  const navigate = useNavigate()
   // cache that forces update of children
   const [data, setContextCache] = useState([])
-  // convenience for children; be patient :))
-  // - wait for cache before rendering
-  const [isFetching, setIsFetching] = useState(false)
+  const [error, setError] = useState(undefined)
 
-  const { enqueueSnackbar, children } = props
+  /**
+   * fetch data
+   * callback: set the initial value of the cache
+   */
+  const { fetch: fetchInner, isFetching } = useFetchApi({
+    fetchFn,
+    normalizer: undefined,
+    callback: setContextCache,
+    enqueueSnackbar,
+    DEBUG,
+  })
 
-  // side-effect; called by child and following add/delete
-  const fetch = async () => {
+  // extra service provided by the ProjectsContext
+  const fetch = () => {
     try {
-      setIsFetching(true)
-      const response = await fetchAllProjects()
-      const { error, status } = response?.data
-      //
-      // set the local cache here
-      if (!error && status !== 'Error' && response?.status === 200) {
-        setContextCache(response.data)
-      } else {
-        // on error redirect to login
-        // ⬜ this should bubble up to a authentication context
-        //    throw a specific InvalidSession error
-        navigate('/login')
-        enqueueSnackbar(`Error: ${error || response?.data?.message}`, {
-          variant: 'error',
-        })
-      }
-      // debug
-      console.log('fetch', { response })
+      fetchInner()
     } catch (e) {
-      // ⬜ Throw and catch the error
-      console.log('error fetch', e)
+      console.error(`🦀 what is this error; how treat? (display on page)`)
+      console.dir(e)
+      navigate('/login')
+    } finally {
     }
-    setIsFetching(false)
   }
-
+  /**
+   * mutate the cache
+   * callback: e.g., navigate following the delete
+   */
   const deleteById = async (id, callback) => {
     try {
       await deleteProject(id)
@@ -86,6 +96,10 @@ const Provider = (props) => {
     }
   }
 
+  /**
+   * mutate the cache
+   * callback: e.g., navigate following the delete
+   */
   const add = async (data, callback) => {
     try {
       const { data: newProject } = await postNewProject(data)
@@ -103,15 +117,18 @@ const Provider = (props) => {
   }
 
   const state = {
-    isFetching,
     data,
+    error,
+    isFetching,
     add,
     deleteById,
     fetch,
   }
 
-  console.debug(`📥 Context is running: ${isFetching}`)
-  console.dir(state)
+  if (DEBUG) {
+    console.debug(`📥 Context is running: ${isFetching}`)
+    console.dir(state)
+  }
   return <Context.Provider value={state}>{children}</Context.Provider>
 }
 
