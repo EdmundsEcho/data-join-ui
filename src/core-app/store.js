@@ -4,7 +4,7 @@ import projectMetaReducer from './projectMetaSlice'
 import saveStoreMiddleware from '../core-app/save-store.middleware'
 
 /**
- * 📌 Exports loadStore
+ * 📌 Exports function loadStore(previousStore)
  *
  * ⬜ Plug this in to the core-app configureStore.js
  *

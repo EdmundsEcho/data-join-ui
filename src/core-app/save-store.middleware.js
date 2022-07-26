@@ -1,5 +1,9 @@
 import { saveStore as saveStoreApi } from '../services/dashboard.api'
-import { getProjectId } from '../core-app/projectMetaSlice'
+import {
+  getProjectId,
+  setCacheStatusStale,
+  setLastSavedOn,
+} from '../core-app/projectMetaSlice'
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true'
@@ -28,26 +32,8 @@ const SAVE_PREFIXES = [
 ]
 const BLACK_LIST = ['projectMeta/setProjectId']
 
-const saveNow = (actionType) => {
-  // str.includes(substr)
-  if (typeof actionType === 'undefined') {
-    return false
-  }
-  const guard =
-    SAVE_PREFIXES.some((prefix) => actionType.includes(prefix)) &&
-    BLACK_LIST.every((prefix) => !actionType.includes(prefix))
-  const color = guard
-    ? 'color: green; font-weight: bold'
-    : 'color: red; font-weight: bold'
-  console.log(`%c 🎉 about to save: ${actionType} -> save: ${guard}`, color)
-  return guard
-}
-
-// eslint-disable
-const middleware =
-  ({ getState, dispatch }) =>
-  (next) =>
-  (action) => {
+// prettier-ignore
+const middleware = ({ getState, dispatch }) => (next) => (action) => {
     console.debug(
       `🧮  middleware action: ${action?.type ?? 'action type: undefined'}`,
     )
@@ -62,25 +48,51 @@ const middleware =
 
     //
     // Tasks
+//
     // ✅ Predicate actions that mutate the reducer (action::document)
+    // ✅ Set the parent cache flag to stale
     // ✅ Send redux-store to backend (saveProject)
-    // ⬜ Update projectMeta to reflect the "saving" state
+    // ✅ Update projectMeta to reflect the "saving" state
     //
     if (saveNow(action.type)) {
       try {
         const state = getState()
         const projectId = getProjectId(state)
         if (typeof projectId === 'undefined') {
-          throw new Error(`Missing projectId: ${projectId}`)
+          console.dir(state)
+          throw new Error(`save-store: Missing projectId: ${projectId}`)
         }
-        saveStoreApi({ projectId, store: state })
-        // send out actions to update projectMeta state
+        // 📬 Send to server
+        const response = saveStoreApi({ projectId, store: state })
+        if (response.status === 401) {
+           // navigate('/login')
+        }
+        // dispatch actions to update projectMeta state
+        console.debug(`Action --------------`)
+        console.dir(setCacheStatusStale())
+        next(setCacheStatusStale())
+        next(setLastSavedOn())
       } catch (e) {
         throw e
       } finally {
       }
     }
   }
+
+function saveNow(actionType) {
+  if (typeof actionType === 'undefined') {
+    return false
+  }
+  // str.includes(substr)
+  const guard =
+    SAVE_PREFIXES.some((prefix) => actionType.includes(prefix)) &&
+    BLACK_LIST.every((prefix) => !actionType.includes(prefix))
+  const color = guard
+    ? 'color: green; font-weight: bold'
+    : 'color: red; font-weight: bold'
+  console.log(`%c 🎉 about to save: ${actionType} -> save: ${guard}`, color)
+  return guard
+}
 
 // prettier-ignore
 export default middleware;

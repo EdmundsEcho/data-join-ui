@@ -140,12 +140,11 @@ export async function getStorageProviderFiles(projectId, sorageProvider) {
  * @function
  * @return {Promise} response
  */
-export async function postNewProject(data) {
+export async function addNewProject(data) {
   const axiosOptions = {
     url: '/projects',
     method: 'POST',
     data: {
-      project: {},
       ...data,
     },
   }

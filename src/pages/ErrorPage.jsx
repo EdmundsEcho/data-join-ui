@@ -51,3 +51,5 @@ export const ErrorPage = (props) => {
     </Box>
   )
 }
+
+export default ErrorPage

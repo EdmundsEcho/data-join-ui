@@ -1,11 +1,10 @@
-import React, { createContext, useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { createContext } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 import { withSnackbar } from 'notistack'
 
 import {
-  postNewProject,
+  addNewProject,
   deleteProject,
   fetchAllProjects as fetchFn,
 } from '../services/dashboard.api'
@@ -48,24 +47,24 @@ const Provider = (props) => {
   //
   const { enqueueSnackbar, children } = props
   let navigate = useNavigate()
-  //
-  // cache that forces update of children
-  const [data, setContextCache] = useState([])
-  const [error, setError] = useState(undefined)
-
   /**
    * fetch data
    * callback: set the initial value of the cache
    */
-  const { fetch: fetchInner, isFetching } = useFetchApi({
+  const {
+    fetch: fetchInner,
+    status,
+    STATUS,
+    error,
+    cache: data,
+  } = useFetchApi({
     fetchFn,
-    normalizer: undefined,
-    callback: setContextCache,
     enqueueSnackbar,
     DEBUG,
   })
 
-  // extra service provided by the ProjectsContext
+  // ProjectsContext will navigate to login on error
+  // 💢 -> sets useFetchApi cache
   const fetch = () => {
     try {
       fetchInner()
@@ -77,7 +76,7 @@ const Provider = (props) => {
     }
   }
   /**
-   * mutate the cache
+   * mutate the server
    * callback: e.g., navigate following the delete
    */
   const deleteById = async (id, callback) => {
@@ -97,55 +96,46 @@ const Provider = (props) => {
   }
 
   /**
-   * mutate the cache
+   * mutate the server
    * callback: e.g., navigate following the delete
    */
   const add = async (data, callback) => {
     try {
-      const { data: newProject } = await postNewProject(data)
-      // call fetch to trigger an update of the local cache
+      const { data: newProject } = await addNewProject(data)
+      // call fetch to trigger an update of the cache
       // (and re-render children in the context)
       await fetch()
       // callback once the fetch has completed
-      // (the whole point of the callback is getting the timing right)
+      // (the purpose of the callback is getting the timing right)
+      // e.g., navigate to the url with the new project_id
       if (typeof callback === 'function') {
         callback(newProject)
       }
     } catch (e) {
+      // ⬜ handle error
       console.log('error', e)
     }
   }
 
+  // exposed interface
   const state = {
     data,
     error,
-    isFetching,
+    status,
+    STATUS,
     add,
     deleteById,
     fetch,
   }
 
   if (DEBUG) {
-    console.debug(`📥 Context is running: ${isFetching}`)
-    console.dir(state)
+    console.debug(
+      `📥 Projects context is running: ${status || 'unknown status'} with ${
+        data?.length ?? 'unknown number of'
+      } items.`,
+    )
   }
   return <Context.Provider value={state}>{children}</Context.Provider>
 }
 
-Provider.propTypes = {
-  isFetching: PropTypes.bool,
-  data: PropTypes.array,
-  add: PropTypes.func,
-  deleteById: PropTypes.func,
-  fetch: PropTypes.func,
-}
-
-// isRequired instead?
-Provider.defaultProps = {
-  isFetching: false,
-  data: [],
-  add: (data) => {},
-  deleteById: (id) => {},
-  fetch: () => {},
-}
 export default withSnackbar(Provider)

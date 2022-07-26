@@ -2,13 +2,26 @@
 /**
  * @module hooks/use-fetch-api
  */
-import { useState } from 'react'
+import { useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { ApiResponseError } from '../errors'
 
 /* eslint-disable no-console */
 
+// internal interface
+const START = 'start'
+const SUCCESS = 'success'
+const ERROR = 'error'
+const IDLE = 'idle'
+
+// consumer interface
+const STATUS = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+}
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true'
 // -----------------------------------------------------------------------------
@@ -23,26 +36,39 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true'
  */
 const useFetchApi = ({
   fetchFn, // how retrieve the raw data
-  callback = (x) => x, // optional post-processing
   normalizer = (x) => x, // optional post-processing
+  callback = (x) => x, // optional
   enqueueSnackbar = (m) => {
     console.log(`🔖 enqueueSnackbar is not configured: ${m}`)
   }, // optional
-  emptyValue = undefined, // optional
-  DEBUG: debugProp = false,
+  initialValue = undefined, // optional
+  DEBUG: debugProp = DEBUG || false,
 }) => {
   //
   // initialize the local state
+  // hosts the status of the fetch and the data
   //
-  const [isFetching, setIsFetching] = useState(false)
+  const [fetchState, dispatch] = useReducer(fetchReducer, {
+    status: STATUS.IDLE,
+    cache: initialValue || null,
+    error: null,
+  })
   //
-  // generic redirect to login when 401
+  // generic (all consumers benefit) redirect to login when 401
   let navigate = useNavigate()
 
-  // returns valid data || throws error
+  //
+  // 💢 Updates the local reducer
+  //
+  //    Usage: Consumer to both call fetch and retrieve the cache
+  //    (likely within a useEffect)
+  //
+  //    Sets status to: start | error | success
+  //
   const fetch = async (...args) => {
     try {
-      setIsFetching(true)
+      dispatch({ type: START })
+      // ⏰ fetch response
       const response = await fetchFn(...args)
 
       console.assert(
@@ -50,12 +76,15 @@ const useFetchApi = ({
         `Unexpected response: Missing status\n${Object.keys(response)}`,
       )
       if (response.status === 200) {
-        return callback(normalizer(response.data))
+        const finalData = normalizer(response.data)
+        dispatch({ type: SUCCESS, data: finalData })
+        callback(finalData)
       } else {
-        // throw a generic error; when caught will get more refined
         throw new ApiResponseError(response)
       }
     } catch (e) {
+      // throw a generic error; when caught will get more refined
+      dispatch({ type: ERROR, error: e })
       console.assert(
         e?.response?.status ?? false,
         `Unexpected Error response: Missing response.status\n${JSON.stringify(
@@ -81,14 +110,61 @@ const useFetchApi = ({
           throw new ApiResponseError(e)
       }
     } finally {
-      setIsFetching(false)
+      // dispatch({ type: IDLE, data: undefined })
     }
   }
 
+  const reset = () => {
+    //set the status
+    dispatch({ type: IDLE, data: undefined })
+  }
+
+  // { fetch, status, cache, error }
   return {
     fetch,
-    isFetching,
+    reset,
+    STATUS,
+    ...fetchState,
   }
 }
 
+/**
+ * fetch reducer tracks the status of the async call
+ *
+ * Sets status = rejected | resolved | pending
+ *
+ */
+function fetchReducer(state, action) {
+  switch (action.type) {
+    case ERROR: {
+      return {
+        ...state,
+        status: STATUS.REJECTED,
+        error: action.error,
+      }
+    }
+    case SUCCESS: {
+      return {
+        ...state,
+        status: STATUS.RESOLVED,
+        cache: action.data,
+      }
+    }
+    case START: {
+      return {
+        ...state,
+        status: STATUS.PENDING,
+      }
+    }
+    case IDLE: {
+      return {
+        ...state,
+        status: STATUS.IDLE,
+      }
+    }
+    default: {
+      throw new Error(`Unhandled action type: ${action.type}`)
+    }
+  }
+}
 export { useFetchApi }

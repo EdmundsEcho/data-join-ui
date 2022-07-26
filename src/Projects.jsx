@@ -21,6 +21,8 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 // 📖
 import { Context as ProjectsContext } from './contexts/ProjectsContext'
+//
+import ErrorPage from './pages/ErrorPage'
 
 /*
 [{
@@ -35,16 +37,16 @@ const Projects = () => {
   // const list = getSummaryList()
   const lookupBy = 'project_id'
 
-  const navigate = useNavigate()
-  const location = useLocation()
   const {
-    data: list = undefined,
-    isFetching,
     fetch,
+    data: list = undefined,
+    error,
+    status,
+    STATUS,
     deleteById: deleteItem,
   } = useContext(ProjectsContext)
 
-  // the side-effect: update the context state with the fetched data
+  // 💢 the side-effect: update the context state with the fetched data
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     fetch()
@@ -56,9 +58,29 @@ const Projects = () => {
       <p>How the list is rendered depends on the width of the view</p>
       <p>Show the new project form</p>
 */
-  if (typeof list === 'undefined' || isFetching) {
-    return <div>...loading</div>
+
+  switch (true) {
+    case status === STATUS.IDLE || status === STATUS.PENDING:
+      return <p>...loading</p>
+    case status === STATUS.RESOLVED:
+      return (
+        <SuccessComp list={list} lookupBy={lookupBy} deleteItem={deleteItem} />
+      )
+    case status === STATUS.REJECTED:
+      return (
+        // 🚧 WIP parsing through error: first look at keys
+        <ErrorPage
+          message={error?.message ?? JSON.stringify(Object.keys(error || {}))}
+        />
+      )
+    default:
+      throw new Error('Unreachable SubApp fetch state')
   }
+}
+
+function SuccessComp({ list, lookupBy, deleteItem }) {
+  const navigate = useNavigate()
+  const location = useLocation()
   return (
     <div className="main-controller-root nostack">
       <div className="main-controller">
@@ -69,15 +91,17 @@ const Projects = () => {
             <p>Eventually will have 4 states</p>
           </div>
 
+          {/* New project link */}
           <NavLink to={`/projects`} key={`summaryLink|new-project-key`}>
             <SummaryView addNewPlaceholder />
           </NavLink>
+
           {/* ⬜ use a custom summary component from props (should accept isActive) */}
           {list.map(({ [lookupBy]: itemId, ...restSummaryProps }) => (
             <div key={`fragment|projectSummaryView|${itemId}`}>
               <NavLink to={`/projects/${itemId}`} key={`summaryLink|${itemId}`}>
                 {({ isActive }) => (
-                  <SummaryView isActive {...restSummaryProps} />
+                  <SummaryView isActive itemId={itemId} {...restSummaryProps} />
                 )}
               </NavLink>
 
@@ -104,7 +128,6 @@ const Projects = () => {
     </div>
   )
 }
-
 /**
  * Contoller
  *
@@ -114,11 +137,12 @@ const Projects = () => {
  */
 function SummaryView({
   isActive,
-  itemId,
+  itemId = '0000',
   name,
   permission,
   addNewPlaceholder,
 }) {
+  const shortId = itemId.slice(itemId.length - 4)
   return (
     <div
       className={clsx({
@@ -132,7 +156,7 @@ function SummaryView({
         <div>New project</div>
       ) : (
         <>
-          <div>{name}</div>
+          <div>{`${name} ${shortId}`}</div>
           <div className="right-align">{permission}</div>
         </>
       )}

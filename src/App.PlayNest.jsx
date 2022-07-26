@@ -158,7 +158,7 @@ function ProjectView(props) {
     <>
       <div className="box stack project-view">
         <SubApp>
-          <p>{projectId}</p>
+          <p>SubApp here: displaying CoreApp</p>
           <CoreApp projectId={projectId} />
         </SubApp>
         {/* placeholder for Outlet and footer navigation */}
