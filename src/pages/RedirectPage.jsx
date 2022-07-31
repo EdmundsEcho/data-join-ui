@@ -2,23 +2,32 @@
  * First page after the person logs-in
  * Routes root element
  */
-import { Box, Paper, Typography } from '@mui/material'
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { withSnackbar } from 'notistack'
+import { useEffect } from 'react';
+import { PropTypes } from 'prop-types';
+import { Box, Paper, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { withSnackbar } from 'notistack';
 
-import { fetchUserProfile } from '../services/dashboard.api'
+import { fetchUserProfile } from '../services/dashboard.api';
+
+/* eslint-disable no-console */
 
 const RedirectPage = (props) => {
-  const { enqueueSnackbar } = props
-  const navigate = useNavigate()
+  const { enqueueSnackbar } = props;
+  const navigate = useNavigate();
 
   const fetchUser = async () => {
     try {
-      const response = await fetchUserProfile()
-      console.log('fetchUser response')
-      console.dir(response)
-      const { error, status } = response?.data
+      const response = await fetchUserProfile();
+      console.assert(
+        response?.data ?? false,
+        `fetchUserProfile response with no data: ${Object.keys(
+          response || {},
+        )}`,
+      );
+      console.log('fetchUser response');
+      console.dir(response);
+      const { error, status } = response.data;
 
       if (!error && status !== 'Error' && response?.status === 200) {
         // 🚧 temp skip user-profile
@@ -33,34 +42,34 @@ const RedirectPage = (props) => {
         } else {
 */
         // localhost:5005/v1/projects
-        navigate('/projects')
+        navigate('/projects');
         enqueueSnackbar('Welcome!', {
           variant: 'success',
-        })
+        });
         //        }
       } else {
-        navigate('/login')
+        navigate('/login');
         enqueueSnackbar(`Error: ${error || response?.data?.message}`, {
           variant: 'error',
-        })
+        });
       }
     } catch (e) {
       // false && error
-      console.log('catching error in redirect')
-      console.log(e)
-      navigate('/projects')
+      console.log('catching error in redirect');
+      console.log(e);
+      navigate('/projects');
     }
-  }
+  };
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    fetchUser()
-  }, [])
+    fetchUser();
+  }, []);
   /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <Box
-      className="login-background"
+      className='login-background'
       sx={{
         height: 'calc(100vh - 100px)',
         alignItems: 'center',
@@ -76,7 +85,7 @@ const RedirectPage = (props) => {
     >
       <Box sx={{ zIndex: 2 }}>
         <Paper sx={{ p: '20px', width: '300px' }}>
-          <Typography variant="h5" component="h5">
+          <Typography variant='h5' component='h5'>
             Redirecting...
           </Typography>
 
@@ -89,12 +98,18 @@ const RedirectPage = (props) => {
               alignItems: 'center',
             }}
           >
-            <span className="spinner spinner-lucivia spinner-lg" />
+            <span className='spinner spinner-lucivia spinner-lg' />
           </Box>
         </Paper>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default withSnackbar(RedirectPage)
+RedirectPage.propTypes = {
+  enqueueSnackbar: PropTypes.func,
+};
+RedirectPage.defaultProps = {
+  enqueueSnackbar: undefined,
+};
+export default withSnackbar(RedirectPage);

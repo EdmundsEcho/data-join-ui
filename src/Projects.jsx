@@ -4,25 +4,27 @@
  * can be customized.
  *
  * 📖 data from ProjectContext
- * 💫 loads when call fetch (side-effect)
  *
- * 🔑 The projects is parent to project; has the Outlet component;
- *    sets where detailed view of the project (core app) is rendered.
- *    What component is the detail view?
- *    👉 see the element for projects/<projectId>
+ * 💫 loads when this comonent calls fetch (side-effect)
  *
- * Models the invoices in React-Router tutorial
+ * 🪟 Projects is parent to project | new project form.
+ *   The <Outlet /> component determines where to render the childrend.
+ *   (rendered in ShowProjects)
  *
  * @component
  */
-import React, { useEffect, useContext } from 'react'
-import clsx from 'clsx'
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import React, { useEffect, useContext } from 'react';
+import { PropTypes } from 'prop-types';
+import clsx from 'clsx';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 // 📖
-import { Context as ProjectsContext } from './contexts/ProjectsContext'
-//
-import ErrorPage from './pages/ErrorPage'
+import ProjectsListProvider, {
+  Context as ProjectsContext,
+} from './contexts/ProjectsContext';
+import ErrorPage from './pages/ErrorPage';
+
+/* eslint-disable react/jsx-props-no-spreading */
 
 /*
 [{
@@ -33,9 +35,21 @@ import ErrorPage from './pages/ErrorPage'
         "permission": "owner"
 }]
 */
+
+/**
+ *
+ * 📖 ProjectListContext
+ *
+ * 📥 calls fetch to load the context
+ *
+ * 👉 renders states associated with fetching data
+ * 👉 when ready, ShowProjects includes Outlet
+ *
+ * @component
+ */
 const Projects = () => {
   // const list = getSummaryList()
-  const lookupBy = 'project_id'
+  const lookupBy = 'project_id';
 
   const {
     fetch,
@@ -44,72 +58,98 @@ const Projects = () => {
     status,
     STATUS,
     deleteById: deleteItem,
-  } = useContext(ProjectsContext)
+  } = useContext(ProjectsContext);
 
-  // 💢 the side-effect: update the context state with the fetched data
+  //
+  // 💢 the side-effect:
+  // update the context state with the fetched data
+  //
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    fetch()
-  }, [])
+    fetch();
+    // return () => something with context
+  }, []);
   /* eslint-enable react-hooks/exhaustive-deps */
-  /*
-      <h2>Projects</h2>
-      <p>Show a list of projects with + at the end of the list</p>
-      <p>How the list is rendered depends on the width of the view</p>
-      <p>Show the new project form</p>
-*/
 
   switch (true) {
     case status === STATUS.IDLE || status === STATUS.PENDING:
-      return <p>...loading</p>
+      return <p>...loading</p>;
+
     case status === STATUS.RESOLVED:
       return (
-        <SuccessComp list={list} lookupBy={lookupBy} deleteItem={deleteItem} />
-      )
+        <ShowProjects list={list} lookupBy={lookupBy} deleteItem={deleteItem} />
+      );
+
     case status === STATUS.REJECTED:
       return (
         // 🚧 WIP parsing through error: first look at keys
         <ErrorPage
           message={error?.message ?? JSON.stringify(Object.keys(error || {}))}
         />
-      )
-    default:
-      throw new Error('Unreachable SubApp fetch state')
-  }
-}
+      );
 
-function SuccessComp({ list, lookupBy, deleteItem }) {
-  const navigate = useNavigate()
-  const location = useLocation()
+    default:
+      throw new Error('Unreachable SubApp fetch state');
+  }
+};
+
+/**
+ * Render a list of summary views for each project in the list.
+ * <SummaryView>
+ *
+ *   👉 renders a link to pid/files
+ *   👉 includes <Outlet /> for children (to the right)
+ *   👉 renders a static "new project" link (summary view addNewPaceholder)
+ *   👉 includes a delete project button; redirects to index
+ *
+ * ⬆ 📖 data as prop
+ *
+ * ⬇ Depends on route Match:
+ *   * new project form or
+ *   * project view
+ *
+ */
+function ShowProjects({ list, lookupBy, deleteItem }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const linkTo = (itemId) => `${itemId}/files`;
+
+  Outlet.displayName = 'ProjectsOutlet';
+
   return (
-    <div className="main-controller-root nostack">
-      <div className="main-controller">
-        <div className="main-controller inner stack box">
-          <div className="box">
+    <div className='main-controller-root nostack'>
+      <div className='main-controller'>
+        <div className='main-controller inner stack box'>
+          <div className='box'>
             <h3>Project list controller</h3>
             <p>Controls which project to show; defaults to new project form</p>
             <p>Eventually will have 4 states</p>
           </div>
 
           {/* New project link */}
-          <NavLink to={`/projects`} key={`summaryLink|new-project-key`}>
+          <NavLink to='/projects' key='summaryLink|new-project-key'>
             <SummaryView addNewPlaceholder />
           </NavLink>
 
           {/* ⬜ use a custom summary component from props (should accept isActive) */}
           {list.map(({ [lookupBy]: itemId, ...restSummaryProps }) => (
             <div key={`fragment|projectSummaryView|${itemId}`}>
-              <NavLink to={`/projects/${itemId}`} key={`summaryLink|${itemId}`}>
+              <NavLink to={linkTo(itemId)} key={`summaryLink|${itemId}`}>
                 {({ isActive }) => (
-                  <SummaryView isActive itemId={itemId} {...restSummaryProps} />
+                  <SummaryView
+                    isActive={isActive}
+                    itemId={itemId}
+                    {...restSummaryProps}
+                  />
                 )}
               </NavLink>
 
-              <div className="box no-border" key={`project-delete|${itemId}`}>
+              <div className='box no-border' key={`project-delete|${itemId}`}>
                 <button
-                  className="delete-project right-align"
+                  className='delete-project right-align'
+                  type='button'
                   onClick={() => {
-                    deleteItem(itemId, navigate('/projects' + location.search))
+                    deleteItem(itemId, navigate(`/projects${location.search}`));
                   }}
                 >
                   Delete
@@ -119,17 +159,26 @@ function SuccessComp({ list, lookupBy, deleteItem }) {
           ))}
         </div>
       </div>
-      <div className="main-view inner">
-        <div className="main-view sizing-frame stack">
-          {/* Layout magic here - where the detail view is rendered */}
+      <div className='main-view inner'>
+        <div className='main-view sizing-frame stack'>
           <Outlet />
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+ShowProjects.propTypes = {
+  list: PropTypes.arrayOf(PropTypes.shape({})),
+  lookupBy: PropTypes.string.isRequired,
+  deleteItem: PropTypes.func,
+};
+ShowProjects.defaultProps = {
+  list: [],
+  deleteItem: undefined,
+};
+
 /**
- * Contoller
  *
  * Component to display fields provided in a summary view of a project
  * This may change and get more sophisticated over time.
@@ -142,7 +191,7 @@ function SummaryView({
   permission,
   addNewPlaceholder,
 }) {
-  const shortId = itemId.slice(itemId.length - 4)
+  const shortId = itemId.slice(itemId.length - 4);
   return (
     <div
       className={clsx({
@@ -157,18 +206,30 @@ function SummaryView({
       ) : (
         <>
           <div>{`${name} ${shortId}`}</div>
-          <div className="right-align">{permission}</div>
+          <div className='right-align'>{permission}</div>
         </>
       )}
     </div>
-  )
+  );
 }
-// Placeholder for now
-// append the search term to the URL
-// creates a permalink of sorts with the filter
-// eslint-disable-next-line
-function QueryNavLink({ to, ...props }) {
-  let location = useLocation()
-  return <NavLink to={to + location.search} {...props} />
-}
-export default Projects
+SummaryView.propTypes = {
+  isActive: PropTypes.bool,
+  itemId: PropTypes.string,
+  name: PropTypes.string,
+  permission: PropTypes.string,
+  addNewPlaceholder: PropTypes.bool,
+};
+SummaryView.defaultProps = {
+  isActive: false,
+  itemId: '00000',
+  name: undefined,
+  permission: undefined,
+  addNewPlaceholder: false,
+};
+
+const WithProvider = (props) => (
+  <ProjectsListProvider>
+    <Projects {...props} />
+  </ProjectsListProvider>
+);
+export default WithProvider;

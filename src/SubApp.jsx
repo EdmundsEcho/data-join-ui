@@ -1,5 +1,6 @@
 /**
- * Isolate the core-app with this component.
+ * Create a separate Redux state that is isolated from the rest
+ * of the application.
  *
  * Features: The component will initialize and isolate the app that uses redux.
  *
@@ -18,66 +19,54 @@
  *    👉 <SubApp>{child}</SubApp> where child is the "core-app"
  *
  */
-import React, { useEffect, useState, useCallback } from 'react'
-import { Provider } from 'react-redux'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState, useCallback } from 'react';
+import { PropTypes } from 'prop-types';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import { useFetchApi } from './hooks/use-fetch-api'
+import { useFetchApi } from './hooks/use-fetch-api';
 import {
   useStatus as useCacheStatus,
-  StatusProvider,
-} from './hooks/use-status-provider'
-import { fetchStore as fetchFn } from './services/dashboard.api'
-import ErrorPage from './pages/ErrorPage'
+  StatusProvider as CacheStatusProvider,
+} from './hooks/use-status-provider';
+import { fetchStore as fetchFn } from './services/dashboard.api';
+import ErrorPage from './pages/ErrorPage';
+import { seedProjectState } from './core-app/ducks/rootSelectors';
 
 // Subapp related
-import loadStore from './core-app/store'
-/*
- * where store = createStore(reducers...)
- * action fetchPosts = () => {
- *   return async dispatch =>  {
- *   try{
- *   get using axios
- *   }
- *   }
- * }
- *
- * store from ./redux/store
- * { fetchPosts } from ./redux/actions
- *
- * store.dispatch(fetchPosts())
- * <Provider store={ store }>
- */
+// import loadStore from './core-app/store'
+import loadStore from './core-app/configuredStore';
 
 // -----------------------------------------------------------------------------
-const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true'
+const DEBUG = false && process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
 const SubApp = (props) => {
   // project_id is required
   // 💫 causes re-render when changed
-  let { projectId } = useParams()
+  const { projectId } = useParams();
 
-  const { enqueueSnackbar, children: child } = props
+  const { enqueueSnackbar, children } = props;
   //
   // 🚧 tmp until figure out other non 401 errors
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     status: cacheStatus,
     isStatusEmpty: isCacheStatusEmpty,
     isStatusStale: isCacheStatusStale,
-    isStatusLoaded,
+    // isStatusLoaded,
     setStatusLoaded,
-  } = useCacheStatus()
+  } = useCacheStatus();
 
-  const [loadedProjectId, setLoadedProjectId] = useState(() => undefined)
+  const [loadedProjectId, setLoadedProjectId] = useState(() => undefined);
 
   const reloadingProject = useCallback(
     () => loadedProjectId === projectId,
     [loadedProjectId, projectId],
-  )
+  );
 
   //
   // 📖 data using the fetchApi
@@ -85,7 +74,7 @@ const SubApp = (props) => {
   //
   const {
     fetch,
-    cache: store,
+    cache: initialStore,
     error,
     status: fetchStatus,
     STATUS: FETCH_STATUS,
@@ -95,15 +84,28 @@ const SubApp = (props) => {
     // 🔖 response includes meta store data:
     // help validate store and/or determine which normalizing function
     // to use (help with managing store versions)
-    normalizer: ({ store }) => store,
+    //
+    // The SubApp only needs the project_id to proceed in the event
+    // the project does not yet already exist.
+    //
+    // 🔑 For new projects: minimum store value with project_id, with flag to
+    //    save the store.
+    //
+    normalizer: ({ project_id: storeId, store: maybeStore }) => {
+      console.assert(
+        storeId === projectId,
+        'The store id does not align with the projectId',
+      );
+      return maybeStore === null ? seedProjectState(projectId) : maybeStore;
+    },
     callback: () => {
-      console.debug(`****************Callback here`)
-      setStatusLoaded()
-      setLoadedProjectId(projectId)
+      console.debug(`****************SubApp updating local fetch status`);
+      setStatusLoaded();
+      setLoadedProjectId(projectId);
     },
     enqueueSnackbar,
     DEBUG,
-  })
+  });
 
   //
   // 💢 Side-effect: loads data into cache
@@ -123,31 +125,31 @@ const SubApp = (props) => {
       // && project_id !== previous project_id
       switch (true) {
         case !reloadingProject():
-          resetFetchApi()
-          fetch(projectId)
-          console.log(`FETCHING from the server b/c switching projects`)
-          break
+          resetFetchApi();
+          fetch(projectId);
+          console.log(`FETCHING from the server b/c switching projects`);
+          break;
 
         // ⬜ This scenario seems dubious; unsure of value
         case isCacheStatusEmpty():
-          fetch(projectId)
-          console.log(`FETCHING from the server b/c cache is empty`)
-          break
+          fetch(projectId);
+          console.log(`FETCHING from the server b/c cache is empty`);
+          break;
         // when stale, nothing to fetch, nor update store
         // SO HOW "not render" at this point!! because Provider wants
         // something. THIS IS AL WRONg.
         case reloadingProject() && isCacheStatusStale():
-          resetFetchApi()
-          fetch(projectId)
-          console.log(`FETCHING from the server b/c cache is stale`)
-          break
+          resetFetchApi();
+          fetch(projectId);
+          console.log(`FETCHING from the server b/c cache is stale`);
+          break;
 
         default: // callback sets the cache status to loaded
       }
     } catch (e) {
-      console.error(`🦀 what is this error; how treat? (display on page)`)
-      console.dir(e)
-      navigate('login')
+      console.error(`🦀 what is this error; how treat? (display on page)`);
+      console.dir(e);
+      navigate('login');
     } finally {
       // anything?
     }
@@ -155,66 +157,59 @@ const SubApp = (props) => {
     // ⬜ return something to close out the effect
     // return () => setIsMounted(false)
     //
-  }, [projectId, isCacheStatusStale, isCacheStatusEmpty, reloadingProject]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // 🔑 For new projects: minimum store value with project_id
-  //
-  const seedStore = useCallback((projectId) => {
-    return {
-      projectMeta: {
-        meta: {
-          projectId,
-        },
-      },
-    }
-  }, [])
+  }, [projectId, isCacheStatusStale, isCacheStatusEmpty, reloadingProject]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // rendering guard helper
-  let showLoading =
+  const showLoading =
     [FETCH_STATUS.IDLE, FETCH_STATUS.PENDING].includes(fetchStatus) ||
-    projectId === 'undefined'
+    projectId === 'undefined';
 
   if (DEBUG) {
-    console.debug(`%c2️⃣  📋 SubApp state summary:`, 'color:orange')
+    // report on state of the component
+    console.debug(`%c📋 SubApp state summary:`, 'color:orange');
     console.dir({
       projectInUrl: projectId,
       nowHostingProjectId: loadedProjectId,
       reloadingProject: reloadingProject(),
       cacheStatus,
       fetchStatus,
-      storeNull: store === null || store === undefined,
-      cachedStore: store,
-      currentStore: 'hidden inside core-app',
-    })
+      storeNull: initialStore === null || initialStore === undefined,
+      storeMinValue: Object.keys(initialStore || {}).length === 1,
+      cachedStore: initialStore,
+      storeLocation: 'Provider instantiated here',
+    });
+
+    const color =
+      fetchStatus === FETCH_STATUS.RESOLVED ? 'color:green' : 'color:red';
+
+    console.debug(
+      `%cfetchStatus resolved?: ${fetchStatus === FETCH_STATUS.RESOLVED}`,
+      color,
+    );
   }
 
-  console.debug(
-    `%cfetchStatus: ${FETCH_STATUS.RESOLVED}`,
-    'color:red; font-weight: bold',
-  )
-  const color =
-    fetchStatus === FETCH_STATUS.RESOLVED ? 'color:green' : 'color:red'
+  Provider.displayName = 'TncAppStore';
 
   switch (true) {
     case showLoading:
-      return <p>...loading</p>
+      return <p>...loading</p>;
 
-    case fetchStatus === FETCH_STATUS.RESOLVED:
-      console.debug(
-        `%cfetchStatus: ${fetchStatus === FETCH_STATUS.RESOLVED}`,
-        color,
-      )
-      console.dir(store)
+    case fetchStatus === FETCH_STATUS.RESOLVED: {
+      // use the initialStore (aka initialState), to generate
+      // the store and persistor used in the Provider
+      const { store, persistor } = loadStore(initialStore);
+
       //
-      // 💰 <Provider store={data}>{child}</Provider>
+      // 💰 Provider
       //
       return (
-        <Provider
-          store={loadStore(store === null ? seedStore(projectId) : store)}
-        >
-          {child}
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            {children}
+          </PersistGate>
         </Provider>
-      )
+      );
+    }
 
     case fetchStatus === FETCH_STATUS.REJECTED:
       return (
@@ -222,16 +217,26 @@ const SubApp = (props) => {
         <ErrorPage
           message={error?.message ?? JSON.stringify(Object.keys(error || {}))}
         />
-      )
+      );
 
     default:
-      throw new Error('Unreachable SubApp fetch state')
+      throw new Error('Unreachable SubApp fetch state');
   }
-}
+};
 
+SubApp.propTypes = {
+  enqueueSnackbar: PropTypes.func,
+  children: PropTypes.node.isRequired,
+};
+SubApp.defaultProps = {
+  enqueueSnackbar: undefined,
+};
+
+/* eslint-disable react/jsx-props-no-spreading */
 const WithCacheStatus = (props) => (
-  <StatusProvider>
+  <CacheStatusProvider>
     <SubApp {...props} />
-  </StatusProvider>
-)
-export default WithCacheStatus
+  </CacheStatusProvider>
+);
+/* eslint-enable react/jsx-props-no-spreading */
+export default WithCacheStatus;

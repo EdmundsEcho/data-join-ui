@@ -5,19 +5,22 @@
  * @module src/services/dashboard.api
  *
  */
-import axios from 'axios'
+import axios from 'axios';
 
-import { ApiCallError } from '../errors'
+import { ApiCallError } from '../errors';
 
 //------------------------------------------------------------------------------
 // Read the .env
 //------------------------------------------------------------------------------
-// const DEBUG = process.env.REACT_APP_DEBUG_API === 'true'
-const DEBUG = true
+const DEBUG = true || process.env.REACT_APP_DEBUG_API === 'true';
+//------------------------------------------------------------------------------
+/* eslint-disable no-console */
 
-console.debug(
-  `✅ dashboard api sending to: http://${window.location.hostname}:5005/v1`,
-)
+if (DEBUG) {
+  console.debug(
+    `✅ dashboard api sending to: http://${window.location.hostname}:5005/v1`,
+  );
+}
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
 
@@ -28,7 +31,7 @@ console.debug(
 const API_BASE_URL =
   process.env.REACT_APP_ENV === 'production'
     ? `${window.location.origin}/v1`
-    : `http://${window.location.hostname}:5005/v1`
+    : `http://${window.location.hostname}:5005/v1`;
 
 //------------------------------------------------------------------------------
 // Configure axios endpoints
@@ -39,7 +42,7 @@ export const apiInstance = axios.create({
     Accept: 'application/json',
   },
   withCredentials: true,
-})
+});
 
 /**
  * Save the store
@@ -49,11 +52,10 @@ export const apiInstance = axios.create({
  */
 export async function saveStore({ projectId, store }) {
   //
-  console.debug(`Save project store: ${projectId}`)
-  console.dir(store)
+  console.debug(`Save project store: ${projectId}`);
   //
   if (typeof projectId === 'undefined') {
-    throw new ApiCallError('Missing projectId')
+    throw new ApiCallError('Missing projectId');
   }
   const axiosOptions = {
     url: `/project-store/${projectId}`,
@@ -62,14 +64,15 @@ export async function saveStore({ projectId, store }) {
       project_id: projectId,
       new_store: store,
     },
-  }
+  };
   if (DEBUG) {
     console.debug(
       `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
       'color:orange',
-    )
+    );
   }
-  return apiInstance(axiosOptions)
+
+  return apiInstance(axiosOptions);
 }
 
 /**
@@ -82,23 +85,23 @@ export async function saveStore({ projectId, store }) {
  */
 export async function fetchStore(projectId = undefined) {
   //
-  console.debug(`Load project store: ${projectId}`)
+  console.debug(`Load project store: ${projectId}`);
   //
   if (typeof projectId === 'undefined') {
-    throw new ApiCallError('Missing projectId')
+    throw new ApiCallError('Missing projectId');
   }
   const axiosOptions = {
     url: `/project-store/${projectId}`,
     method: 'GET',
-  }
+  };
   //
   if (DEBUG) {
     console.debug(
       `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
       'color:orange',
-    )
+    );
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 /**
@@ -112,25 +115,25 @@ export async function fetchAllProjects() {
   const axiosOptions = {
     url: '/projects',
     method: 'GET',
-  }
+  };
   if (DEBUG) {
-    console.debug(`%c testing "v1/projects" endpoint`, 'color:orange')
+    console.debug(`%c testing "v1/projects" endpoint`, 'color:orange');
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 export async function getStorageProviderFiles(projectId, sorageProvider) {
   const axiosOptions = {
     url: `/filesystem/readdir?project_id=${projectId}&storage_rpovider=${sorageProvider}`,
     method: 'GET',
-  }
+  };
   if (DEBUG) {
     console.debug(
       `%c testing "/v1/filesystem/readdir" endpoint`,
       'color:orange',
-    )
+    );
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 /**
@@ -147,11 +150,11 @@ export async function addNewProject(data) {
     data: {
       ...data,
     },
-  }
+  };
   if (DEBUG) {
-    console.debug(`%c testing POST @ "v1/projects" endpoint`, 'color:orange')
+    console.debug(`%c testing POST @ "v1/projects" endpoint`, 'color:orange');
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 /**
@@ -165,28 +168,37 @@ export async function deleteProject(projectId) {
   const axiosOptions = {
     url: `/projects/${projectId}`,
     method: 'DELETE',
-  }
+  };
   if (DEBUG) {
-    console.debug(`%c testing DELETE @ "v1/projects" endpoint`, 'color:orange')
+    console.debug(`%c testing DELETE @ "v1/projects" endpoint`, 'color:orange');
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 /**
- * Gets all of user's connected drives
+ *
+ * User perspective - drives
+ *
+ *  url="http://restapi:3000/user_drive_tokens",
+ *
+ * ⚠️  See dashboard.api for project-centric drives
+ *
  *
  * @function
  * @return {Promise} response
  */
-export async function fetchUserDrives(projectId) {
+export async function fetchUserDrives() {
   const axiosOptions = {
-    url: `/project-drives/${projectId}`,
+    url: `/user-drives`,
     method: 'GET',
-  }
+  };
   if (DEBUG) {
-    console.debug(`%c testing "users/profile" endpoint`, 'color:orange')
+    console.debug(
+      `%c testing "users/user_drives_tokens" endpoint`,
+      'color:orange',
+    );
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 /**
@@ -200,11 +212,11 @@ export async function fetchUserProfile() {
   const axiosOptions = {
     url: '/users/profile',
     method: 'GET',
-  }
+  };
   if (DEBUG) {
-    console.debug(`%c testing "users/profile" endpoint`, 'color:orange')
+    console.debug(`%c testing "users/profile" endpoint`, 'color:orange');
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }
 
 /**
@@ -222,9 +234,9 @@ export async function editUserProfile(data) {
       'Content-Type': 'application/json',
     },
     data,
-  }
+  };
   if (DEBUG) {
-    console.debug(`%c testing "users/profile" endpoint`, 'color:orange')
+    console.debug(`%c testing "users/profile" endpoint`, 'color:orange');
   }
-  return apiInstance(axiosOptions)
+  return apiInstance(axiosOptions);
 }

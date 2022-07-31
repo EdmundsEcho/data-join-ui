@@ -1,0 +1,81 @@
+// @flow
+
+export type EtlFieldNoIdxT = {
+  name: Name,
+  purpose: Purpose,
+  levels: Array<DataValue>,
+  'map-symbols': { arrows: { domain: DataValue, codomain: DataValue } },
+  'map-files': ?MapFiles,
+  'etl-unit': string,
+  format: Format,
+  'null-value-expansion': NullValueExpansion,
+  sources: Array<Source>,
+  'codomain-reducer': CodomainReducer,
+  'slicing-reducer': SlicingReducer,
+}
+export type EtlFieldT = {
+  idx: number,
+  ...EtlFieldNoIdxT
+}
+
+export type Source = {
+  enabled: bool,
+  'source-type': SourceType,
+  'field-alias': string,
+  'header-idx': number,
+  'purpose': Purpose,
+  'format': string,
+  'header-idxs': Array<number>,
+  'field-aliases': Array<string>,
+  'alias-idx-map': { [string]: number },
+  levels: Levels,
+  nlevels: number,
+  filename: Filename,
+  'codomain-reducer': CodomainReducer,
+  'slicing-reducer': SlicingReducer,
+}
+
+export type FileField = {
+  enabled: boolean,
+  'source-type': SourceType,
+  'field-alias': Name,
+  'header-idx': number,
+  'purpose': Purpose,
+  'format': string,
+  'header-idxs': Array<number>,
+  'field-aliases': Array<string>,
+  'alias-idx-map': { [string]: number },
+  levels: Array<any>,
+  nlevels: number,
+  filename: Filename,
+  'codomain-reducer': CodomainReducer,
+  'slicing-reducer': SlicingReducer,
+}
+
+export type Time = {
+  interval: Interval,
+  reference: Reference,
+}
+export type Reference = {
+  idx: number,
+  value: string,
+  format: string,
+}
+export type Interval = {
+  unit: 'M'| 'W'| 'D'| 'Y',
+  count: number
+}
+
+export type DataValue = string | number | boolean;
+export type CodomainReducer = 'SUM' | 'AVG' | 'LAST' | 'FIRST'| 'COUNT';
+export type Filename = string;
+export type Format = string;
+export type Levels = Array<[DataValue, number]>;
+export type MapFiles = { [string]: any }
+export type Name = string;
+export type NullValue = DataValue;
+export type NullValueExpansion = DataValue;
+export type Purpose = 'mspan' | 'mvalue' | 'quality' | 'subject' | 'mcomp';
+export type SlicingReducer = 'SUM' | 'AVG' | 'COUNT';
+export type SourceType = 'WIDE' | 'IMPLIED'  | 'RAW';
+

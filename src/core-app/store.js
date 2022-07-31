@@ -1,9 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from './counterSlice'
-import projectMetaReducer from './projectMetaSlice'
-import saveStoreMiddleware from '../core-app/save-store.middleware'
+import { configureStore } from '@reduxjs/toolkit';
+import counterReducer from './counterSlice';
+import projectMetaReducer from './ducks/projectMeta.reducer';
+import saveStoreMiddleware from './ducks/middleware/core/save-store.middleware';
 
 /**
+ * DEPREACTED - was part of seed dummy build
+ *
  * 📌 Exports function loadStore(previousStore)
  *
  * ⬜ Plug this in to the core-app configureStore.js
@@ -24,6 +26,6 @@ const loadStore = (preloadedState = undefined) =>
     },
     middleware: () => [saveStoreMiddleware],
     preloadedState,
-  })
+  });
 
-export default loadStore
+export default loadStore;

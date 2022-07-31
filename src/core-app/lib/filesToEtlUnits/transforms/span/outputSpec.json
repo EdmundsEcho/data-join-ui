@@ -1,0 +1,19 @@
+{
+  "span-data": {
+    "time": {
+      "reference": {
+        "0": "05-16"
+      },
+      "interval": {
+        "unit": "year|quarter|month|day|hour|min|sec",
+        "count": "Number"
+      }
+    },
+    "levels": [
+      {
+        "start": "Integer",
+        "len": "Integer"
+      }
+    ]
+  }
+}

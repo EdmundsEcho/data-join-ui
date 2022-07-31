@@ -1,0 +1,55 @@
+export default {
+  status: 'Successful',
+  count: 7,
+  results: [
+    {
+      path: '/Users/Adam/Downloads/Nolo Partnership',
+      display_name: 'mocked Nolo Partnership',
+      is_directory: true,
+      created_at: '2019-03-09T00:05:18.494Z',
+      size: null,
+    },
+    {
+      path: '/Users/Adam/Downloads/pandas_tutorial_read.csv',
+      display_name: 'mocked pandas_tutorial_read.csv',
+      is_directory: false,
+      created_at: '2019-02-07T02:37:57.851Z',
+      size: 110111,
+    },
+    {
+      path: '/Users/Adam/Downloads/savaysa_NRx (1).csv',
+      display_name: 'mocked savaysa_NRx (1).csv',
+      is_directory: false,
+      created_at: '2019-02-08T05:00:52.451Z',
+      size: 4230292,
+    },
+    {
+      path: '/Users/Adam/Downloads/savaysa_NRx.csv',
+      display_name: 'mocked savaysa_NRx.csv',
+      is_directory: false,
+      created_at: '2019-02-01T22:38:42.521Z',
+      size: 4230292,
+    },
+    {
+      path: '/Users/Adam/Downloads/test.csv',
+      display_name: 'mocked test.csv',
+      is_directory: false,
+      created_at: '2019-02-26T03:42:10.756Z',
+      size: 13,
+    },
+    {
+      path: '/Users/Adam/Downloads/warfarin_NRx.csv',
+      display_name: 'mocked warfarin_NRx.csv',
+      is_directory: false,
+      created_at: '2019-02-26T14:12:21.583Z',
+      size: 134156196,
+    },
+    {
+      path: '/Users/Adam/Downloads/xarelto_NRx.csv',
+      display_name: 'mocked xarelto_NRx.csv',
+      is_directory: false,
+      created_at: '2019-02-26T14:12:31.051Z',
+      size: 96277201,
+    },
+  ],
+};

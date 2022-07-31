@@ -1,0 +1,17 @@
+// @flow
+
+declare export interface HeaderViewTextField {
+  className: string,
+  key: string,
+  name: string,
+  value: string,
+  onChange(filename: string, fieldIdx: number, key: string, value:
+  string): void,
+  onBlur?:(filename: string, fieldIdx: number, key: string, value:
+  string): void,
+  onKeyDown?:(filename: string, fieldIdx: number, key: string, value:
+  string): void,
+  onKeyUp?:(filename: string, fieldIdx: number, key: string, value:
+  string): void,
+  helperText?: string,
+}

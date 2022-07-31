@@ -1,0 +1,10 @@
+{
+  "port": 8989,
+  "staticPath": "public",
+  "watchDirs": ["src"],
+  "webpack": {
+    "configPath": "react-scripts/config/webpack.config",
+    "includeHashInOutputFilename": true
+  },
+  "globalImports": ["src/assets/index.css"]
+}

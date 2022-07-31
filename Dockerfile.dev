@@ -1,0 +1,13 @@
+FROM node:16.13-alpine as react-build
+
+COPY . /frontend
+WORKDIR /frontend
+
+ENV NODE_ENV=development
+ENV REACT_APP_ENV=development
+ENV PORT=3000
+
+RUN yarn upgrade
+RUN yarn build
+
+ENTRYPOINT yarn start

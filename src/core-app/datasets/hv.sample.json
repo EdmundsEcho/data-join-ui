@@ -1,0 +1,149 @@
+{
+  "files": {
+    "headerViews": {
+      "/Users/edmund/Desktop/data/savaysa_NRx.csv": {
+        "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+        "header": [
+          "NPI Number",
+          "SPI Number",
+          "Primary Specialty Desc",
+          "Practitioner State",
+          "Practitioner Zip Code",
+          "Payment Type Group",
+          "Year-Month",
+          "NRx Count"
+        ],
+        "enabled": true,
+        "nrows": 51255,
+        "fields": [
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 0,
+            "default-name": "NPI Number",
+            "field-alias": "npi",
+            "purpose": "subject",
+            "null-value": null,
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 6709,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv"
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 1,
+            "default-name": "SPI Number",
+            "field-alias": "SPI Number",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 6709,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "codomain-reducer": "FIRST",
+            "map-weights": { "arrows": {} }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 2,
+            "default-name": "Primary Specialty Desc",
+            "field-alias": "specialty",
+            "purpose": "quality",
+            "null-value": "zzz",
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 34,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "codomain-reducer": "FIRST",
+            "map-weights": { "arrows": {} }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 3,
+            "default-name": "Practitioner State",
+            "field-alias": "state",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 52,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "codomain-reducer": "FIRST",
+            "map-weights": { "arrows": {} }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 4,
+            "default-name": "Practitioner Zip Code",
+            "field-alias": "Practitioner Zip Code",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 2901,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "codomain-reducer": "FIRST",
+            "map-weights": { "arrows": {} }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 5,
+            "default-name": "Payment Type Group",
+            "field-alias": "payer",
+            "purpose": "mcomp",
+            "null-value": null,
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 3,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "map-weights": { "arrows": {} }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 6,
+            "default-name": "Year-Month",
+            "field-alias": "date",
+            "purpose": "mspan",
+            "null-value": null,
+            "format": "YYYY-MM",
+            "map-symbols": { "arrows": {} },
+            "nlevels": 21,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "time": {
+              "reference": {
+                "idx": 0,
+                "value": "2015-02",
+                "format": "YYYY-MM"
+              },
+              "interval": { "unit": "M", "count": 1 }
+            },
+            "levels-mspan": [
+              { "rangeStart": 0, "rangeLength": 2, "reduced": false }
+            ]
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 7,
+            "default-name": "NRx Count",
+            "field-alias": "rx",
+            "purpose": "mvalue",
+            "null-value": null,
+            "format": null,
+            "map-symbols": { "arrows": {} },
+            "nlevels": 16,
+            "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+            "codomain-reducer": "SUM",
+            "slicing-reducer": "SUM"
+          }
+        ]
+      }
+    }
+  }
+}

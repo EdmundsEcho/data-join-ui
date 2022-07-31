@@ -1,0 +1,5434 @@
+{
+  "fileView": {
+    "path": "/Users/edmund/Desktop/data",
+    "files": [
+      {
+        "created_at": "2019-05-16 17:55:09.570187",
+        "display_name": "_sm_savaysa_NRx_DUP_COL.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-16 17:54:51",
+        "path": "/Users/edmund/Desktop/data/_sm_savaysa_NRx_DUP_COL.csv",
+        "size": 8498
+      },
+      {
+        "created_at": "2018-10-15 12:27:37.596698",
+        "display_name": "brand_spec_rollup.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:01:00",
+        "path": "/Users/edmund/Desktop/data/brand_spec_rollup.csv",
+        "size": 243
+      },
+      {
+        "created_at": "2019-05-25 19:21:39.371186",
+        "display_name": "column-cutter.sh",
+        "is_directory": false,
+        "modified_at": "2019-05-25 19:21:39.371047",
+        "path": "/Users/edmund/Desktop/data/column-cutter.sh",
+        "size": 664
+      },
+      {
+        "created_at": "2020-12-09 12:03:43.630779",
+        "display_name": "eliquis_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2017-02-21 08:17:36",
+        "path": "/Users/edmund/Desktop/data/eliquis_NRx.csv",
+        "size": 226985332
+      },
+      {
+        "created_at": "2020-12-09 15:42:16.365417",
+        "display_name": "eliquis_NRx.csv.idx",
+        "is_directory": false,
+        "modified_at": "2020-12-09 15:42:16.365417",
+        "path": "/Users/edmund/Desktop/data/eliquis_NRx.csv.idx",
+        "size": 23261112
+      },
+      {
+        "created_at": "2019-05-17 17:55:08.208353",
+        "display_name": "fat_campaign_activity.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-17 17:55:08.208353",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity.csv",
+        "size": 28996
+      },
+      {
+        "created_at": "2020-02-06 10:26:03.051318",
+        "display_name": "fat_campaign_activity_vDate.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-24 10:02:00.231930",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity_vDate.csv",
+        "size": 14657
+      },
+      {
+        "created_at": "2020-06-16 17:46:32.550887",
+        "display_name": "fat_campaign_activity_vDateNull.csv",
+        "is_directory": false,
+        "modified_at": "2020-06-16 17:46:32.550887",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv",
+        "size": 7256
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.590575",
+        "display_name": "savaysa_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:58:42",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+        "size": 4230292
+      },
+      {
+        "created_at": "2021-01-28 18:56:53.660502",
+        "display_name": "savaysa_NRx_mini.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-28 18:56:53.660415",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini.csv",
+        "size": 480
+      },
+      {
+        "created_at": "2021-01-25 19:07:13.275795",
+        "display_name": "savaysa_NRx_mini_v100.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-25 19:07:13.275795",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini_v100.csv",
+        "size": 8398
+      },
+      {
+        "created_at": "2021-01-24 19:02:59.495813",
+        "display_name": "savaysa_NRx_mini_v50.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-24 19:02:59.495813",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini_v50.csv",
+        "size": 4416
+      },
+      {
+        "created_at": "2021-01-25 19:03:20.296059",
+        "display_name": "savaysa_NRx_mini_v58.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-25 19:03:20.296059",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini_v58.csv",
+        "size": 5120
+      },
+      {
+        "created_at": "2020-10-01 09:42:44.035378",
+        "display_name": "savaysa_NRx_short.csv",
+        "is_directory": false,
+        "modified_at": "2020-10-01 09:42:44.035378",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+        "size": 247069
+      },
+      {
+        "created_at": "2020-06-16 16:01:44.397652",
+        "display_name": "savaysa_target_list_vSmall.csv",
+        "is_directory": false,
+        "modified_at": "2020-06-16 16:01:44.374948",
+        "path": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+        "size": 4056372
+      },
+      {
+        "created_at": "2020-06-16 16:01:21.248619",
+        "display_name": "savaysa_target_list_vSmall.xlsx",
+        "is_directory": false,
+        "modified_at": "2020-06-16 16:01:20.093974",
+        "path": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.xlsx",
+        "size": 5056485
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.625875",
+        "display_name": "spec_rollup_spi.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:27:56",
+        "path": "/Users/edmund/Desktop/data/spec_rollup_spi.csv",
+        "size": 1664
+      },
+      {
+        "created_at": "2020-02-06 10:26:00.715388",
+        "display_name": "specialty",
+        "is_directory": false,
+        "modified_at": "2019-05-22 19:11:18.121796",
+        "path": "/Users/edmund/Desktop/data/specialty",
+        "size": 18
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.655879",
+        "display_name": "tBrand_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:28:56",
+        "path": "/Users/edmund/Desktop/data/tBrand_staged.csv",
+        "size": 3517027
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.460325",
+        "display_name": "tGenerics_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:30:45",
+        "path": "/Users/edmund/Desktop/data/tGenerics_staged.csv",
+        "size": 107705101
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.952054",
+        "display_name": "tHeadroom_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:29:46",
+        "path": "/Users/edmund/Desktop/data/tHeadroom_staged.csv",
+        "size": 75605885
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.976108",
+        "display_name": "tTL_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:28:37",
+        "path": "/Users/edmund/Desktop/data/tTL_staged.csv",
+        "size": 3746055
+      },
+      {
+        "created_at": "2019-05-22 19:44:59.589526",
+        "display_name": "temp.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-22 19:44:59.589526",
+        "path": "/Users/edmund/Desktop/data/temp.csv",
+        "size": 31984018
+      },
+      {
+        "created_at": "2018-10-15 12:27:46.975503",
+        "display_name": "warfarin_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:57:55",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv",
+        "size": 134156196
+      },
+      {
+        "created_at": "2020-02-06 10:26:00.715186",
+        "display_name": "warfarin_NRx.csv.bk",
+        "is_directory": false,
+        "modified_at": "2019-05-25 19:18:24.654841",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv.bk",
+        "size": 134156196
+      },
+      {
+        "created_at": "2020-12-12 11:28:42.258481",
+        "display_name": "warfarin_NRx.csv.idx",
+        "is_directory": false,
+        "modified_at": "2020-12-12 11:28:42.258481",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv.idx",
+        "size": 14068368
+      },
+      {
+        "created_at": "2021-01-26 20:43:29.087589",
+        "display_name": "warfarin_NRx_head.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-26 20:43:29.087589",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx_head.csv",
+        "size": 382
+      },
+      {
+        "created_at": "2021-01-26 20:40:46.597098",
+        "display_name": "warfarin_NRx_tail.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-26 20:40:46.597098",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx_tail.csv",
+        "size": 392
+      },
+      {
+        "created_at": "2018-10-20 16:41:50.810797",
+        "display_name": "xarelto_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:59:08",
+        "path": "/Users/edmund/Desktop/data/xarelto_NRx.csv",
+        "size": 96277201
+      },
+      {
+        "created_at": "2020-10-01 20:15:19.105519",
+        "display_name": "xarelto_NRx_short.csv",
+        "is_directory": false,
+        "modified_at": "2020-10-01 20:15:19.105519",
+        "path": "/Users/edmund/Desktop/data/xarelto_NRx_short.csv",
+        "size": 6413653
+      }
+    ],
+    "filteredFiles": [
+      {
+        "created_at": "2019-05-16 17:55:09.570187",
+        "display_name": "_sm_savaysa_NRx_DUP_COL.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-16 17:54:51",
+        "path": "/Users/edmund/Desktop/data/_sm_savaysa_NRx_DUP_COL.csv",
+        "size": 8498
+      },
+      {
+        "created_at": "2018-10-15 12:27:37.596698",
+        "display_name": "brand_spec_rollup.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:01:00",
+        "path": "/Users/edmund/Desktop/data/brand_spec_rollup.csv",
+        "size": 243
+      },
+      {
+        "created_at": "2019-05-25 19:21:39.371186",
+        "display_name": "column-cutter.sh",
+        "is_directory": false,
+        "modified_at": "2019-05-25 19:21:39.371047",
+        "path": "/Users/edmund/Desktop/data/column-cutter.sh",
+        "size": 664
+      },
+      {
+        "created_at": "2020-12-09 12:03:43.630779",
+        "display_name": "eliquis_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2017-02-21 08:17:36",
+        "path": "/Users/edmund/Desktop/data/eliquis_NRx.csv",
+        "size": 226985332
+      },
+      {
+        "created_at": "2020-12-09 15:42:16.365417",
+        "display_name": "eliquis_NRx.csv.idx",
+        "is_directory": false,
+        "modified_at": "2020-12-09 15:42:16.365417",
+        "path": "/Users/edmund/Desktop/data/eliquis_NRx.csv.idx",
+        "size": 23261112
+      },
+      {
+        "created_at": "2019-05-17 17:55:08.208353",
+        "display_name": "fat_campaign_activity.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-17 17:55:08.208353",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity.csv",
+        "size": 28996
+      },
+      {
+        "created_at": "2020-02-06 10:26:03.051318",
+        "display_name": "fat_campaign_activity_vDate.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-24 10:02:00.231930",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity_vDate.csv",
+        "size": 14657
+      },
+      {
+        "created_at": "2020-06-16 17:46:32.550887",
+        "display_name": "fat_campaign_activity_vDateNull.csv",
+        "is_directory": false,
+        "modified_at": "2020-06-16 17:46:32.550887",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv",
+        "size": 7256
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.590575",
+        "display_name": "savaysa_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:58:42",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+        "size": 4230292
+      },
+      {
+        "created_at": "2021-01-28 18:56:53.660502",
+        "display_name": "savaysa_NRx_mini.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-28 18:56:53.660415",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini.csv",
+        "size": 480
+      },
+      {
+        "created_at": "2021-01-25 19:07:13.275795",
+        "display_name": "savaysa_NRx_mini_v100.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-25 19:07:13.275795",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini_v100.csv",
+        "size": 8398
+      },
+      {
+        "created_at": "2021-01-24 19:02:59.495813",
+        "display_name": "savaysa_NRx_mini_v50.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-24 19:02:59.495813",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini_v50.csv",
+        "size": 4416
+      },
+      {
+        "created_at": "2021-01-25 19:03:20.296059",
+        "display_name": "savaysa_NRx_mini_v58.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-25 19:03:20.296059",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_mini_v58.csv",
+        "size": 5120
+      },
+      {
+        "created_at": "2020-10-01 09:42:44.035378",
+        "display_name": "savaysa_NRx_short.csv",
+        "is_directory": false,
+        "modified_at": "2020-10-01 09:42:44.035378",
+        "path": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+        "size": 247069
+      },
+      {
+        "created_at": "2020-06-16 16:01:44.397652",
+        "display_name": "savaysa_target_list_vSmall.csv",
+        "is_directory": false,
+        "modified_at": "2020-06-16 16:01:44.374948",
+        "path": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+        "size": 4056372
+      },
+      {
+        "created_at": "2020-06-16 16:01:21.248619",
+        "display_name": "savaysa_target_list_vSmall.xlsx",
+        "is_directory": false,
+        "modified_at": "2020-06-16 16:01:20.093974",
+        "path": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.xlsx",
+        "size": 5056485
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.625875",
+        "display_name": "spec_rollup_spi.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:27:56",
+        "path": "/Users/edmund/Desktop/data/spec_rollup_spi.csv",
+        "size": 1664
+      },
+      {
+        "created_at": "2020-02-06 10:26:00.715388",
+        "display_name": "specialty",
+        "is_directory": false,
+        "modified_at": "2019-05-22 19:11:18.121796",
+        "path": "/Users/edmund/Desktop/data/specialty",
+        "size": 18
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.655879",
+        "display_name": "tBrand_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:28:56",
+        "path": "/Users/edmund/Desktop/data/tBrand_staged.csv",
+        "size": 3517027
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.460325",
+        "display_name": "tGenerics_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:30:45",
+        "path": "/Users/edmund/Desktop/data/tGenerics_staged.csv",
+        "size": 107705101
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.952054",
+        "display_name": "tHeadroom_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:29:46",
+        "path": "/Users/edmund/Desktop/data/tHeadroom_staged.csv",
+        "size": 75605885
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.976108",
+        "display_name": "tTL_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:28:37",
+        "path": "/Users/edmund/Desktop/data/tTL_staged.csv",
+        "size": 3746055
+      },
+      {
+        "created_at": "2019-05-22 19:44:59.589526",
+        "display_name": "temp.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-22 19:44:59.589526",
+        "path": "/Users/edmund/Desktop/data/temp.csv",
+        "size": 31984018
+      },
+      {
+        "created_at": "2018-10-15 12:27:46.975503",
+        "display_name": "warfarin_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:57:55",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv",
+        "size": 134156196
+      },
+      {
+        "created_at": "2020-02-06 10:26:00.715186",
+        "display_name": "warfarin_NRx.csv.bk",
+        "is_directory": false,
+        "modified_at": "2019-05-25 19:18:24.654841",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv.bk",
+        "size": 134156196
+      },
+      {
+        "created_at": "2020-12-12 11:28:42.258481",
+        "display_name": "warfarin_NRx.csv.idx",
+        "is_directory": false,
+        "modified_at": "2020-12-12 11:28:42.258481",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv.idx",
+        "size": 14068368
+      },
+      {
+        "created_at": "2021-01-26 20:43:29.087589",
+        "display_name": "warfarin_NRx_head.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-26 20:43:29.087589",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx_head.csv",
+        "size": 382
+      },
+      {
+        "created_at": "2021-01-26 20:40:46.597098",
+        "display_name": "warfarin_NRx_tail.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-26 20:40:46.597098",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx_tail.csv",
+        "size": 392
+      },
+      {
+        "created_at": "2018-10-20 16:41:50.810797",
+        "display_name": "xarelto_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:59:08",
+        "path": "/Users/edmund/Desktop/data/xarelto_NRx.csv",
+        "size": 96277201
+      },
+      {
+        "created_at": "2020-10-01 20:15:19.105519",
+        "display_name": "xarelto_NRx_short.csv",
+        "is_directory": false,
+        "modified_at": "2020-10-01 20:15:19.105519",
+        "path": "/Users/edmund/Desktop/data/xarelto_NRx_short.csv",
+        "size": 6413653
+      }
+    ],
+    "filterText": "",
+    "readdirErrors": []
+  },
+  "headerView": {},
+  "etlView": {
+    "etlObject": {
+      "etlUnits": {
+        "specialty": {
+          "type": "quality",
+          "subject": "npi",
+          "codomain": "specialty",
+          "codomain-reducer": "FIRST"
+        },
+        "state": {
+          "type": "quality",
+          "subject": "npi",
+          "codomain": "state",
+          "codomain-reducer": "FIRST"
+        },
+        "zip": {
+          "type": "quality",
+          "subject": "npi",
+          "codomain": "zip",
+          "codomain-reducer": "FIRST"
+        },
+        "rx-count": {
+          "type": "mvalue",
+          "subject": "npi",
+          "mspan": "rx-date",
+          "mcomps": [
+            "payer"
+          ],
+          "codomain": "rx-count",
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "campaign": {
+          "type": "mvalue",
+          "subject": "npi",
+          "mspan": "camp-date",
+          "mcomps": [
+            "camp-type"
+          ],
+          "codomain": "campaign",
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "reach": {
+          "type": "mvalue",
+          "subject": "npi",
+          "mspan": "reach-date",
+          "mcomps": [],
+          "codomain": "reach",
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        }
+      },
+      "etlFields": {
+        "npi": {
+          "idx": 0,
+          "name": "npi",
+          "purpose": "subject",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": null,
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 0,
+              "default-name": "NPI Number",
+              "field-alias": "npi",
+              "warehouse-name": "npinumber",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 385,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv"
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 0,
+              "default-name": "imsid",
+              "field-alias": "npi",
+              "warehouse-name": "imsid",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 10,
+              "nrows": 122,
+              "filename": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv"
+            },
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 1,
+              "default-name": "npi",
+              "field-alias": "npi",
+              "warehouse-name": "npi",
+              "purpose": "subject",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 52184,
+              "nrows": 52524,
+              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ]
+        },
+        "specialty": {
+          "idx": 1,
+          "name": "specialty",
+          "purpose": "quality",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "specialty",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 2,
+              "default-name": "Primary Specialty Desc",
+              "field-alias": "specialty",
+              "warehouse-name": "primaryspecialtydesc",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                [
+                  "CARDIOVASCULAR DISEASES",
+                  1970
+                ],
+                [
+                  "CRITICAL CARE MEDICINE",
+                  3
+                ],
+                [
+                  "EMERGENCY MEDICINE",
+                  2
+                ],
+                [
+                  "FAMILY MEDICINE",
+                  8
+                ],
+                [
+                  "FAMILY PRACTICE",
+                  295
+                ],
+                [
+                  "FAMILY PRACTICE, GERIATRIC MEDICINE",
+                  4
+                ],
+                [
+                  "GENERAL PRACTICE",
+                  8
+                ],
+                [
+                  "GENERAL PREVENTIVE MEDICINE",
+                  3
+                ],
+                [
+                  "INTERNAL MED, CARD. ELECTROPHYSIOLOGY",
+                  203
+                ],
+                [
+                  "INTERNAL MEDICINE",
+                  349
+                ],
+                [
+                  "NURSE PRACTITIONER",
+                  55
+                ],
+                [
+                  "ONCOLOGY MEDICAL",
+                  2
+                ],
+                [
+                  "PEDIATRICS",
+                  12
+                ],
+                [
+                  "PHYSICIAN ASSISTANT",
+                  66
+                ],
+                [
+                  "PUBLIC HEALTH",
+                  13
+                ],
+                [
+                  "PULMONARY DISEASES",
+                  10
+                ],
+                [
+                  "UNSPECIFIED",
+                  12
+                ]
+              ],
+              "nlevels": 17,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "codomain-reducer": "FIRST",
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "state": {
+          "idx": 2,
+          "name": "state",
+          "purpose": "quality",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "state",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 3,
+              "default-name": "Practitioner State",
+              "field-alias": "state",
+              "warehouse-name": "practitionerstate",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                [
+                  "AK",
+                  11
+                ],
+                [
+                  "AL",
+                  52
+                ],
+                [
+                  "AR",
+                  8
+                ],
+                [
+                  "AZ",
+                  80
+                ],
+                [
+                  "CA",
+                  333
+                ],
+                [
+                  "CO",
+                  16
+                ],
+                [
+                  "CT",
+                  88
+                ],
+                [
+                  "DC",
+                  11
+                ],
+                [
+                  "FL",
+                  354
+                ],
+                [
+                  "GA",
+                  112
+                ],
+                [
+                  "HI",
+                  12
+                ],
+                [
+                  "IA",
+                  4
+                ],
+                [
+                  "IL",
+                  77
+                ],
+                [
+                  "IN",
+                  43
+                ],
+                [
+                  "KS",
+                  39
+                ],
+                [
+                  "KY",
+                  27
+                ],
+                [
+                  "LA",
+                  75
+                ],
+                [
+                  "MA",
+                  6
+                ],
+                [
+                  "MD",
+                  66
+                ],
+                [
+                  "MI",
+                  110
+                ],
+                [
+                  "MN",
+                  6
+                ],
+                [
+                  "MO",
+                  83
+                ],
+                [
+                  "MS",
+                  35
+                ],
+                [
+                  "NC",
+                  101
+                ],
+                [
+                  "NE",
+                  4
+                ],
+                [
+                  "NH",
+                  10
+                ],
+                [
+                  "NJ",
+                  82
+                ],
+                [
+                  "NM",
+                  27
+                ],
+                [
+                  "NV",
+                  18
+                ],
+                [
+                  "NY",
+                  247
+                ],
+                [
+                  "OH",
+                  101
+                ],
+                [
+                  "OK",
+                  81
+                ],
+                [
+                  "PA",
+                  95
+                ],
+                [
+                  "RI",
+                  7
+                ],
+                [
+                  "SC",
+                  26
+                ],
+                [
+                  "SD",
+                  5
+                ],
+                [
+                  "TN",
+                  102
+                ],
+                [
+                  "TX",
+                  357
+                ],
+                [
+                  "UT",
+                  33
+                ],
+                [
+                  "VA",
+                  37
+                ],
+                [
+                  "WA",
+                  5
+                ],
+                [
+                  "WI",
+                  28
+                ],
+                [
+                  "WV",
+                  17
+                ],
+                [
+                  "WY",
+                  11
+                ]
+              ],
+              "nlevels": 44,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "codomain-reducer": "FIRST",
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "zip": {
+          "idx": 3,
+          "name": "zip",
+          "purpose": "quality",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "zip",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 4,
+              "default-name": "Practitioner Zip Code",
+              "field-alias": "zip",
+              "warehouse-name": "practitionerzipcode",
+              "purpose": "quality",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                [
+                  "01930",
+                  2
+                ],
+                [
+                  "02120",
+                  5
+                ],
+                [
+                  "02864",
+                  2
+                ],
+                [
+                  "02906",
+                  6
+                ],
+                [
+                  "03756",
+                  10
+                ],
+                [
+                  "06040",
+                  7
+                ],
+                [
+                  "06042",
+                  11
+                ],
+                [
+                  "06105",
+                  18
+                ],
+                [
+                  "06518",
+                  55
+                ],
+                [
+                  "07028",
+                  20
+                ],
+                [
+                  "07046",
+                  4
+                ],
+                [
+                  "07060",
+                  5
+                ],
+                [
+                  "07081",
+                  2
+                ],
+                [
+                  "07202",
+                  7
+                ],
+                [
+                  "07306",
+                  4
+                ],
+                [
+                  "07480",
+                  2
+                ],
+                [
+                  "07601",
+                  5
+                ],
+                [
+                  "07666",
+                  4
+                ],
+                [
+                  "08015",
+                  14
+                ],
+                [
+                  "08755",
+                  12
+                ],
+                [
+                  "08759",
+                  6
+                ],
+                [
+                  "08840",
+                  3
+                ],
+                [
+                  "08865",
+                  7
+                ],
+                [
+                  "10003",
+                  5
+                ],
+                [
+                  "10019",
+                  3
+                ],
+                [
+                  "10021",
+                  4
+                ],
+                [
+                  "10029",
+                  3
+                ],
+                [
+                  "10591",
+                  4
+                ],
+                [
+                  "10901",
+                  10
+                ],
+                [
+                  "10980",
+                  9
+                ],
+                [
+                  "11030",
+                  16
+                ],
+                [
+                  "11042",
+                  2
+                ],
+                [
+                  "11105",
+                  2
+                ],
+                [
+                  "11554",
+                  12
+                ],
+                [
+                  "11563",
+                  38
+                ],
+                [
+                  "11704",
+                  15
+                ],
+                [
+                  "11743",
+                  13
+                ],
+                [
+                  "11803",
+                  13
+                ],
+                [
+                  "12211",
+                  16
+                ],
+                [
+                  "12401",
+                  14
+                ],
+                [
+                  "13210",
+                  11
+                ],
+                [
+                  "13413",
+                  2
+                ],
+                [
+                  "13440",
+                  2
+                ],
+                [
+                  "13491",
+                  23
+                ],
+                [
+                  "14120",
+                  3
+                ],
+                [
+                  "14221",
+                  35
+                ],
+                [
+                  "14701",
+                  15
+                ],
+                [
+                  "15644",
+                  12
+                ],
+                [
+                  "15906",
+                  3
+                ],
+                [
+                  "16354",
+                  7
+                ],
+                [
+                  "16502",
+                  19
+                ],
+                [
+                  "16505",
+                  12
+                ],
+                [
+                  "17074",
+                  15
+                ],
+                [
+                  "17740",
+                  6
+                ],
+                [
+                  "19010",
+                  14
+                ],
+                [
+                  "19046",
+                  7
+                ],
+                [
+                  "19116",
+                  2
+                ],
+                [
+                  "19372",
+                  8
+                ],
+                [
+                  "20037",
+                  11
+                ],
+                [
+                  "20602",
+                  3
+                ],
+                [
+                  "20815",
+                  4
+                ],
+                [
+                  "20850",
+                  2
+                ],
+                [
+                  "20874",
+                  7
+                ],
+                [
+                  "21208",
+                  18
+                ],
+                [
+                  "21701",
+                  22
+                ],
+                [
+                  "21742",
+                  16
+                ],
+                [
+                  "22304",
+                  13
+                ],
+                [
+                  "22554",
+                  2
+                ],
+                [
+                  "22601",
+                  2
+                ],
+                [
+                  "23188",
+                  2
+                ],
+                [
+                  "23510",
+                  12
+                ],
+                [
+                  "23805",
+                  3
+                ],
+                [
+                  "24501",
+                  9
+                ],
+                [
+                  "25304",
+                  13
+                ],
+                [
+                  "25550",
+                  5
+                ],
+                [
+                  "27295",
+                  12
+                ],
+                [
+                  "27529",
+                  4
+                ],
+                [
+                  "27577",
+                  15
+                ],
+                [
+                  "27810",
+                  2
+                ],
+                [
+                  "28203",
+                  4
+                ],
+                [
+                  "28204",
+                  2
+                ],
+                [
+                  "28207",
+                  2
+                ],
+                [
+                  "28277",
+                  3
+                ],
+                [
+                  "28358",
+                  13
+                ],
+                [
+                  "28401",
+                  13
+                ],
+                [
+                  "28411",
+                  17
+                ],
+                [
+                  "28562",
+                  3
+                ],
+                [
+                  "28739",
+                  5
+                ],
+                [
+                  "28801",
+                  13
+                ],
+                [
+                  "28803",
+                  7
+                ],
+                [
+                  "29303",
+                  8
+                ],
+                [
+                  "29403",
+                  5
+                ],
+                [
+                  "29464",
+                  9
+                ],
+                [
+                  "29642",
+                  5
+                ],
+                [
+                  "29678",
+                  3
+                ],
+                [
+                  "30024",
+                  11
+                ],
+                [
+                  "30046",
+                  7
+                ],
+                [
+                  "30060",
+                  11
+                ],
+                [
+                  "30274",
+                  15
+                ],
+                [
+                  "30328",
+                  21
+                ],
+                [
+                  "30542",
+                  2
+                ],
+                [
+                  "30606",
+                  23
+                ],
+                [
+                  "30901",
+                  23
+                ],
+                [
+                  "31024",
+                  7
+                ],
+                [
+                  "32034",
+                  23
+                ],
+                [
+                  "32055",
+                  13
+                ],
+                [
+                  "32224",
+                  2
+                ],
+                [
+                  "32308",
+                  15
+                ],
+                [
+                  "32506",
+                  7
+                ],
+                [
+                  "32605",
+                  18
+                ],
+                [
+                  "32803",
+                  7
+                ],
+                [
+                  "32937",
+                  2
+                ],
+                [
+                  "32955",
+                  13
+                ],
+                [
+                  "32960",
+                  22
+                ],
+                [
+                  "33016",
+                  12
+                ],
+                [
+                  "33027",
+                  3
+                ],
+                [
+                  "33040",
+                  23
+                ],
+                [
+                  "33143",
+                  9
+                ],
+                [
+                  "33173",
+                  7
+                ],
+                [
+                  "33176",
+                  6
+                ],
+                [
+                  "33326",
+                  5
+                ],
+                [
+                  "33410",
+                  2
+                ],
+                [
+                  "33414",
+                  15
+                ],
+                [
+                  "33434",
+                  8
+                ],
+                [
+                  "33449",
+                  10
+                ],
+                [
+                  "33470",
+                  7
+                ],
+                [
+                  "33486",
+                  14
+                ],
+                [
+                  "33511",
+                  2
+                ],
+                [
+                  "33618",
+                  12
+                ],
+                [
+                  "33756",
+                  18
+                ],
+                [
+                  "33872",
+                  2
+                ],
+                [
+                  "34239",
+                  11
+                ],
+                [
+                  "34266",
+                  10
+                ],
+                [
+                  "34474",
+                  14
+                ],
+                [
+                  "34653",
+                  13
+                ],
+                [
+                  "34689",
+                  12
+                ],
+                [
+                  "34711",
+                  9
+                ],
+                [
+                  "34741",
+                  19
+                ],
+                [
+                  "34761",
+                  23
+                ],
+                [
+                  "35007",
+                  11
+                ],
+                [
+                  "35243",
+                  6
+                ],
+                [
+                  "35294",
+                  16
+                ],
+                [
+                  "35406",
+                  2
+                ],
+                [
+                  "35601",
+                  14
+                ],
+                [
+                  "35630",
+                  7
+                ],
+                [
+                  "36608",
+                  2
+                ],
+                [
+                  "37075",
+                  10
+                ],
+                [
+                  "37203",
+                  5
+                ],
+                [
+                  "37205",
+                  15
+                ],
+                [
+                  "37232",
+                  2
+                ],
+                [
+                  "37334",
+                  6
+                ],
+                [
+                  "37620",
+                  11
+                ],
+                [
+                  "37862",
+                  7
+                ],
+                [
+                  "37916",
+                  9
+                ],
+                [
+                  "37923",
+                  20
+                ],
+                [
+                  "37934",
+                  12
+                ],
+                [
+                  "38024",
+                  3
+                ],
+                [
+                  "38501",
+                  13
+                ],
+                [
+                  "38801",
+                  4
+                ],
+                [
+                  "38821",
+                  11
+                ],
+                [
+                  "39532",
+                  17
+                ],
+                [
+                  "39744",
+                  6
+                ],
+                [
+                  "40050",
+                  3
+                ],
+                [
+                  "40165",
+                  2
+                ],
+                [
+                  "40207",
+                  2
+                ],
+                [
+                  "40217",
+                  6
+                ],
+                [
+                  "42003",
+                  16
+                ],
+                [
+                  "42101",
+                  2
+                ],
+                [
+                  "42420",
+                  2
+                ],
+                [
+                  "43420",
+                  2
+                ],
+                [
+                  "44001",
+                  11
+                ],
+                [
+                  "44111",
+                  13
+                ],
+                [
+                  "44266",
+                  5
+                ],
+                [
+                  "44512",
+                  7
+                ],
+                [
+                  "44646",
+                  16
+                ],
+                [
+                  "45013",
+                  3
+                ],
+                [
+                  "45208",
+                  6
+                ],
+                [
+                  "45242",
+                  7
+                ],
+                [
+                  "45429",
+                  31
+                ],
+                [
+                  "45662",
+                  10
+                ],
+                [
+                  "46123",
+                  3
+                ],
+                [
+                  "46237",
+                  12
+                ],
+                [
+                  "46902",
+                  11
+                ],
+                [
+                  "47172",
+                  6
+                ],
+                [
+                  "47240",
+                  11
+                ],
+                [
+                  "47374",
+                  5
+                ],
+                [
+                  "48034",
+                  7
+                ],
+                [
+                  "48050",
+                  2
+                ],
+                [
+                  "48066",
+                  15
+                ],
+                [
+                  "48075",
+                  2
+                ],
+                [
+                  "48088",
+                  3
+                ],
+                [
+                  "48152",
+                  11
+                ],
+                [
+                  "48185",
+                  2
+                ],
+                [
+                  "48334",
+                  5
+                ],
+                [
+                  "48336",
+                  19
+                ],
+                [
+                  "48439",
+                  2
+                ],
+                [
+                  "48446",
+                  13
+                ],
+                [
+                  "48507",
+                  2
+                ],
+                [
+                  "48602",
+                  16
+                ],
+                [
+                  "48640",
+                  5
+                ],
+                [
+                  "48912",
+                  10
+                ],
+                [
+                  "49007",
+                  3
+                ],
+                [
+                  "49684",
+                  7
+                ],
+                [
+                  "49841",
+                  3
+                ],
+                [
+                  "50401",
+                  3
+                ],
+                [
+                  "52403",
+                  2
+                ],
+                [
+                  "53081",
+                  12
+                ],
+                [
+                  "53142",
+                  14
+                ],
+                [
+                  "53713",
+                  4
+                ],
+                [
+                  "55426",
+                  6
+                ],
+                [
+                  "57401",
+                  5
+                ],
+                [
+                  "60005",
+                  11
+                ],
+                [
+                  "60015",
+                  14
+                ],
+                [
+                  "60031",
+                  15
+                ],
+                [
+                  "60050",
+                  13
+                ],
+                [
+                  "60101",
+                  3
+                ],
+                [
+                  "60548",
+                  7
+                ],
+                [
+                  "60632",
+                  20
+                ],
+                [
+                  "63080",
+                  2
+                ],
+                [
+                  "63128",
+                  13
+                ],
+                [
+                  "63303",
+                  2
+                ],
+                [
+                  "63703",
+                  18
+                ],
+                [
+                  "64014",
+                  21
+                ],
+                [
+                  "64068",
+                  20
+                ],
+                [
+                  "64116",
+                  10
+                ],
+                [
+                  "65616",
+                  4
+                ],
+                [
+                  "66160",
+                  9
+                ],
+                [
+                  "66209",
+                  12
+                ],
+                [
+                  "66211",
+                  4
+                ],
+                [
+                  "67219",
+                  17
+                ],
+                [
+                  "68131",
+                  4
+                ],
+                [
+                  "70360",
+                  2
+                ],
+                [
+                  "70433",
+                  10
+                ],
+                [
+                  "70506",
+                  18
+                ],
+                [
+                  "70563",
+                  19
+                ],
+                [
+                  "70601",
+                  7
+                ],
+                [
+                  "71115",
+                  16
+                ],
+                [
+                  "71201",
+                  6
+                ],
+                [
+                  "71301",
+                  4
+                ],
+                [
+                  "72401",
+                  2
+                ],
+                [
+                  "72703",
+                  7
+                ],
+                [
+                  "73072",
+                  5
+                ],
+                [
+                  "73110",
+                  11
+                ],
+                [
+                  "73112",
+                  22
+                ],
+                [
+                  "73120",
+                  19
+                ],
+                [
+                  "73401",
+                  9
+                ],
+                [
+                  "74017",
+                  20
+                ],
+                [
+                  "75088",
+                  8
+                ],
+                [
+                  "75093",
+                  4
+                ],
+                [
+                  "75226",
+                  5
+                ],
+                [
+                  "75231",
+                  21
+                ],
+                [
+                  "75248",
+                  12
+                ],
+                [
+                  "75701",
+                  22
+                ],
+                [
+                  "76002",
+                  6
+                ],
+                [
+                  "76020",
+                  15
+                ],
+                [
+                  "76021",
+                  17
+                ],
+                [
+                  "76104",
+                  22
+                ],
+                [
+                  "76132",
+                  10
+                ],
+                [
+                  "76208",
+                  16
+                ],
+                [
+                  "76354",
+                  11
+                ],
+                [
+                  "77338",
+                  17
+                ],
+                [
+                  "77375",
+                  4
+                ],
+                [
+                  "77385",
+                  2
+                ],
+                [
+                  "77478",
+                  2
+                ],
+                [
+                  "77504",
+                  5
+                ],
+                [
+                  "77626",
+                  2
+                ],
+                [
+                  "77901",
+                  38
+                ],
+                [
+                  "78003",
+                  17
+                ],
+                [
+                  "78155",
+                  16
+                ],
+                [
+                  "78404",
+                  13
+                ],
+                [
+                  "78613",
+                  12
+                ],
+                [
+                  "78681",
+                  16
+                ],
+                [
+                  "78705",
+                  14
+                ],
+                [
+                  "78756",
+                  6
+                ],
+                [
+                  "79416",
+                  14
+                ],
+                [
+                  "79761",
+                  21
+                ],
+                [
+                  "79765",
+                  4
+                ],
+                [
+                  "79902",
+                  15
+                ],
+                [
+                  "80031",
+                  2
+                ],
+                [
+                  "80220",
+                  3
+                ],
+                [
+                  "80234",
+                  9
+                ],
+                [
+                  "80304",
+                  5
+                ],
+                [
+                  "82072",
+                  11
+                ],
+                [
+                  "84010",
+                  14
+                ],
+                [
+                  "84057",
+                  5
+                ],
+                [
+                  "84107",
+                  12
+                ],
+                [
+                  "84124",
+                  3
+                ],
+                [
+                  "84332",
+                  2
+                ],
+                [
+                  "84651",
+                  2
+                ],
+                [
+                  "85006",
+                  8
+                ],
+                [
+                  "85020",
+                  6
+                ],
+                [
+                  "85142",
+                  2
+                ],
+                [
+                  "85224",
+                  10
+                ],
+                [
+                  "85308",
+                  8
+                ],
+                [
+                  "85712",
+                  26
+                ],
+                [
+                  "85718",
+                  14
+                ],
+                [
+                  "85745",
+                  12
+                ],
+                [
+                  "86442",
+                  2
+                ],
+                [
+                  "88011",
+                  5
+                ],
+                [
+                  "88201",
+                  20
+                ],
+                [
+                  "88260",
+                  4
+                ],
+                [
+                  "89052",
+                  3
+                ],
+                [
+                  "89169",
+                  16
+                ],
+                [
+                  "90019",
+                  2
+                ],
+                [
+                  "90048",
+                  16
+                ],
+                [
+                  "90211",
+                  16
+                ],
+                [
+                  "90404",
+                  18
+                ],
+                [
+                  "90720",
+                  32
+                ],
+                [
+                  "91007",
+                  6
+                ],
+                [
+                  "91107",
+                  17
+                ],
+                [
+                  "91355",
+                  2
+                ],
+                [
+                  "91803",
+                  7
+                ],
+                [
+                  "91942",
+                  16
+                ],
+                [
+                  "92037",
+                  11
+                ],
+                [
+                  "92078",
+                  2
+                ],
+                [
+                  "92103",
+                  3
+                ],
+                [
+                  "92123",
+                  3
+                ],
+                [
+                  "92211",
+                  8
+                ],
+                [
+                  "92270",
+                  19
+                ],
+                [
+                  "92307",
+                  5
+                ],
+                [
+                  "92404",
+                  3
+                ],
+                [
+                  "92553",
+                  6
+                ],
+                [
+                  "92595",
+                  3
+                ],
+                [
+                  "92694",
+                  10
+                ],
+                [
+                  "92708",
+                  3
+                ],
+                [
+                  "92868",
+                  12
+                ],
+                [
+                  "92879",
+                  2
+                ],
+                [
+                  "92882",
+                  2
+                ],
+                [
+                  "93101",
+                  23
+                ],
+                [
+                  "93111",
+                  2
+                ],
+                [
+                  "93230",
+                  21
+                ],
+                [
+                  "93312",
+                  7
+                ],
+                [
+                  "93449",
+                  10
+                ],
+                [
+                  "93465",
+                  14
+                ],
+                [
+                  "93720",
+                  21
+                ],
+                [
+                  "93901",
+                  12
+                ],
+                [
+                  "94583",
+                  2
+                ],
+                [
+                  "94598",
+                  20
+                ],
+                [
+                  "94609",
+                  11
+                ],
+                [
+                  "96150",
+                  2
+                ],
+                [
+                  "96701",
+                  10
+                ],
+                [
+                  "96797",
+                  3
+                ],
+                [
+                  "98405",
+                  4
+                ],
+                [
+                  "99204",
+                  2
+                ],
+                [
+                  "99669",
+                  11
+                ]
+              ],
+              "nlevels": 345,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+              "codomain-reducer": "FIRST",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "codomain-reducer": "FIRST",
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "payer": {
+          "idx": 4,
+          "name": "payer",
+          "purpose": "mcomp",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "rx-count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 5,
+              "default-name": "Payment Type Group",
+              "field-alias": "payer",
+              "warehouse-name": "paymenttypegroup",
+              "purpose": "mcomp",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                [
+                  "CASH",
+                  172
+                ],
+                [
+                  "MEDICAID",
+                  48
+                ],
+                [
+                  "TOTAL THIRD PARTY",
+                  2781
+                ]
+              ],
+              "nlevels": 3,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "rx-date": {
+          "idx": 5,
+          "name": "rx-date",
+          "purpose": "mspan",
+          "levels": [
+            [
+              "2015-02",
+              27
+            ],
+            [
+              "2015-03",
+              59
+            ],
+            [
+              "2015-04",
+              59
+            ],
+            [
+              "2015-05",
+              79
+            ],
+            [
+              "2015-06",
+              89
+            ],
+            [
+              "2015-07",
+              123
+            ],
+            [
+              "2015-08",
+              130
+            ],
+            [
+              "2015-09",
+              132
+            ],
+            [
+              "2015-10",
+              153
+            ],
+            [
+              "2015-11",
+              171
+            ],
+            [
+              "2015-12",
+              173
+            ],
+            [
+              "2016-01",
+              178
+            ],
+            [
+              "2016-02",
+              183
+            ],
+            [
+              "2016-03",
+              180
+            ],
+            [
+              "2016-04",
+              191
+            ],
+            [
+              "2016-05",
+              188
+            ],
+            [
+              "2016-06",
+              179
+            ],
+            [
+              "2016-07",
+              188
+            ],
+            [
+              "2016-08",
+              188
+            ],
+            [
+              "2016-09",
+              172
+            ],
+            [
+              "2016-10",
+              177
+            ]
+          ],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "rx-count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 6,
+              "default-name": "Year-Month",
+              "field-alias": "rx-date",
+              "warehouse-name": "yearmonth",
+              "purpose": "mspan",
+              "null-value": null,
+              "format": "YYYY-MM",
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                [
+                  "2015-02",
+                  27
+                ],
+                [
+                  "2015-03",
+                  59
+                ],
+                [
+                  "2015-04",
+                  59
+                ],
+                [
+                  "2015-05",
+                  79
+                ],
+                [
+                  "2015-06",
+                  89
+                ],
+                [
+                  "2015-07",
+                  123
+                ],
+                [
+                  "2015-08",
+                  130
+                ],
+                [
+                  "2015-09",
+                  132
+                ],
+                [
+                  "2015-10",
+                  153
+                ],
+                [
+                  "2015-11",
+                  171
+                ],
+                [
+                  "2015-12",
+                  173
+                ],
+                [
+                  "2016-01",
+                  178
+                ],
+                [
+                  "2016-02",
+                  183
+                ],
+                [
+                  "2016-03",
+                  180
+                ],
+                [
+                  "2016-04",
+                  191
+                ],
+                [
+                  "2016-05",
+                  188
+                ],
+                [
+                  "2016-06",
+                  179
+                ],
+                [
+                  "2016-07",
+                  188
+                ],
+                [
+                  "2016-08",
+                  188
+                ],
+                [
+                  "2016-09",
+                  172
+                ],
+                [
+                  "2016-10",
+                  177
+                ]
+              ],
+              "nlevels": 21,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2015-02",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 21,
+                  "reduced": false
+                }
+              ]
+            }
+          ],
+          "time": {
+            "interval": {
+              "unit": "M",
+              "count": 1
+            },
+            "reference": {
+              "idx": 33,
+              "value": "2015-02",
+              "isoFormat": "YYYY-MM"
+            }
+          },
+          "levels-mspan": [
+            {
+              "rangeStart": 0,
+              "rangeLength": 21,
+              "reduced": false
+            }
+          ]
+        },
+        "rx-count": {
+          "idx": 6,
+          "name": "rx-count",
+          "purpose": "mvalue",
+          "levels": [],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "rx-count",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 7,
+              "default-name": "NRx Count",
+              "field-alias": "rx-count",
+              "warehouse-name": "nrxcount",
+              "purpose": "mvalue",
+              "null-value": null,
+              "format": null,
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [],
+              "nlevels": 10,
+              "nrows": 2998,
+              "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            }
+          ],
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "campaign": {
+          "idx": 7,
+          "name": "campaign",
+          "purpose": "mvalue",
+          "levels": [],
+          "map-symbols": {},
+          "etl-unit": "campaign",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "campaign",
+              "header-idx": null,
+              "purpose": "mvalue",
+              "format": null,
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "field-aliases": [
+                "Send2012_05",
+                "Send2014_04",
+                "Send2014_05",
+                "Open2013_06",
+                "Click2012_07",
+                "Click2012_09"
+              ],
+              "alias-idx-map": {
+                "Send2012_05": 5,
+                "Send2014_04": 6,
+                "Send2014_05": 7,
+                "Open2013_06": 8,
+                "Click2012_07": 9,
+                "Click2012_09": 10
+              },
+              "levels": [],
+              "nlevels": null,
+              "filename": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv",
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            }
+          ],
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        },
+        "camp-type": {
+          "idx": 8,
+          "name": "camp-type",
+          "purpose": "mcomp",
+          "levels": [],
+          "map-symbols": {},
+          "etl-unit": "campaign",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "format": null,
+              "map-fieldnames": {
+                "arrows": {
+                  "Send2012_05": "Send",
+                  "Send2014_04": "Send",
+                  "Send2014_05": "Send",
+                  "Open2013_06": "Open",
+                  "Click2012_07": "Click",
+                  "Click2012_09": "Click"
+                }
+              },
+              "levels": [
+                [
+                  "Send",
+                  366
+                ],
+                [
+                  "Open",
+                  122
+                ],
+                [
+                  "Click",
+                  244
+                ]
+              ],
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "camp-type",
+              "header-idx": null,
+              "purpose": "mcomp",
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "field-aliases": [
+                "Send2012_05",
+                "Send2014_04",
+                "Send2014_05",
+                "Open2013_06",
+                "Click2012_07",
+                "Click2012_09"
+              ],
+              "alias-idx-map": {
+                "Send2012_05": 5,
+                "Send2014_04": 6,
+                "Send2014_05": 7,
+                "Open2013_06": 8,
+                "Click2012_07": 9,
+                "Click2012_09": 10
+              },
+              "nlevels": 6,
+              "filename": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv",
+              "map-weights": {
+                "arrows": {}
+              }
+            }
+          ],
+          "map-weights": {
+            "arrows": {}
+          }
+        },
+        "camp-date": {
+          "idx": 9,
+          "name": "camp-date",
+          "purpose": "mspan",
+          "levels": [
+            [
+              "2012-05",
+              122
+            ],
+            [
+              "2014-04",
+              122
+            ],
+            [
+              "2014-05",
+              122
+            ],
+            [
+              "2013-06",
+              122
+            ],
+            [
+              "2012-07",
+              122
+            ],
+            [
+              "2012-09",
+              122
+            ]
+          ],
+          "map-symbols": {},
+          "etl-unit": "campaign",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "format": "YYYY-MM",
+              "map-fieldnames": {
+                "arrows": {
+                  "Send2012_05": "2012-05",
+                  "Send2014_04": "2014-04",
+                  "Send2014_05": "2014-05",
+                  "Open2013_06": "2013-06",
+                  "Click2012_07": "2012-07",
+                  "Click2012_09": "2012-09"
+                }
+              },
+              "levels": [
+                [
+                  "2012-05",
+                  122
+                ],
+                [
+                  "2014-04",
+                  122
+                ],
+                [
+                  "2014-05",
+                  122
+                ],
+                [
+                  "2013-06",
+                  122
+                ],
+                [
+                  "2012-07",
+                  122
+                ],
+                [
+                  "2012-09",
+                  122
+                ]
+              ],
+              "enabled": true,
+              "source-type": "WIDE",
+              "field-alias": "camp-date",
+              "header-idx": null,
+              "purpose": "mspan",
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
+              "field-aliases": [
+                "Send2012_05",
+                "Send2014_04",
+                "Send2014_05",
+                "Open2013_06",
+                "Click2012_07",
+                "Click2012_09"
+              ],
+              "alias-idx-map": {
+                "Send2012_05": 5,
+                "Send2014_04": 6,
+                "Send2014_05": 7,
+                "Open2013_06": 8,
+                "Click2012_07": 9,
+                "Click2012_09": 10
+              },
+              "nlevels": 6,
+              "filename": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv",
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2012-05",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 1,
+                  "reduced": false
+                },
+                {
+                  "rangeStart": 2,
+                  "rangeLength": 1,
+                  "reduced": false
+                },
+                {
+                  "rangeStart": 4,
+                  "rangeLength": 1,
+                  "reduced": false
+                },
+                {
+                  "rangeStart": 13,
+                  "rangeLength": 1,
+                  "reduced": false
+                },
+                {
+                  "rangeStart": 23,
+                  "rangeLength": 2,
+                  "reduced": false
+                }
+              ]
+            }
+          ],
+          "time": {
+            "interval": {
+              "unit": "M",
+              "count": 1
+            },
+            "reference": {
+              "idx": 0,
+              "value": "2012-05",
+              "isoFormat": "YYYY-MM"
+            }
+          },
+          "levels-mspan": [
+            {
+              "rangeStart": 0,
+              "rangeLength": 1,
+              "reduced": false
+            },
+            {
+              "rangeStart": 2,
+              "rangeLength": 1,
+              "reduced": false
+            },
+            {
+              "rangeStart": 4,
+              "rangeLength": 1,
+              "reduced": false
+            },
+            {
+              "rangeStart": 13,
+              "rangeLength": 1,
+              "reduced": false
+            },
+            {
+              "rangeStart": 23,
+              "rangeLength": 2,
+              "reduced": false
+            }
+          ]
+        },
+        "reach-date": {
+          "idx": 10,
+          "name": "reach-date",
+          "purpose": "mspan",
+          "levels": [
+            [
+              "",
+              40514
+            ],
+            [
+              "01-2016",
+              199
+            ],
+            [
+              "02-2016",
+              2429
+            ],
+            [
+              "03-2016",
+              3070
+            ],
+            [
+              "04-2016",
+              2653
+            ],
+            [
+              "05-2016",
+              1861
+            ],
+            [
+              "06-2016",
+              1177
+            ],
+            [
+              "07-2016",
+              522
+            ],
+            [
+              "08-2016",
+              108
+            ]
+          ],
+          "map-symbols": {
+            "arrows": {}
+          },
+          "etl-unit": "reach",
+          "format": "YYYY-MM-DD",
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "RAW",
+              "header-idx": 14,
+              "default-name": "MM-YYYY",
+              "field-alias": "reach-date",
+              "warehouse-name": "mmyyyy",
+              "purpose": "mspan",
+              "null-value": null,
+              "format": "MM-YYYY",
+              "map-symbols": {
+                "arrows": {}
+              },
+              "levels": [
+                [
+                  "",
+                  40514
+                ],
+                [
+                  "01-2016",
+                  199
+                ],
+                [
+                  "02-2016",
+                  2429
+                ],
+                [
+                  "03-2016",
+                  3070
+                ],
+                [
+                  "04-2016",
+                  2653
+                ],
+                [
+                  "05-2016",
+                  1861
+                ],
+                [
+                  "06-2016",
+                  1177
+                ],
+                [
+                  "07-2016",
+                  522
+                ],
+                [
+                  "08-2016",
+                  108
+                ]
+              ],
+              "nlevels": 9,
+              "nrows": 52524,
+              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "time": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2016-01",
+                  "isoFormat": "YYYY-MM"
+                }
+              },
+              "levels-mspan": [
+                {
+                  "rangeStart": 0,
+                  "rangeLength": 8,
+                  "reduced": false
+                }
+              ]
+            }
+          ],
+          "time": {
+            "interval": {
+              "unit": "M",
+              "count": "1"
+            },
+            "reference": {
+              "idx": 44,
+              "value": "2016-01",
+              "isoFormat": "YYYY-MM"
+            }
+          },
+          "levels-mspan": [
+            {
+              "rangeStart": 0,
+              "rangeLength": 8,
+              "reduced": false
+            }
+          ]
+        },
+        "reach": {
+          "idx": 11,
+          "name": "reach",
+          "purpose": "mvalue",
+          "levels": [],
+          "map-symbols": {},
+          "etl-unit": "reach",
+          "format": null,
+          "null-value-expansion": null,
+          "map-files": null,
+          "sources": [
+            {
+              "enabled": true,
+              "source-type": "IMPLIED",
+              "field-alias": "reach",
+              "header-idx": null,
+              "purpose": "mvalue",
+              "format": null,
+              "null-value": null,
+              "map-implied": {
+                "domain": "reach-date",
+                "codomain": 1
+              },
+              "levels": [],
+              "nlevels": 1,
+              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "codomain-reducer": "SUM",
+              "slicing-reducer": "SUM"
+            }
+          ],
+          "codomain-reducer": "SUM",
+          "slicing-reducer": "SUM"
+        }
+      }
+    },
+    "etlFieldChanges": {
+      "__derivedFields": {},
+      "reach-date": {
+        "format": "YYYY-MM-DD",
+        "time": {
+          "interval": {
+            "unit": "M",
+            "count": "1"
+          },
+          "reference": {
+            "idx": 44,
+            "value": "2016-01",
+            "isoFormat": "YYYY-MM"
+          }
+        }
+      }
+    },
+    "etlViewErrors": []
+  },
+  "workbench": {
+    "tree": {
+      "0": {
+        "id": 0,
+        "type": "root",
+        "height": 0,
+        "parent": null,
+        "data": {},
+        "index": null,
+        "childIds": [
+          1,
+          2
+        ]
+      },
+      "1": {
+        "id": 1,
+        "type": "palette",
+        "height": 1,
+        "parent": 0,
+        "data": {},
+        "index": 0,
+        "childIds": [
+          3
+        ]
+      },
+      "2": {
+        "id": 2,
+        "type": "canvas",
+        "height": 1,
+        "parent": 0,
+        "data": {},
+        "index": 1,
+        "childIds": [
+          16,
+          17,
+          18
+        ]
+      },
+      "3": {
+        "id": 3,
+        "type": "palette",
+        "height": 2,
+        "parent": 1,
+        "data": {},
+        "index": 0,
+        "childIds": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ]
+      },
+      "4": {
+        "id": 4,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "type": "group",
+          "groupTag": "q_specialty"
+        },
+        "index": 0,
+        "childIds": [
+          5
+        ]
+      },
+      "5": {
+        "id": 5,
+        "type": "palette",
+        "height": 4,
+        "parent": 4,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_specialty",
+            "displayName": "specialty",
+            "tag": "txtValues",
+            "values": {
+              "0": {
+                "request": true,
+                "value": "CARDIOVASCULAR DISEASES"
+              },
+              "1": {
+                "request": true,
+                "value": "CRITICAL CARE MEDICINE"
+              },
+              "2": {
+                "request": true,
+                "value": "EMERGENCY MEDICINE"
+              },
+              "3": {
+                "request": true,
+                "value": "FAMILY MEDICINE"
+              },
+              "4": {
+                "request": true,
+                "value": "FAMILY PRACTICE"
+              },
+              "5": {
+                "request": true,
+                "value": "FAMILY PRACTICE, GERIATRIC MEDICINE"
+              },
+              "6": {
+                "request": true,
+                "value": "GENERAL PRACTICE"
+              },
+              "7": {
+                "request": true,
+                "value": "GENERAL PREVENTIVE MEDICINE"
+              },
+              "8": {
+                "request": true,
+                "value": "INTERNAL MED, CARD. ELECTROPHYSIOLOGY"
+              },
+              "9": {
+                "request": true,
+                "value": "INTERNAL MEDICINE"
+              },
+              "10": {
+                "request": true,
+                "value": "NURSE PRACTITIONER"
+              },
+              "11": {
+                "request": true,
+                "value": "ONCOLOGY MEDICAL"
+              },
+              "12": {
+                "request": true,
+                "value": "PEDIATRICS"
+              },
+              "13": {
+                "request": true,
+                "value": "PHYSICIAN ASSISTANT"
+              },
+              "14": {
+                "request": true,
+                "value": "PUBLIC HEALTH"
+              },
+              "15": {
+                "request": true,
+                "value": "PULMONARY DISEASES"
+              },
+              "16": {
+                "request": true,
+                "value": "UNSPECIFIED"
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "6": {
+        "id": 6,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "type": "group",
+          "groupTag": "q_state"
+        },
+        "index": 1,
+        "childIds": [
+          7
+        ]
+      },
+      "7": {
+        "id": 7,
+        "type": "palette",
+        "height": 4,
+        "parent": 6,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_state",
+            "displayName": "state",
+            "tag": "txtValues",
+            "values": {
+              "0": {
+                "request": true,
+                "value": "AK"
+              },
+              "1": {
+                "request": true,
+                "value": "AL"
+              },
+              "2": {
+                "request": true,
+                "value": "AR"
+              },
+              "3": {
+                "request": true,
+                "value": "AZ"
+              },
+              "4": {
+                "request": true,
+                "value": "CA"
+              },
+              "5": {
+                "request": true,
+                "value": "CO"
+              },
+              "6": {
+                "request": true,
+                "value": "CT"
+              },
+              "7": {
+                "request": true,
+                "value": "DC"
+              },
+              "8": {
+                "request": true,
+                "value": "FL"
+              },
+              "9": {
+                "request": true,
+                "value": "GA"
+              },
+              "10": {
+                "request": true,
+                "value": "HI"
+              },
+              "11": {
+                "request": true,
+                "value": "IA"
+              },
+              "12": {
+                "request": true,
+                "value": "IL"
+              },
+              "13": {
+                "request": true,
+                "value": "IN"
+              },
+              "14": {
+                "request": true,
+                "value": "KS"
+              },
+              "15": {
+                "request": true,
+                "value": "KY"
+              },
+              "16": {
+                "request": true,
+                "value": "LA"
+              },
+              "17": {
+                "request": true,
+                "value": "MA"
+              },
+              "18": {
+                "request": true,
+                "value": "MD"
+              },
+              "19": {
+                "request": true,
+                "value": "MI"
+              },
+              "20": {
+                "request": true,
+                "value": "MN"
+              },
+              "21": {
+                "request": true,
+                "value": "MO"
+              },
+              "22": {
+                "request": true,
+                "value": "MS"
+              },
+              "23": {
+                "request": true,
+                "value": "NC"
+              },
+              "24": {
+                "request": true,
+                "value": "NE"
+              },
+              "25": {
+                "request": true,
+                "value": "NH"
+              },
+              "26": {
+                "request": true,
+                "value": "NJ"
+              },
+              "27": {
+                "request": true,
+                "value": "NM"
+              },
+              "28": {
+                "request": true,
+                "value": "NV"
+              },
+              "29": {
+                "request": true,
+                "value": "NY"
+              },
+              "30": {
+                "request": true,
+                "value": "OH"
+              },
+              "31": {
+                "request": true,
+                "value": "OK"
+              },
+              "32": {
+                "request": true,
+                "value": "PA"
+              },
+              "33": {
+                "request": true,
+                "value": "RI"
+              },
+              "34": {
+                "request": true,
+                "value": "SC"
+              },
+              "35": {
+                "request": true,
+                "value": "SD"
+              },
+              "36": {
+                "request": true,
+                "value": "TN"
+              },
+              "37": {
+                "request": true,
+                "value": "TX"
+              },
+              "38": {
+                "request": true,
+                "value": "UT"
+              },
+              "39": {
+                "request": true,
+                "value": "VA"
+              },
+              "40": {
+                "request": true,
+                "value": "WA"
+              },
+              "41": {
+                "request": true,
+                "value": "WI"
+              },
+              "42": {
+                "request": true,
+                "value": "WV"
+              },
+              "43": {
+                "request": true,
+                "value": "WY"
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "8": {
+        "id": 8,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "type": "group",
+          "groupTag": "q_zip"
+        },
+        "index": 2,
+        "childIds": [
+          9
+        ]
+      },
+      "9": {
+        "id": 9,
+        "type": "palette",
+        "height": 4,
+        "parent": 8,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_zip",
+            "displayName": "zip",
+            "tag": "txtValues",
+            "values": {
+              "0": {
+                "request": true,
+                "value": "01930"
+              },
+              "1": {
+                "request": true,
+                "value": "02120"
+              },
+              "2": {
+                "request": true,
+                "value": "02864"
+              },
+              "3": {
+                "request": true,
+                "value": "02906"
+              },
+              "4": {
+                "request": true,
+                "value": "03756"
+              },
+              "5": {
+                "request": true,
+                "value": "06040"
+              },
+              "6": {
+                "request": true,
+                "value": "06042"
+              },
+              "7": {
+                "request": true,
+                "value": "06105"
+              },
+              "8": {
+                "request": true,
+                "value": "06518"
+              },
+              "9": {
+                "request": true,
+                "value": "07028"
+              },
+              "10": {
+                "request": true,
+                "value": "07046"
+              },
+              "11": {
+                "request": true,
+                "value": "07060"
+              },
+              "12": {
+                "request": true,
+                "value": "07081"
+              },
+              "13": {
+                "request": true,
+                "value": "07202"
+              },
+              "14": {
+                "request": true,
+                "value": "07306"
+              },
+              "15": {
+                "request": true,
+                "value": "07480"
+              },
+              "16": {
+                "request": true,
+                "value": "07601"
+              },
+              "17": {
+                "request": true,
+                "value": "07666"
+              },
+              "18": {
+                "request": true,
+                "value": "08015"
+              },
+              "19": {
+                "request": true,
+                "value": "08755"
+              },
+              "20": {
+                "request": true,
+                "value": "08759"
+              },
+              "21": {
+                "request": true,
+                "value": "08840"
+              },
+              "22": {
+                "request": true,
+                "value": "08865"
+              },
+              "23": {
+                "request": true,
+                "value": "10003"
+              },
+              "24": {
+                "request": true,
+                "value": "10019"
+              },
+              "25": {
+                "request": true,
+                "value": "10021"
+              },
+              "26": {
+                "request": true,
+                "value": "10029"
+              },
+              "27": {
+                "request": true,
+                "value": "10591"
+              },
+              "28": {
+                "request": true,
+                "value": "10901"
+              },
+              "29": {
+                "request": true,
+                "value": "10980"
+              },
+              "30": {
+                "request": true,
+                "value": "11030"
+              },
+              "31": {
+                "request": true,
+                "value": "11042"
+              },
+              "32": {
+                "request": true,
+                "value": "11105"
+              },
+              "33": {
+                "request": true,
+                "value": "11554"
+              },
+              "34": {
+                "request": true,
+                "value": "11563"
+              },
+              "35": {
+                "request": true,
+                "value": "11704"
+              },
+              "36": {
+                "request": true,
+                "value": "11743"
+              },
+              "37": {
+                "request": true,
+                "value": "11803"
+              },
+              "38": {
+                "request": true,
+                "value": "12211"
+              },
+              "39": {
+                "request": true,
+                "value": "12401"
+              },
+              "40": {
+                "request": true,
+                "value": "13210"
+              },
+              "41": {
+                "request": true,
+                "value": "13413"
+              },
+              "42": {
+                "request": true,
+                "value": "13440"
+              },
+              "43": {
+                "request": true,
+                "value": "13491"
+              },
+              "44": {
+                "request": true,
+                "value": "14120"
+              },
+              "45": {
+                "request": true,
+                "value": "14221"
+              },
+              "46": {
+                "request": true,
+                "value": "14701"
+              },
+              "47": {
+                "request": true,
+                "value": "15644"
+              },
+              "48": {
+                "request": true,
+                "value": "15906"
+              },
+              "49": {
+                "request": true,
+                "value": "16354"
+              },
+              "50": {
+                "request": true,
+                "value": "16502"
+              },
+              "51": {
+                "request": true,
+                "value": "16505"
+              },
+              "52": {
+                "request": true,
+                "value": "17074"
+              },
+              "53": {
+                "request": true,
+                "value": "17740"
+              },
+              "54": {
+                "request": true,
+                "value": "19010"
+              },
+              "55": {
+                "request": true,
+                "value": "19046"
+              },
+              "56": {
+                "request": true,
+                "value": "19116"
+              },
+              "57": {
+                "request": true,
+                "value": "19372"
+              },
+              "58": {
+                "request": true,
+                "value": "20037"
+              },
+              "59": {
+                "request": true,
+                "value": "20602"
+              },
+              "60": {
+                "request": true,
+                "value": "20815"
+              },
+              "61": {
+                "request": true,
+                "value": "20850"
+              },
+              "62": {
+                "request": true,
+                "value": "20874"
+              },
+              "63": {
+                "request": true,
+                "value": "21208"
+              },
+              "64": {
+                "request": true,
+                "value": "21701"
+              },
+              "65": {
+                "request": true,
+                "value": "21742"
+              },
+              "66": {
+                "request": true,
+                "value": "22304"
+              },
+              "67": {
+                "request": true,
+                "value": "22554"
+              },
+              "68": {
+                "request": true,
+                "value": "22601"
+              },
+              "69": {
+                "request": true,
+                "value": "23188"
+              },
+              "70": {
+                "request": true,
+                "value": "23510"
+              },
+              "71": {
+                "request": true,
+                "value": "23805"
+              },
+              "72": {
+                "request": true,
+                "value": "24501"
+              },
+              "73": {
+                "request": true,
+                "value": "25304"
+              },
+              "74": {
+                "request": true,
+                "value": "25550"
+              },
+              "75": {
+                "request": true,
+                "value": "27295"
+              },
+              "76": {
+                "request": true,
+                "value": "27529"
+              },
+              "77": {
+                "request": true,
+                "value": "27577"
+              },
+              "78": {
+                "request": true,
+                "value": "27810"
+              },
+              "79": {
+                "request": true,
+                "value": "28203"
+              },
+              "80": {
+                "request": true,
+                "value": "28204"
+              },
+              "81": {
+                "request": true,
+                "value": "28207"
+              },
+              "82": {
+                "request": true,
+                "value": "28277"
+              },
+              "83": {
+                "request": true,
+                "value": "28358"
+              },
+              "84": {
+                "request": true,
+                "value": "28401"
+              },
+              "85": {
+                "request": true,
+                "value": "28411"
+              },
+              "86": {
+                "request": true,
+                "value": "28562"
+              },
+              "87": {
+                "request": true,
+                "value": "28739"
+              },
+              "88": {
+                "request": true,
+                "value": "28801"
+              },
+              "89": {
+                "request": true,
+                "value": "28803"
+              },
+              "90": {
+                "request": true,
+                "value": "29303"
+              },
+              "91": {
+                "request": true,
+                "value": "29403"
+              },
+              "92": {
+                "request": true,
+                "value": "29464"
+              },
+              "93": {
+                "request": true,
+                "value": "29642"
+              },
+              "94": {
+                "request": true,
+                "value": "29678"
+              },
+              "95": {
+                "request": true,
+                "value": "30024"
+              },
+              "96": {
+                "request": true,
+                "value": "30046"
+              },
+              "97": {
+                "request": true,
+                "value": "30060"
+              },
+              "98": {
+                "request": true,
+                "value": "30274"
+              },
+              "99": {
+                "request": true,
+                "value": "30328"
+              },
+              "100": {
+                "request": true,
+                "value": "30542"
+              },
+              "101": {
+                "request": true,
+                "value": "30606"
+              },
+              "102": {
+                "request": true,
+                "value": "30901"
+              },
+              "103": {
+                "request": true,
+                "value": "31024"
+              },
+              "104": {
+                "request": true,
+                "value": "32034"
+              },
+              "105": {
+                "request": true,
+                "value": "32055"
+              },
+              "106": {
+                "request": true,
+                "value": "32224"
+              },
+              "107": {
+                "request": true,
+                "value": "32308"
+              },
+              "108": {
+                "request": true,
+                "value": "32506"
+              },
+              "109": {
+                "request": true,
+                "value": "32605"
+              },
+              "110": {
+                "request": true,
+                "value": "32803"
+              },
+              "111": {
+                "request": true,
+                "value": "32937"
+              },
+              "112": {
+                "request": true,
+                "value": "32955"
+              },
+              "113": {
+                "request": true,
+                "value": "32960"
+              },
+              "114": {
+                "request": true,
+                "value": "33016"
+              },
+              "115": {
+                "request": true,
+                "value": "33027"
+              },
+              "116": {
+                "request": true,
+                "value": "33040"
+              },
+              "117": {
+                "request": true,
+                "value": "33143"
+              },
+              "118": {
+                "request": true,
+                "value": "33173"
+              },
+              "119": {
+                "request": true,
+                "value": "33176"
+              },
+              "120": {
+                "request": true,
+                "value": "33326"
+              },
+              "121": {
+                "request": true,
+                "value": "33410"
+              },
+              "122": {
+                "request": true,
+                "value": "33414"
+              },
+              "123": {
+                "request": true,
+                "value": "33434"
+              },
+              "124": {
+                "request": true,
+                "value": "33449"
+              },
+              "125": {
+                "request": true,
+                "value": "33470"
+              },
+              "126": {
+                "request": true,
+                "value": "33486"
+              },
+              "127": {
+                "request": true,
+                "value": "33511"
+              },
+              "128": {
+                "request": true,
+                "value": "33618"
+              },
+              "129": {
+                "request": true,
+                "value": "33756"
+              },
+              "130": {
+                "request": true,
+                "value": "33872"
+              },
+              "131": {
+                "request": true,
+                "value": "34239"
+              },
+              "132": {
+                "request": true,
+                "value": "34266"
+              },
+              "133": {
+                "request": true,
+                "value": "34474"
+              },
+              "134": {
+                "request": true,
+                "value": "34653"
+              },
+              "135": {
+                "request": true,
+                "value": "34689"
+              },
+              "136": {
+                "request": true,
+                "value": "34711"
+              },
+              "137": {
+                "request": true,
+                "value": "34741"
+              },
+              "138": {
+                "request": true,
+                "value": "34761"
+              },
+              "139": {
+                "request": true,
+                "value": "35007"
+              },
+              "140": {
+                "request": true,
+                "value": "35243"
+              },
+              "141": {
+                "request": true,
+                "value": "35294"
+              },
+              "142": {
+                "request": true,
+                "value": "35406"
+              },
+              "143": {
+                "request": true,
+                "value": "35601"
+              },
+              "144": {
+                "request": true,
+                "value": "35630"
+              },
+              "145": {
+                "request": true,
+                "value": "36608"
+              },
+              "146": {
+                "request": true,
+                "value": "37075"
+              },
+              "147": {
+                "request": true,
+                "value": "37203"
+              },
+              "148": {
+                "request": true,
+                "value": "37205"
+              },
+              "149": {
+                "request": true,
+                "value": "37232"
+              },
+              "150": {
+                "request": true,
+                "value": "37334"
+              },
+              "151": {
+                "request": true,
+                "value": "37620"
+              },
+              "152": {
+                "request": true,
+                "value": "37862"
+              },
+              "153": {
+                "request": true,
+                "value": "37916"
+              },
+              "154": {
+                "request": true,
+                "value": "37923"
+              },
+              "155": {
+                "request": true,
+                "value": "37934"
+              },
+              "156": {
+                "request": true,
+                "value": "38024"
+              },
+              "157": {
+                "request": true,
+                "value": "38501"
+              },
+              "158": {
+                "request": true,
+                "value": "38801"
+              },
+              "159": {
+                "request": true,
+                "value": "38821"
+              },
+              "160": {
+                "request": true,
+                "value": "39532"
+              },
+              "161": {
+                "request": true,
+                "value": "39744"
+              },
+              "162": {
+                "request": true,
+                "value": "40050"
+              },
+              "163": {
+                "request": true,
+                "value": "40165"
+              },
+              "164": {
+                "request": true,
+                "value": "40207"
+              },
+              "165": {
+                "request": true,
+                "value": "40217"
+              },
+              "166": {
+                "request": true,
+                "value": "42003"
+              },
+              "167": {
+                "request": true,
+                "value": "42101"
+              },
+              "168": {
+                "request": true,
+                "value": "42420"
+              },
+              "169": {
+                "request": true,
+                "value": "43420"
+              },
+              "170": {
+                "request": true,
+                "value": "44001"
+              },
+              "171": {
+                "request": true,
+                "value": "44111"
+              },
+              "172": {
+                "request": true,
+                "value": "44266"
+              },
+              "173": {
+                "request": true,
+                "value": "44512"
+              },
+              "174": {
+                "request": true,
+                "value": "44646"
+              },
+              "175": {
+                "request": true,
+                "value": "45013"
+              },
+              "176": {
+                "request": true,
+                "value": "45208"
+              },
+              "177": {
+                "request": true,
+                "value": "45242"
+              },
+              "178": {
+                "request": true,
+                "value": "45429"
+              },
+              "179": {
+                "request": true,
+                "value": "45662"
+              },
+              "180": {
+                "request": true,
+                "value": "46123"
+              },
+              "181": {
+                "request": true,
+                "value": "46237"
+              },
+              "182": {
+                "request": true,
+                "value": "46902"
+              },
+              "183": {
+                "request": true,
+                "value": "47172"
+              },
+              "184": {
+                "request": true,
+                "value": "47240"
+              },
+              "185": {
+                "request": true,
+                "value": "47374"
+              },
+              "186": {
+                "request": true,
+                "value": "48034"
+              },
+              "187": {
+                "request": true,
+                "value": "48050"
+              },
+              "188": {
+                "request": true,
+                "value": "48066"
+              },
+              "189": {
+                "request": true,
+                "value": "48075"
+              },
+              "190": {
+                "request": true,
+                "value": "48088"
+              },
+              "191": {
+                "request": true,
+                "value": "48152"
+              },
+              "192": {
+                "request": true,
+                "value": "48185"
+              },
+              "193": {
+                "request": true,
+                "value": "48334"
+              },
+              "194": {
+                "request": true,
+                "value": "48336"
+              },
+              "195": {
+                "request": true,
+                "value": "48439"
+              },
+              "196": {
+                "request": true,
+                "value": "48446"
+              },
+              "197": {
+                "request": true,
+                "value": "48507"
+              },
+              "198": {
+                "request": true,
+                "value": "48602"
+              },
+              "199": {
+                "request": true,
+                "value": "48640"
+              },
+              "200": {
+                "request": true,
+                "value": "48912"
+              },
+              "201": {
+                "request": true,
+                "value": "49007"
+              },
+              "202": {
+                "request": true,
+                "value": "49684"
+              },
+              "203": {
+                "request": true,
+                "value": "49841"
+              },
+              "204": {
+                "request": true,
+                "value": "50401"
+              },
+              "205": {
+                "request": true,
+                "value": "52403"
+              },
+              "206": {
+                "request": true,
+                "value": "53081"
+              },
+              "207": {
+                "request": true,
+                "value": "53142"
+              },
+              "208": {
+                "request": true,
+                "value": "53713"
+              },
+              "209": {
+                "request": true,
+                "value": "55426"
+              },
+              "210": {
+                "request": true,
+                "value": "57401"
+              },
+              "211": {
+                "request": true,
+                "value": "60005"
+              },
+              "212": {
+                "request": true,
+                "value": "60015"
+              },
+              "213": {
+                "request": true,
+                "value": "60031"
+              },
+              "214": {
+                "request": true,
+                "value": "60050"
+              },
+              "215": {
+                "request": true,
+                "value": "60101"
+              },
+              "216": {
+                "request": true,
+                "value": "60548"
+              },
+              "217": {
+                "request": true,
+                "value": "60632"
+              },
+              "218": {
+                "request": true,
+                "value": "63080"
+              },
+              "219": {
+                "request": true,
+                "value": "63128"
+              },
+              "220": {
+                "request": true,
+                "value": "63303"
+              },
+              "221": {
+                "request": true,
+                "value": "63703"
+              },
+              "222": {
+                "request": true,
+                "value": "64014"
+              },
+              "223": {
+                "request": true,
+                "value": "64068"
+              },
+              "224": {
+                "request": true,
+                "value": "64116"
+              },
+              "225": {
+                "request": true,
+                "value": "65616"
+              },
+              "226": {
+                "request": true,
+                "value": "66160"
+              },
+              "227": {
+                "request": true,
+                "value": "66209"
+              },
+              "228": {
+                "request": true,
+                "value": "66211"
+              },
+              "229": {
+                "request": true,
+                "value": "67219"
+              },
+              "230": {
+                "request": true,
+                "value": "68131"
+              },
+              "231": {
+                "request": true,
+                "value": "70360"
+              },
+              "232": {
+                "request": true,
+                "value": "70433"
+              },
+              "233": {
+                "request": true,
+                "value": "70506"
+              },
+              "234": {
+                "request": true,
+                "value": "70563"
+              },
+              "235": {
+                "request": true,
+                "value": "70601"
+              },
+              "236": {
+                "request": true,
+                "value": "71115"
+              },
+              "237": {
+                "request": true,
+                "value": "71201"
+              },
+              "238": {
+                "request": true,
+                "value": "71301"
+              },
+              "239": {
+                "request": true,
+                "value": "72401"
+              },
+              "240": {
+                "request": true,
+                "value": "72703"
+              },
+              "241": {
+                "request": true,
+                "value": "73072"
+              },
+              "242": {
+                "request": true,
+                "value": "73110"
+              },
+              "243": {
+                "request": true,
+                "value": "73112"
+              },
+              "244": {
+                "request": true,
+                "value": "73120"
+              },
+              "245": {
+                "request": true,
+                "value": "73401"
+              },
+              "246": {
+                "request": true,
+                "value": "74017"
+              },
+              "247": {
+                "request": true,
+                "value": "75088"
+              },
+              "248": {
+                "request": true,
+                "value": "75093"
+              },
+              "249": {
+                "request": true,
+                "value": "75226"
+              },
+              "250": {
+                "request": true,
+                "value": "75231"
+              },
+              "251": {
+                "request": true,
+                "value": "75248"
+              },
+              "252": {
+                "request": true,
+                "value": "75701"
+              },
+              "253": {
+                "request": true,
+                "value": "76002"
+              },
+              "254": {
+                "request": true,
+                "value": "76020"
+              },
+              "255": {
+                "request": true,
+                "value": "76021"
+              },
+              "256": {
+                "request": true,
+                "value": "76104"
+              },
+              "257": {
+                "request": true,
+                "value": "76132"
+              },
+              "258": {
+                "request": true,
+                "value": "76208"
+              },
+              "259": {
+                "request": true,
+                "value": "76354"
+              },
+              "260": {
+                "request": true,
+                "value": "77338"
+              },
+              "261": {
+                "request": true,
+                "value": "77375"
+              },
+              "262": {
+                "request": true,
+                "value": "77385"
+              },
+              "263": {
+                "request": true,
+                "value": "77478"
+              },
+              "264": {
+                "request": true,
+                "value": "77504"
+              },
+              "265": {
+                "request": true,
+                "value": "77626"
+              },
+              "266": {
+                "request": true,
+                "value": "77901"
+              },
+              "267": {
+                "request": true,
+                "value": "78003"
+              },
+              "268": {
+                "request": true,
+                "value": "78155"
+              },
+              "269": {
+                "request": true,
+                "value": "78404"
+              },
+              "270": {
+                "request": true,
+                "value": "78613"
+              },
+              "271": {
+                "request": true,
+                "value": "78681"
+              },
+              "272": {
+                "request": true,
+                "value": "78705"
+              },
+              "273": {
+                "request": true,
+                "value": "78756"
+              },
+              "274": {
+                "request": true,
+                "value": "79416"
+              },
+              "275": {
+                "request": true,
+                "value": "79761"
+              },
+              "276": {
+                "request": true,
+                "value": "79765"
+              },
+              "277": {
+                "request": true,
+                "value": "79902"
+              },
+              "278": {
+                "request": true,
+                "value": "80031"
+              },
+              "279": {
+                "request": true,
+                "value": "80220"
+              },
+              "280": {
+                "request": true,
+                "value": "80234"
+              },
+              "281": {
+                "request": true,
+                "value": "80304"
+              },
+              "282": {
+                "request": true,
+                "value": "82072"
+              },
+              "283": {
+                "request": true,
+                "value": "84010"
+              },
+              "284": {
+                "request": true,
+                "value": "84057"
+              },
+              "285": {
+                "request": true,
+                "value": "84107"
+              },
+              "286": {
+                "request": true,
+                "value": "84124"
+              },
+              "287": {
+                "request": true,
+                "value": "84332"
+              },
+              "288": {
+                "request": true,
+                "value": "84651"
+              },
+              "289": {
+                "request": true,
+                "value": "85006"
+              },
+              "290": {
+                "request": true,
+                "value": "85020"
+              },
+              "291": {
+                "request": true,
+                "value": "85142"
+              },
+              "292": {
+                "request": true,
+                "value": "85224"
+              },
+              "293": {
+                "request": true,
+                "value": "85308"
+              },
+              "294": {
+                "request": true,
+                "value": "85712"
+              },
+              "295": {
+                "request": true,
+                "value": "85718"
+              },
+              "296": {
+                "request": true,
+                "value": "85745"
+              },
+              "297": {
+                "request": true,
+                "value": "86442"
+              },
+              "298": {
+                "request": true,
+                "value": "88011"
+              },
+              "299": {
+                "request": true,
+                "value": "88201"
+              },
+              "300": {
+                "request": true,
+                "value": "88260"
+              },
+              "301": {
+                "request": true,
+                "value": "89052"
+              },
+              "302": {
+                "request": true,
+                "value": "89169"
+              },
+              "303": {
+                "request": true,
+                "value": "90019"
+              },
+              "304": {
+                "request": true,
+                "value": "90048"
+              },
+              "305": {
+                "request": true,
+                "value": "90211"
+              },
+              "306": {
+                "request": true,
+                "value": "90404"
+              },
+              "307": {
+                "request": true,
+                "value": "90720"
+              },
+              "308": {
+                "request": true,
+                "value": "91007"
+              },
+              "309": {
+                "request": true,
+                "value": "91107"
+              },
+              "310": {
+                "request": true,
+                "value": "91355"
+              },
+              "311": {
+                "request": true,
+                "value": "91803"
+              },
+              "312": {
+                "request": true,
+                "value": "91942"
+              },
+              "313": {
+                "request": true,
+                "value": "92037"
+              },
+              "314": {
+                "request": true,
+                "value": "92078"
+              },
+              "315": {
+                "request": true,
+                "value": "92103"
+              },
+              "316": {
+                "request": true,
+                "value": "92123"
+              },
+              "317": {
+                "request": true,
+                "value": "92211"
+              },
+              "318": {
+                "request": true,
+                "value": "92270"
+              },
+              "319": {
+                "request": true,
+                "value": "92307"
+              },
+              "320": {
+                "request": true,
+                "value": "92404"
+              },
+              "321": {
+                "request": true,
+                "value": "92553"
+              },
+              "322": {
+                "request": true,
+                "value": "92595"
+              },
+              "323": {
+                "request": true,
+                "value": "92694"
+              },
+              "324": {
+                "request": true,
+                "value": "92708"
+              },
+              "325": {
+                "request": true,
+                "value": "92868"
+              },
+              "326": {
+                "request": true,
+                "value": "92879"
+              },
+              "327": {
+                "request": true,
+                "value": "92882"
+              },
+              "328": {
+                "request": true,
+                "value": "93101"
+              },
+              "329": {
+                "request": true,
+                "value": "93111"
+              },
+              "330": {
+                "request": true,
+                "value": "93230"
+              },
+              "331": {
+                "request": true,
+                "value": "93312"
+              },
+              "332": {
+                "request": true,
+                "value": "93449"
+              },
+              "333": {
+                "request": true,
+                "value": "93465"
+              },
+              "334": {
+                "request": true,
+                "value": "93720"
+              },
+              "335": {
+                "request": true,
+                "value": "93901"
+              },
+              "336": {
+                "request": true,
+                "value": "94583"
+              },
+              "337": {
+                "request": true,
+                "value": "94598"
+              },
+              "338": {
+                "request": true,
+                "value": "94609"
+              },
+              "339": {
+                "request": true,
+                "value": "96150"
+              },
+              "340": {
+                "request": true,
+                "value": "96701"
+              },
+              "341": {
+                "request": true,
+                "value": "96797"
+              },
+              "342": {
+                "request": true,
+                "value": "98405"
+              },
+              "343": {
+                "request": true,
+                "value": "99204"
+              },
+              "344": {
+                "request": true,
+                "value": "99669"
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "10": {
+        "id": 10,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "type": "group",
+          "groupTag": "m_campaign"
+        },
+        "index": 3,
+        "childIds": [
+          11
+        ]
+      },
+      "11": {
+        "id": 11,
+        "type": "palette",
+        "height": 4,
+        "parent": 10,
+        "data": {
+          "type": "etlUnit::measurement",
+          "value": {
+            "request": true,
+            "measurementType": "m_campaign",
+            "displayName": "campaign",
+            "values": {
+              "0": {
+                "request": true,
+                "componentName": "camptype",
+                "displayName": "camp-type",
+                "reduced": false,
+                "tag": "txtValues",
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": "Click"
+                  },
+                  "1": {
+                    "request": true,
+                    "value": "Open"
+                  },
+                  "2": {
+                    "request": true,
+                    "value": "Send"
+                  }
+                }
+              },
+              "1": {
+                "request": true,
+                "componentName": "time",
+                "displayName": "camp-date",
+                "reduced": false,
+                "tag": "spanValues",
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 0,
+                      "rangeLength": 1,
+                      "reduced": false
+                    }
+                  },
+                  "1": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 2,
+                      "rangeLength": 1,
+                      "reduced": false
+                    }
+                  },
+                  "2": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 4,
+                      "rangeLength": 1,
+                      "reduced": false
+                    }
+                  },
+                  "3": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 13,
+                      "rangeLength": 1,
+                      "reduced": false
+                    }
+                  },
+                  "4": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 23,
+                      "rangeLength": 2,
+                      "reduced": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "12": {
+        "id": 12,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "type": "group",
+          "groupTag": "m_reach"
+        },
+        "index": 4,
+        "childIds": [
+          13
+        ]
+      },
+      "13": {
+        "id": 13,
+        "type": "palette",
+        "height": 4,
+        "parent": 12,
+        "data": {
+          "type": "etlUnit::measurement",
+          "value": {
+            "request": true,
+            "measurementType": "m_reach",
+            "displayName": "reach",
+            "values": {
+              "0": {
+                "request": true,
+                "componentName": "time",
+                "displayName": "reach-date",
+                "reduced": false,
+                "tag": "spanValues",
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 0,
+                      "rangeLength": 8,
+                      "reduced": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "14": {
+        "id": 14,
+        "type": "palette",
+        "height": 3,
+        "parent": 3,
+        "data": {
+          "type": "group",
+          "groupTag": "m_rxcount"
+        },
+        "index": 5,
+        "childIds": [
+          15
+        ]
+      },
+      "15": {
+        "id": 15,
+        "type": "palette",
+        "height": 4,
+        "parent": 14,
+        "data": {
+          "type": "etlUnit::measurement",
+          "value": {
+            "request": true,
+            "measurementType": "m_rxcount",
+            "displayName": "rx-count",
+            "values": {
+              "0": {
+                "request": true,
+                "componentName": "payer",
+                "displayName": "payer",
+                "reduced": false,
+                "tag": "txtValues",
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": "CASH"
+                  },
+                  "1": {
+                    "request": true,
+                    "value": "MEDICAID"
+                  },
+                  "2": {
+                    "request": true,
+                    "value": "TOTAL THIRD PARTY"
+                  }
+                }
+              },
+              "1": {
+                "request": true,
+                "componentName": "time",
+                "displayName": "rx-date",
+                "reduced": false,
+                "tag": "spanValues",
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 0,
+                      "rangeLength": 21,
+                      "reduced": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "16": {
+        "id": 16,
+        "type": "canvas",
+        "height": 2,
+        "parent": 2,
+        "data": {},
+        "index": 0,
+        "childIds": [
+          19
+        ]
+      },
+      "17": {
+        "id": 17,
+        "type": "canvas",
+        "height": 2,
+        "parent": 2,
+        "data": {},
+        "index": 1,
+        "childIds": [
+          21
+        ]
+      },
+      "18": {
+        "id": 18,
+        "type": "canvas",
+        "height": 2,
+        "parent": 2,
+        "data": {},
+        "index": 2,
+        "childIds": []
+      },
+      "19": {
+        "id": 19,
+        "type": "canvas",
+        "height": 3,
+        "parent": 16,
+        "data": {
+          "type": "group",
+          "groupTag": "q_specialty"
+        },
+        "index": 0,
+        "childIds": [
+          20
+        ]
+      },
+      "20": {
+        "id": 20,
+        "type": "canvas",
+        "height": 4,
+        "parent": 19,
+        "data": {
+          "type": "etlUnit::quality",
+          "value": {
+            "request": true,
+            "qualityName": "q_specialty",
+            "displayName": "specialty",
+            "tag": "txtValues",
+            "values": {
+              "0": {
+                "request": true,
+                "value": "CARDIOVASCULAR DISEASES"
+              },
+              "1": {
+                "request": true,
+                "value": "CRITICAL CARE MEDICINE"
+              },
+              "2": {
+                "request": true,
+                "value": "EMERGENCY MEDICINE"
+              },
+              "3": {
+                "request": true,
+                "value": "FAMILY MEDICINE"
+              },
+              "4": {
+                "request": true,
+                "value": "FAMILY PRACTICE"
+              },
+              "5": {
+                "request": true,
+                "value": "FAMILY PRACTICE, GERIATRIC MEDICINE"
+              },
+              "6": {
+                "request": true,
+                "value": "GENERAL PRACTICE"
+              },
+              "7": {
+                "request": true,
+                "value": "GENERAL PREVENTIVE MEDICINE"
+              },
+              "8": {
+                "request": true,
+                "value": "INTERNAL MED, CARD. ELECTROPHYSIOLOGY"
+              },
+              "9": {
+                "request": true,
+                "value": "INTERNAL MEDICINE"
+              },
+              "10": {
+                "request": true,
+                "value": "NURSE PRACTITIONER"
+              },
+              "11": {
+                "request": true,
+                "value": "ONCOLOGY MEDICAL"
+              },
+              "12": {
+                "request": true,
+                "value": "PEDIATRICS"
+              },
+              "13": {
+                "request": true,
+                "value": "PHYSICIAN ASSISTANT"
+              },
+              "14": {
+                "request": true,
+                "value": "PUBLIC HEALTH"
+              },
+              "15": {
+                "request": true,
+                "value": "PULMONARY DISEASES"
+              },
+              "16": {
+                "request": true,
+                "value": "UNSPECIFIED"
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      },
+      "21": {
+        "id": 21,
+        "type": "canvas",
+        "height": 3,
+        "parent": 17,
+        "data": {
+          "type": "group",
+          "groupTag": "m_reach"
+        },
+        "index": 0,
+        "childIds": [
+          22
+        ]
+      },
+      "22": {
+        "id": 22,
+        "type": "canvas",
+        "height": 4,
+        "parent": 21,
+        "data": {
+          "type": "etlUnit::measurement",
+          "value": {
+            "request": true,
+            "measurementType": "m_reach",
+            "displayName": "reach",
+            "values": {
+              "0": {
+                "request": true,
+                "componentName": "time",
+                "displayName": "reach-date",
+                "reduced": false,
+                "tag": "spanValues",
+                "values": {
+                  "0": {
+                    "request": true,
+                    "value": {
+                      "rangeStart": 0,
+                      "rangeLength": 8,
+                      "reduced": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "index": 0,
+        "childIds": []
+      }
+    },
+    "matrix": null,
+    "draggedId": null
+  },
+  "stepper": {
+    "isHidden": true,
+    "isPrevDisabled": true,
+    "isNextDisabled": true,
+    "registeredNextStep": {},
+    "steps": [
+      {
+        "route": "/",
+        "displayName": "Overview"
+      },
+      {
+        "route": "/campaigns/1/files",
+        "displayName": "Select Files"
+      },
+      {
+        "route": "/campaigns/1/fields",
+        "displayName": "Configure Fields"
+      },
+      {
+        "route": "/campaigns/1/pending",
+        "displayName": "Building ETL",
+        "canBacktrack": false
+      },
+      {
+        "route": "/campaigns/1/workbench",
+        "displayName": "Workbench"
+      }
+    ]
+  },
+  "levels": {
+    "levels": [],
+    "isFetching": false
+  },
+  "pendingRequests": {
+    "INSPECTION": {}
+  },
+  "notifications": [],
+  "modal": {
+    "modalType": null,
+    "modalProps": {},
+    "modalActions": {}
+  },
+  "ui": {
+    "loading": false
+  }
+}
