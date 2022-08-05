@@ -1,5 +1,5 @@
 /**
- * @description
+ *
  * Part of the File dialog
  * Displays a single file entry.
  *
@@ -22,24 +22,20 @@ import { formatFileSize } from '../../../utils/common';
 
 function FileRow(props) {
   const {
-    display_name,
-    path,
-    file_id,
-    is_directory,
+    display_name: displayName,
+    is_directory: isDirectory,
     size,
     isSelected,
-    fetchDirectory,
-    toggleFile,
+    fetchDirectory, // pre-configured fn
+    toggleFile, // pre-configured fn
   } = props;
-
-  const handleToggleFile = () => toggleFile(path, !isSelected);
 
   return (
     <TableRow
       hover
-      onClick={() => (is_directory ? fetchDirectory(file_id) : handleToggleFile())}
+      onClick={() => (isDirectory ? fetchDirectory() : toggleFile(!isSelected))}
     >
-      {is_directory ? (
+      {isDirectory ? (
         <TableCell align='center'>
           <Folder className='folderIcon' />
         </TableCell>
@@ -56,7 +52,7 @@ function FileRow(props) {
         </TableCell>
       )}
       <TableCell className='filename' align='left'>
-        {display_name}
+        {displayName}
       </TableCell>
       <TableCell className='filesize' align='right'>
         {formatFileSize(size)}
@@ -67,10 +63,8 @@ function FileRow(props) {
 
 FileRow.propTypes = {
   display_name: PropTypes.string.isRequired,
-  path: PropTypes.string.isRequired,
-  file_id: PropTypes.string,
-  fetchDirectory: PropTypes.func.isRequired,
   is_directory: PropTypes.bool.isRequired,
+  fetchDirectory: PropTypes.func.isRequired,
   isSelected: PropTypes.bool,
   size: PropTypes.number,
   toggleFile: PropTypes.func,

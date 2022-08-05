@@ -11,6 +11,8 @@
  */
 import { makeActionCreator } from '../../utils/makeActionCreator';
 
+export { STATUS } from '../../lib/sum-types';
+
 // feature
 export const FILEVIEW = '[FileView]';
 
@@ -18,20 +20,35 @@ export const READ_DIR_START = `${FILEVIEW} GET_READ_DIR_START`; // command
 export const READ_DIR_SUCCESS = `${FILEVIEW} GET_READ_DIR_SUCCESS`; // event
 export const READ_DIR_ERROR = `${FILEVIEW} GET_READ_DIR_ERROR`; // event
 
-// action kind :: command
-export const fetchDirectoryStart = makeActionCreator(
-  READ_DIR_START,
-  'path',
-  'provider',
-  'project_id',
-);
+export const SET_DIR_STATUS = `${FILEVIEW} SET_DIR_STATUS`; // document
+export const RESET_DIR_REQUEST = `${FILEVIEW} RESET_DIR_REQUEST`; // document
 
-// action kind :: event
-export const fetchDirectorySuccess = makeActionCreator(
-  READ_DIR_SUCCESS,
-  'files',
-  'path',
-  'parent',
-);
-// action kind :: event
+// action kind :: command
+export const fetchDirectoryStart = (request) => {
+  return {
+    type: READ_DIR_START,
+    ...request,
+  };
+};
+export const resetFetchRequest = () => {
+  return {
+    type: RESET_DIR_REQUEST,
+  };
+};
+// action kind :: event -> document
+export const setDirStatus = (status) => {
+  return {
+    type: SET_DIR_STATUS,
+    status,
+  };
+};
+
+// action kind :: event -> document
+export const fetchDirectorySuccess = (payload) => {
+  return {
+    type: READ_DIR_SUCCESS,
+    payload,
+  };
+};
+// action kind :: event -> document
 export const fetchDirectoryError = makeActionCreator(READ_DIR_ERROR, 'error');

@@ -66,10 +66,10 @@ import {
 import { SOURCE_TYPES } from '../lib/sum-types';
 
 // ☎️  callback
-import { cancelHeaderView } from '../ducks/actions/headerView.actions';
+// import { cancelHeaderView } from '../ducks/actions/headerView.actions';
 // action creator
-import { withConfirmation } from '../ducks/actions/modal.actions';
-import { filesConfirmRemovingFileText } from '../constants/strings';
+// import { withConfirmation } from '../ducks/actions/modal.actions';
+// import { filesConfirmRemovingFileText } from '../constants/strings';
 
 import {
   prettyNumber,
@@ -99,7 +99,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
  *
  */
 function HeaderView(props) {
-  const { filename } = props;
+  const { filename, removeFile } = props;
   // ignoring stateId (generating it instead locally)
 
   useTraceUpdate(props);
@@ -126,31 +126,13 @@ function HeaderView(props) {
     getActiveFieldCount(state, filename),
   );
 
-  const noop = () => {};
-
-  // 📬 remove a headerView/file with confirmation
-  const dispatch = useDispatch();
-
-  const handleRemove = (/* filename */) => {
-    dispatch(
-      withConfirmation(
-        cancelHeaderView({ path: filename }),
-        {
-          stateId: `${filename}`,
-          message: filesConfirmRemovingFileText(filename),
-        },
-        noop,
-      ),
-    );
-  };
-
   return (
     <Card key={`|${filename}|HeaderView`} className={clsx('Luci-HeaderView')}>
       <ContextProvider
         stateId={`${filename}|HeaderView|Context`}
         filename={filename}
         headerView={headerView || { nrows: null }}
-        handleRemove={handleRemove}
+        handleRemove={removeFile}
         hideInactive
         status={headerView ? 'success' : 'loading'}
         activeFieldCount={activeFieldCount}
@@ -195,6 +177,7 @@ function HeaderView(props) {
 }
 HeaderView.propTypes = {
   filename: PropTypes.string.isRequired,
+  removeFile: PropTypes.func.isRequired,
 };
 // 🔧
 HeaderView.whyDidYouRender = true;

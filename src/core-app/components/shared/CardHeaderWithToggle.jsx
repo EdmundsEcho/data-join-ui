@@ -30,7 +30,6 @@ const CardHeaderWithToggle = (props) => {
 
   const {
     handleRemove,
-    filename,
     toggleShowDetail,
     showDetail,
     hideInactive,
@@ -59,15 +58,17 @@ const CardHeaderWithToggle = (props) => {
                 className={clsx('expandIcon', { expandOpen: showDetail })}
                 onClick={handleShowDetail}
                 tabIndex={-1}
-                size="large">
+                size='large'
+              >
                 <ExpandMoreIcon />
               </IconButton>
             </Grid>
             <Grid item xs={4}>
               <IconButton
                 className={clsx('closeIcon')}
-                onClick={() => handleRemove(filename)}
-                size="large">
+                onClick={handleRemove}
+                size='large'
+              >
                 <CloseIcon />
               </IconButton>
             </Grid>

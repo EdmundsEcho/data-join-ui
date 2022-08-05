@@ -64,16 +64,19 @@ export const seedProjectState = (...args) =>
 
 // utilized by useFormMachine
 export const getFilesSlice = (state) => state.fileView;
-export const getPath = (state) => fromFileView.getPath(state.fileView);
-export const getParent = (state) => fromFileView.getParent(state.fileView);
+export const getPath = (state) => fromFileView.getPathQuery(state.fileView);
+export const getParent = (state) =>
+  fromFileView.getParentPathQuery(state.fileView);
 export const getFiles = (state) => fromFileView.getFiles(state.fileView);
+export const getFilesRequest = (state) =>
+  fromFileView.getRequest(state.fileView);
 export const selectFiles = (state, filterText) =>
   fromFileView.selectFilesF(state.fileView, filterText);
 export const getReaddirErrors = (state) =>
   fromFileView.getReaddirErrors(state.fileView);
-export const getIsLoadingFiles = (state) =>
-  fromFileView.getIsLoadingFiles(state.fileView);
-
+export const getFilesViewStatus = (state) =>
+  fromFileView.getFilesViewStatus(state.fileView);
+export const { STATUS } = fromFileView;
 //------------------------------------------------------------------------------
 /**  headerView
  *   process scope: selected files -> etl

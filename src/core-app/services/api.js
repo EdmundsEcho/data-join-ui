@@ -46,23 +46,24 @@ if (DEBUG) {
 //------------------------------------------------------------------------------
 // Configure axios endpoints
 //------------------------------------------------------------------------------
-const apiInstance = axios.create({
+export const apiInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     Accept: 'application/json',
   },
+  withCredentials: true,
 });
+apiInstance.interceptors.response.use(stdApiResponse, stdApiResponse);
 
-const gqlInstance = axios.create({
+export const gqlInstance = axios.create({
   baseURL: GQL_BASE_URL,
   method: 'POST',
   headers: {
     'content-type': 'application/json',
     Accept: 'application/json',
   },
+  withCredentials: true,
 });
-
-apiInstance.interceptors.response.use(stdApiResponse, stdApiResponse);
 
 //------------------------------------------------------------------------------
 /**
@@ -181,54 +182,6 @@ const { INSPECTION, EXTRACTION, MATRIX } = ServiceTypes;
 
 //------------------------------------------------------------------------------
 // Endpoints/api services
-//------------------------------------------------------------------------------
-/**
- * New drive-related endpoint
- *
- * Filesystem
- *
- */
-export async function getStorageProviderFiles(projectId, sorageProvider) {
-  const axiosOptions = {
-    url: `/filesystem/readdir?project_id=${projectId}&storage_rpovider=${sorageProvider}`,
-    method: 'GET',
-  };
-  if (DEBUG) {
-    console.debug(
-      `%c testing "/v1/filesystem/readdir" endpoint`,
-      'color:orange',
-    );
-  }
-  return apiInstance(axiosOptions);
-}
-/**
- * Get the project drives
- *
- * @function
- * @return {Promise} response
- */
-export async function fetchProjectDrives(projectId) {
-  const axiosOptions = {
-    url: `/project-drives/${projectId}`,
-    method: 'GET',
-  };
-  if (DEBUG) {
-    console.debug(
-      `%c testing "/project-drives/<pid>" endpoint`,
-      'color:orange',
-    );
-  }
-  return apiInstance(axiosOptions);
-}
-export const readDirectory = (path, provider, project_id /* , filter */) => {
-  let path_query = `&path=${path}`;
-  if (!path || path.length === 0) {
-    path_query = '';
-  }
-  const url = `/filesystem/readdir?provider=${provider}${path_query}&project_id=${project_id}`;
-  return apiInstance.get(url);
-};
-
 //------------------------------------------------------------------------------
 /**
  * Polling for the status of a queued task.
@@ -569,3 +522,64 @@ function validateEventRequest(event, requestKey) {
     );
   }
 }
+
+//------------------------------------------------------------------------------
+// non-asynch request
+//
+/**
+ * Get the project drives
+ *
+ * @function
+ * @return {Promise} response
+ */
+export async function fetchProjectDrives(projectId) {
+  const axiosOptions = {
+    url: `/project-drives/${projectId}`,
+    method: 'GET',
+  };
+  if (DEBUG) {
+    console.debug(
+      `%c testing "/project-drives/<pid>" endpoint`,
+      'color:orange',
+    );
+  }
+  return apiInstance(axiosOptions);
+}
+/**
+ * List files | drives
+ *
+ *  request = {
+ *      project_id, # required
+ *      token_id,
+ *      path_query,
+ *      path_is_directory, # default: true
+ *      parent_path_query  # required when parent :: path_query
+ *  }
+ *
+ *  response: {
+ *      status
+ *      count
+ *      results: {
+ *          parent_path_query: null | 'root' | path_query
+ *          files: [ File ]
+ *      }
+ *  }
+ *
+ * @function
+ * @return {Promise} response
+ */
+export const readDirectory = (request) => {
+  const axiosOptions = {
+    url: `/filesystem/readdir`,
+    method: 'POST',
+    data: request,
+  };
+  if (DEBUG) {
+    console.debug(
+      `%c testing POST @ "v1/filesystem/readdir" endpoint`,
+      'color:orange',
+    );
+  }
+
+  return apiInstance(axiosOptions);
+};

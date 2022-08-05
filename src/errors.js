@@ -1,23 +1,17 @@
-// --
+// -DEPRECATE - use LuciErrors in lib
+// -
 function ApiCallError(message) {
-  const error = new Error(message)
-  return error
+  const error = new Error(message);
+  return error;
 }
-ApiCallError.prototype = Object.create(Error.prototype)
-
-// --
-function ApiResponseError(message) {
-  const error = new Error(message)
-  return error
-}
-ApiResponseError.prototype = Object.create(Error.prototype)
+ApiCallError.prototype = Object.create(Error.prototype);
 
 // --
 function ExpiredSessionError(message) {
-  const error = new Error(message)
-  return error
+  const error = new Error(message);
+  return error;
 }
-ExpiredSessionError.prototype = Object.create(Error.prototype)
+ExpiredSessionError.prototype = Object.create(Error.prototype);
 
 // --
-export { ApiCallError, ApiResponseError, ExpiredSessionError }
+export { ApiCallError, ExpiredSessionError };

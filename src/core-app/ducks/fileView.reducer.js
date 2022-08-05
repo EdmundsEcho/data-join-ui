@@ -23,6 +23,9 @@ import {
   READ_DIR_START,
   READ_DIR_SUCCESS,
   READ_DIR_ERROR,
+  SET_DIR_STATUS,
+  RESET_DIR_REQUEST,
+  STATUS,
 } from './actions/fileView.actions';
 
 // -----------------------------------------------------------------------------
@@ -30,13 +33,16 @@ import {
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
+export { STATUS };
+
 export const initialState = {
-  path: null,
+  count: undefined,
   files: [],
   filteredFiles: [],
   filterText: '', // search for filenames
   readdirErrors: [],
-  isLoading: false,
+  status: STATUS.idle,
+  request: undefined,
 };
 
 // -----------------------------------------------------------------------------
@@ -48,11 +54,13 @@ export const initialState = {
  * `initialState` for this state fragment.
  *
  */
-export const getPath = (stateFragment) => stateFragment.path;
-export const getParent = (stateFragment) => stateFragment.parent;
-export const getFiles = (stateFragment) => stateFragment?.files ?? [];
-export const getReaddirErrors = (stateFragment) => stateFragment?.readdirErrors;
-export const getIsLoadingFiles = (stateFragment) => stateFragment?.isLoading;
+export const getPathQuery = (stateFragment) => stateFragment.pathQuery;
+export const getParentPathQuery = (stateFragment) =>
+  stateFragment.parentPathQuery;
+export const getFiles = (stateFragment) => stateFragment.files;
+export const getReaddirErrors = (stateFragment) => stateFragment.readdirErrors;
+export const getFilesViewStatus = (stateFragment) => stateFragment.status;
+export const getRequest = (stateFragment) => stateFragment.request;
 /**
  *
  * selector
@@ -75,8 +83,7 @@ export const selectFilesF = (stateFragment, filterText) => {
 //------------------------------------------------------------------------------
 /**
  *
- * The action types should all be `document`
- * (see Programming with Actions)
+ * The action types should all be `document` (see Programming with Actions)
  *
  * 1. the return type must match the reducer defined here.
  *
@@ -87,38 +94,62 @@ export const selectFilesF = (stateFragment, filterText) => {
  * 3. the action will trickle down from the state root; however, the reducer
  *    defined here points to the stateFragment (so do *not* use rootSelectors)
  *
+ *   [ACTION_TYPE]: (state, action) => ({..})
  */
 //------------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
   RESET: () => ({
     ...initialState,
   }),
-  // command
-  // 🛈  payload required: 'path'
+  // command (consumed by sagas)
   [READ_DIR_START]: (state) => ({
     ...state,
     files: [],
+    count: 0,
     readdirErrors: [],
-    isLoading: true,
+    status: STATUS.pending,
   }),
 
-  // event
-  [READ_DIR_SUCCESS]: (state, { path, files, parent }) => ({
+  // event -> document
+  [READ_DIR_SUCCESS]: (state, { payload }) => ({
     ...state,
-    path,
-    files,
-    parent,
-    filteredFiles: files,
+    ...payload,
     readdirErrors: [],
-    isLoading: false,
+    status: STATUS.resolved,
   }),
 
   // event
   [READ_DIR_ERROR]: (state, { error }) => ({
     ...state,
     files: [],
+    count: 0,
     readdirErrors: [...state.readdirErrors, error],
-    isLoading: false,
+    status: STATUS.rejected,
+  }),
+
+  // document
+  [SET_DIR_STATUS]: (state, { status }) => {
+    if (status === STATUS.pending) {
+      return {
+        ...state,
+        files: [],
+        count: 0,
+        readdirErrors: [],
+        status,
+      };
+    }
+    return {
+      ...state,
+      status,
+    };
+  },
+
+  // document
+  [RESET_DIR_REQUEST]: (state) => ({
+    ...state,
+    request: undefined,
+    readdirErrors: [],
+    status: STATUS.idle,
   }),
 });
 export default reducer;

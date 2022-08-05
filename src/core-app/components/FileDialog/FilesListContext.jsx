@@ -1,72 +1,99 @@
-import React, { useCallback, createContext, useState } from 'react';
+/**
+ *
+ * Likely DEPRECATE
+ *
+ */
+import React, { useMemo, createContext } from 'react';
 
 import { withSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import {
-  getStorageProviderFiles,
-} from '../../services/api';
+import { readDirectory as fetchFn } from '../../services/api';
+import { useFetchApi } from '../../../hooks/use-fetch-api';
 
-export const FilesListContext = createContext({
+// -----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+// -----------------------------------------------------------------------------
+/* eslint-disable no-console */
+
+/**
+ * Relevant when we want to "configure" the context externally.
+ */
+export const Context = createContext({
   isFetching: false,
   filesList: [],
   fetchFiles: () => {},
 });
+Context.displayName = 'FilesList-Context';
 
-/**
- * Context provider that shares the user-driven state changes in the tools
- */
 const Provider = (props) => {
-const navigate = useNavigate();
-  const [isFetching, setIsFetching] = useState(false);
-  const [filesList, setFilesList] = useState([]);
-//
+  const navigate = useNavigate();
+  //
   const { enqueueSnackbar, children } = props;
 
-  const fetchFiles = async () => {
+  /**
+   * fetch data
+   * callback: set the initial value of the cache
+   */
+  const {
+    fetch: fetchApi,
+    status,
+    STATUS,
+    error,
+    cache: data,
+  } = useFetchApi({
+    fetchFn,
+    enqueueSnackbar,
+    DEBUG,
+  });
+
+  // 💢 -> sets useFetchApi cache
+  const fetch = () => {
     try {
-      setIsFetching(true);
-      const response = await getStorageProviderFiles();
-      const { error, status } = response?.data;
-      if (!error && status !== 'Error' && response?.status === 200 ) {
-        setFilesList(response.data);
-      } else {
-        navigate('/login');
-        enqueueSnackbar(`Error: ${error || response?.data?.message}`, {
-          variant: 'error',
-        });
-      }
-      console.log('fetchFiles', { response });
+      fetchApi();
     } catch (e) {
-      console.log('error fetchProjects', e);
+      if (e.status === 401) {
+        console.dir(e);
+        navigate('/login');
+      } else {
+        console.error(`🦀 what is this error; how treat? (display on page)`);
+        navigate('/login');
+        throw e;
+      }
     }
-    setIsFetching(false);
+    // finally { }
   };
 
-  const state = {
-    isFetching,
-    filesList,
-    fetchFiles,
-  };
-
-  return (
-    <FilesListContext.Provider value={state}>
-      {children}
-    </FilesListContext.Provider>
+  // exposed interface
+  const state = useMemo(
+    () => ({
+      data,
+      error,
+      status,
+      STATUS,
+      fetch,
+    }),
+    [status, error, data], // eslint-disable-line
   );
+
+  if (DEBUG) {
+    console.debug(
+      `📥 FilesList context is running: ${status || 'unknown status'} with ${
+        data?.length ?? 'unknown number of'
+      } items.`,
+    );
+  }
+  return <Context.Provider value={state}>{children}</Context.Provider>;
 };
+
+Provider.displayName = 'FilesList-Provider';
 
 Provider.propTypes = {
-  isFetching: PropTypes.bool,
-  filesList: PropTypes.array,
-  fetchFiles: PropTypes.func,
+  enqueueSnackbar: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-// isRequired instead?
-Provider.defaultProps = {
-  isFetching: false,
-  filesList: [],
-  fetchFiles: () => {},
-};
+Provider.defaultProps = {};
+
 export default withSnackbar(Provider);

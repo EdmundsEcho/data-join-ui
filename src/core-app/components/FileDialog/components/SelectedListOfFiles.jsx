@@ -28,9 +28,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
 /* eslint-disable no-console */
 
 const SelectedListOfFiles = (props) => {
-  const {
-    selected, // array of filenames
-  } = props;
+  const { files, removeFile } = props;
 
   useTraceUpdate(props);
 
@@ -44,7 +42,7 @@ const SelectedListOfFiles = (props) => {
   // 🔖 selected does not mean ready
   // ...wait for api to retrieve
   //
-  return selected.length === 0 ? (
+  return files.length === 0 ? (
     <Container className={clsx('Luci-HeaderViews', 'empty')}>
       <Typography type='p'>
         Select the files to be included in the analysis.
@@ -52,11 +50,12 @@ const SelectedListOfFiles = (props) => {
     </Container>
   ) : (
     <Container className={clsx('Luci-HeaderViews', 'root')}>
-      {selected.map((filename) => (
+      {files.map((file) => (
         <HeaderView
-          key={`|${filename}|header-view`}
-          stateId={`|${filename}|header-view`}
-          filename={filename}
+          key={`|${file.pathObj.identifier}|header-view`}
+          stateId={`|${file.pathObj.identifier}|header-view`}
+          filename={file.pathObj.displayName}
+          removeFile={() => removeFile(file.pathObj)}
         />
       ))}
     </Container>
@@ -64,11 +63,12 @@ const SelectedListOfFiles = (props) => {
 };
 
 SelectedListOfFiles.propTypes = {
-  selected: PropTypes.arrayOf(PropTypes.string),
+  files: PropTypes.arrayOf(PropTypes.shape({})),
+  removeFile: PropTypes.func.isRequired,
 };
 
 SelectedListOfFiles.defaultProps = {
-  selected: [],
+  files: [],
 };
 
 export default SelectedListOfFiles;

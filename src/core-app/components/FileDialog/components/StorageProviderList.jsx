@@ -1,4 +1,10 @@
-import React, { useState } from 'react';
+/**
+ *
+ * Display the list of shared drive services.
+ * Manage the authorization process.
+ *
+ */
+import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,7 +16,14 @@ const CustomButton = (props) => {
   return <IconButton {...props} className='auth-button' />;
 };
 
-const StorageProviderList = ({ project_id: projectId, className }) => {
+/**
+ *
+ * Render the shared-drive provider buttons; onClick, authenticate.
+ *
+ * @component
+ *
+ */
+const StorageProviderList = ({ projectId, className }) => {
   const handleAuth = (serviceName) => {
     const driveAuthURL = `http://localhost:3099/drive/${serviceName}/${projectId}`;
     window.location.replace(driveAuthURL);
@@ -56,16 +69,10 @@ const StorageProviderList = ({ project_id: projectId, className }) => {
 };
 
 StorageProviderList.propTypes = {
-  project_id: PropTypes.string.isRequired,
-  className: PropTypes.string,
-  // files: PropTypes.arrayOf(PropTypes.shape({ length: PropTypes.number })),
-  // fileSearchText: PropTypes.string,
+  projectId: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
 };
 
-StorageProviderList.defaultProps = {
-  className: '',
-  // files: [],
-  // fileSearchText: '',
-};
+StorageProviderList.defaultProps = {};
 
 export default StorageProviderList;

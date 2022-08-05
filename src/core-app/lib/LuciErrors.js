@@ -21,11 +21,21 @@
  */
 class LuciError extends Error {
   constructor(error, ...params) {
-    const message =
+    console.debug(
+      `is this value true: ${typeof error === 'object' && 'message' in error}`,
+    );
+
+    const [message, cause] =
       typeof error === 'object' && 'message' in error
-        ? error.message
-        : error || '';
-    super(message, ...params);
+        ? [error.message, error]
+        : [error || '', undefined];
+
+    if (cause) {
+      super(message, { cause });
+    } else {
+      super(message, ...params);
+    }
+
     if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     } else {
@@ -33,7 +43,7 @@ class LuciError extends Error {
     }
     this.name = this.constructor.name;
     this.message = message;
-    this.fix = error; // host the error as a fix
+    this.cause = cause || error; // host the error as a fix
     this.date = new Date();
   }
 }

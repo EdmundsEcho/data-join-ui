@@ -1,5 +1,4 @@
 /**
- * @description
  * Standard axios response handler. Gracefully returns standard object
  * regardless of the result of the request. You can depend on the object
  * returning in this format { status: xxx, statusText: '', data: ... }

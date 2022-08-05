@@ -18,6 +18,7 @@ import palette from './assets/scheme/palette.json';
 import { FIELD_TYPES, PURPOSE_TYPES } from './lib/sum-types';
 
 // const LuciviaOrange = '#FF9445'; // eslint-disable-line
+/* eslint-disable */
 
 /**
  * Custom theme that is supposed to overwrite the default theme
@@ -202,6 +203,13 @@ export default createTheme({
           },
           '& thead tr th:first-of-type svg': {
             marginBottom: '-4px',
+          },
+          // last cell: more space on the right
+          '& thead tr th:last-child': {
+            paddingRight: spacingFn(5),
+          },
+          '& tbody tr td:last-child': {
+            paddingRight: spacingFn(5),
           },
           '& tbody tr:last-child td': {
             border: 'none',
@@ -450,9 +458,11 @@ export default createTheme({
               width: `90%`,
             },
           },
-          // see also DirectoryView (parent)
+          // see also parent MuiTableContainer DirectoryView (parent)
           '&.Luci-DirectoryView': {
-            marginBottom: 'auto',
+            marginBottom: 'auto', // 🛈  this when parent is block?
+            flex: 1, // 🛈  this when parent is flex
+            overflow: 'inherit',
             // height: 'calc(100vh - 244px)',
             // 234 = footer: 122, appBar: 48, searchBar: 64
             // margin of error provided by last row padding
@@ -538,7 +548,7 @@ export default createTheme({
         variant: 'standard',
       },
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: (/* theme */) => ({
           '&.LuciSelectMenu': {
             minWidth: '36px',
             '&.derivedField': {
@@ -706,6 +716,11 @@ export default createTheme({
         dense: {
           '&.Luci-DirectoryView': {
             minHeight: 'min-content',
+          },
+        },
+        root: {
+          '&.Luci-DirectoryView': {
+            width: '100%',
           },
         },
       },
@@ -1058,7 +1073,7 @@ export default createTheme({
           alignItems: 'center',
           justifyContent: 'center',
         },
-        switchBase: ({ theme }) => ({
+        switchBase: (/* theme */) => ({
           padding: '5px',
           left: '0px',
           '&.Mui-checked': {
@@ -1356,7 +1371,10 @@ export default createTheme({
             display: 'flex',
             flexDirection: 'column',
             flexGrow: 1,
+            overflow: 'hidden',
             '& .app-paging-view': {
+              overflow: 'hidden',
+              display: 'flex',
               flexGrow: 1,
             },
             '& .app-paging-controller': {},
@@ -1565,19 +1583,27 @@ export default createTheme({
     },
     MuiCardContent: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           margin: 'inherit',
           padding: 'inherit',
           '&.EtlUnit-Parameter': {
             padding: '0px',
-            margin: `${spacingFn(2)} 0px`,
-            border: `0.5px ridge ${palette.grey[200]}`,
+            margin: `${theme.spacingFn(2)} 0px`,
+            border: `0.5px ridge ${theme.palette.grey[200]}`,
             borderRadius: '4px',
             '&.no-border, &.quality': {
               border: `none`,
             },
           },
-        },
+          '&.Luci-DirectoryView': {
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            flex: 1,
+            overflow: 'inherit',
+            marginRight: theme.spacingFn(3), // ⬜ match parent that set left
+          },
+        }),
       },
     },
     MuiCard: {
@@ -1614,11 +1640,28 @@ export default createTheme({
           // FileDialog left side
           //---------------------------------------------------------------------
           '&.Luci-DirectoryView': {
-            margin: `auto ${theme.spacingFn(3)}`,
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            flex: 1,
+            overflow: 'inherit',
+            margin: `0 ${theme.spacingFn(3)}`,
             boxShadow: 'none',
             borderRadius: 0,
             backgroundColor: 'inherit',
             fontSize: '1.0rem',
+            height: '100%',
+            '& .grow-max': {
+              display: 'flex',
+              flexDirection: 'column',
+              flexWrap: 'nowrap',
+              overflow: 'inherit',
+              flexGrow: 1,
+            },
+            '& .drive-providers': {
+              marginBottom: theme.spacingFn(4),
+              justifyContent: 'center',
+            },
           },
           //---------------------------------------------------------------------
           // FileDialog right side

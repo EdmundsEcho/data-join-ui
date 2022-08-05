@@ -2,18 +2,17 @@
 
 /**
  *
- * ⬆ FileDialog/container
- * 📖 files (redux)
- * ⬇ ListOfFiles
+ * ⬆ container
+ * 📖 files, headerViewErrors, others...
+ * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { withSnackbar } from 'notistack';
+import clsx from 'clsx';
 
-// import clsx from 'clsx';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -23,21 +22,21 @@ import SearchBar from './components/SearchBar';
 import ListOfFiles from './components/ListOfFiles';
 import StorageProviderList from './components/StorageProviderList';
 
-// import FilesListContext from './FilesListContext';
+// layout support
+// import useDimensions from '../../hooks/use-react-dimensions';
 
 // 📖 data
 import {
-  getPath,
   getFiles,
-  getParent,
-  getIsLoadingFiles,
-  getReaddirErrors,
+  getFilesRequest,
+  getFilesViewStatus,
 } from '../../ducks/rootSelectors';
 
 // ☎️  Callbacks to update data
-import { fetchDirectoryStart } from '../../ducks/actions/fileView.actions';
-import { fetchProjectDrives } from '../../services/api';
-// import { getStorageProviderFiles } from '../../services/api';
+import {
+  fetchDirectoryStart,
+  resetFetchRequest,
+} from '../../ducks/actions/fileView.actions';
 
 /**
  * Directory view: 📖 files
@@ -49,18 +48,10 @@ import { fetchProjectDrives } from '../../services/api';
  * @component
  *
  */
-function LeftPane({ enqueueSnackbar, selectedFiles, toggleFile }) {
-  const [provider, setProvider] = useState(null);
-  const [providers, setProviders] = useState(null);
-
+function LeftPane({ selectedFiles, toggleFile }) {
   // 📖 left side data
   // ⚠️  can return null
-  const path = useSelector(getPath) || 'root';
-
-  // ⬜ Get project_id from URL
-  const { pathname } = useLocation();
-  const regexResult = pathname.slice(1).match(/\/(.*?)\//);
-  const projectId = regexResult ? regexResult[1] : null;
+  const { projectId } = useParams();
 
   // 📬
   const dispatch = useDispatch();
@@ -69,101 +60,94 @@ function LeftPane({ enqueueSnackbar, selectedFiles, toggleFile }) {
   // set the filter value for which files to view
   const [fileViewFilter, setFileViewFilter] = useState(() => '');
 
-  const errors = useSelector((state) => getReaddirErrors(state));
-  const isLoading = useSelector((state) => getIsLoadingFiles(state));
+  // retrieve state from redux; files and request for those files
   const cache = useSelector((state) => getFiles(state), shallowEqual);
+  const cachedRequest = useSelector(getFilesRequest);
+  const viewStatus = useSelector(getFilesViewStatus);
 
-  const handleFetchProjectDrives = useCallback(
-    async (requestedPath) => {
-      setFileViewFilter('');
-      const { data } = await fetchProjectDrives(projectId);
-      const projectDrives = Array.isArray(data)
-        ? data.filter((drive) => drive.project_id === projectId)
-        : [];
-      setProviders(projectDrives);
-    },
-    [projectId],
-  );
-
+  // initial state: pull root data
+  // pull whatever drives are shared with the project
   useEffect(() => {
-    handleFetchProjectDrives();
-    setProvider(null);
-  }, [projectId]);
-
-  useEffect(() => {
-    if (errors.length > 0) {
-      errors.forEach((error) =>
-        enqueueSnackbar(`Error from ${provider}: ${error}`, {
-          variant: 'error',
+    if (typeof cachedRequest === 'undefined') {
+      dispatch(
+        // request gets stored in redux (later changed incrementally)
+        fetchDirectoryStart({
+          project_id: projectId,
+          token_id: null,
+          path_query: null,
+          display_name: undefined,
         }),
       );
-    } else if (provider && !isLoading) {
-      enqueueSnackbar(`Files loaded succesfully from: ${provider}`, {
-        variant: 'success',
-      });
     }
-  }, [errors, isLoading, provider]);
+    // return () => dispatch(resetFetchRequest());
+  }, [dispatch, projectId, cachedRequest]);
 
+  const {
+    path_query: pathQuery,
+    token_id: tokenId,
+    display_name: displayName,
+  } = cachedRequest || {
+    token_id: undefined,
+    path_query: undefined,
+    display_name: undefined,
+  };
+
+  // local filter
   const displayFiles =
     fileViewFilter === ''
       ? cache
       : cache.filter((file) => file.display_name.includes(fileViewFilter));
-
-  const parent = useSelector(getParent) || undefined;
 
   // update local state
   const handleNewFileView = (filterText) => {
     setFileViewFilter(filterText);
   };
 
+  // incremental params: 1. none 2. token_id 3. path_query (file_id)
   const handleFetchDirectory = useCallback(
-    async (requestedPath, providerName = provider) => {
-      setFileViewFilter('');
-      dispatch(fetchDirectoryStart(requestedPath, providerName, projectId));
+    (newRequest) => {
+      setFileViewFilter(''); // reset the local view filter
+      dispatch(
+        fetchDirectoryStart({
+          ...cachedRequest,
+          ...newRequest,
+        }),
+      );
     },
-    [dispatch, provider, projectId],
+    [dispatch, cachedRequest],
   );
 
-  const handleSelectProvider = (providerName) => {
-    setProvider(providerName);
-    setProviders(null);
-    handleFetchDirectory('root', providerName);
-  };
-
-  return typeof path === 'undefined' ? null : (
-    <Card key={`files|leftPane|${path}`} className='Luci-DirectoryView'>
-      <CardActions className='Luci-DirectoryView'>
-        <SearchBar
-          className='Luci-DirectoryView'
-          path={path}
-          files={providers || displayFiles}
-          onChange={handleNewFileView}
-          onCancel={() => setFileViewFilter('')}
-          value={fileViewFilter}
-        />
-      </CardActions>
-      {/* Current directory */}
-      {/* List of files */}
-      <CardContent className='Luci-DirectoryView'>
-        <ListOfFiles
-          parent={parent}
-          className='Luci-DirectoryView'
-          files={providers || displayFiles}
-          selected={selectedFiles}
-          path={path}
-          fetchDirectory={handleFetchDirectory}
-          fetchProjectDrives={handleFetchProjectDrives}
-          selectProvider={handleSelectProvider}
-          isFilesView={!providers}
-          isLoading={isLoading}
-          toggleFile={toggleFile}
-          show
-        />
-      </CardContent>
-      <CardActions className='Luci-DirectoryView'>
+  return typeof pathQuery === 'undefined' ? null : (
+    <Card key={`files|leftPane|${pathQuery}`} className='Luci-DirectoryView'>
+      <div className='grow-max'>
+        <CardActions className='Luci-DirectoryView'>
+          <SearchBar
+            className='Luci-DirectoryView'
+            path={displayName || ''}
+            files={displayFiles}
+            onChange={handleNewFileView}
+            onCancel={() => setFileViewFilter('')}
+            value={fileViewFilter}
+          />
+        </CardActions>
+        {/* Current directory */}
+        {/* List of files */}
+        <CardContent className='Luci-DirectoryView'>
+          <ListOfFiles
+            className='list-of-files'
+            files={displayFiles}
+            selected={selectedFiles}
+            path={pathQuery || ''}
+            fetchDirectory={handleFetchDirectory}
+            toggleFile={toggleFile}
+            viewStatus={viewStatus}
+          />
+        </CardContent>
+      </div>
+      <CardActions className={clsx('Luci-DirectoryView', 'drive-providers')}>
         <StorageProviderList
-          className='Luci-DirectoryView'
-          project_id={projectId}
+          className='Drive-Providers'
+          projectId={projectId}
         />
       </CardActions>
     </Card>
@@ -173,7 +157,6 @@ function LeftPane({ enqueueSnackbar, selectedFiles, toggleFile }) {
 LeftPane.propTypes = {
   selectedFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
   toggleFile: PropTypes.func.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-export default withSnackbar(LeftPane);
+export default LeftPane;

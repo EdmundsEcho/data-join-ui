@@ -18,8 +18,7 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 
-import SplitPane from 'react-split-pane';
-import '../../assets/scheme/react-split-pane.css';
+import SplitPane from 'react-split-pane'; // see index.css
 
 import SelectedListOfFiles from './components/SelectedListOfFiles';
 // parts to this component
@@ -62,6 +61,7 @@ const FileDialogComponent = () => {
   }
 
   // 📖 data (shared left and right side)
+  // string :: pathObj.identifier
   const selectedFiles = useSelector(getSelected, shallowEqual);
 
   // 📬 remove a headerView/file with confirmation
@@ -70,11 +70,12 @@ const FileDialogComponent = () => {
   // guarded/displays a confirmation dialog
   // ☎️  toggle/remove file (shared)
   const handleRemoveFile = useCallback(
-    (filename) => {
+    (pathObj) => {
       dispatch(
-        withConfirmation(cancelHeaderView({ path: filename }), {
-          stateId: `${filename}`,
-          message: filesConfirmRemovingFileText(filename),
+        // note: internal to redux path = pathObj.identifier
+        withConfirmation(cancelHeaderView({ path: pathObj.identifier }), {
+          stateId: `${pathObj.identifier}`,
+          message: filesConfirmRemovingFileText(pathObj.filename),
         }),
       );
     },
@@ -83,11 +84,10 @@ const FileDialogComponent = () => {
 
   // ☎️  left side
   const handleToggleFile = useCallback(
-    (filename, isSelected) => {
+    (pathObj) => (isSelected) =>
       !isSelected
-        ? handleRemoveFile(filename)
-        : dispatch(fetchHeaderView({ path: filename }));
-    },
+        ? handleRemoveFile(pathObj)
+        : dispatch(fetchHeaderView({ path: pathObj.identifier, pathObj })),
     [dispatch, handleRemoveFile],
   );
 
@@ -119,14 +119,14 @@ function RightPane({ selectedFiles, removeFile }) {
         titleTypographyProps={{ variant: 'h5' }}
       />
       <CardContent>
-        <SelectedListOfFiles selected={selectedFiles} removeFile={removeFile} />
+        <SelectedListOfFiles files={selectedFiles} removeFile={removeFile} />
       </CardContent>
     </Card>
   );
 }
 // SplitPane.RightPane.displayName = 'FileDialog.SplitPane.RightPane';
 RightPane.propTypes = {
-  selectedFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedFiles: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   removeFile: PropTypes.func.isRequired,
 };
 

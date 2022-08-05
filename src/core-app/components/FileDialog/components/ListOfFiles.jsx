@@ -25,9 +25,10 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 
-import FileRowItem from './FileRowItem';
 import DriveRowItem from './DriveRowItem';
-// import { getParentPath } from '../../../utils/common';
+import FileRowItem from './FileRowItem';
+
+import { STATUS } from '../../../ducks/rootSelectors';
 
 /**
  * @component
@@ -37,12 +38,10 @@ function ListOfFiles(props) {
     className,
     files,
     fetchDirectory,
-    fetchProjectDrives,
+    fetchParentPath, // likely request object
     selected,
     toggleFile,
-    selectProvider,
-    isFilesView,
-    isLoading,
+    viewStatus,
   } = props;
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -65,7 +64,8 @@ function ListOfFiles(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {isLoading && (
+          {/* Spinner while pending */}
+          {viewStatus === STATUS.pending && (
             <TableRow
               sx={{
                 mt: '55px',
@@ -81,44 +81,43 @@ function ListOfFiles(props) {
               </td>
             </TableRow>
           )}
-          {/* First row depends on presence of dir */}
-          {isFilesView && !isLoading && (
-            <>
-              <FileRowItem
-                is_directory
-                display_name='Show all drives...'
-                path='root'
-                file_id='root'
-                fetchDirectory={fetchProjectDrives}
-              />
-              <FileRowItem
-                is_directory
-                display_name='Up Directory...'
-                path='root'
-                file_id='root'
-                fetchDirectory={fetchDirectory}
-              />
-            </>
+          {/* First row link to parent when exists */}
+          {fetchParentPath && (
+            <FileRowItem
+              display_name='Up Directory...'
+              fetchDirectory={fetchParentPath}
+            />
           )}
           {/* subsequent rows... */}
-          {files.map((file) =>
-            file.drive_provider ? (
-              <DriveRowItem
-                key={`${file.drive_provider}${file.project_id}`}
-                {...file}
-                selectProvider={selectProvider}
-              />
-            ) : (
-              <FileRowItem
-                key={file.path}
-                file_id={file.file_id}
-                {...file}
-                toggleFile={toggleFile}
-                fetchDirectory={fetchDirectory}
-                isSelected={selected.indexOf(file.path) !== -1}
-              />
-            ),
-          )}
+          {files.length > 0 &&
+            files.map((file) =>
+              file.is_drive ? (
+                <DriveRowItem
+                  key={file.file_id}
+                  displayName={file.display_name}
+                  fetchDirectory={() =>
+                    fetchDirectory({
+                      token_id: file.token_id,
+                      path_query: null,
+                      display_name: file.display_name,
+                    })
+                  }
+                />
+              ) : (
+                <FileRowItem
+                  key={file.file_id}
+                  file_id={file.file_id}
+                  {...file}
+                  toggleFile={toggleFile}
+                  fetchDirectory={() =>
+                    fetchDirectory({
+                      path_query: file.file_id,
+                    })
+                  }
+                  isSelected={selected.indexOf(file.path) !== -1}
+                />
+              ),
+            )}
         </TableBody>
       </Table>
     </TableContainer>
@@ -129,21 +128,20 @@ ListOfFiles.propTypes = {
   className: PropTypes.string.isRequired,
   files: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   path: PropTypes.string.isRequired,
+  fetchParentPath: PropTypes.func,
   fetchDirectory: PropTypes.func.isRequired,
-  fetchProjectDrives: PropTypes.func.isRequired,
-  selectProvider: PropTypes.func.isRequired,
   selected: PropTypes.arrayOf(PropTypes.string),
-  toggleFile: PropTypes.func.isRequired,
-  parent: PropTypes.string,
-  isFilesView: PropTypes.bool,
-  isLoading: PropTypes.bool,
+  toggleFile: PropTypes.func,
+  parentPath: PropTypes.string,
+  viewStatus: PropTypes.oneOf(Object.values(STATUS)),
 };
 
 ListOfFiles.defaultProps = {
   selected: [],
-  parent: 'root',
-  isFilesView: true,
-  isLoading: false,
+  parentPath: 'root',
+  viewStatus: STATUS.idle,
+  fetchParentPath: undefined,
+  toggleFile: undefined,
 };
 
 export default ListOfFiles;

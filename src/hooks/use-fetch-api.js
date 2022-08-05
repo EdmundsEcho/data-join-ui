@@ -5,7 +5,7 @@
 import { useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ApiResponseError } from '../errors';
+import { ApiResponseError } from '../core-app/lib/LuciErrors';
 
 /* eslint-disable no-console */
 
@@ -55,7 +55,7 @@ const useFetchApi = ({
   });
   //
   // generic (all consumers benefit) redirect to login when 401
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   //
   // 💢 Updates the local reducer
@@ -85,15 +85,13 @@ const useFetchApi = ({
     } catch (e) {
       // throw a generic error; when caught will get more refined
       console.assert(
-        e?.response?.status ?? false,
-        `Unexpected Error response: Missing response.status\n${JSON.stringify(
-          e,
-        )}`,
+        e?.cause?.status ?? false,
+        `Unexpected error: Missing status\n${JSON.stringify(e)}`,
       );
 
       // grow the switch statement if/when deal with other status
       // default: let the user of the fetch-api figure out what to do.
-      switch (e.response.status) {
+      switch (e.cause?.status) {
         case 401:
           enqueueSnackbar(`Unauthorized: Session expired`, {
             variant: 'error',

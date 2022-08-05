@@ -97,7 +97,11 @@ export const fixAction = (action) => {
 //------------------------------------------------------------------------------
 // middleware-related (async)
 //------------------------------------------------------------------------------
-const create = (type, { path }) => ({ type, path });
+const create = (type, { path, pathObj = undefined }) => ({
+  type,
+  path,
+  pathObj,
+});
 // action kind :: command
 export const fetchHeaderView = (action) => create(FETCH_HEADER_VIEW, action);
 export const cancelHeaderView = (action) => create(CANCEL_HEADER_VIEW, action);

@@ -1,5 +1,6 @@
+# copy/paste from .eslintrc
+
 {
-  # copy/paste from .eslintrc
   "arrowParens": "always",
   "bracketSpacing": true,
   "endOfLine": "auto",
@@ -7,6 +8,7 @@
   "jsxSingleQuote": true,
   "printWidth": 80,
   "semi": true,
+  "singleAttributePerLine": false,
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "all",

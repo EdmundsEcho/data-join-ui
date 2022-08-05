@@ -17,7 +17,7 @@ import {
 import { setNotification } from '../../actions/notifications.actions';
 
 // -----------------------------------------------------------------------------
-const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+const DEBUG = false && process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -33,7 +33,7 @@ const SAVE_PREFIXES = [
   'TAG_WAREHOUSE_STATE',
   'SAVE_REDUX', // saveNow
 ];
-const BLACK_LIST = [];
+const BLACK_LIST = ['SET_DIR_STATUS', 'persist/REHYDRATE'];
 
 const middleware =
   ({ getState, persistor }) =>
@@ -89,8 +89,8 @@ const middleware =
         }
 
         // dispatch actions to update projectMeta state
-        console.debug(`Action --------------`);
-        console.dir(setCacheStatusStale());
+        // console.debug(`Action --------------`);
+        // console.dir(setCacheStatusStale());
         next(setCacheStatusStale());
         next(setLastSavedOn());
         next(setSaveStatus(SAVE_STATUS.idle));
@@ -113,10 +113,14 @@ function saveNow(actionType) {
   const guard =
     SAVE_PREFIXES.some((prefix) => actionType.includes(prefix)) &&
     BLACK_LIST.every((prefix) => !actionType.includes(prefix));
-  const color = guard
-    ? 'color: green; font-weight: bold'
-    : 'color: red; font-weight: bold';
-  console.log(`%c 🎉 about to save: ${actionType} -> save: ${guard}`, color);
+
+  if (DEBUG) {
+    const color = guard
+      ? 'color: green; font-weight: bold'
+      : 'color: red; font-weight: bold';
+    console.log(`%c 🎉 about to save: ${actionType} -> save: ${guard}`, color);
+  }
+
   return guard;
 }
 

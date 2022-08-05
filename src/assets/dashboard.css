@@ -203,6 +203,7 @@ ul[title]::before {
 .project-view {
   flex-grow: 1;
   flex-wrap: nowrap;
+  overflow: hidden;
 }
 .message {
   color: grey;

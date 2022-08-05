@@ -1,4 +1,5 @@
-import React, { createContext } from 'react';
+import React, { useMemo, createContext } from 'react';
+import { PropTypes } from 'prop-types';
 
 import { useNavigate } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
@@ -16,8 +17,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 /* eslint-disable no-console */
 
 /**
- * This is only relevant when we want to "configure" the
- * context externally.
+ * Relevant when we want to "configure" the context externally.
  */
 export const Context = createContext({
   // state
@@ -39,14 +39,12 @@ export const Context = createContext({
     console.warn('Not configured - fetch projects');
   },
 });
+Context.displayName = 'Projects-Context';
 
-/**
- * Context provider that shares the user-driven state changes
- */
 const Provider = (props) => {
   //
   const { enqueueSnackbar, children } = props;
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   /**
    * fetch data
    * callback: set the initial value of the cache
@@ -77,8 +75,8 @@ const Provider = (props) => {
         navigate('/login');
         throw e;
       }
-    } finally {
     }
+    // finally { }
   };
   /**
    * mutate the server
@@ -123,15 +121,18 @@ const Provider = (props) => {
   };
 
   // exposed interface
-  const state = {
-    data,
-    error,
-    status,
-    STATUS,
-    add,
-    deleteById,
-    fetch,
-  };
+  const state = useMemo(
+    () => ({
+      data,
+      error,
+      status,
+      STATUS,
+      add,
+      deleteById,
+      fetch,
+    }),
+    [status, error, data], // eslint-disable-line
+  );
 
   if (DEBUG) {
     console.debug(
@@ -142,5 +143,14 @@ const Provider = (props) => {
   }
   return <Context.Provider value={state}>{children}</Context.Provider>;
 };
+
+Provider.displayName = 'ProjectContext-Provider';
+
+Provider.propTypes = {
+  enqueueSnackbar: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+Provider.defaultProps = {};
 
 export default withSnackbar(Provider);

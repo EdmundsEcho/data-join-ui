@@ -13,27 +13,28 @@ import TableRow from '@mui/material/TableRow';
 import { Google } from '@mui/icons-material';
 import Icon from '@mui/material/Icon';
 
-/* eslint camelcase: "off" */
-
 function DriveRow(props) {
-  const { drive_provider: driveProvider, selectProvider } = props;
+  const {
+    displayName,
+    fetchDirectory, // pre-configured fn
+  } = props;
 
-  const providerIcon =
-    {
-      google: <Google />,
-      msgraph: (
-        <span className='iconify' data-icon='mdi:microsoft-azure'></span>
-      ),
-      dropbox: <span className='iconify' data-icon='mdi:dropbox'></span>,
-    }[driveProvider] || null;
+  // Map displayName -> Icon
+  const providerIcon = {
+    google: <Google />,
+    msgraph: <span className='iconify' data-icon='mdi:microsoft-azure'></span>,
+    dropbox: <span className='iconify' data-icon='mdi:dropbox'></span>,
+  }[displayName];
 
   return (
-    <TableRow hover onClick={() => selectProvider(driveProvider)}>
+    <TableRow hover onClick={fetchDirectory}>
       <TableCell align='center'>
-        <Icon>{providerIcon}</Icon>
+        <span className='google-drive'>
+          <Icon>{providerIcon}</Icon>
+        </span>
       </TableCell>
       <TableCell className='filename' align='left'>
-        {driveProvider}
+        {displayName}
       </TableCell>
       <TableCell className='filesize' align='right'>
         {}
@@ -43,8 +44,8 @@ function DriveRow(props) {
 }
 
 DriveRow.propTypes = {
-  drive_provider: PropTypes.string.isRequired,
-  selectProvider: PropTypes.func.isRequired,
+  displayName: PropTypes.string.isRequired,
+  fetchDirectory: PropTypes.func.isRequired,
 };
 
 export default DriveRow;

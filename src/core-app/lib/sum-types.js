@@ -1,9 +1,9 @@
 /**
- * @module enumerations
  *
- * @description
  * Resource to support the re-use of critical or otherwise highly utilized
  * enumerations (~types).
+ *
+ * @module enumerations
  *
  */
 export const FIELD_TYPES = {
@@ -45,6 +45,18 @@ export const NODE_TYPES = {
   GROUP: 'group',
   EMPTY: 'empty',
   ROOT: 'root',
+};
+
+// consumer interface
+export const STATUS = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+  idle: 'idle',
+  pending: 'pending',
+  resolved: 'resolved',
+  rejected: 'rejected',
 };
 
 // -----------------------------------------------------------------------------

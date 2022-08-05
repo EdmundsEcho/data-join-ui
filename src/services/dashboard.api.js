@@ -5,7 +5,7 @@
  * @module src/services/dashboard.api
  *
  */
-import axios from 'axios';
+import { apiInstance } from '../core-app/services/api';
 
 import { ApiCallError } from '../errors';
 
@@ -23,26 +23,6 @@ if (DEBUG) {
 }
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
-
-//------------------------------------------------------------------------------
-// Set the endpoint base url based on env setting
-// Read the .env
-//------------------------------------------------------------------------------
-const API_BASE_URL =
-  process.env.REACT_APP_ENV === 'production'
-    ? `${window.location.origin}/v1`
-    : `http://${window.location.hostname}:5005/v1`;
-
-//------------------------------------------------------------------------------
-// Configure axios endpoints
-//------------------------------------------------------------------------------
-export const apiInstance = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    Accept: 'application/json',
-  },
-  withCredentials: true,
-});
 
 /**
  * Save the store
@@ -118,20 +98,6 @@ export async function fetchAllProjects() {
   };
   if (DEBUG) {
     console.debug(`%c testing "v1/projects" endpoint`, 'color:orange');
-  }
-  return apiInstance(axiosOptions);
-}
-
-export async function getStorageProviderFiles(projectId, sorageProvider) {
-  const axiosOptions = {
-    url: `/filesystem/readdir?project_id=${projectId}&storage_rpovider=${sorageProvider}`,
-    method: 'GET',
-  };
-  if (DEBUG) {
-    console.debug(
-      `%c testing "/v1/filesystem/readdir" endpoint`,
-      'color:orange',
-    );
   }
   return apiInstance(axiosOptions);
 }

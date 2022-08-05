@@ -1,6 +1,6 @@
 // src/components/HeaderViewContext.jsx
 
-import React, { useCallback, createContext } from 'react';
+import React, { useMemo, useCallback, createContext } from 'react';
 import PropTypes from 'prop-types';
 
 import usePersistedState from '../hooks/use-persisted-state';
@@ -52,7 +52,8 @@ const Provider = ({
     setHideInactive(!hideInactive);
   }, [hideInactive, setHideInactive]);
 
-  const state = {
+  // ⬜ figure out memo
+  const state = useMemo(() => ({
     stateId,
     showDetail,
     toggleShowDetail,
@@ -61,7 +62,7 @@ const Provider = ({
     setHideInactive,
     setShowDetail,
     ...rest,
-  };
+  }));
 
   return <Context.Provider value={state}>{children}</Context.Provider>;
 };

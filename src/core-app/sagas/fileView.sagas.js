@@ -1,7 +1,5 @@
 /**
- * @module src/sagas/fileView.sagas
  *
- * @description
  * Maintain the list of files in the active directory.
  *
  * 🔖 Critical that it only export the watch function for the sagas
@@ -9,46 +7,53 @@
  *
  * ⬜ Likely change to middleware that leverages the API core
  *
+ * @module src/sagas/fileView.sagas
+ *
  */
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import {
   READ_DIR_START,
+  setDirStatus,
   fetchDirectorySuccess,
   fetchDirectoryError,
+  STATUS,
 } from '../ducks/actions/fileView.actions';
 
 import { readDirectory } from '../services/api';
 import * as UT from './sagas.helpers';
 import { ApiCallError } from '../lib/LuciErrors';
 
-function* _fetchDirectory(action) {
-  try {
-    const response = yield call(
-      readDirectory,
-      action.path,
-      action.provider,
-      action.project_id,
-    );
+/* eslint-disable no-console */
 
-    if (response.status > 200) {
+function* _fetchDirectory({ type, ...request }) {
+  try {
+    yield put(setDirStatus(STATUS.pending));
+    const response = yield call(readDirectory, request);
+
+    if (response.status !== 200) {
+      // caught later to document
       throw new ApiCallError(
-        `Status: ${response.status} }Could not retrieve directory: ${
-          action?.path ?? 'undefined'
+        `Status: ${response.status} Could not retrieve directory: ${
+          request?.path_id ?? 'undefined'
         }`,
       );
     }
 
     // Retain current path across browser refreshes
-    localStorage.setItem('last_path', action.path);
+    // localStorage.setItem('last_path', request.path_id);
 
     // document
+    console.assert(
+      response?.data && response?.data?.results,
+      'Fetch directory API: unexpected response',
+    );
     yield put(
-      fetchDirectorySuccess(
-        response?.data?.results,
-        action.path,
-        response?.data?.parent,
-      ),
+      fetchDirectorySuccess({
+        ...response.data.results,
+        filteredFiles: response.data.results.files,
+        request,
+      }),
     );
   } catch (e) {
     yield put(fetchDirectoryError(e.toString()));
