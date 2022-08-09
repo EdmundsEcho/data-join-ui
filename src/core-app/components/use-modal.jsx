@@ -1,7 +1,6 @@
 // src/components/use-modal.jsx
 
 /**
- * @module components/use-modal
  *
  * @description
  * Wraps an *action* with the modal functionality.  The modal component
@@ -11,8 +10,16 @@
  * exports useModal
  * default: import WithModal
  *
+ * @module components/use-modal
+ *
  */
-import React, { useContext, useRef, createContext, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useRef,
+  createContext,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 /* eslint-disable no-console */
@@ -59,13 +66,13 @@ function ModalServiceProvider({ ModalComponent, children }) {
   // 💰 ref to the context value
   // ::function that returns a Promise
   // props depend on the modal. e.g., {message, stateId}
-  const openModalP = (props /* modalProps */) => {
+  const openModalP = useCallback((props /* modalProps */) => {
     setShowModal(true);
     setModalProps(props);
     return new Promise((resolve, reject) => {
       awaitingPromiseRef.current = { resolve, reject };
     }).finally(() => cleanup());
-  };
+  }, []);
 
   // ✅ resolve when cancel
   const handleCancel = () => {

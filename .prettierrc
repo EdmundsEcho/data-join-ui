@@ -4,7 +4,7 @@
   "arrowParens": "always",
   "bracketSpacing": true,
   "endOfLine": "auto",
-  "jsxBracketSameLine": false,
+  "jsxBracketSameLine": true,
   "jsxSingleQuote": true,
   "printWidth": 80,
   "semi": true,

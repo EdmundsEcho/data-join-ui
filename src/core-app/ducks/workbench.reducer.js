@@ -530,9 +530,10 @@ export const resetCanvas = ({ tree }) => {
     // palette of all heights, others less < 3 (includes root)
     if (tree[key].type === NODE_TYPES.PALETTE || tree[key].height < 3) {
       // reset the leaf canvas node values
-      tree[key].type === NODE_TYPES.CANVAS && tree[key].height === 2
-        ? (newTree[key] = resetNode(tree[key]))
-        : (newTree[key] = resetListeners(tree[key]));
+      newTree[key] =
+        tree[key].type === NODE_TYPES.CANVAS && tree[key].height === 2
+          ? resetNode(tree[key])
+          : resetListeners(tree[key]);
     }
     return newTree;
   }, {});
@@ -645,6 +646,16 @@ const maybeSetAll = (compOrQualNode) => {
 const reducer = createReducer(initialState, {
   // Utility to reset all state
   RESET: () => initialState,
+
+  // debugging utility
+  RESET_TREE: (state) => {
+    return {
+      ...state,
+      tree: {},
+    };
+  },
+
+  // debugging utility
   PING: (state) => {
     console.log(`PING from redux workbench.reducer`);
     return state;
@@ -655,13 +666,6 @@ const reducer = createReducer(initialState, {
     const tree = Tree.fromFlatNodes(getTree(state));
     console.log(tree);
     return state;
-  },
-  // debugging utility
-  RESET_TREE: (state) => {
-    return {
-      ...state,
-      tree: {},
-    };
   },
 
   // 🚧 WIP

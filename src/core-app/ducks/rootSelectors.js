@@ -48,6 +48,8 @@ export const getProjectId = (state) =>
   fromProjectMeta.getProjectId(state._projectMeta);
 export const getSaveStatus = (state) =>
   fromProjectMeta.getSaveStatus(state._projectMeta);
+export const isCacheStale = (state) =>
+  fromProjectMeta.isCacheStale(state._projectMeta);
 export const getCacheStatus = (state) =>
   fromProjectMeta.getCacheStatus(state._projectMeta);
 export const initRedux = (state) =>
@@ -65,17 +67,29 @@ export const seedProjectState = (...args) =>
 // utilized by useFormMachine
 export const getFilesSlice = (state) => state.fileView;
 export const getPath = (state) => fromFileView.getPathQuery(state.fileView);
-export const getParent = (state) =>
+export const getParentPathQuery = (state) =>
   fromFileView.getParentPathQuery(state.fileView);
 export const getFiles = (state) => fromFileView.getFiles(state.fileView);
-export const getFilesRequest = (state) =>
-  fromFileView.getRequest(state.fileView);
+export const getRequestHistory = (state) =>
+  fromFileView.getRequestHistory(state.fileView);
 export const selectFiles = (state, filterText) =>
   fromFileView.selectFilesF(state.fileView, filterText);
 export const getReaddirErrors = (state) =>
   fromFileView.getReaddirErrors(state.fileView);
 export const getFilesViewStatus = (state) =>
   fromFileView.getFilesViewStatus(state.fileView);
+export const peekRequestHistory = (state, emptyValue) =>
+  fromFileView.peekRequestHistory(state.fileView, emptyValue);
+
+export const peekParentRequestHistory = (state, emptyValue) =>
+  fromFileView.peekParentRequestHistory(state.fileView, emptyValue);
+export const isActivated = (state) => fromFileView.isActivated(state.fileView);
+export const hasRequestHistory = (state) =>
+  fromFileView.hasRequestHistory(state.fileView);
+
+export const getDriveTokenId = (state) =>
+  fromFileView.getDriveTokenId(state.fileView);
+
 export const { STATUS } = fromFileView;
 //------------------------------------------------------------------------------
 /**  headerView
@@ -86,6 +100,9 @@ export const { STATUS } = fromFileView;
 
 export const getSelected = (state) =>
   fromHeaderView.getSelected(state.headerView);
+
+export const isFileSelected = (state, path) =>
+  fromHeaderView.isFileSelected(state.headerView, path);
 
 export const getHvSequence = (state, filename) =>
   getSelected(state).findIndex((filename_) => filename_ === filename);

@@ -12,6 +12,11 @@ import Grid from '@mui/material/Grid';
 import { IconButton } from '@mui/material';
 import { Google } from '@mui/icons-material';
 
+//------------------------------------------------------------------------------
+const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
+// e.g., http://localhost:3099/drive
+//------------------------------------------------------------------------------
+
 const CustomButton = (props) => {
   return <IconButton {...props} className='auth-button' />;
 };
@@ -25,7 +30,7 @@ const CustomButton = (props) => {
  */
 const StorageProviderList = ({ projectId, className }) => {
   const handleAuth = (serviceName) => {
-    const driveAuthURL = `http://localhost:3099/drive/${serviceName}/${projectId}`;
+    const driveAuthURL = `${DRIVE_AUTH_URL}/${serviceName}/${projectId}`;
     window.location.replace(driveAuthURL);
   };
 
@@ -38,8 +43,7 @@ const StorageProviderList = ({ projectId, className }) => {
         justifyContent='space-between'
         alignItems='center'
         wrap='nowrap'
-        columnGap='18px'
-      >
+        columnGap='18px'>
         <Grid container item alignItems='center' justifyContent='center'>
           Add new files:
         </Grid>
@@ -52,8 +56,7 @@ const StorageProviderList = ({ projectId, className }) => {
           <Grid item>
             <CustomButton
               title='One Drive'
-              onClick={() => handleAuth('msgraph')}
-            >
+              onClick={() => handleAuth('msgraph')}>
               <span className='iconify' data-icon='mdi:microsoft-azure'></span>
             </CustomButton>
           </Grid>

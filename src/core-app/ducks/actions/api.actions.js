@@ -27,6 +27,16 @@ export const POLLING_RESOLVED = 'API POLLING RESOLVED'; // event
 export const POLLING_CANCELLED = 'API POLLING CANCELLED'; // event
 export const POLLING_ERROR = 'API POLLING ERROR'; // event
 
+export const Actions = {
+  FETCH,
+  RESUME,
+  CANCEL,
+  POLLING_START,
+  POLLING_END,
+  POLLING_RESOLVED,
+  POLLING_CANCELLED,
+  POLLING_ERROR,
+};
 //------------------------------------------------------------------------------
 // const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 //------------------------------------------------------------------------------

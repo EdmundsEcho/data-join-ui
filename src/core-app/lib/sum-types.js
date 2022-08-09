@@ -49,10 +49,12 @@ export const NODE_TYPES = {
 
 // consumer interface
 export const STATUS = {
+  INACTIVE: 'inactive',
   IDLE: 'idle',
   PENDING: 'pending',
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
+  inactive: 'inactive',
   idle: 'idle',
   pending: 'pending',
   resolved: 'resolved',

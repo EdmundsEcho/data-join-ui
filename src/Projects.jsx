@@ -13,7 +13,7 @@
  *
  * @component
  */
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useCallback } from 'react';
 import { PropTypes } from 'prop-types';
 import clsx from 'clsx';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -51,8 +51,10 @@ const Projects = () => {
   // const list = getSummaryList()
   const lookupBy = 'project_id';
 
+  // Initialize the shared context for Projects
+  // list of projects
   const {
-    fetch,
+    fetch: fetchProp,
     data: list = undefined,
     error,
     status,
@@ -60,16 +62,14 @@ const Projects = () => {
     deleteById: deleteItem,
   } = useContext(ProjectsContext);
 
+  const fetch = useCallback(fetchProp, [fetchProp]);
   //
   // 💢 the side-effect:
   // update the context state with the fetched data
   //
-  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     fetch();
-    // return () => something with context
   }, []);
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   switch (true) {
     case status === STATUS.IDLE || status === STATUS.PENDING:
@@ -112,7 +112,7 @@ const Projects = () => {
 function ShowProjects({ list, lookupBy, deleteItem }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const linkTo = (itemId) => `${itemId}/files`;
+  const linkTo = (itemId) => `${itemId}/files`; // project_id
 
   Outlet.displayName = 'ProjectsOutlet';
 
@@ -150,8 +150,7 @@ function ShowProjects({ list, lookupBy, deleteItem }) {
                   type='button'
                   onClick={() => {
                     deleteItem(itemId, navigate(`/projects${location.search}`));
-                  }}
-                >
+                  }}>
                   Delete
                 </button>
               </div>
@@ -197,15 +196,14 @@ function SummaryView({
       className={clsx({
         active: isActive,
         'project-mini-card box nostack': true,
-      })}
-    >
+      })}>
       {addNewPlaceholder ? (
         /* use a callback with axios to history.push or
            navigate to the new project */
         <div>New project</div>
       ) : (
         <>
-          <div>{`${name} ${shortId}`}</div>
+          <div>{`${name} -- ${shortId}`}</div>
           <div className='right-align'>{permission}</div>
         </>
       )}

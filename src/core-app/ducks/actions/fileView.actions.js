@@ -22,12 +22,25 @@ export const READ_DIR_ERROR = `${FILEVIEW} GET_READ_DIR_ERROR`; // event
 
 export const SET_DIR_STATUS = `${FILEVIEW} SET_DIR_STATUS`; // document
 export const RESET_DIR_REQUEST = `${FILEVIEW} RESET_DIR_REQUEST`; // document
+export const PUSH_FETCH_HIST = `${FILEVIEW} PUSH_FETCH_HIST`; // document
+export const POP_FETCH_HIST = `${FILEVIEW} POP_FETCH_HIST`; // document
 
 // action kind :: command
 export const fetchDirectoryStart = (request) => {
   return {
     type: READ_DIR_START,
-    ...request,
+    request,
+  };
+};
+export const pushFetchHistory = (payload) => {
+  return {
+    type: PUSH_FETCH_HIST,
+    payload,
+  };
+};
+export const popFetchHistory = () => {
+  return {
+    type: POP_FETCH_HIST,
   };
 };
 export const resetFetchRequest = () => {
@@ -51,4 +64,9 @@ export const fetchDirectorySuccess = (payload) => {
   };
 };
 // action kind :: event -> document
-export const fetchDirectoryError = makeActionCreator(READ_DIR_ERROR, 'error');
+export const fetchDirectoryError = (error) => {
+  return {
+    type: READ_DIR_ERROR,
+    error,
+  };
+};

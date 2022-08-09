@@ -1,5 +1,4 @@
 /**
- * @module configuredStore
  *
  * @description
  * Initializes the `redux store`.  If building a development and production
@@ -23,111 +22,65 @@
  * * install the extension in the browser
  * * configuration is manually performed per the documentation
  *   [see docs](https://github.com/zalmoxisus/redux-devtools-extension)
+ *
+ * @module configuredStore
+ *
  */
 // import { createStore, applyMiddleware, compose } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist'
-import { configureStore } from '@reduxjs/toolkit' // dev only
+import { persistStore, persistReducer, purgeStoredState } from 'redux-persist';
+import { configureStore } from '@reduxjs/toolkit'; // dev only
 
 // persist state
 // import localforage from 'localforage';
-import createSagaMiddleware from 'redux-saga'
-import idbStorage from './services/local-storage'
+import createSagaMiddleware from 'redux-saga';
 
 // sagas
-import rootSaga from './initSagas'
+import rootSaga from './initSagas';
 
 // the appReducer (a combination of reducers)
-import appReducers from './combinedReducer'
+import appReducers from './combinedReducer';
+// the redux-persist configuration
+import { persistConfig } from './redux-persist-cfg';
 
 // core
-import actionSplitterMiddleware from './ducks/middleware/core/action-splitter.middleware'
-import actionFilterMiddleware from './ducks/middleware/core/action-filter.middleware'
-import asyncMiddleware from './ducks/middleware/core/async.middleware'
-import pendingRequestsMiddleware from './ducks/middleware/core/pending-requests.middleware'
-import normalizeMiddleware from './ducks/middleware/core/normalize.middleware'
-import notificationsMiddleware from './ducks/middleware/core/notifications.middleware'
-import loggerMiddleware from './ducks/middleware/core/logging.middleware'
-import saveStoreMiddleware from './ducks/middleware/core/save-store.middleware'
+import actionSplitterMiddleware from './ducks/middleware/core/action-splitter.middleware';
+import actionFilterMiddleware from './ducks/middleware/core/action-filter.middleware';
+import asyncMiddleware from './ducks/middleware/core/async.middleware';
+import pendingRequestsMiddleware from './ducks/middleware/core/pending-requests.middleware';
+import normalizeMiddleware from './ducks/middleware/core/normalize.middleware';
+import notificationsMiddleware from './ducks/middleware/core/notifications.middleware';
+import loggerMiddleware from './ducks/middleware/core/logging.middleware';
+import saveStoreMiddleware from './ducks/middleware/core/save-store.middleware';
 // feature
-import headerViewMiddleware from './ducks/middleware/feature/headerView.middleware'
-import etlViewMiddleware from './ducks/middleware/feature/etlView.middleware'
-import workbenchMiddleware from './ducks/middleware/feature/workbench.middleware'
-import matrixMiddleware from './ducks/middleware/feature/matrix.middleware'
+import headerViewMiddleware from './ducks/middleware/feature/headerView.middleware';
+import etlViewMiddleware from './ducks/middleware/feature/etlView.middleware';
+import workbenchMiddleware from './ducks/middleware/feature/workbench.middleware';
+import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 
 // actions to sanitize by the redux devTools extension
 //
-import { ADD_HEADER_VIEW } from './ducks/actions/headerView.actions'
-import { SET_TREE } from './ducks/actions/workbench.actions'
-import { SET_MATRIX } from './ducks/actions/matrix.actions'
-import { POLLING_RESOLVED } from './ducks/actions/api.actions'
-import { REMOVE as REMOVE_PENDING_REQUEST } from './ducks/actions/pendingRequests.actions'
+import { ADD_HEADER_VIEW } from './ducks/actions/headerView.actions';
+import { SET_TREE } from './ducks/actions/workbench.actions';
+import { SET_MATRIX } from './ducks/actions/matrix.actions';
+import { POLLING_RESOLVED } from './ducks/actions/api.actions';
+import { REMOVE as REMOVE_PENDING_REQUEST } from './ducks/actions/pendingRequests.actions';
 
 /* eslint-disable no-console */
-const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware();
 
-/*
-const {
-  createReduxHistory,
-  // routerMiddleware,
-  // routerReducer,
-} = createReduxHistoryContext({
-  history: createBrowserHistory(),
-  routerReducerKey: 'router',
-  oldLocationChangePayload: false,
-  reduxTravelling: true,
-  selectRouterState: null,
-  savePreviousLocations: 0,
-  batch: null,
-  reachGlobalHistory: null,
-}); */
+const REDUCER_DIR = './combineReducers';
 
-const REDUCER_DIR = './combineReducers'
-// const DEBUG_STATE = process.env.REACT_APP_DEBUG_STATE === 'true';
-
-/*
- * configuration for the persistor
-  🔧
-{
-  key: string, // the key for the persist
-  storage: Object, // the storage adapter, following the AsyncStorage api
-  version?: number, // the state version as an integer (defaults to -1)
-  blacklist?: Array<string>, // do not persist these keys
-  whitelist?: Array<string>, // only persist these keys
-  migrate?: (Object, number) => Promise<Object>,
-  transforms?: Array<Transform>,
-  throttle?: number, // ms to throttle state writes
-  keyPrefix?: string, // will be prefixed to the storage key
-  debug?: boolean, // true -> verbose logs
-  stateReconciler?: false | StateReconciler, // false -> do not automatically reconcile state
-  serialize?: boolean, // false -> do not call JSON.parse & stringify when setting & getting from storage
-  writeFailHandler?: Function, // will be called if the storage engine fails during setItem()
-}
-
-  🔧
-    Configure the devTools extension
-    https://redux-toolkit.js.org/api/configureStore
-*/
-
-// Set redux-persist to use localforage
-const persistConfig = {
-  key: 'root',
-  storage: idbStorage,
-  version: '0.3.0',
-  throttle: 1000,
-  serialize: false,
-  deserialize: false,
-  blacklist: ['workbench.matrix', '_persist'],
-}
-
+// -----------------------------------------------------------------------------
 // 🚧 Reduce the memory and CPU usage
 //    Redux debugging
+// -----------------------------------------------------------------------------
 const resetData = (action) => ({
   ...action,
   event: {
     ...action.event,
     request: { ...action.event.request, data: '<<LONG_BLOB>>' },
   },
-})
+});
 const devToolsConfiguration = {
   actionSanitizer: (action) => {
     switch (true) {
@@ -135,20 +88,20 @@ const devToolsConfiguration = {
 
       case action.type.includes(SET_TREE):
         // case action.type.includes(SET_MATRIX):
-        return { ...action, payload: '<<LONG_BLOB>>' }
+        return { ...action, payload: '<<LONG_BLOB>>' };
 
       case action.type.includes(POLLING_RESOLVED):
       case action.type.includes(REMOVE_PENDING_REQUEST):
-        return resetData(action)
+        return resetData(action);
 
       case action.type.includes(ADD_HEADER_VIEW):
         return {
           ...action,
           payload: { ...action.payload, fields: '<<LONG_BLOB>>' },
-        }
+        };
 
       default:
-        return action
+        return action;
     }
   },
   stateSanitizer: (state) =>
@@ -158,10 +111,13 @@ const devToolsConfiguration = {
 
   traceLimit: 20,
   trace: true,
-}
+};
 
+// -----------------------------------------------------------------------------
+// Production
+//
 const configureStoreProd = (initialState) => {
-  console.info('Loading the Production Version of the store')
+  console.info('Loading the Production Version of the store');
 
   // Programming with Actions
   const featureMiddleware = [
@@ -169,7 +125,7 @@ const configureStoreProd = (initialState) => {
     etlViewMiddleware,
     workbenchMiddleware,
     matrixMiddleware,
-  ]
+  ];
 
   const coreMiddleware = [
     actionSplitterMiddleware, // Array -> single action
@@ -179,21 +135,21 @@ const configureStoreProd = (initialState) => {
     normalizeMiddleware, // api data -> normalized data
     notificationsMiddleware,
     loggerMiddleware,
-  ]
+  ];
 
   const middlewares = [
     ...featureMiddleware, //
     ...coreMiddleware, // final processing before document
     sagaMiddleware, // schedule feature reports
     saveStoreMiddleware, // ⚠️  must be last in the sequence
-  ]
+  ];
 
   console.assert(
     typeof appReducers === 'function',
     `appReducers: ${typeof appReducers}`,
-  )
+  );
 
-  const persistedReducer = persistReducer(persistConfig, appReducers)
+  const persistedReducer = persistReducer(persistConfig, appReducers);
 
   const store = configureStore({
     reducer: persistedReducer,
@@ -205,19 +161,22 @@ const configureStoreProd = (initialState) => {
       }).prepend(middlewares),
     preloadedState: initialState,
     devTools: devToolsConfiguration,
-  })
+  });
 
   // register as a listener
-  const persistor = persistStore(store)
+  const persistor = persistStore(store);
 
   // fire-up sagas,
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(rootSaga);
 
-  return { store, persistor }
-}
+  return { store, persistor };
+};
 
-export const configureStoreDev2 = (initialState) => {
-  console.info('Loading the Dev Version (v2) of the store')
+// -----------------------------------------------------------------------------
+// Development
+//
+const configureStoreDev2 = (initialState) => {
+  console.info('Loading the Dev Version (v2) of the store');
 
   // Programming with Actions
   const featureMiddleware = [
@@ -225,7 +184,7 @@ export const configureStoreDev2 = (initialState) => {
     etlViewMiddleware,
     workbenchMiddleware,
     matrixMiddleware,
-  ]
+  ];
 
   const coreMiddleware = [
     actionSplitterMiddleware, // Array -> single action
@@ -235,21 +194,21 @@ export const configureStoreDev2 = (initialState) => {
     normalizeMiddleware, // api data -> normalized data
     notificationsMiddleware,
     loggerMiddleware,
-  ]
+  ];
 
   const middlewares = [
     ...featureMiddleware, //
     ...coreMiddleware, // final processing before document
     sagaMiddleware, // schedule feature reports
     saveStoreMiddleware, // ⚠️  must be last in the sequence
-  ]
+  ];
 
   console.assert(
     typeof appReducers === 'function',
     `appReducers: ${typeof appReducers}`,
-  )
+  );
 
-  const persistedReducer = persistReducer(persistConfig, appReducers)
+  const persistedReducer = persistReducer(persistConfig, appReducers);
 
   const store = configureStore({
     reducer: persistedReducer,
@@ -261,26 +220,30 @@ export const configureStoreDev2 = (initialState) => {
       }).prepend(middlewares),
     preloadedState: initialState,
     devTools: devToolsConfiguration,
-  })
+  });
 
   // register as a listener
-  const persistor = persistStore(store)
+  const persistor = persistStore(store);
 
   // fire-up sagas,
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(rootSaga);
 
   // fire-up hot-reloader
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
-    module.hot.accept(REDUCER_DIR, () => store.replaceReducer(persistedReducer))
+    module.hot.accept(REDUCER_DIR, () =>
+      store.replaceReducer(persistedReducer),
+    );
   }
-  return { store, persistor }
-}
+  return { store, persistor };
+};
 
 // ⬜ Merge shared codebase
 const configuredStore =
   process.env.REACT_APP_ENV === 'production'
     ? configureStoreProd
-    : configureStoreDev2
+    : configureStoreDev2;
 
-export default configuredStore
+export default configuredStore;
+
+// END

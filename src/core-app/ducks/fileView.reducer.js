@@ -23,8 +23,10 @@ import {
   READ_DIR_START,
   READ_DIR_SUCCESS,
   READ_DIR_ERROR,
-  SET_DIR_STATUS,
   RESET_DIR_REQUEST,
+  PUSH_FETCH_HIST,
+  POP_FETCH_HIST,
+  SET_DIR_STATUS,
   STATUS,
 } from './actions/fileView.actions';
 
@@ -41,8 +43,8 @@ export const initialState = {
   filteredFiles: [],
   filterText: '', // search for filenames
   readdirErrors: [],
-  status: STATUS.idle,
-  request: undefined,
+  status: STATUS.inactive,
+  requests: undefined,
 };
 
 // -----------------------------------------------------------------------------
@@ -54,13 +56,28 @@ export const initialState = {
  * `initialState` for this state fragment.
  *
  */
-export const getPathQuery = (stateFragment) => stateFragment.pathQuery;
-export const getParentPathQuery = (stateFragment) =>
-  stateFragment.parentPathQuery;
 export const getFiles = (stateFragment) => stateFragment.files;
 export const getReaddirErrors = (stateFragment) => stateFragment.readdirErrors;
 export const getFilesViewStatus = (stateFragment) => stateFragment.status;
-export const getRequest = (stateFragment) => stateFragment.request;
+export const getRequestHistory = (stateFragment) =>
+  stateFragment?.requests ?? undefined;
+export const getPathQuery = (stateFragment) => stateFragment.request.path_query;
+export const getParentPathQuery = (stateFragment) =>
+  stateFragment.parent_path_query;
+export const peekRequestHistory = (stateFragment, emptyValue) =>
+  peekLastRequest(stateFragment.requests, emptyValue);
+
+export const peekParentRequestHistory = (stateFragment, emptyValue) =>
+  peekParentRequest(stateFragment.requests, emptyValue);
+export const isActivated = (stateFragment) =>
+  stateFragment.status !== STATUS.inactive;
+export const hasRequestHistory = (stateFragment) =>
+  stateFragment?.requests !== undefined && stateFragment?.requests?.length > 0;
+
+// I'm not sure how robbust this approach is
+export const getDriveTokenId = (stateFragment) =>
+  stateFragment?.token_id ?? undefined;
+
 /**
  *
  * selector
@@ -111,9 +128,10 @@ const reducer = createReducer(initialState, {
   }),
 
   // event -> document
-  [READ_DIR_SUCCESS]: (state, { payload }) => ({
+  // (state, action : {type, payload})
+  [READ_DIR_SUCCESS]: (state, { payload: { request, ...rest } }) => ({
     ...state,
-    ...payload,
+    ...rest,
     readdirErrors: [],
     status: STATUS.resolved,
   }),
@@ -129,15 +147,6 @@ const reducer = createReducer(initialState, {
 
   // document
   [SET_DIR_STATUS]: (state, { status }) => {
-    if (status === STATUS.pending) {
-      return {
-        ...state,
-        files: [],
-        count: 0,
-        readdirErrors: [],
-        status,
-      };
-    }
     return {
       ...state,
       status,
@@ -145,11 +154,48 @@ const reducer = createReducer(initialState, {
   },
 
   // document
+  [PUSH_FETCH_HIST]: (state, { payload: newRequest }) => ({
+    ...state,
+    requests: pushRequest(state?.requests ?? [], newRequest),
+  }),
+  // document
+  [POP_FETCH_HIST]: (state) => ({
+    ...state,
+    requests: popRequest(state.requests)[1],
+  }),
+
+  // document
   [RESET_DIR_REQUEST]: (state) => ({
     ...state,
-    request: undefined,
+    requests: undefined,
     readdirErrors: [],
-    status: STATUS.idle,
+    status: STATUS.inactive,
   }),
 });
+
+// used in two situations:
+// 1. read the last request (without setting state)
+// 2. set state with the tail
+function popRequest(requests) {
+  if (requests === undefined) {
+    return [undefined, undefined];
+  }
+  if (requests?.length === 0) {
+    return [undefined, []];
+  }
+  const [head, ...tail] = requests;
+  return [head, tail];
+}
+function peekLastRequest(requests, emptyValue = {}) {
+  const maybeValue = popRequest(requests)[0];
+  return maybeValue === undefined ? emptyValue : maybeValue;
+}
+function peekParentRequest(requests, emptyValue = {}) {
+  const maybeTail = popRequest(requests)?.[1] ?? [];
+  const maybeValue = popRequest(maybeTail)[0];
+  return maybeValue === undefined ? emptyValue : maybeValue;
+}
+function pushRequest(requests, newRequest) {
+  return [newRequest, ...requests];
+}
 export default reducer;

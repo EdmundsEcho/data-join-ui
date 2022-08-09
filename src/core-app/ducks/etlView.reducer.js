@@ -260,6 +260,12 @@ const reducer = createReducer(initialState, {
   RESET: () => initialState,
 
   /* Testing utility */
+  PING: (state) => {
+    console.log('PING from redux etlView.reducer');
+    return state;
+  },
+
+  /* Testing utility */
   RESET_DERIVED: (state) => ({
     ...state,
     etlFieldChanges: {
@@ -274,12 +280,6 @@ const reducer = createReducer(initialState, {
       __derivedFields: {},
     },
   }),
-
-  /* Testing utility */
-  PING: (state) => {
-    console.log('PING from redux etlView.reducer');
-    return state;
-  },
 
   /* Utility that prints the first hv with levels removed */
   PRINT: (state) => {

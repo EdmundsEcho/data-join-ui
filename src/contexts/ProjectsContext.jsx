@@ -1,13 +1,12 @@
-import React, { useMemo, createContext } from 'react';
+import React, { useCallback, useMemo, createContext } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { useNavigate } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 
 import {
-  addNewProject,
-  deleteProject,
-  fetchAllProjects as fetchFn,
+  addNewProject as addNewApi,
+  deleteProject as deleteApi,
+  fetchAllProjects as fetchAllApi,
 } from '../services/dashboard.api';
 import { useFetchApi } from '../hooks/use-fetch-api';
 
@@ -19,119 +18,81 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 /**
  * Relevant when we want to "configure" the context externally.
  */
-export const Context = createContext({
-  // state
-  isFetching: false,
-  data: [],
-  // api access
-  add: (data) => {
-    console.warn('Not configured - new project');
-    console.dir(data);
-  },
-  deleteById: (id) => {
-    console.warn('Not configured - delete');
-    console.dir(id);
-  },
-  fetch: () => {
-    console.warn('Not configured - fetch projects');
-  },
-  callback: () => {
-    console.warn('Not configured - fetch projects');
-  },
-});
+export const Context = createContext();
 Context.displayName = 'Projects-Context';
 
 const Provider = (props) => {
   //
+  // 📌 wrapped on export
   const { enqueueSnackbar, children } = props;
-  const navigate = useNavigate();
   /**
    * fetch data
    * callback: set the initial value of the cache
    */
   const {
-    fetch: fetchApi,
+    fetch,
     status,
     STATUS,
     error,
     cache: data,
   } = useFetchApi({
-    fetchFn,
+    fetchFn: fetchAllApi,
     enqueueSnackbar,
     DEBUG,
   });
 
-  // ProjectsContext will navigate to login on error
-  // 💢 -> sets useFetchApi cache
-  const fetch = () => {
-    try {
-      fetchApi();
-    } catch (e) {
-      if (e.status === 401) {
-        console.dir(e);
-        navigate('/login');
-      } else {
-        console.error(`🦀 what is this error; how treat? (display on page)`);
-        navigate('/login');
-        throw e;
-      }
-    }
-    // finally { }
-  };
   /**
    * mutate the server
    * callback: e.g., navigate following the delete
    */
-  const deleteById = async (id, callback) => {
-    try {
-      await deleteProject(id);
-      // call fetch to trigger an update of the local cache
-      // (and re-render children in the context)
-      await fetch();
-      // callback once the fetch has completed
-      // (the whole point of the callback is getting the timing right)
-      if (typeof callback === 'function') {
-        callback();
+  const deleteById = useCallback(
+    async (id, callback) => {
+      try {
+        await deleteApi(id);
+        // call fetch to trigger an update of the local cache
+        // (and re-render children in the context)
+        await fetch();
+        // callback once the fetch has completed
+        // (the whole point of the callback is getting the timing right)
+        if (typeof callback === 'function') {
+          callback();
+        }
+      } catch (e) {
+        console.log('error', e);
       }
-    } catch (e) {
-      console.log('error', e);
-    }
-  };
+    },
+    [fetch],
+  );
 
   /**
    * mutate the server
    * callback: e.g., navigate following the delete
    */
-  const add = async (data, callback) => {
-    try {
-      const { data: newProject } = await addNewProject(data);
-      // call fetch to trigger an update of the cache
-      // (and re-render children in the context)
-      await fetch();
-      // callback once the fetch has completed
-      // (the purpose of the callback is getting the timing right)
-      // e.g., navigate to the url with the new project_id
-      if (typeof callback === 'function') {
-        callback(newProject);
+  const add = useCallback(
+    async (newData, callback) => {
+      try {
+        const { data: newProject } = await addNewApi(newData);
+        // call fetch to trigger an update of the cache
+        // (and re-render children in the context)
+        await fetch();
+        // callback once the fetch has completed
+        // (the purpose of the callback is getting the timing right)
+        // e.g., navigate to the url with the new project_id
+        if (typeof callback === 'function') {
+          callback(newProject);
+        }
+      } catch (e) {
+        // ⬜ handle error
+        console.log('error', e);
       }
-    } catch (e) {
-      // ⬜ handle error
-      console.log('error', e);
-    }
-  };
+    },
+    [fetch],
+  );
 
-  // exposed interface
+  // public interface
   const state = useMemo(
-    () => ({
-      data,
-      error,
-      status,
-      STATUS,
-      add,
-      deleteById,
-      fetch,
-    }),
-    [status, error, data], // eslint-disable-line
+    () => ({ data, error, status, STATUS, add, deleteById, fetch }),
+    [status, error, data, deleteById, add, STATUS, fetch],
   );
 
   if (DEBUG) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
 import LoginPage from './pages/LoginPage';
@@ -12,6 +12,7 @@ import ProjectView from './core-app/Main';
 /* eslint-disable no-console */
 
 const App = () => {
+  const navigate = useNavigate();
   return (
     <div className='root box stack'>
       <div className='root inner'>
@@ -63,7 +64,15 @@ const App = () => {
                 <Route path='shared-drives' element={<SharedDrives />} />
                 <Route path='projects' element={<Projects />}>
                   {/* outlet-> */}
-                  <Route index element={<NewProjectForm />} />
+                  <Route
+                    index
+                    element={
+                      <NewProjectForm
+                        redirectFn={(pid) => navigate(`/projects/${pid}/files`)}
+                      />
+                    }
+                  />
+
                   <Route path=':projectId/*' element={<ProjectView />} />
                   {/* Gateway to the core-app */}
                 </Route>

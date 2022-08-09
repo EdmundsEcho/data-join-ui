@@ -15,6 +15,8 @@ import {
   SAVE_STATUS,
 } from '../../actions/projectMeta.actions';
 import { setNotification } from '../../actions/notifications.actions';
+import { Actions as apiActions } from '../../actions/api.actions';
+import { purgePersistedState } from '../../../redux-persist-cfg';
 
 // -----------------------------------------------------------------------------
 const DEBUG = false && process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
@@ -33,17 +35,17 @@ const SAVE_PREFIXES = [
   'TAG_WAREHOUSE_STATE',
   'SAVE_REDUX', // saveNow
 ];
-const BLACK_LIST = ['SET_DIR_STATUS', 'persist/REHYDRATE'];
+const BLACK_LIST = [
+  'SET_DIR_STATUS',
+  'persist/REHYDRATE',
+  ...Object.values(apiActions),
+];
 
 const middleware =
   ({ getState, persistor }) =>
   (next) =>
   (action) => {
-    console.debug(
-      `🧮  middleware action: ${action?.type ?? 'action type: undefined'}`,
-    );
     // dispatch the action in action.type with the closure
-
     // about to be returned.
     next(action);
 
@@ -54,11 +56,19 @@ const middleware =
     const state = getState();
 
     if (initRedux(state)) {
-      clearAgentCache(persistor);
+      // requires initialization
+      // clear the local user agent redux persist cache
+      purgePersistedState();
       // send out a "saveNow" action
       const projectId = getProjectId(state);
+      // send the redux state to the api
       saveStoreApi({ projectId, store: state });
+      // set the status so that we
       next(setSaveStatus(SAVE_STATUS.idle));
+    } else if (action.type === 'RESET') {
+      purgePersistedState();
+    } else if (action.type === 'CLOSE_PROJECT') {
+      next({ type: 'RESET' });
     }
     //
     // Tasks
@@ -94,6 +104,7 @@ const middleware =
         next(setCacheStatusStale());
         next(setLastSavedOn());
         next(setSaveStatus(SAVE_STATUS.idle));
+        // next({ type: 'persist/PERSIST' });
       } catch (e) {
         console.error(e);
         setNotification({
@@ -124,7 +135,7 @@ function saveNow(actionType) {
   return guard;
 }
 
-function clearAgentCache(persistor) {
+export function clearAgentCache(persistor) {
   return async (dispatch) => {
     try {
       await persistor.purge();

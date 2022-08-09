@@ -77,6 +77,19 @@ export const removeProp = (remove, obj) => {
 };
 
 /**
+ * camelCase -> snake
+ *
+ * @function
+ * @param {String} str
+ * @return {String}
+ */
+export const camelToSnakeCase = (text) => {
+  return text
+    .replace(/(.)([A-Z][a-z]+)/, '$1_$2')
+    .replace(/([a-z0-9])([A-Z])/, '$1_$2')
+    .toLowerCase();
+};
+/**
  * StringValue -> stringValue
  *
  * @function
@@ -155,9 +168,7 @@ export const getFilenameFromPath = (path) => {
  */
 export const getParentPath = (path) => {
   if (typeof path !== 'string' || path.length === 0) {
-    console.warn(
-      `getParentPath call with invalid input: ${path || 'empty'}`,
-    );
+    console.warn(`getParentPath call with invalid input: ${path || 'empty'}`);
     return 'Filename';
   }
   // If we're on a Windows machine we handle the backslash path delimiter
@@ -198,11 +209,13 @@ export const maxId = (collection, idProp) => {
  *
  * @function
  */
-export const compose = (...fns) => (firstArg) =>
-  fns.reduceRight(
-    (prevReturnValue, fn) => (fn ? fn(prevReturnValue) : prevReturnValue),
-    firstArg,
-  );
+export const compose =
+  (...fns) =>
+  (firstArg) =>
+    fns.reduceRight(
+      (prevReturnValue, fn) => (fn ? fn(prevReturnValue) : prevReturnValue),
+      firstArg,
+    );
 
 /**
  *

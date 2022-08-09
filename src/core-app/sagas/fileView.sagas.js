@@ -26,11 +26,24 @@ import { ApiCallError } from '../lib/LuciErrors';
 
 /* eslint-disable no-console */
 
-function* _fetchDirectory({ type, ...request }) {
+/**
+ * Tasks:
+ *
+ * 1. Processess the possible return values for the directory search.
+ * 2. Appends the original request to the response.
+ *
+ * ⬜ Part this seems redundant or misplaced.
+ *
+ */
+function* _fetchDirectory({ request }) {
   try {
     yield put(setDirStatus(STATUS.pending));
     const response = yield call(readDirectory, request);
 
+    if (response.status === 401) {
+      window.location('/login');
+      return;
+    }
     if (response.status !== 200) {
       // caught later to document
       throw new ApiCallError(
@@ -48,7 +61,10 @@ function* _fetchDirectory({ type, ...request }) {
       response?.data && response?.data?.results,
       'Fetch directory API: unexpected response',
     );
+
     yield put(
+      // copy into both files and filteredFiles
+      // (🦀 need to create singular view)
       fetchDirectorySuccess({
         ...response.data.results,
         filteredFiles: response.data.results.files,
@@ -56,7 +72,7 @@ function* _fetchDirectory({ type, ...request }) {
       }),
     );
   } catch (e) {
-    yield put(fetchDirectoryError(e.toString()));
+    yield put(fetchDirectoryError({ error: e, request }));
   }
 }
 

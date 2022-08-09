@@ -9,6 +9,7 @@
  */
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
@@ -18,14 +19,14 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 
-import SplitPane from 'react-split-pane'; // see index.css
+import SplitPane from 'react-split-pane';
 
 import SelectedListOfFiles from './components/SelectedListOfFiles';
 // parts to this component
 import LeftPane from './LeftPane';
 
 // 📖 data
-import { getSelected } from '../../ducks/rootSelectors';
+import { getDriveTokenId, getSelected } from '../../ducks/rootSelectors';
 
 // ☎️  Callbacks to update data
 import {
@@ -61,8 +62,9 @@ const FileDialogComponent = () => {
   }
 
   // 📖 data (shared left and right side)
-  // string :: pathObj.identifier
   const selectedFiles = useSelector(getSelected, shallowEqual);
+  const currentDriveToken = useSelector(getDriveTokenId);
+  const { projectId } = useParams();
 
   // 📬 remove a headerView/file with confirmation
   const dispatch = useDispatch();
@@ -70,12 +72,11 @@ const FileDialogComponent = () => {
   // guarded/displays a confirmation dialog
   // ☎️  toggle/remove file (shared)
   const handleRemoveFile = useCallback(
-    (pathObj) => {
+    (path, displayName) => {
       dispatch(
-        // note: internal to redux path = pathObj.identifier
-        withConfirmation(cancelHeaderView({ path: pathObj.identifier }), {
-          stateId: `${pathObj.identifier}`,
-          message: filesConfirmRemovingFileText(pathObj.filename),
+        withConfirmation(cancelHeaderView({ path }), {
+          stateId: `${path}`,
+          message: filesConfirmRemovingFileText(displayName),
         }),
       );
     },
@@ -84,11 +85,22 @@ const FileDialogComponent = () => {
 
   // ☎️  left side
   const handleToggleFile = useCallback(
-    (pathObj) => (isSelected) =>
-      !isSelected
-        ? handleRemoveFile(pathObj)
-        : dispatch(fetchHeaderView({ path: pathObj.identifier, pathObj })),
-    [dispatch, handleRemoveFile],
+    ({ fileId, path, displayName, isSelected }) => {
+      // coordinate state with new isSelected value (FileRowItem)
+      console.log(`handleToggleFile: ${fileId}`);
+      return isSelected
+        ? dispatch(
+            fetchHeaderView({
+              projectId,
+              tokenId: currentDriveToken,
+              fileQuery: fileId,
+              path,
+              displayName,
+            }),
+          ) // + add to the selected
+        : handleRemoveFile(path, displayName);
+    },
+    [dispatch, handleRemoveFile, projectId, currentDriveToken],
   );
 
   return (
@@ -100,9 +112,8 @@ const FileDialogComponent = () => {
       defaultSize={454}
       style={{
         position: 'relative',
-      }}
-    >
-      <LeftPane selectedFiles={selectedFiles} toggleFile={handleToggleFile} />
+      }}>
+      <LeftPane projectId={projectId} toggleFile={handleToggleFile} />
       <RightPane selectedFiles={selectedFiles} removeFile={handleRemoveFile} />
     </SplitPane>
   );
@@ -119,14 +130,14 @@ function RightPane({ selectedFiles, removeFile }) {
         titleTypographyProps={{ variant: 'h5' }}
       />
       <CardContent>
-        <SelectedListOfFiles files={selectedFiles} removeFile={removeFile} />
+        <SelectedListOfFiles selected={selectedFiles} removeFile={removeFile} />
       </CardContent>
     </Card>
   );
 }
 // SplitPane.RightPane.displayName = 'FileDialog.SplitPane.RightPane';
 RightPane.propTypes = {
-  selectedFiles: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  selectedFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
   removeFile: PropTypes.func.isRequired,
 };
 

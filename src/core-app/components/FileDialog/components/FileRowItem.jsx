@@ -7,6 +7,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
@@ -18,23 +19,25 @@ import CheckBoxOutlineRounded from '@mui/icons-material/CheckBoxOutlineBlankRoun
 import { formatFileSize } from '../../../utils/common';
 // import { filesConfirmRemovingFileText } from '../../../constants/strings';
 
+// 📖 Redux
+import { isFileSelected } from '../../../ducks/rootSelectors';
 /* eslint camelcase: "off" */
 
 function FileRow(props) {
-  const {
-    display_name: displayName,
-    is_directory: isDirectory,
-    size,
-    isSelected,
-    fetchDirectory, // pre-configured fn
-    toggleFile, // pre-configured fn
-  } = props;
+  const { path, displayName, isDirectory, size, fetchDirectory, toggleFile } =
+    props;
+
+  // "keep state local"
+  // Computing isSelected locally may help prevent re-rendering the whole
+  // list of files with each toggle.
+  const isSelected = useSelector((state) => isFileSelected(state, path));
 
   return (
     <TableRow
       hover
-      onClick={() => (isDirectory ? fetchDirectory() : toggleFile(!isSelected))}
-    >
+      onClick={() =>
+        isDirectory ? fetchDirectory() : toggleFile(!isSelected)
+      }>
       {isDirectory ? (
         <TableCell align='center'>
           <Folder className='folderIcon' />
@@ -62,17 +65,17 @@ function FileRow(props) {
 }
 
 FileRow.propTypes = {
-  display_name: PropTypes.string.isRequired,
-  is_directory: PropTypes.bool.isRequired,
+  path: PropTypes.string, // not required for directories
+  displayName: PropTypes.string.isRequired,
+  isDirectory: PropTypes.bool.isRequired,
   fetchDirectory: PropTypes.func.isRequired,
-  isSelected: PropTypes.bool,
   size: PropTypes.number,
   toggleFile: PropTypes.func,
 };
 FileRow.defaultProps = {
   size: null,
-  isSelected: false,
   toggleFile: undefined,
+  path: undefined,
 };
 
 export default FileRow;

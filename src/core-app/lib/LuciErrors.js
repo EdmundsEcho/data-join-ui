@@ -21,6 +21,8 @@
  */
 class LuciError extends Error {
   constructor(error, ...params) {
+    console.debug('%cGENERATING LUCI ERROR', 'color:cyan');
+    console.dir(error);
     console.debug(
       `is this value true: ${typeof error === 'object' && 'message' in error}`,
     );

@@ -12,7 +12,7 @@
  * @module components/FileDialog/ListOfFiles
  *
  */
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -30,6 +30,8 @@ import FileRowItem from './FileRowItem';
 
 import { STATUS } from '../../../ducks/rootSelectors';
 
+/* eslint-disable no-console */
+
 /**
  * @component
  */
@@ -38,8 +40,7 @@ function ListOfFiles(props) {
     className,
     files,
     fetchDirectory,
-    fetchParentPath, // likely request object
-    selected,
+    fetchParentPath,
     toggleFile,
     viewStatus,
   } = props;
@@ -50,8 +51,7 @@ function ListOfFiles(props) {
       <Table
         stickyHeader
         size='small'
-        className={clsx('Luci-Table-fileDirectory')}
-      >
+        className={clsx('Luci-Table-fileDirectory')}>
         <TableHead>
           <TableRow>
             <TableCell />
@@ -74,8 +74,7 @@ function ListOfFiles(props) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 position: 'absolute',
-              }}
-            >
+              }}>
               <td>
                 <i className='spinner spinner-lucivia spinner-lg' />
               </td>
@@ -84,11 +83,12 @@ function ListOfFiles(props) {
           {/* First row link to parent when exists */}
           {fetchParentPath && (
             <FileRowItem
-              display_name='Up Directory...'
+              displayName='Up Directory...'
               fetchDirectory={fetchParentPath}
+              isDirectory
             />
           )}
-          {/* subsequent rows... */}
+          {/* subsequent rows: drive or files ... */}
           {files.length > 0 &&
             files.map((file) =>
               file.is_drive ? (
@@ -106,15 +106,24 @@ function ListOfFiles(props) {
               ) : (
                 <FileRowItem
                   key={file.file_id}
-                  file_id={file.file_id}
+                  displayName={file.display_name}
+                  isDirectory={file.is_directory}
                   {...file}
-                  toggleFile={toggleFile}
-                  fetchDirectory={() =>
-                    fetchDirectory({
-                      path_query: file.file_id,
+                  // when !directory, download and analyze a file
+                  toggleFile={(isSelected) =>
+                    toggleFile({
+                      fileId: file.file_id,
+                      path: file.path,
+                      displayName: file.display_name,
+                      isSelected,
                     })
                   }
-                  isSelected={selected.indexOf(file.path) !== -1}
+                  // OR when directory, search the remote drive
+                  fetchDirectory={() =>
+                    fetchDirectory({
+                      path_query: file.file_id, // for searching remote drive
+                    })
+                  }
                 />
               ),
             )}
@@ -127,19 +136,13 @@ function ListOfFiles(props) {
 ListOfFiles.propTypes = {
   className: PropTypes.string.isRequired,
   files: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  path: PropTypes.string.isRequired,
   fetchParentPath: PropTypes.func,
   fetchDirectory: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(PropTypes.string),
   toggleFile: PropTypes.func,
-  parentPath: PropTypes.string,
-  viewStatus: PropTypes.oneOf(Object.values(STATUS)),
+  viewStatus: PropTypes.oneOf(Object.values(STATUS)).isRequired,
 };
 
 ListOfFiles.defaultProps = {
-  selected: [],
-  parentPath: 'root',
-  viewStatus: STATUS.idle,
   fetchParentPath: undefined,
   toggleFile: undefined,
 };

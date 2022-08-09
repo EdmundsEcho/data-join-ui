@@ -25,7 +25,7 @@ const initialState = (projectId = undefined) => ({
   projectId,
   version: '0.3.9',
   meta: {
-    cacheStatus: CACHE_STATUS.empty,
+    cacheStatus: CACHE_STATUS.empty, // cache value echos server
     lastSavedOn: undefined,
     saveStatus: SAVE_STATUS.init, // occurs once with a new project
   },
@@ -47,6 +47,9 @@ export const slice = createSlice({
     setLastSavedOn: (state) => {
       state.meta.lastSavedOn = Date.now();
     },
+    reset: (state) => {
+      state = initialState();
+    },
   },
   /* eslint-enable no-param-reassign  */
 });
@@ -58,6 +61,7 @@ export const {
   setProjectId,
   setLastSavedOn,
   setSaveStatus,
+  reset,
   setCacheStatusStale = () => {
     return setCacheStatus(CACHE_STATUS.stale);
   },
@@ -76,8 +80,12 @@ export const getProjectId = (stateFragment) => stateFragment.projectId;
 export const getSaveStatus = (stateFragment) => stateFragment.meta.saveStatus;
 export const initRedux = (stateFragment) =>
   stateFragment.meta.saveStatus === SAVE_STATUS.init;
+export const isCacheStale = (stateFragment) =>
+  stateFragment.meta?.cacheStatus === CACHE_STATUS.stale;
 export const getCacheStatus = (stateFragment) =>
   stateFragment.meta?.cacheStatus ?? CACHE_STATUS.empty;
+
+// returns an initial state object
 export const seedProjectState = (projectId) => ({
   _projectMeta: initialState(projectId),
 });

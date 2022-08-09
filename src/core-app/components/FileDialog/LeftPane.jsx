@@ -7,8 +7,7 @@
  * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
  */
-import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -28,15 +27,25 @@ import StorageProviderList from './components/StorageProviderList';
 // 📖 data
 import {
   getFiles,
-  getFilesRequest,
   getFilesViewStatus,
+  hasRequestHistory,
+  isActivated,
+  peekParentRequestHistory,
+  peekRequestHistory,
 } from '../../ducks/rootSelectors';
 
 // ☎️  Callbacks to update data
 import {
   fetchDirectoryStart,
-  resetFetchRequest,
+  pushFetchHistory,
+  popFetchHistory,
+  STATUS,
 } from '../../ducks/actions/fileView.actions';
+
+// ----------------------------------------------------------------------------
+const DEBUG = false;
+// ----------------------------------------------------------------------------
+/* eslint-disable no-console */
 
 /**
  * Directory view: 📖 files
@@ -48,51 +57,104 @@ import {
  * @component
  *
  */
-function LeftPane({ selectedFiles, toggleFile }) {
-  // 📖 left side data
-  // ⚠️  can return null
-  const { projectId } = useParams();
-
-  // 📬
-  const dispatch = useDispatch();
+function LeftPane({ projectId, toggleFile }) {
+  //
+  const dispatch = useDispatch(); // 📬
 
   // local state to update the view of the files
   // set the filter value for which files to view
   const [fileViewFilter, setFileViewFilter] = useState(() => '');
 
-  // retrieve state from redux; files and request for those files
+  // retrieve state from redux
   const cache = useSelector((state) => getFiles(state), shallowEqual);
-  const cachedRequest = useSelector(getFilesRequest);
-  const viewStatus = useSelector(getFilesViewStatus);
+  const hasHistory = useSelector(hasRequestHistory);
+  const isInitialized = useSelector(isActivated);
+  const fetchStatus = useSelector(getFilesViewStatus);
 
-  // initial state: pull root data
-  // pull whatever drives are shared with the project
+  //
+  // 🟢 Initializing effect
+  // 🗄️ Project drives = default fetch
+  //
+  const parentRequest = useSelector((state) =>
+    peekParentRequestHistory(state, null),
+  );
+
+  // child or "next" fetch
+  const previousRequest = useSelector((state) =>
+    peekRequestHistory(state, {
+      project_id: projectId,
+      token_id: undefined,
+      path_query: undefined,
+      display_name: undefined,
+    }),
+  );
+  const initialFetch = useMemo(
+    () => ({
+      ...previousRequest,
+      token_id: null,
+      path_query: null,
+      display_name: 'Data sources',
+    }),
+    [previousRequest],
+  );
+
+  //
+  // 💢 initializing effect
+  //
+  // called when not yet initialized; once initialized, the
+  // subsequent calls to fetch are user-driven.
   useEffect(() => {
-    if (typeof cachedRequest === 'undefined') {
-      dispatch(
-        // request gets stored in redux (later changed incrementally)
-        fetchDirectoryStart({
-          project_id: projectId,
-          token_id: null,
-          path_query: null,
-          display_name: undefined,
-        }),
-      );
-    }
-    // return () => dispatch(resetFetchRequest());
-  }, [dispatch, projectId, cachedRequest]);
+    if (!isInitialized)
+      switch (true) {
+        case !hasHistory: {
+          dispatch(fetchDirectoryStart(initialFetch));
+          dispatch(pushFetchHistory(initialFetch));
+          break;
+        }
+        case hasHistory:
+          dispatch(fetchDirectoryStart(previousRequest));
+          break;
+        default:
+      }
+  }, [
+    previousRequest,
+    dispatch,
+    hasHistory,
+    initialFetch,
+    isInitialized,
+    projectId,
+  ]);
 
-  const {
-    path_query: pathQuery,
-    token_id: tokenId,
-    display_name: displayName,
-  } = cachedRequest || {
-    token_id: undefined,
-    path_query: undefined,
-    display_name: undefined,
-  };
+  // the decontructed result used to render the state of the component
+  const { path_query: pathQuery, display_name: displayName } = hasHistory
+    ? previousRequest
+    : initialFetch;
 
-  // local filter
+  // ---------------------------------------------------------------------------
+  // User-driven fetch request
+  // child directory
+  const handleFetchDirectory = useCallback(
+    (newRequest_) => {
+      setFileViewFilter(''); // reset the local view filter
+      // build the new request in part using cached value
+      const newRequest = {
+        ...previousRequest,
+        ...newRequest_,
+      };
+      dispatch(fetchDirectoryStart(newRequest));
+      dispatch(pushFetchHistory(newRequest));
+    },
+    [dispatch, previousRequest],
+  );
+  // parent directory
+  const handleFetchParentDirectory = useCallback(() => {
+    setFileViewFilter(''); // reset the local view filter
+    dispatch(fetchDirectoryStart(parentRequest));
+    dispatch(popFetchHistory());
+  }, [dispatch, parentRequest]);
+
+  // ---------------------------------------------------------------------------
+  // local filtered view of files
   const displayFiles =
     fileViewFilter === ''
       ? cache
@@ -102,60 +164,93 @@ function LeftPane({ selectedFiles, toggleFile }) {
   const handleNewFileView = (filterText) => {
     setFileViewFilter(filterText);
   };
+  // ---------------------------------------------------------------------------
+  if (DEBUG) {
+    console.debug(`%c📋 LeftPane state summary:`, 'color:cyan');
+    console.dir({
+      projectInUrl: projectId,
+      fetchStatus,
+      initialized: isInitialized,
+      hasHistory,
+      previousRequest,
+      parentRequest,
+    });
 
-  // incremental params: 1. none 2. token_id 3. path_query (file_id)
-  const handleFetchDirectory = useCallback(
-    (newRequest) => {
-      setFileViewFilter(''); // reset the local view filter
-      dispatch(
-        fetchDirectoryStart({
-          ...cachedRequest,
-          ...newRequest,
-        }),
+    const color = fetchStatus === STATUS.resolved ? 'color:green' : 'color:red';
+    console.debug(
+      `%cfetchStatus resolved?: ${fetchStatus === STATUS.resolved}`,
+      color,
+    );
+  }
+
+  // there is always something that will eventually be returned
+  switch (fetchStatus) {
+    case STATUS.inactive:
+      return null;
+
+    case STATUS.pending:
+      return (
+        <div
+          sx={{
+            mt: '40px',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'relative',
+            margin: '0 auto',
+          }}>
+          <i className='spinner spinner-lucivia spinner-lg' />
+        </div>
       );
-    },
-    [dispatch, cachedRequest],
-  );
-
-  return typeof pathQuery === 'undefined' ? null : (
-    <Card key={`files|leftPane|${pathQuery}`} className='Luci-DirectoryView'>
-      <div className='grow-max'>
-        <CardActions className='Luci-DirectoryView'>
-          <SearchBar
-            className='Luci-DirectoryView'
-            path={displayName || ''}
-            files={displayFiles}
-            onChange={handleNewFileView}
-            onCancel={() => setFileViewFilter('')}
-            value={fileViewFilter}
-          />
-        </CardActions>
-        {/* Current directory */}
-        {/* List of files */}
-        <CardContent className='Luci-DirectoryView'>
-          <ListOfFiles
-            className='list-of-files'
-            files={displayFiles}
-            selected={selectedFiles}
-            path={pathQuery || ''}
-            fetchDirectory={handleFetchDirectory}
-            toggleFile={toggleFile}
-            viewStatus={viewStatus}
-          />
-        </CardContent>
-      </div>
-      <CardActions className={clsx('Luci-DirectoryView', 'drive-providers')}>
-        <StorageProviderList
-          className='Drive-Providers'
-          projectId={projectId}
-        />
-      </CardActions>
-    </Card>
-  );
+    case STATUS.resolved:
+      return (
+        <Card
+          key={`files|leftPane|${pathQuery}`}
+          className='Luci-DirectoryView'>
+          <div className='grow-max'>
+            <CardActions className='Luci-DirectoryView'>
+              <SearchBar
+                className='Luci-DirectoryView'
+                path={displayName || ''}
+                files={displayFiles}
+                onChange={handleNewFileView}
+                onCancel={() => setFileViewFilter('')}
+                value={fileViewFilter}
+              />
+            </CardActions>
+            {/* List of files */}
+            <CardContent className='Luci-DirectoryView'>
+              <ListOfFiles
+                className='list-of-files'
+                files={displayFiles}
+                path={pathQuery || ''}
+                fetchDirectory={handleFetchDirectory}
+                fetchParentPath={
+                  parentRequest ? handleFetchParentDirectory : null
+                }
+                toggleFile={toggleFile}
+                viewStatus={fetchStatus}
+              />
+            </CardContent>
+          </div>
+          {/* Data drive providers */}
+          <CardActions
+            className={clsx('Luci-DirectoryView', 'drive-providers')}>
+            <StorageProviderList
+              className='Drive-Providers'
+              projectId={projectId}
+            />
+          </CardActions>
+        </Card>
+      );
+    default:
+      return <div>Unreachable</div>;
+  }
 }
 // SplitPane.LeftPane.displayName = 'FileDialog.SplitPane.LeftPane';
 LeftPane.propTypes = {
-  selectedFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+  projectId: PropTypes.string.isRequired,
   toggleFile: PropTypes.func.isRequired,
 };
 

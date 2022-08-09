@@ -10,6 +10,7 @@ import WithLabel from '../components/shared/WithLabel';
 
 // 📖 new project
 import { Context as ProjectsContext } from '../contexts/ProjectsContext';
+import { ApiCallError } from '../core-app/lib/LuciErrors';
 
 //
 // @KM: @TODO: make new config later
@@ -17,8 +18,8 @@ import { Context as ProjectsContext } from '../contexts/ProjectsContext';
 //
 import F from './user-profile.config.js';
 
-// import { ProjectsListContext } from '../components/ProjectsListContext';
-
+//
+// ✅ requires ProjectContext
 //
 // ⬜ Programatic navigation: Once add new, navigate to the new project
 //    ... this requires that we wait for the backend to provide us a new
@@ -27,12 +28,6 @@ import F from './user-profile.config.js';
 const ProjectForm = () => {
   const { add: addNewProject } = useContext(ProjectsContext);
   const navigate = useNavigate();
-
-  const createNewProject = async (data) => {
-    await addNewProject(data, ({ project_id: projectId }) =>
-      navigate(`/projects/${projectId}`),
-    );
-  };
 
   const formik = useFormik({
     initialValues: F.initialValues,
@@ -48,10 +43,16 @@ const ProjectForm = () => {
         const data = {
           ...validValues,
         };
-        // alert(JSON.stringify(data, null, 2));
-        await createNewProject(data);
+        //
+        // add and redirect
+        //
+        await addNewProject(data, ({ project_id: pid }) =>
+          navigate(`/projects/${pid}/files`),
+        );
       } catch (e) {
-        console.log('error', e);
+        alert(JSON.stringify(e, null, 2));
+        console.error('error', e);
+        throw new ApiCallError(e);
       }
 
       // await new Promise((r) => setTimeout(r, 500));
@@ -92,8 +93,7 @@ const ProjectForm = () => {
           variant='contained'
           size='small'
           color='primary'
-          type='submit'
-        >
+          type='submit'>
           Create new project
         </Button>
       </form>

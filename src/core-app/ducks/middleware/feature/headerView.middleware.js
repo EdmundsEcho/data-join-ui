@@ -37,6 +37,7 @@ import {
 } from '../../../services/api';
 
 import { SOURCE_TYPES, PURPOSE_TYPES } from '../../../lib/sum-types';
+import { camelToSnakeCase } from '../../../utils/common';
 
 import { normalizer as fileToHeaderView } from '../../../lib/filesToEtlUnits/file-to-header';
 import { updateWideToLongFields } from '../../../lib/filesToEtlUnits/transforms/wide-to-long-fields';
@@ -110,20 +111,28 @@ const middleware =
             throw new ApiCallError(`fetchHeaderView: missing action.path`);
           }
 
-          // uses action-splitter to process multiple actions
+          const { type: _, ...request_ } = action;
+
+          // convert keys to snake
+          const request = Object.entries(request_).reduce((acc, [k, v]) => {
+            acc[camelToSnakeCase(k)] = v;
+            return acc;
+          }, {});
+
+          // uses action-splitter
           next([
             setNotification({
               message: `${HEADER_VIEW}.middleware: -> polling-api.sagas`,
               feature: HEADER_VIEW,
             }),
-            addToSelectedList({ path: action.path }), // document
-            /*-----------------------------------------------------------------*/
+            addToSelectedList(action), // document
+            // -----------------------------------------------------------------
             apiFetch({
-              /*-----------------------------------------------------------------*/
+              // ---------------------------------------------------------------
               // ::event
               meta: { uiKey: action.path, feature: HEADER_VIEW },
-              request: { path: action.path, maxTries: MAX_TRIES },
-            }), // map + translation
+              request: { ...request, maxTries: MAX_TRIES },
+            }), // map + translate
           ]);
         } catch (e) {
           // ERROR will have been thrown/catched if deeper
@@ -215,6 +224,7 @@ const middleware =
         );
         */
 
+        // ⬜ The error parsing is not working as expected
         dispatch([
           setNotification({
             message: 'Api returned an error',

@@ -1,4 +1,4 @@
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 /**
  * Function that requires initialization (partial application)
@@ -14,15 +14,15 @@ const propsFromField = (props, fields) => (fieldName) => {
   if (!(fieldName in fields)) {
     throw new Error(
       `The requested field does not exist in the fromConfig: ${fieldName}`,
-    )
+    );
   }
   return Object.entries(fields[fieldName]).reduce((acc, [key, value]) => {
     if (props.includes(key)) {
-      acc[key] = value
+      acc[key] = value;
     }
-    return acc
-  }, {})
-}
+    return acc;
+  }, {});
+};
 /**
  * Generic form validation functions
  *
@@ -36,10 +36,10 @@ const propsFromField = (props, fields) => (fieldName) => {
  */
 const initialValues = (fields) => {
   return Object.entries(fields).reduce((acc, [name, field]) => {
-    acc[name] = field?.placeholder ?? undefined
-    return acc
-  }, {})
-}
+    acc[name] = field?.placeholder ?? undefined;
+    return acc;
+  }, {});
+};
 
 //
 // WIP - extend to include numbers when needed
@@ -49,19 +49,19 @@ const validationSchema = (fields) => {
   return Object.entries(fields)
     .filter(([, field]) => ['text', 'email'].includes(field.type))
     .reduce((acc, [name, field]) => {
-      let cfg = Yup.string().max(
+      const cfg = Yup.string().max(
         field?.max ?? 40,
         `Must be ${field.max} characters or less`,
-      )
+      );
       if (field?.required ?? false) {
-        cfg.required(field.errorMsg)
+        cfg.required(field.errorMsg);
       }
       if (field.type === 'email') {
-        cfg.email(field.invalidMsg)
+        cfg.email(field.invalidMsg);
       }
-      acc[name] = cfg
-      return acc
-    }, {})
-}
+      acc[name] = cfg;
+      return acc;
+    }, {});
+};
 
-export {validationSchema, initialValues, propsFromField}
+export { validationSchema, initialValues, propsFromField };

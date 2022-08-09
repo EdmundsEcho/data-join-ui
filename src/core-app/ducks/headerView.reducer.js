@@ -81,6 +81,12 @@ export const initialState = {
 //------------------------------------------------------------------------------
 export const getHeaderViews = (stateFragment) => stateFragment.headerViews;
 export const getSelected = (stateFragment) => stateFragment.selected;
+
+export const isFileSelected = (stateFragment, path) => {
+  const flt = (entry) => entry[0] === path;
+  return stateFragment.selected.findIndex(flt) !== -1;
+};
+
 export const getHasSelectedFiles = (stateFragment) =>
   stateFragment.selected.length > 0;
 
@@ -526,9 +532,10 @@ const reducer = createReducer(initialState, {
   // Two parts to the request:
   // 👉 async update of headerViews (not here)
   // 👉 sync update of selected files (here)
-  [ADD_SELECTED]: (state, { path: filename }) => ({
+  //
+  [ADD_SELECTED]: (state, { path, displayName }) => ({
     ...state,
-    selected: [...state.selected, filename],
+    selected: [...state.selected, [path, displayName]],
   }),
   //
   // part of July 2021 push
@@ -564,30 +571,40 @@ const reducer = createReducer(initialState, {
     };
   },
 
+  //
   // command that we document
+  //
   // 👉 triggers a saga fix-report
-  [REMOVE_HEADER_VIEW]: (state, { path: removeFilename }) => {
+  //
+  // 🗄️ shared-drive update:
+  //
+  // 🔖 filename in headerView = path
+  //    (what identifies files locally on the luci drive)
+  //
+  //    selected files hosts both the path and displayName.
+  //    [[path, displayName]]
+  //
+  [REMOVE_HEADER_VIEW]: (state, { path: removeFile }) => {
+    //
     // two documentation steps:
+    //
     // 1. selected: the list that tracks the user request, right away
     // 2. headerViews: the list data retrieved, which can take time
-    const updatedHvs = Object.keys(state.headerViews).includes(removeFilename)
-      ? /* eslint-disable no-shadow */
-        /* eslint-disable no-param-reassign */
+    //
+    const updatedHvs = Object.keys(state.headerViews).includes(removeFile)
+      ? /* eslint-disable no-shadow, no-param-reassign */
         // 👍 May be called when file does not exist in the hvs collection
         Object.values(state.headerViews).reduce((updatedHvs, hv) => {
-          if (hv.filename !== removeFilename) updatedHvs[hv.filename] = hv;
+          if (hv.filename !== removeFile) updatedHvs[hv.filename] = hv;
           return updatedHvs;
         }, {})
-      : /* eslint-enable no-shadow */
-        /* eslint-enable no-param-reassign */
+      : /* eslint-enable no-shadow, no-param-reassign */
         state.headerViews;
 
     return {
       ...state,
       headerViews: updatedHvs,
-      selected: state.selected.filter(
-        (filename) => filename !== removeFilename,
-      ),
+      selected: state.selected.filter(([path, _]) => path !== removeFile),
     };
   },
 

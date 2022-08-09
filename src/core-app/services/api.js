@@ -354,13 +354,14 @@ export const initApiService = async (eventInterface) => {
 };
 // File Inspection
 async function queueFileInspectionRequest(eventInterface) {
+  // Aug 2022: partial validation
   validateEventRequest(eventInterface, 'path');
   const axiosOptions = {
     method: 'POST',
     url: `/${ServiceConfigs[INSPECTION].endpoint}`,
     data: {
-      path: eventInterface.request.path,
       force: false,
+      ...eventInterface.request,
     },
   };
   return jobIdInterface(apiInstance(axiosOptions));
