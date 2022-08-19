@@ -10,17 +10,22 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const actionSplitterMiddleware = ({ dispatch }) => (next) => (action) => {
-  if (DEBUG) {
-    console.info(`%c🚧 Start of core-middleware array`, colors.light.purple);
-    console.info('loaded action-splitter.middleware');
-  }
+const actionSplitterMiddleware =
+  ({ dispatch }) =>
+  (next) =>
+  (action) => {
+    if (DEBUG) {
+      console.info(`%c🧮 Start of core-middleware array`, colors.light.purple);
+      console.info(
+        'loaded action-splitter.middleware 💫 (sends each [action] to Start)',
+      );
+    }
 
-  if (Array.isArray(action)) {
-    action.forEach((action_) => dispatch(action_));
-  } else {
-    next(action);
-  }
-};
+    if (Array.isArray(action)) {
+      action.forEach((action_) => dispatch(action_));
+    } else {
+      next(action);
+    }
+  };
 
 export default actionSplitterMiddleware;

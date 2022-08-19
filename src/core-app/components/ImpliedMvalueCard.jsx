@@ -72,8 +72,7 @@ function ImpliedMvalueCard(props) {
       stateId={`${stateId}|implied-mvalue`}
       expanded
       heading='Implied Value'
-      canCollapse
-    >
+      canCollapse>
       {valueName === '' ? (
         <Typography>{ERRORS.impliedMvalueConfig.doc}</Typography>
       ) : null}

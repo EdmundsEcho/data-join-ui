@@ -1,6 +1,7 @@
 // src/components/Workbench/components/shared/ValueGridFileLevels.jsx
 
 import React, { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -17,7 +18,7 @@ import WeightIcon from '@mui/icons-material/FitnessCenter';
 import SeriesIcon from '@mui/icons-material/LinearScale';
 
 // api (note: no use of action creators)
-import { getLevels as fetchLevelsInner } from '../../services/api';
+import { getFileLevels as fetchLevelsInner } from '../../services/api';
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { FIELD_TYPES, PURPOSE_TYPES } from '../../lib/sum-types';
@@ -80,9 +81,11 @@ const edgeToGridRowFn = (edge) => ({
 //    (i.e., without generating a redux action
 //           thereby does not invoke middleware, nor reducers)
 //
-const fetchLevels = ({ filter, ...rest }) => {
-  return fetchLevelsInner({ ...filter, ...rest });
-};
+const fetchLevels =
+  (projectId) =>
+  ({ filter, ...rest }) => {
+    return fetchLevelsInner({ projectId, ...filter, ...rest });
+  };
 const parseResponse = (response) => response.data.levels;
 //-------------------------------------------------------------------------------
 // When data :: derivedField
@@ -113,31 +116,31 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
     [fieldType, getValue],
   );
 
-  const selectionModel = useSelector(
-    (state) => {
-      switch (fieldType) {
-        case FIELD_TYPES.FILE:
-          return getSelectionModelFile(
-            state,
-            getValue('filename'),
-            getValue('header-idx'),
-          );
+  const { projectId } = useParams();
 
-        case FIELD_TYPES.ETL:
-          return getSelectionModelEtl(state, getValue('name'));
+  const selectionModel = useSelector((state) => {
+    switch (fieldType) {
+      case FIELD_TYPES.FILE:
+        return getSelectionModelFile(
+          state,
+          getValue('filename'),
+          getValue('header-idx'),
+        );
 
-        case FIELD_TYPES.WIDE:
-          return {
-            totalCount: getValue('levels').length,
-            selectionModel: getValue('levels'),
-            type: 'levels',
-          };
+      case FIELD_TYPES.ETL:
+        return getSelectionModelEtl(state, getValue('name'));
 
-        default:
-          throw new InvalidStateError(`Unreachable`);
-      }
+      case FIELD_TYPES.WIDE:
+        return {
+          totalCount: getValue('levels').length,
+          selectionModel: getValue('levels'),
+          type: 'levels',
+        };
+
+      default:
+        throw new InvalidStateError(`Unreachable`);
     }
-  );
+  });
 
   //
   // group-by-file | wide-to-long-field
@@ -169,7 +172,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
         }
         purpose={getValue('purpose')}
         baseSelectAll={selectAll}
-        fetchFn={fetchLevels}
+        fetchFn={fetchLevels(projectId)}
         normalizer={parseResponse}
         edgeToGridRowFn={edgeToGridRowFn}
         // required to determine the height of the grid
@@ -221,8 +224,8 @@ function Tools({ purpose, fieldType }) {
         <ToolTip title='Series function'>
           <IconButton
             className={clsx('Luci-IconButton', 'small', 'series')}
-            tabIndex='-1'
-            size="large">
+            tabIndex={-1}
+            size='large'>
             <SeriesIcon />
           </IconButton>
         </ToolTip>
@@ -230,8 +233,8 @@ function Tools({ purpose, fieldType }) {
         <ToolTip title='Rollup function'>
           <IconButton
             className={clsx('Luci-IconButton', 'small', 'rollup')}
-            tabIndex='-1'
-            size="large">
+            tabIndex={-1}
+            size='large'>
             <LabelIcon />
           </IconButton>
         </ToolTip>
@@ -240,14 +243,17 @@ function Tools({ purpose, fieldType }) {
         <ToolTip title='Weighting function'>
           <IconButton
             className={clsx('Luci-IconButton', 'small', 'weight')}
-            tabIndex='-1'
-            size="large">
+            tabIndex={-1}
+            size='large'>
             <WeightIcon />
           </IconButton>
         </ToolTip>
       ) : null}
       <ToolTip title='Scrubb function'>
-        <IconButton className={clsx('Luci-IconButton', 'small')} tabIndex='-1' size="large">
+        <IconButton
+          className={clsx('Luci-IconButton', 'small')}
+          tabIndex={-1}
+          size='large'>
           <EditIcon />
         </IconButton>
       </ToolTip>

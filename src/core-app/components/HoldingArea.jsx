@@ -1,7 +1,6 @@
 // src/components/HoldingArea.jsx
 
 /**
- * @module src/components/HoldingArea
  *
  * @description
  * The HoldingArea component is a general-purpose component used as an
@@ -12,9 +11,10 @@
  * 🚧 This needs to be reviewed in context of the StepBar and generally
  *    navigating through the app.
  *
+ * @module src/components/HoldingArea
+ *
  */
 import React, { useEffect, useState } from 'react';
-// import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,7 +40,7 @@ const HoldingArea = (/* props */) => {
   useEffect(() => {
     // if (prevJobs && prevJobs.length > pendingJobs.length) {
     if (!uiLoading) {
-      navigate('/campaigns/1/workbench');
+      navigate('/workbench');
     }
 
     setPrevJobs(pendingJobs);

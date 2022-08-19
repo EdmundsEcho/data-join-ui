@@ -20,7 +20,7 @@ import { colors } from '../constants/variables';
 //------------------------------------------------------------------------------
 // Read the .env
 //------------------------------------------------------------------------------
-const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
+const DEBUG = true || process.env.REACT_APP_DEBUG_API === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
 
@@ -73,9 +73,12 @@ export const gqlInstance = axios.create({
  */
 export const ResponseTypePredicates = {
   RESOLVED: (response) => {
+    console.debug(`----xxx HERE 8888 =-====`);
+    console.dir(response);
     return (
       response?.data?.results === 'stopped' ||
-      response?.data?.results.includes('object is not subscriptable')
+      response?.data?.results.includes('object is not subscriptable') ||
+      false
     );
   },
   CANCELLED: (response) => response?.data?.results === 'killed',
@@ -87,14 +90,32 @@ export const ResponseTypes = {
   JOB_ID: 'jobId',
   CANCELLED: 'cancelled',
 };
+
+const statusEndpointMaker = (SERVICE) => {
+  return (projectId, jid, resultsOrCancel, pid) => {
+    let suffix = '';
+    if (typeof jid !== 'undefined') {
+      suffix = `/${jid}`;
+    }
+    if (resultsOrCancel === 'RESULTS') {
+      suffix = `${suffix}/results`;
+    }
+    if (resultsOrCancel === 'CANCEL') {
+      suffix = `${suffix}?pid=${pid}`;
+    }
+    return `/${SERVICE}/${projectId}${suffix}`;
+  };
+};
 //------------------------------------------------------------------------------
 // Configure api response::result -> required format
 // Utilized by feature.middleware
+//
 //------------------------------------------------------------------------------
 export const ServiceConfigs = {
+  // @inspection_blueprint.route("/v1/inspection/<project_id>", methods=['POST'])
   INSPECTION: {
     type: 'INSPECTION',
-    endpoint: 'inspection',
+    endpoint: statusEndpointMaker('inspection'),
     feature: HEADER_VIEW,
     resultType: 'HeaderView',
     middleware: 'headerView',
@@ -103,6 +124,7 @@ export const ServiceConfigs = {
         return response?.data?.data?.results;
       },
       getData: (response) => response?.data?.data?.results,
+      getApiError: (event) => event.request.data?.cause,
       setData: (value) => ({
         response: { data: { data: { results: value } } },
       }),
@@ -110,7 +132,7 @@ export const ServiceConfigs = {
   },
   EXTRACTION: {
     type: 'EXTRACTION',
-    endpoint: 'extraction',
+    endpoint: statusEndpointMaker('extraction'),
     feature: WORKBENCH,
     resultType: 'EtlObject',
     middleware: 'workbench',
@@ -124,7 +146,7 @@ export const ServiceConfigs = {
   },
   MATRIX: {
     type: 'MATRIX',
-    endpoint: 'matrix',
+    endpoint: (projectId) => `/extraction/${projectId}`,
     feature: MATRIX_FEATURE,
     resultType: 'Matrix',
     middleware: 'matrix',
@@ -184,9 +206,84 @@ const { INSPECTION, EXTRACTION, MATRIX } = ServiceTypes;
 // Endpoints/api services
 //------------------------------------------------------------------------------
 /**
+ * tnc-py
+ * Queuing requests
+ *
+ * ✅ Utilized by the polling machine in polling-api.js
+ *
+ * Consumes the fetchAction event generated  by the machine.
+ *
+ * @return {Object} jobId processId
+ *
+ */
+export const initApiService = async (eventInterface) => {
+  validateEventInterface(eventInterface, false /* jobId */);
+  switch (eventInterface.meta.feature) {
+    case HEADER_VIEW:
+      return queueFileInspectionRequest(eventInterface);
+    case WORKBENCH:
+      return queueEtlExtraction(eventInterface);
+    case MATRIX_FEATURE:
+      return queueMatrixRequest(eventInterface);
+    default:
+      throw new InvalidStateError('Unreachable');
+  }
+};
+// File Inspection
+async function queueFileInspectionRequest(eventInterface) {
+  console.debug(`%cHEADER_ queue`, colors.purple);
+  // Aug 2022: partial validation
+  validateEventRequest(eventInterface, 'path');
+  const { feature } = eventInterface.meta;
+  const { project_id: projectId } = eventInterface.request;
+  const serviceType = getServiceType(feature);
+  const axiosOptions = {
+    method: 'POST',
+    url: ServiceConfigs[serviceType].endpoint(projectId),
+    data: {
+      force: false,
+      ...eventInterface.request,
+    },
+  };
+  const response = await apiInstance(axiosOptions);
+  return jobIdInterface(response);
+}
+// Extraction
+async function queueEtlExtraction(eventInterface) {
+  console.debug(`%cEXTRACTION_ queue`, colors.purple);
+  console.dir(eventInterface);
+  validateEventRequest(eventInterface, 'etlObject');
+  const { feature } = eventInterface.meta;
+  const { project_id: projectId } = eventInterface.request;
+  const serviceType = getServiceType(feature);
+  const axiosOptions = {
+    method: 'POST',
+    url: ServiceConfigs[serviceType].endpoint(projectId),
+    data: eventInterface.request.etlObject,
+  };
+  const response = await apiInstance(axiosOptions);
+  return jobIdInterface(response);
+}
+// Matrix
+async function queueMatrixRequest(eventInterface) {
+  validateEventRequest(eventInterface, 'spec');
+  const { feature } = eventInterface.meta;
+  const { project_id: projectId } = eventInterface.request;
+  const serviceType = getServiceType(feature);
+  const axiosOptions = {
+    method: 'POST',
+    url: ServiceConfigs[serviceType].endpoint(projectId),
+    data: eventInterface.request.spec,
+  };
+  const response = await apiInstance(axiosOptions);
+  return jobIdInterface(response);
+}
+//------------------------------------------------------------------------------
+/**
  * Polling for the status of a queued task.
  *
- * ✅ Utilized by the machine
+ * ✅ Utilized by the polling-machine
+ *
  *    👉 Ready when 'stopped'
  *    👉 Pending when 'started'
  *    👉 Error when 'status: "Successful", results: "error"'
@@ -197,17 +294,20 @@ const { INSPECTION, EXTRACTION, MATRIX } = ServiceTypes;
  *
  */
 export const statusApiService = async (eventInterface) => {
+  console.debug(`Checking status ---------------`);
+  console.dir(eventInterface);
   validateEventInterface(eventInterface, true /* jobId */);
-  const { jobId } = eventInterface.request;
+  const { jobId, project_id: projectId } = eventInterface.request;
   const { feature } = eventInterface.meta;
+  const serviceType = getServiceType(feature);
 
   const response = await apiInstance.get(
-    `/${ServiceConfigs[getServiceType(feature)].endpoint}/${jobId}`,
+    ServiceConfigs[serviceType].endpoint(projectId, jobId),
   );
 
   return {
     ...response,
-    request: { jobId },
+    request: eventInterface.request,
     responseType: ResponseTypes.STATUS,
   };
 };
@@ -222,7 +322,7 @@ export const statusApiService = async (eventInterface) => {
  */
 export const resultApiService = async (eventInterface) => {
   validateEventInterface(eventInterface, true /* jobId */);
-  const { jobId } = eventInterface.request;
+  const { jobId, project_id: projectId } = eventInterface.request;
   const { feature } = eventInterface.meta;
   const serviceType = getServiceType(feature);
 
@@ -231,8 +331,9 @@ export const resultApiService = async (eventInterface) => {
   switch (serviceType) {
     case INSPECTION:
       response = await apiInstance.get(
-        `/${ServiceConfigs[serviceType].endpoint}/${jobId}/results`,
+        ServiceConfigs[serviceType].endpoint(projectId, jobId, 'RESULTS'),
       );
+
       break;
 
     case EXTRACTION:
@@ -274,17 +375,13 @@ export const resultApiService = async (eventInterface) => {
 //
 export const cancelApiService = async (eventInterface) => {
   validateEventInterface(eventInterface, true /* jobId */);
-  const { jobId, processId } = eventInterface.request;
-  const serviceType = getServiceType(eventInterface.meta.feature);
-  const response = await apiInstance.delete(
-    `/${ServiceConfigs[serviceType].endpoint}/${jobId}?pid=${processId}`,
-  );
+  const { project_id: projectId, jobId, processId } = eventInterface.request;
+  const { feature } = eventInterface.meta;
+  const serviceType = getServiceType(feature);
 
-  if (response.status > 200) {
-    throw new ApiCallError(
-      `cancelApiRequest ${serviceType} ${jobId} failed; see network.`,
-    );
-  }
+  const response = await apiInstance.delete(
+    ServiceConfigs[serviceType].endpoint(projectId, jobId, 'CANCEL', processId),
+  );
 
   return {
     ...response,
@@ -292,6 +389,7 @@ export const cancelApiService = async (eventInterface) => {
   };
 };
 
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 /**
  * tnc-py
@@ -307,7 +405,8 @@ export const cancelApiService = async (eventInterface) => {
  * @return {Object}
  *
  */
-export const getLevels = ({
+export const getFileLevels = ({
+  projectId,
   sources,
   purpose,
   arrows = {},
@@ -322,73 +421,10 @@ export const getLevels = ({
     limit: purpose === 'mspan' ? 99999999999 : limit,
     sources,
   };
-  return apiInstance.post(`/levels`, body);
+  return apiInstance.post(`/levels/${projectId}`, body);
 };
 
 //------------------------------------------------------------------------------
-// export the queue functions
-//------------------------------------------------------------------------------
-/**
- * tnc-py
- * Queuing requests
- *
- * ✅ Utilized by the polling machine in polling-api.js
- *
- * Consumes the fetchAction event generated  by the machine.
- *
- * @return {Object} jobId processId
- *
- */
-export const initApiService = async (eventInterface) => {
-  validateEventInterface(eventInterface, false /* jobId */);
-  switch (eventInterface.meta.feature) {
-    case HEADER_VIEW:
-      return queueFileInspectionRequest(eventInterface);
-    case WORKBENCH:
-      return queueEtlExtraction(eventInterface);
-    case MATRIX_FEATURE:
-      return queueMatrixRequest(eventInterface);
-    default:
-      throw new InvalidStateError('Unreachable');
-  }
-};
-// File Inspection
-async function queueFileInspectionRequest(eventInterface) {
-  // Aug 2022: partial validation
-  validateEventRequest(eventInterface, 'path');
-  const axiosOptions = {
-    method: 'POST',
-    url: `/${ServiceConfigs[INSPECTION].endpoint}`,
-    data: {
-      force: false,
-      ...eventInterface.request,
-    },
-  };
-  return jobIdInterface(apiInstance(axiosOptions));
-}
-// Extraction
-async function queueEtlExtraction(eventInterface) {
-  validateEventRequest(eventInterface, 'etlObject');
-  const axiosOptions = {
-    method: 'POST',
-    data: eventInterface.request.etlObject,
-    url: `/extraction`,
-  };
-
-  return jobIdInterface(apiInstance(axiosOptions));
-}
-// Matrix
-async function queueMatrixRequest(eventInterface) {
-  validateEventRequest(eventInterface, 'spec');
-  const axiosOptions = {
-    method: 'POST',
-    data: eventInterface.request.spec,
-    url: `/matrix`,
-  };
-  return jobIdInterface(apiInstance(axiosOptions));
-}
-//------------------------------------------------------------------------------
-
 /**
  * Page through the matrix data.
  * Utilized both locally and by the ui
@@ -492,22 +528,23 @@ export const fetchLevels = async (request) => {
 /*-----------------------------------------------------------------------------*/
 // Local utilities
 /*-----------------------------------------------------------------------------*/
+// extract jobId and processId from the job ticket
 // api response -> { jobId, processId }
 //
-async function jobIdInterface(request) {
-  const response = await request;
+async function jobIdInterface(response) {
   if (DEBUG) {
     console.debug(
-      '%c** api response does it look as expected **',
+      '%c** api response does it look as expected? **',
       colors.purple,
     );
     console.dir(response);
   }
 
   if (response.status > 200) {
-    throw new ApiCallError(
-      `Retrieving the jobId failed.\n${response.data.message}`,
-    );
+    throw new ApiCallError({
+      message: `Retrieving the jobId failed.`,
+      ...response.data,
+    });
   }
   // used to run the polling task
   return {
@@ -570,6 +607,7 @@ export async function fetchProjectDrives(projectId) {
  * @return {Promise} response
  */
 export const readDirectory = (request) => {
+  console.debug(`%cHEADER_ dir`, colors.purple);
   const axiosOptions = {
     url: `/filesystem/readdir`,
     method: 'POST',

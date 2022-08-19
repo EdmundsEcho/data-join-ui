@@ -86,6 +86,7 @@ module.exports = {
   plugins: [
     // extends prefix: plugin:name
     // 'prettier',
+    'redux-saga',
     'import',
     'react',
     'react-hooks',
@@ -115,6 +116,7 @@ module.exports = {
    *
    */
   extends: [
+    'plugin:redux-saga/recommended',
     // eslint rule settings
     'eslint:recommended',
     'airbnb', // ./node_modules/eslint-config-airbnb/index.js

@@ -21,7 +21,7 @@ import CardContent from '@mui/material/CardContent';
 
 import SplitPane from 'react-split-pane';
 
-import SelectedListOfFiles from './components/SelectedListOfFiles';
+import HeaderViews from './components/HeaderViews';
 // parts to this component
 import LeftPane from './LeftPane';
 
@@ -44,7 +44,12 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const leftPaneStyle = {};
+const style = {
+  position: 'relative',
+};
+const leftPaneStyle = {
+  overflow: 'auto',
+};
 const rightPaneStyle = {
   flexGrow: 1,
   height: 'auto',
@@ -87,7 +92,6 @@ const FileDialogComponent = () => {
   const handleToggleFile = useCallback(
     ({ fileId, path, displayName, isSelected }) => {
       // coordinate state with new isSelected value (FileRowItem)
-      console.log(`handleToggleFile: ${fileId}`);
       return isSelected
         ? dispatch(
             fetchHeaderView({
@@ -104,15 +108,14 @@ const FileDialogComponent = () => {
   );
 
   return (
+    /* ROOT VIEW */
     <SplitPane
       className={clsx('LuciSplitPane', 'FileDialog')}
+      style={style}
       pane1Style={leftPaneStyle}
       pane2Style={rightPaneStyle}
       minSize={240}
-      defaultSize={454}
-      style={{
-        position: 'relative',
-      }}>
+      defaultSize={454}>
       <LeftPane projectId={projectId} toggleFile={handleToggleFile} />
       <RightPane selectedFiles={selectedFiles} removeFile={handleRemoveFile} />
     </SplitPane>
@@ -130,14 +133,16 @@ function RightPane({ selectedFiles, removeFile }) {
         titleTypographyProps={{ variant: 'h5' }}
       />
       <CardContent>
-        <SelectedListOfFiles selected={selectedFiles} removeFile={removeFile} />
+        {/* selected files => HeaderViews */}
+        <HeaderViews selectedFiles={selectedFiles} removeFile={removeFile} />
       </CardContent>
     </Card>
   );
 }
 // SplitPane.RightPane.displayName = 'FileDialog.SplitPane.RightPane';
 RightPane.propTypes = {
-  selectedFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedFiles: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+    .isRequired,
   removeFile: PropTypes.func.isRequired,
 };
 

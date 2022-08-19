@@ -6,6 +6,7 @@
  *
  */
 import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -16,7 +17,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 // api
-import { getLevels as getLevelsInternal } from '../../services/api';
+import { getFileLevels as getLevelsInternal } from '../../services/api';
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 
 import { FIELD_TYPES, SOURCE_TYPES } from '../../lib/sum-types';
@@ -126,6 +127,7 @@ function StatSummary({ getValue, fieldType }) {
   //
   const [localStore, setLocalStore] = useState(() => undefined);
   const [status, setStatus] = useState(() => 'idle');
+  const { projectId } = useParams();
   // error | success | idle | pending
 
   //
@@ -139,7 +141,7 @@ function StatSummary({ getValue, fieldType }) {
   //
   // ⌛ async call to the api
   //
-  const getLevels = useCallback(
+  const getFileLevels = useCallback(
     async (isMounted, callback) => {
       //
       // short-circuit the effect when...
@@ -149,9 +151,10 @@ function StatSummary({ getValue, fieldType }) {
         setStatus('error');
         return;
       }
-      const response = await getLevelsInternal(
-        fileLevelsRequest(getValue, fieldType),
-      );
+      const response = await getLevelsInternal({
+        projectId,
+        ...fileLevelsRequest(getValue, fieldType),
+      });
       if (!isMounted) {
         return;
       }
@@ -162,21 +165,21 @@ function StatSummary({ getValue, fieldType }) {
       callback(response);
       setStatus('success');
     },
-    [fieldType, getValue, hasImpliedMvalue],
+    [projectId, fieldType, getValue, hasImpliedMvalue],
   );
 
   useEffect(() => {
     let isMounted = true;
     if (typeof localStore === 'undefined') {
       setStatus('pending');
-      getLevels(isMounted, (response) => {
+      getFileLevels(isMounted, (response) => {
         setLocalStore(response.data.payload);
       });
     }
     return () => {
       isMounted = false;
     };
-  }, [getLevels, localStore]);
+  }, [getFileLevels, localStore]);
 
   //
   // Individual chunks of information

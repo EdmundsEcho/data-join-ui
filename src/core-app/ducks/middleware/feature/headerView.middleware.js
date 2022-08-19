@@ -4,16 +4,16 @@
  * @module middleware/feature/headerView.middleware
  */
 import {
-  TYPES, // pass-through document
+  UPDATE_FILEFIELD, // pass-through document
   UPDATE_WIDE_TO_LONG_FIELDS, // command
   setWideToLongFieldsInHv, // document
   HEADER_VIEW, // feature
   FETCH_HEADER_VIEW, // command
   CANCEL_HEADER_VIEW, // command
   addHeaderView, // document
-  cancelHeaderView, // command called when error
   removeHeaderView, // document
   addToSelectedList, // document
+  removeFromSelectedList, // document
   addInspectionError, // document
   removeInspectionError, // document
   setFixedHeaderViews, // document
@@ -28,12 +28,14 @@ import {
   apiCancel,
   pollingEventError,
   validateEventInterface,
+  apiEventError,
+  getUiKey,
 } from '../../actions/api.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import {
   ServiceConfigs,
   getServiceType,
-  getLevels,
+  getFileLevels,
 } from '../../../services/api';
 
 import { SOURCE_TYPES, PURPOSE_TYPES } from '../../../lib/sum-types';
@@ -75,13 +77,13 @@ const MAX_TRIES = 15;
  * @middleware
  */
 const middleware =
-  ({ getState, dispatch }) =>
+  (projectId) =>
+  ({ getState }) =>
   (next) =>
-  (action) => {
+  async (action) => {
     //
     if (DEBUG) {
-      console.info(`%c🟢 Start of middleware cycle`, colors.orange);
-      console.info('👉 loaded headerView.middleware');
+      console.info(`👉 loaded headerView.middleware: ${projectId}`);
     }
 
     if (action.type === 'PING')
@@ -90,7 +92,8 @@ const middleware =
         colors.light.purple,
       );
 
-    const { isValid, getData } =
+    // retrieve helpers for the headerView response
+    const { isValid, getData, getApiError } =
       ServiceConfigs[getServiceType(HEADER_VIEW)].response;
 
     // dispatch the current action in action.type with the closure that is
@@ -106,6 +109,7 @@ const middleware =
       // fetchHeaderView -> apiFetch
       // -------------------------------------------------------------------------
       case FETCH_HEADER_VIEW: {
+        console.debug(`%cFETCH_HEADER_VIEW activated`, 'color:pink');
         try {
           if (!action?.path) {
             throw new ApiCallError(`fetchHeaderView: missing action.path`);
@@ -114,6 +118,7 @@ const middleware =
           const { type: _, ...request_ } = action;
 
           // convert keys to snake
+          // ⬜ move to the normalizing configuration
           const request = Object.entries(request_).reduce((acc, [k, v]) => {
             acc[camelToSnakeCase(k)] = v;
             return acc;
@@ -122,7 +127,7 @@ const middleware =
           // uses action-splitter
           next([
             setNotification({
-              message: `${HEADER_VIEW}.middleware: -> polling-api.sagas`,
+              message: `${HEADER_VIEW}.middleware: -> polling-api.config.sagas`,
               feature: HEADER_VIEW,
             }),
             addToSelectedList(action), // document
@@ -154,10 +159,10 @@ const middleware =
           if (!action?.path /* ui perspective */) {
             throw new ApiCallError(`cancelHeaderView: missing action.path`);
           }
-          // ⚠️  feature -> core; dispatch is not required
+          // feature -> core
           next([
             setNotification({
-              message: `${HEADER_VIEW} middleware: action::feature -> ::api (next: polling-api.sagas)`,
+              message: `${HEADER_VIEW} middleware: action::feature -> ::api (next: polling-api.config.sagas)`,
               feature: HEADER_VIEW,
             }),
             apiCancel({
@@ -165,7 +170,8 @@ const middleware =
               meta: { uiKey: action.path, feature: HEADER_VIEW },
               request: { path: action.path },
             }), // map + translation to core api perspective
-            removeHeaderView({ feature: HEADER_VIEW, path: action.path }), // document
+            removeHeaderView(action), // document
+            removeFromSelectedList(action), // document
           ]);
         } catch (e) {
           next(
@@ -186,58 +192,67 @@ const middleware =
           console.log(`👉 middleware - resolved`);
           console.log(action);
         }
-        // expects event
-        //
-        // 🔑 Dependency on request + machine output structure
-        //
-        //
-        if (!isValid(action?.event?.request)) {
-          throw new ApiResponseError(
-            `headerView.middleware: unexpected response; see api.ServiceConfigs`,
-          );
+        try {
+          // expects event
+          //
+          // 🔑 Dependency on request + machine output structure
+          //
+          //
+          // check for error (somehow API did not catch this)
+          if (!isValid(action?.event?.request)) {
+            throw new ApiResponseError(
+              `headerView.middleware: unexpected response; see api.ServiceConfigs`,
+            );
+          }
+          next([
+            setNotification({
+              message: `${HEADER_VIEW}.middleware: documenting headerView (next: reducer)`,
+              feature: HEADER_VIEW,
+            }),
+            // normalizer interface
+            addHeaderView({
+              payload: getData(action.event.request),
+              normalizer: fileToHeaderView,
+              startTime: new Date(),
+            }),
+            tagWarehouseState('STALE'),
+          ]);
+        } catch (e) {
+          next(apiEventError({ feature: HEADER_VIEW, ...e }));
         }
-        dispatch([
-          setNotification({
-            message: `${HEADER_VIEW}.middleware: documenting headerView (next: reducer)`,
-            feature: HEADER_VIEW,
-          }),
-          // normalizer interface
-          addHeaderView({
-            payload: getData(action.event.request),
-            normalizer: fileToHeaderView,
-            startTime: new Date(),
-          }),
-          tagWarehouseState('STALE'),
-        ]);
         break;
       }
 
       // action :: pollingEventError
       case `${HEADER_VIEW} ${POLLING_ERROR}`: {
+        if (DEBUG) {
+          console.debug(`__ 1️⃣  🦀 did I make it to the middleware?`);
+          console.dir(action);
+        }
         // expects event
         validateEventInterface(action?.event, false /* jobId */);
 
-        /*
         console.assert(
-          getData(action.event.request)?.error,
+          action.event.request.error,
           'The response is not an error',
         );
-        */
 
         // ⬜ The error parsing is not working as expected
-        dispatch([
+        next([
           setNotification({
-            message: 'Api returned an error',
+            message:
+              action.event.request?.data?.message ?? 'Api returned an error',
             feature: HEADER_VIEW,
-            error:
-              getData(action.event.request) ??
-              action.event.request.errorEvent.toString(),
+            error: getApiError(action.event) ?? JSON.stringify(action.event),
           }),
-          cancelHeaderView({ path: action.event.request.path }),
+          // convert from action :: event, to ~ ui-agent action type (path)
+          removeHeaderView({ type: null, path: getUiKey(action.event) }), // document
+          removeFromSelectedList({ type: null, path: getUiKey(action.event) }), // document
           // ephemeral notice to the user
           addInspectionError({
             filename: action.event.request.path,
-            message: 'Api returned an error',
+            message:
+              action.event.request?.data?.message ?? 'Api returned an error',
           }),
         ]);
         // dispatch an action to clear the notice after a given time
@@ -313,7 +328,7 @@ const middleware =
       // 3️⃣  👉 interpreted here; may map to an action that updates levels
       //
       //
-      case TYPES.UPDATE_FILEFIELD: {
+      case UPDATE_FILEFIELD: {
         const { filename, fieldIdx, key, value } = action;
         // augment the state with async data; othewise, updates go to the
         // reducer directly to be documented.
@@ -332,18 +347,35 @@ const middleware =
           ).levels.length;
 
           if (value === PURPOSE_TYPES.MSPAN && levelsCount === 0) {
-            dispatch([
+            next([
               setNotification({
                 message: `Fetching the mspan data for the redux-store`,
                 feature: HEADER_VIEW,
               }),
-              setLevelsAsync(
-                filename,
-                fieldIdx,
-                PURPOSE_TYPES.MSPAN,
-                (response) => response.data.levels.edges,
-              ),
             ]);
+            const response = await getFileLevels({
+              projectId,
+              sources: [{ filename, 'header-index': fieldIdx }],
+              purpose: PURPOSE_TYPES.MSPAN,
+            });
+            if (response.status > 200 || response.data.status === 'Error') {
+              next(
+                pollingEventError({
+                  feature: HEADER_VIEW,
+                  message: response.data?.message ?? `error retrieving levels`,
+                  uid: `${filename} ${PURPOSE_TYPES.MSPAN}`,
+                }),
+              );
+            }
+
+            // transform the api data -> [[value, count]]
+            const normalized = response.data.levels.edges;
+            const levels = normalized.map(({ node }) => [
+              node.level,
+              node.count,
+            ]);
+
+            next(setHvFieldLevels(filename, fieldIdx, levels));
           }
         }
         break;
@@ -380,56 +412,4 @@ const middleware =
     }
   };
 
-/**
- *
- * Promise event
- *
- * 🔖 This action gets augmented by async.middleware
- *
- * The normalizer raw api -> edges, where each edge has a node with
- * the level and count props.
- *
- * @function
- * @param {string} filename
- * @param {number} headerIdx
- * @param {string} purpose PURPOSE_TYPES
- * @param {function} normalizer raw api -> edges
- * @return {Object} action picked-up by async.middleware
- */
-function setLevelsAsync(filename, headerIdx, purpose, normalizer) {
-  return {
-    type: 'GO LUCI',
-    meta: { feature: HEADER_VIEW },
-    payload: (dispatch) => {
-      // promise sub-routine
-      new Promise((resolve) => {
-        // ⏳  call the api
-        const response = getLevels({
-          sources: [{ filename, 'header-index': headerIdx }],
-          purpose,
-        });
-        resolve(response);
-      }).then((response) => {
-        if (response.status > 200 || response.data.status === 'Error') {
-          dispatch(
-            pollingEventError({
-              feature: HEADER_VIEW,
-              message: response.data?.message ?? `error retrieving levels`,
-              uid: `${filename} ${purpose}`,
-            }),
-          );
-          return;
-        }
-
-        // transform the api data -> [[value, count]]
-        const levels = normalizer(response).map(({ node }) => [
-          node.level,
-          node.count,
-        ]);
-
-        dispatch(setHvFieldLevels(filename, headerIdx, levels));
-      });
-    },
-  };
-}
 export default middleware;

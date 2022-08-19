@@ -1,17 +1,20 @@
 // src/sagas/headerView-fix-report.js
 
 /**
- * @module sagas/headerView-fix-report.sagas
  *
  * @description
  * ⬜ throttle the ability to trigger a report
+ *
+ * @module sagas/headerView-fix-report.sagas
  *
  */
 
 import { call, put, race, select, take, takeEvery } from 'redux-saga/effects';
 
 import {
-  TYPES, // document direct to reducer
+  UPDATE_FILEFIELD, // document
+  UPDATE_IMPLIED_MVALUE, // document
+  RESET_FILEFIELDS, // document
   HEADER_VIEW, // feature
   ADD_HEADER_VIEW,
   REMOVE_HEADER_VIEW,
@@ -27,7 +30,7 @@ import { setNotification } from '../ducks/actions/notifications.actions';
 
 // ⚠️  returns a timeout promise
 import { reportHvsFixesP } from '../ducks/rootSelectors';
-import { TimeoutError } from '../lib/LuciErrors';
+import { SagasError, TimeoutError } from '../lib/LuciErrors';
 
 import * as UT from './sagas.helpers';
 import { colors } from '../constants/variables';
@@ -51,8 +54,9 @@ if (DEBUG) {
  * (actions :: document)
  */
 const scheduleFixReportActions = [
-  TYPES.UPDATE_FILEFIELD,
-  TYPES.UPDATE_IMPLIED_MVALUE,
+  UPDATE_FILEFIELD,
+  UPDATE_IMPLIED_MVALUE,
+  RESET_FILEFIELDS,
   SET_WIDE_TO_LONG_FIELDS_IN_HV, // document
   ADD_HEADER_VIEW, // document
   REMOVE_HEADER_VIEW, // document
@@ -61,8 +65,8 @@ const scheduleFixReportActions = [
 ];
 
 function* _report() {
-  const state = yield select();
   try {
+    const state = yield select();
     // the computation
     const fixes = yield call(reportHvsFixesP, { state, DEBUG });
     return fixes; // receiver, informs the race condition
@@ -89,52 +93,62 @@ function* _scheduleValidation(action) {
     );
     console.dir(action);
   }
-
-  // 👉 The race starts here
-  const [report, timedout, nextRequest] = yield race([
-    call(_report),
-    take(`${HEADER_VIEW} ${TIMED_OUT}`),
-    take(scheduleFixReportActions),
-  ]);
-
-  if (DEBUG) {
-    console.debug('%c🏁 headerView-report-fixes.sagas the race is over', COLOR);
+  if (typeof action === 'undefined') {
+    throw new SagasError('undefined action');
   }
-  // 🏁 The race finish line
-  switch (true) {
-    // when the report wins the race, document the result
-    case typeof report !== 'undefined':
-      if (DEBUG) {
-        console.debug(`%c✅ Report won the race!!!`, COLOR);
-      }
-      yield put(setHvsFixes(report));
-      break;
 
-    // when the report times out, notify (no other change)
-    case typeof timedout !== 'undefined':
-      if (DEBUG) {
-        console.debug(`%c⌛ The request timeout won the race!!!`, COLOR);
-      }
-      yield put(
-        setNotification({
-          message: timedout.message || 'Error report timedout',
-          feature: `headerView user-feedback`,
-        }),
+  try {
+    // 👉 The race starts here
+    const [report, timedout, nextRequest] = yield race([
+      call(_report),
+      take(`${HEADER_VIEW} ${TIMED_OUT}`),
+      take(scheduleFixReportActions),
+    ]);
+
+    if (DEBUG) {
+      console.debug(
+        '%c🏁 headerView-report-fixes.sagas the race is over',
+        COLOR,
       );
-      break;
+    }
+    // 🏁 The race finish line
+    switch (true) {
+      // when the report wins the race, document the result
+      case typeof report !== 'undefined':
+        if (DEBUG) {
+          console.debug(`%c✅ Report won the race!!!`, COLOR);
+        }
+        yield put(setHvsFixes(report));
+        break;
 
-    // when another request is recieved,
-    // 👉 start the race over.
-    case typeof nextRequest !== 'undefined':
-      if (DEBUG) {
-        console.debug(`%c⬜ The next request won the race!!!`, COLOR);
-      }
-      /* just cancel others in the race */
-      yield call(_scheduleValidation); // restart the process
-      break;
+      // when the report times out, notify (no other change)
+      case typeof timedout !== 'undefined':
+        if (DEBUG) {
+          console.debug(`%c⌛ The request timeout won the race!!!`, COLOR);
+        }
+        yield put(
+          setNotification({
+            message: timedout.message || 'Error report timedout',
+            feature: `headerView user-feedback`,
+          }),
+        );
+        break;
 
-    default:
-      break;
+      // when another request is recieved,
+      // 👉 start the race over.
+      case typeof nextRequest !== 'undefined':
+        if (DEBUG) {
+          console.debug(`%c⬜ The next request won the race!!!`, COLOR);
+        }
+        /* just cancel others in the race */
+        yield call(_scheduleValidation); // restart the process
+        break;
+
+      default:
+        break;
+    }
+  } catch (e) {
+    throw new SagasError(e);
   }
   // scrappy fix to deal with async timing
   console.groupEnd();

@@ -56,8 +56,7 @@ import Button from '@mui/material/Button';
 
 import logo from '../../assets/l@3x.png';
 
-// ☎️  initiate the etl process
-// import { setLoader } from '../../ducks/actions/ui.actions';
+// 📖 ☎️  initiate the etl process
 import {
   // WORKBENCH,
   fetchWarehouse,
@@ -306,12 +305,10 @@ const StepBarComponent = ({
     <Container
       className={clsx('Luci-Stepper wrapper')}
       maxWidth='xl'
-      sx={{ gridColumn: '1/3' }}
-    >
+      sx={{ gridColumn: '1/3' }}>
       <Stepper
         className={clsx('Luci-Stepper root')}
-        activeStep={currentStep.idx}
-      >
+        activeStep={currentStep.idx}>
         {stepsText.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
@@ -331,8 +328,7 @@ const StepBarComponent = ({
                 startIcon={<PreviousArrow fontSize='small' />}
                 onClick={() =>
                   navigate(getBacktrackLink(indexedSteps, currentStep.idx - 1))
-                }
-              >
+                }>
                 Previous
               </Button>
 
@@ -343,10 +339,10 @@ const StepBarComponent = ({
                 })}
                 // href={nextHref()}
                 endIcon={<NextArrow fontSize='small' />}
-                onClick={() => handleNextStep()}
-              >
+                onClick={() => handleNextStep()}>
                 Next
               </Button>
+              <Button onClick={() => handleNextStep()}>Test next</Button>
             </CardActions>
           </Card>
         </Container>

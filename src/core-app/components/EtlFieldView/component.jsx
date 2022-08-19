@@ -98,10 +98,13 @@ const COLOR = colors.blue;
 /* eslint-disable no-console */
 
 // SplitPane className
+
+const style = {
+  position: 'relative',
+};
 const leftPaneStyle = {
   overflow: 'auto',
 };
-
 const rightPaneStyle = {
   overflow: 'auto',
 };
@@ -545,12 +548,12 @@ function Main(props) {
     <>
       {/* ROOT VIEW */}
       <SplitPane
-        className={clsx('Luci-SplitPane', 'eltFieldView')}
+        className={clsx('Luci-SplitPane', 'EtlFieldView')}
+        style={style}
         pane1Style={leftPaneStyle}
         pane2Style={rightPaneStyle}
         minSize={270}
-        defaultSize={500}
-      >
+        defaultSize={500}>
         {leftPane}
         {rightPane}
       </SplitPane>
@@ -617,8 +620,7 @@ function LeftPane({
         purpose={PURPOSE_TYPES.MVALUE}
         selectedFieldName={selectedFieldName}
         handleSelectField={handleSelectField}
-        cardHeader={<MeasurementHeader />}
-      >
+        cardHeader={<MeasurementHeader />}>
         <EtlUnitMeas
           meaEtlUnits={meaEtlUnits} // 📖
           meaRelatedEtlFields={meaRelatedEtlFieldsView} // 📖
@@ -822,8 +824,7 @@ function EtlUnit({
 }) {
   return (
     <ErrorBoundary
-      message={`Something went wrong with EtlUnit with purpose: ${purpose}`}
-    >
+      message={`Something went wrong with EtlUnit with purpose: ${purpose}`}>
       <Card className={clsx('Luci-EtlFieldView', 'root')}>
         {cardHeader}
         <CardContent>
@@ -856,8 +857,7 @@ function EtlUnit({
                           : 'active',
                       )}
                       hover
-                      onClick={() => handleSelectField(field.name)}
-                    >
+                      onClick={() => handleSelectField(field.name)}>
                       <TableCell>
                         <Typography variant='body1' noWrap>
                           {field.name}
@@ -928,8 +928,7 @@ function QualityHeader({ enableAddNewField, onOpenNewQualDialog }) {
             <IconButton
               className={clsx('Luci-Icon', 'addQualImpliedFieldButton')}
               size='small'
-              onClick={onOpenNewQualDialog}
-            >
+              onClick={onOpenNewQualDialog}>
               <AddIcon />
             </IconButton>
           ) : null}

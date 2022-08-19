@@ -21,9 +21,8 @@ import { formatFileSize } from '../../../utils/common';
 
 // 📖 Redux
 import { isFileSelected } from '../../../ducks/rootSelectors';
-/* eslint camelcase: "off" */
 
-function FileRow(props) {
+function FileRowItem(props) {
   const { path, displayName, isDirectory, size, fetchDirectory, toggleFile } =
     props;
 
@@ -35,8 +34,8 @@ function FileRow(props) {
   return (
     <TableRow
       hover
-      onClick={() =>
-        isDirectory ? fetchDirectory() : toggleFile(!isSelected)
+      onClick={
+        isDirectory ? () => fetchDirectory() : () => toggleFile(!isSelected)
       }>
       {isDirectory ? (
         <TableCell align='center'>
@@ -64,18 +63,19 @@ function FileRow(props) {
   );
 }
 
-FileRow.propTypes = {
+FileRowItem.propTypes = {
   path: PropTypes.string, // not required for directories
   displayName: PropTypes.string.isRequired,
   isDirectory: PropTypes.bool.isRequired,
-  fetchDirectory: PropTypes.func.isRequired,
-  size: PropTypes.number,
+  fetchDirectory: PropTypes.func,
   toggleFile: PropTypes.func,
+  size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
-FileRow.defaultProps = {
+FileRowItem.defaultProps = {
   size: null,
   toggleFile: undefined,
+  fetchDirectory: undefined,
   path: undefined,
 };
 
-export default FileRow;
+export default FileRowItem;

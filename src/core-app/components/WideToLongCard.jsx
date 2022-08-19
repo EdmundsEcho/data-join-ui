@@ -206,8 +206,7 @@ const WideToLongCard = (props) => {
       expanded
       canCollapse
       marginTop='20px' // this feels like a hack
-      marginBottom='0px'
-    >
+      marginBottom='0px'>
       <ErrorBoundary message='wideToLongFields: Something went wrong'>
         <Collapse in>
           <Grid container spacing={5}>
@@ -282,8 +281,7 @@ function AddFactorTable(props) {
       {/* Heading Factor Name | Purpose | + Factors */}
       <TableHead>
         <TableRow
-          className={clsx('Luci-FileField-Row', 'header', 'factorNames')}
-        >
+          className={clsx('Luci-FileField-Row', 'header', 'factorNames')}>
           <TableCell>Factor Name</TableCell>
           <TableCell align='center'>Purpose</TableCell>
 
@@ -293,8 +291,7 @@ function AddFactorTable(props) {
               tabIndex={-1}
               style={styleIconButton}
               onClick={() => addFactor()}
-              size='large'
-            >
+              size='large'>
               <AddIcon />
             </IconButton>
             Factors
@@ -333,8 +330,7 @@ function AddFactorTable(props) {
                 saveChange={changeWideFieldValue(factor.id)}
                 hasNullValues={false}
               />
-            }
-          >
+            }>
             {/* Summary view */}
             {/* Input Factor name: config[factors.factorId].name */}
             <TableCell>
@@ -372,8 +368,7 @@ function AddFactorTable(props) {
                 disabled={factors.length === 1}
                 style={stylePaddingZero}
                 onClick={() => removeFactor(factor.id)}
-                size='large'
-              >
+                size='large'>
                 <RemoveIcon />
               </IconButton>
             </TableCell>
@@ -414,14 +409,12 @@ function SetFactorValueTable(props) {
       {/* Header: Field Name | factor-1 | factor-2 etc.. */}
       <TableHead>
         <TableRow
-          className={clsx('Luci-FileField-Row', 'header', 'fieldNames')}
-        >
+          className={clsx('Luci-FileField-Row', 'header', 'fieldNames')}>
           <TableCell>Field Name</TableCell>
           {factors.map((factor) => (
             <TableCell
               className={clsx('factorName')}
-              key={`${factor.name}-${factor.id}`}
-            >
+              key={`${factor.name}-${factor.id}`}>
               <FactorWithMenu
                 text={factor.name}
                 menu={
@@ -460,8 +453,7 @@ function SetFactorValueTable(props) {
                 'Luci-FileField-Row',
                 'Luci-Wide-FieldNames',
                 'body',
-              )}
-            >
+              )}>
               {/* fieldname/alias that contains/embeds the factor values */}
               <TableCell>
                 <Typography>{fieldAlias}</Typography>

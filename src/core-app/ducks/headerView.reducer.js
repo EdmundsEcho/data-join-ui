@@ -19,11 +19,13 @@
 import createReducer from '../utils/createReducer';
 // actions :: document
 import {
-  TYPES,
+  UPDATE_IMPLIED_MVALUE,
+  UPDATE_FILEFIELD,
+  RESET_FILEFIELDS,
   ADD_SELECTED,
+  REMOVE_SELECTED,
   ADD_HEADER_VIEW,
   REMOVE_HEADER_VIEW, // CANCEL command -> here
-  // REMOVE_SELECTED,
   ADD_INSPECTION_ERROR,
   REMOVE_INSPECTION_ERROR,
   SET_HVS, // document updated hvs
@@ -32,6 +34,7 @@ import {
   SET_WIDE_TO_LONG_FIELDS_IN_HV,
   SET_HV_FIELD_LEVELS, // document levels (likely only mspan)
 } from './actions/headerView.actions';
+import { RESET } from './actions/project-meta.actions';
 
 import { updateField } from '../lib/filesToEtlUnits/update-field';
 import { getWideToLongFieldsConfig } from '../lib/filesToEtlUnits/transforms/wide-to-long-fields';
@@ -455,6 +458,9 @@ export const reportHvsFixesP = ({
     Array.isArray(headerViews),
     `Report Errors: Expecting an Array of hvs`,
   );
+  if (headerViews.length === 0) {
+    return {};
+  }
 
   const result = computeWithTimeout(
     () =>
@@ -500,7 +506,7 @@ export const reportHvsFixesP = ({
 //------------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
   /* Utility to reset all state */
-  RESET: () => initialState,
+  [RESET]: () => initialState,
 
   /* Testing */
   RESET_HVS_FIXES: (state) => ({
@@ -572,7 +578,7 @@ const reducer = createReducer(initialState, {
   },
 
   //
-  // command that we document
+  // command that we document (from middleware)
   //
   // 👉 triggers a saga fix-report
   //
@@ -592,37 +598,30 @@ const reducer = createReducer(initialState, {
     // 2. headerViews: the list data retrieved, which can take time
     //
     const updatedHvs = Object.keys(state.headerViews).includes(removeFile)
-      ? /* eslint-disable no-shadow, no-param-reassign */
-        // 👍 May be called when file does not exist in the hvs collection
-        Object.values(state.headerViews).reduce((updatedHvs, hv) => {
-          if (hv.filename !== removeFile) updatedHvs[hv.filename] = hv;
-          return updatedHvs;
+      ? /* eslint-disable no-param-reassign */
+        Object.values(state.headerViews).reduce((updatedHvs_, hv) => {
+          if (hv.filename !== removeFile) updatedHvs_[hv.filename] = hv;
+          return updatedHvs_;
         }, {})
-      : /* eslint-enable no-shadow, no-param-reassign */
+      : /* eslint-enable no-param-reassign */
         state.headerViews;
 
     return {
       ...state,
       headerViews: updatedHvs,
-      selected: state.selected.filter(([path, _]) => path !== removeFile),
     };
   },
 
-  /*
-  // ⚠️  This is required only so that the user can deselect a file
-  //    and see the result *without* waiting for the api to catch up.
-  //    The caller is middleware. Otherwise, this change in state happens
-  //    with the cancel headerView action.
-  //
-  // 🦀 There may be state-coordination issues here
-  [REMOVE_SELECTED]: (state, { path: removeFilename }) => {
+  // called by middleware when inspection returns an error || remove headerview
+  [REMOVE_SELECTED]: (state, { path: removeFile }) => {
+    if (DEBUG) {
+      console.debug(`__ 2️⃣  🦀 Reducer with path: ${removeFile}`);
+    }
     return {
       ...state,
-      selected: state.selected.filter(
-        (filename) => filename !== removeFilename,
-      ),
+      selected: state.selected.filter((entry) => entry[0] !== removeFile),
     };
-  }, */
+  },
 
   //----------------------------------------------------------------------------
   // wide-to-long-fields
@@ -646,10 +645,7 @@ const reducer = createReducer(initialState, {
   //    (direct, synced update of the reducer)
   //    Some of them trigger a scheduled report-fixes manged using a saga.
   //----------------------------------------------------------------------------
-  [TYPES.UPDATE_IMPLIED_MVALUE]: (
-    state,
-    { filename, mvalueFieldname: name },
-  ) => {
+  [UPDATE_IMPLIED_MVALUE]: (state, { filename, mvalueFieldname: name }) => {
     const headerViews = {
       ...state.headerViews,
       [filename]: {
@@ -665,7 +661,7 @@ const reducer = createReducer(initialState, {
   },
 
   // used to undo changes using xstate
-  [TYPES.RESET_FILEFIELDS]: (state, { filename, fields }) => {
+  [RESET_FILEFIELDS]: (state, { filename, fields }) => {
     return {
       ...state,
       [filename]: {
@@ -686,7 +682,7 @@ const reducer = createReducer(initialState, {
   //    Saga will take the array of actions that need to schedule
   //    an error report.
   //
-  [TYPES.UPDATE_FILEFIELD]: (state, { filename, fieldIdx, key, value }) => {
+  [UPDATE_FILEFIELD]: (state, { filename, fieldIdx, key, value }) => {
     // value undefined is ok (toggle enable, null is not ok)
     if (value == null) return state;
 

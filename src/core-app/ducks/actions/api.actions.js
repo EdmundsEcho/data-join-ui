@@ -49,10 +49,19 @@ export const Actions = {
 // :: command
 // receiver: polling-api.sagas
 // the machine event:: request, meta
-const create = (type, event) => ({
+const createT = (type, event) => ({
   type: `${event?.meta?.feature} ${type}`,
   event,
 });
+const create = (type, event) => {
+  const result = {
+    type: `${event?.meta?.feature} ${type}`,
+    event,
+  };
+  console.debug(`__ action creator`);
+  console.dir(result);
+  return result;
+};
 // :: command
 // receiver: polling-api.sagas
 // the machine event:: request, meta
@@ -86,11 +95,16 @@ export function validateEventInterface(eventInterface, jobId = true) {
     console.dir(eventInterface);
     throw new ApiCallError('Api call without a valid request');
   }
+  if (!eventInterface.request?.project_id) {
+    console.dir(eventInterface);
+    throw new ApiCallError('Api call without request.project_id');
+  }
   if (jobId && !eventInterface?.request?.jobId) {
     console.dir(eventInterface);
     throw new ApiCallError('Api call without request.jobId');
   }
   if (!eventInterface.meta?.uiKey) {
+    console.dir(eventInterface);
     throw new ApiCallError('Api call without meta.uiKey');
   }
   if (!eventInterface?.meta?.feature) {
@@ -98,6 +112,7 @@ export function validateEventInterface(eventInterface, jobId = true) {
     throw new ApiCallError('Api call without meta.feature');
   }
 }
+// utility to retrieve uiKey from event
 export const getUiKey = (event) => {
   return event.meta.uiKey;
 };

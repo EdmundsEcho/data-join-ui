@@ -28,7 +28,8 @@ import {
  */
 export const fixSameAsOtherSubjects = (state, DEBUG = false) => {
   const hvs = getHeaderViews(state);
-  const firstSelected = getSelected(state)[0];
+  // [[path, displayName]]
+  const firstSelected = getSelected(state)[0][0];
 
   const newName = getDefaultSubjectName(hvs, firstSelected);
   if (DEBUG) {

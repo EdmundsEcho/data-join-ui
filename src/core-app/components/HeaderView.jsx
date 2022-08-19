@@ -71,11 +71,7 @@ import { SOURCE_TYPES } from '../lib/sum-types';
 // import { withConfirmation } from '../ducks/actions/modal.actions';
 // import { filesConfirmRemovingFileText } from '../constants/strings';
 
-import {
-  prettyNumber,
-  getFilenameFromPath,
-  getParentPath,
-} from '../utils/common';
+import { prettyNumber, getParentPath } from '../utils/common';
 import { memoize } from '../lib/filesToEtlUnits/headerview-helpers';
 import { colors, useTraceUpdate } from '../constants/variables';
 
@@ -99,7 +95,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
  *
  */
 function HeaderView(props) {
-  const { filename, removeFile } = props;
+  const { displayName, filename, removeFile } = props;
   // ignoring stateId (generating it instead locally)
 
   useTraceUpdate(props);
@@ -131,12 +127,12 @@ function HeaderView(props) {
       <ContextProvider
         stateId={`${filename}|HeaderView|Context`}
         filename={filename}
+        displayName={displayName}
         headerView={headerView || { nrows: null }}
         handleRemove={removeFile}
         hideInactive
         status={headerView ? 'success' : 'loading'}
-        activeFieldCount={activeFieldCount}
-      >
+        activeFieldCount={activeFieldCount}>
         <HeaderViewContext.Consumer>
           {({ showDetail }) => {
             return (
@@ -152,8 +148,7 @@ function HeaderView(props) {
                     <Collapse in={showDetail} timeout='auto' unmountOnExit>
                       <Main
                         filename={filename}
-                        titleRow={<HeaderViewFieldHeader />}
-                      >
+                        titleRow={<HeaderViewFieldHeader />}>
                         <HeaderViewFields key={`|${filename}|Header}`} />
                       </Main>
                       <DerivedField
@@ -192,7 +187,7 @@ HeaderView.whyDidYouRender = true;
  *
  */
 function Summary() {
-  const { headerView, filename, activeFieldCount } =
+  const { headerView, filename, displayName, activeFieldCount } =
     useContext(HeaderViewContext);
   const { nrows = null } = headerView;
 
@@ -200,13 +195,11 @@ function Summary() {
     <CardHeaderWithToggle
       key={`${filename}|closable-card`}
       stateId={`${filename}|closable-card`}
-      title={getFilenameFromPath(filename)}
+      title={displayName}
       subheader={
         <Grid className='Luci-HeaderView-summary' container>
           <Grid item xs={12} className='path'>
-            <Typography variant='subtitle2'>
-              {getParentPath(filename)}
-            </Typography>
+            <Typography variant='subtitle2'>Parent path</Typography>
           </Grid>
           <Grid item className='rowCount'>
             <Typography className='metaText'>
@@ -233,23 +226,20 @@ Summary.defaultProps = {};
  * State depends on headerView.header
  * Will always be present... eventually.
  */
-function Main({ filename, titleRow, children }) {
+function Main({ titleRow, children }) {
   return (
     <Table
       className={clsx('Luci-HeaderView', 'Luci-Table', 'headerView', 'detail')}
-      key={`|${filename}|HeaderViewTable}`}
-      size='medium'
-    >
+      size='medium'>
       {/* Row of field titles */}
-      <TableHead key={`|${filename}|HeaderViewHeader}`}>{titleRow}</TableHead>
+      <TableHead>{titleRow}</TableHead>
 
       {/* Rows to display the data - HeaderViewFields */}
-      <TableBody key={`|${filename}|HeaderViewBody}`}>{children}</TableBody>
+      <TableBody>{children}</TableBody>
     </Table>
   );
 }
 Main.propTypes = {
-  filename: PropTypes.string.isRequired,
   titleRow: PropTypes.node.isRequired,
   children: PropTypes.node.isRequired,
 };

@@ -10,7 +10,7 @@
  * @module src/sagas/fileView.sagas
  *
  */
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, takeLeading } from 'redux-saga/effects';
 
 import {
   READ_DIR_START,
@@ -23,8 +23,20 @@ import {
 import { readDirectory } from '../services/api';
 import * as UT from './sagas.helpers';
 import { ApiCallError } from '../lib/LuciErrors';
+import { colors } from '../constants/variables';
 
+//------------------------------------------------------------------------------
+// 🗄️ authorization
+const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
+//------------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
+const COLOR = colors.light.blue;
+//------------------------------------------------------------------------------
 /* eslint-disable no-console */
+
+if (DEBUG) {
+  console.info('%c👉 loaded fileView.sagas', COLOR);
+}
 
 /**
  * Tasks:
@@ -35,17 +47,48 @@ import { ApiCallError } from '../lib/LuciErrors';
  * ⬜ Part this seems redundant or misplaced.
  *
  */
-function* _fetchDirectory({ request }) {
+function* _fetchDirectory({ type, request }) {
+  yield console.debug(`%cHEADER_ dir ${type}`, colors.pink);
   try {
     yield put(setDirStatus(STATUS.pending));
     const response = yield call(readDirectory, request);
 
     if (response.status === 401) {
+      yield put(fetchDirectoryError({ error: 'Session expired', request }));
+      yield put(setDirStatus(STATUS.idle));
       window.location('/login');
+      return;
+    }
+    if (response.status === 403) {
+      if (typeof response?.data?.provider === 'undefined') {
+        yield put(setDirStatus(STATUS.rejected));
+        throw new ApiCallError(
+          `Status: ${response.status} Could not retrieve directory: ${
+            request?.path_id ?? 'undefined'
+          }`,
+        );
+      }
+      console.assert(
+        response?.data?.provider ?? false,
+        `Missing drive provider in 403 error: ${JSON.stringify(response)}`,
+      );
+      console.assert(
+        request?.project_id ?? false,
+        `The directory request is missing project_id: ${JSON.stringify(
+          request,
+        )}`,
+      );
+      yield put(setDirStatus(STATUS.idle));
+      // run the authorization process
+      window.location.replace(
+        `${DRIVE_AUTH_URL}/${response.data.provider}/${request.project_id}`,
+      );
+      // yield put(fetchDirectoryError({ error: 'Session expired', request }));
       return;
     }
     if (response.status !== 200) {
       // caught later to document
+      yield put(setDirStatus(STATUS.rejected));
       throw new ApiCallError(
         `Status: ${response.status} Could not retrieve directory: ${
           request?.path_id ?? 'undefined'
@@ -62,6 +105,7 @@ function* _fetchDirectory({ request }) {
       'Fetch directory API: unexpected response',
     );
 
+    yield put(setDirStatus(STATUS.resolved));
     yield put(
       // copy into both files and filteredFiles
       // (🦀 need to create singular view)
@@ -82,7 +126,7 @@ function* _fetchDirectory({ request }) {
 // Watcher
 export function* watchFileViewSaga() {
   UT.log(
-    yield takeLatest(READ_DIR_START, _fetchDirectory),
+    yield takeLeading(READ_DIR_START, _fetchDirectory),
     `📁 fileView.sagas: taking ${READ_DIR_START}`,
   );
 }

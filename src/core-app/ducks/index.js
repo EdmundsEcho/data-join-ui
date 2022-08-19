@@ -11,7 +11,7 @@
  * @see combineReducers
  *
  */
-export { default as _projectMeta } from './projectMeta.reducer';
+export { default as $_projectMeta } from './project-meta.reducer'; // eslint-disable-line
 export { default as fileView } from './fileView.reducer';
 export { default as headerView } from './headerView.reducer';
 export { default as etlView } from './etlView.reducer';

@@ -673,8 +673,8 @@ export default createTheme({
                     '&.Mui-disabled': {
                       color: 'inherit',
                     },
-                    '& > *:first-child': {
-                      '& > *:first-child': {
+                    '& > *:first-of-type': {
+                      '& > *:first-of-type': {
                         // svg-icon
                         fontSize: '1.1rem',
                       },

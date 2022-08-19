@@ -24,6 +24,7 @@ import {
   ADD_DERIVED_FIELD,
   DELETE_DERIVED_FIELD,
 } from './actions/etlView.actions';
+import { RESET } from './actions/project-meta.actions';
 
 import { setTimeProp } from '../lib/filesToEtlUnits/transforms/span/span-helper';
 import { removeDerivedField } from '../lib/filesToEtlUnits/remove-etl-field';
@@ -82,8 +83,9 @@ export const getEtlFieldChanges = (stateFragment) => {
   return stateFragment.etlFieldChanges || initialState.etlFieldChanges;
 };
 
+// 🦀 ? aug 13, 2022
 export const isEtlFieldDerived = (stateFragment, fieldName) =>
-  fieldName in getEtlFieldChanges(stateFragment)?.__derivedFields ?? false;
+  fieldName in getEtlFieldChanges(stateFragment).__derivedFields ?? false;
 
 export const selectEtlField = (stateFragment, fieldName) =>
   stateFragment.etlObject.etlFields[fieldName];
@@ -257,7 +259,7 @@ export const getEtlViewErrors = (stateFragment) => stateFragment.etlViewErrors;
 // ----------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
   // Utility to reset all state fragments
-  RESET: () => initialState,
+  [RESET]: () => initialState,
 
   /* Testing utility */
   PING: (state) => {

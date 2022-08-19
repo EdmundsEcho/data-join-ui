@@ -5,7 +5,7 @@
  * campaign. These files are represented by FileDialogCard components.
  *
  * ⬆ Parent: FileDialog (RightPanel)
- * 📖 list of selected files (uid: path)
+ * 📖 HeaderViews ~ list of selected files (uid: filename/path)
  * ⬇ ⬇ HeaderView
  *
  * Mostly local state (toggle show).
@@ -27,7 +27,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const SelectedListOfFiles = (props) => {
+const HeaderViews = (props) => {
   const {
     selectedFiles, // [[path, displayName]]
     removeFile,
@@ -57,7 +57,8 @@ const SelectedListOfFiles = (props) => {
         <HeaderView
           key={`|${path}|header-view`}
           stateId={`|${path}|header-view`}
-          filename={displayName}
+          displayName={displayName}
+          filename={path}
           removeFile={() => removeFile(path, displayName)}
         />
       ))}
@@ -65,13 +66,13 @@ const SelectedListOfFiles = (props) => {
   );
 };
 
-SelectedListOfFiles.propTypes = {
+HeaderViews.propTypes = {
   selectedFiles: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   removeFile: PropTypes.func.isRequired,
 };
 
-SelectedListOfFiles.defaultProps = {
+HeaderViews.defaultProps = {
   selectedFiles: [],
 };
 
-export default SelectedListOfFiles;
+export default HeaderViews;

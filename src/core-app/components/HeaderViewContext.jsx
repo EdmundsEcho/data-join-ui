@@ -53,16 +53,28 @@ const Provider = ({
   }, [hideInactive, setHideInactive]);
 
   // ⬜ figure out memo
-  const state = useMemo(() => ({
-    stateId,
-    showDetail,
-    toggleShowDetail,
-    toggleHideInactive,
-    hideInactive,
-    setHideInactive,
-    setShowDetail,
-    ...rest,
-  }));
+  const state = useMemo(
+    () => ({
+      stateId,
+      showDetail,
+      toggleShowDetail,
+      toggleHideInactive,
+      hideInactive,
+      setHideInactive,
+      setShowDetail,
+      ...rest,
+    }),
+    [
+      stateId,
+      showDetail,
+      toggleShowDetail,
+      toggleHideInactive,
+      hideInactive,
+      setHideInactive,
+      setShowDetail,
+      rest,
+    ],
+  );
 
   return <Context.Provider value={state}>{children}</Context.Provider>;
 };

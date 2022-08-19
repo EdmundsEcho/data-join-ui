@@ -1,21 +1,17 @@
 // src/ducks/middleware/feature/workbench.middleware.js
 
 /**
- * @module middleware/feature/workbench.middleware
  *
  * @description
  *
- * 🚧 This is feature specific and not fully implemented
- *    Part of standardizing the messaging system using middleware
+ * 💢 Hit the extraction endpoint
  *
- * ⚠️  Is part of the v2 store
+ * ⏰ async, polling instantiation of the warehouse obsEtl -> warehouse
  *
- * This is thus far a failed attempt to re-use the xstate polling request
- * service.  The mini-api fails because it does not support the sequence
- * 1. sync request from the api: etlObject -> obsEtl
- * 2. async, polling instantiation of the warehouse obsEtl -> warehouse
+ * Once we know the job is complete, the workbench page can go
+ * ahead and use the graphql server.
  *
- * 🔖 as of July 2021 works in confunction with workbench.sagas
+ * @module middleware/feature/workbench.middleware
  *
  */
 import {
@@ -45,6 +41,7 @@ import {
 } from '../../actions/workbench.actions';
 import {
   ApiCallError,
+  InvalidStateError,
   ApiResponseError,
   InvalidTreeStateError,
 } from '../../../lib/LuciErrors';
@@ -70,6 +67,7 @@ import { ServiceConfigs, getServiceType } from '../../../services/api';
 // 📖 tree state
 import {
   getTree,
+  getProjectId,
   selectNodeState,
   getEtlObject,
   resetCanvas,
@@ -98,23 +96,17 @@ const MAX_TRIES = 20;
 
 /* --------------------------------------------------------------------------- */
 const middleware =
+  (projectId) =>
   ({ dispatch, getState }) =>
   (next) =>
   (action) => {
     //
     if (DEBUG) {
-      console.info('👉 loaded workbench.middleware');
+      console.info(`👉 loaded workbench.middleware: ${projectId}`);
     }
-
     if (action.type === 'PING')
       console.log(
         `%cPING recieved by workbench.middleware`,
-        colors.light.purple,
-      );
-
-    if (action.type === 'MIDDLE')
-      console.log(
-        `%cMIDDLE recieved by workbench.middleware`,
         colors.light.purple,
       );
 
@@ -457,23 +449,27 @@ const middleware =
         next(setTree(resetCanvas(getState())));
         break;
       }
-
       // -------------------------------------------------------------------------
       // Fire-up the api core service
       // -------------------------------------------------------------------------
       // map feature command -> api command
       // ui perspective -> api perspective
+      // fetchWarehouse -> apiFetch
       // -------------------------------------------------------------------------
       case FETCH_WAREHOUSE: {
         // the payload required to make the request is pulled directly
         // from the redux::store
         const state = getState();
 
+        if (getProjectId(state) !== projectId) {
+          throw new InvalidStateError(`Mismatch project: redux and middleware`);
+        }
+
         // instantiate | update the hosted warehouse
         if (!isHostedWarehouseStateStale(state)) {
           next(
             setNotification({
-              message: `${WORKBENCH}.middleware: No need to compute the warehouse`,
+              message: `${WORKBENCH}.middleware: Valid cache; no need recompute the warehouse`,
               feature: WORKBENCH,
             }),
           );
@@ -494,8 +490,12 @@ const middleware =
               apiFetch({
                 /*-----------------------------------------------------------------*/
                 // ::event
-                meta: { uiKey: 'obsetl', feature: WORKBENCH },
+                meta: {
+                  uiKey: 'obsetl',
+                  feature: WORKBENCH,
+                },
                 request: {
+                  project_id: projectId,
                   etlObject: prepareForTransit(getEtlObject(state)),
                   maxTries: MAX_TRIES,
                 },

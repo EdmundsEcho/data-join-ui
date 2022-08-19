@@ -35,6 +35,7 @@ export const colors = {
   orange: 'color: #ffa500',
   purple: 'color: #9600cd',
   grey: 'color: #808080',
+  pink: 'color: #ffc0cb',
   light: {
     blue: 'color: #add8e6',
     purple: 'color: #d5a6e6',

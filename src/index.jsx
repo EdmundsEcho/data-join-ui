@@ -1,7 +1,7 @@
 import './wdyr'; // why did you render debug utility
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { version as reactVersion } from 'react';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 
@@ -18,7 +18,12 @@ import './assets/fonts.css';
 
 import Dashboard from './App.PlayNest.jsx';
 
-ReactDOM.render(
+/* eslint-disable-next-line */
+console.info(`App using react version: ${reactVersion}`);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <SnackbarProvider maxSnack={3}>
@@ -31,7 +36,6 @@ ReactDOM.render(
       </SnackbarProvider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root'),
 );
 
 // use-query-params adapter for React Router 6

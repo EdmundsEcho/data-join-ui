@@ -2,8 +2,8 @@
  *
  *  Part of
  *
- *    👉 polling-api.sagas.js
- *       👉 polling.config.js
+ *    👉 polling-api.config.sagas.js
+ *       👉 polling.setup.js
  *          👉 polling-machine
  *             ✅ generate the events required to fire off the actions
  *               👉 polling-worker
@@ -226,7 +226,8 @@ const pollingMachineConfig = ({
                     }`,
                     ...initialWorkerContext({
                       request: {
-                        ...(event?.data ?? context?.request),
+                        ...context?.request,
+                        ...event?.data,
                         maxTries: context.request.maxTries,
                       },
                       meta: context.meta,
@@ -282,7 +283,7 @@ const pollingMachineConfig = ({
                         errorEvent: event?.event ?? {
                           toString: () => 'Internal error',
                         }, // from the api
-                        errorMessage: event.message,
+                        errorMessage: event?.message,
                       };
                     },
                   }),
@@ -372,7 +373,7 @@ const pollingMachineConfig = ({
         failed: {
           type: 'final',
           entry: [
-            actions.log(`🚫 failed`),
+            actions.log(`🚫 failed - on queue`),
             actions.assign({
               isError: true,
             }),

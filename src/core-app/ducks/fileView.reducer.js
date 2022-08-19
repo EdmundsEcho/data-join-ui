@@ -23,12 +23,13 @@ import {
   READ_DIR_START,
   READ_DIR_SUCCESS,
   READ_DIR_ERROR,
-  RESET_DIR_REQUEST,
+  CLEAR_FETCH_HISTORY,
   PUSH_FETCH_HIST,
   POP_FETCH_HIST,
   SET_DIR_STATUS,
   STATUS,
 } from './actions/fileView.actions';
+import { RESET } from './actions/project-meta.actions';
 
 // -----------------------------------------------------------------------------
 // const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
@@ -38,12 +39,12 @@ import {
 export { STATUS };
 
 export const initialState = {
-  count: undefined,
+  count: 0,
   files: [],
   filteredFiles: [],
   filterText: '', // search for filenames
   readdirErrors: [],
-  status: STATUS.inactive,
+  status: STATUS.idle,
   requests: undefined,
 };
 
@@ -69,8 +70,6 @@ export const peekRequestHistory = (stateFragment, emptyValue) =>
 
 export const peekParentRequestHistory = (stateFragment, emptyValue) =>
   peekParentRequest(stateFragment.requests, emptyValue);
-export const isActivated = (stateFragment) =>
-  stateFragment.status !== STATUS.inactive;
 export const hasRequestHistory = (stateFragment) =>
   stateFragment?.requests !== undefined && stateFragment?.requests?.length > 0;
 
@@ -115,7 +114,7 @@ export const selectFilesF = (stateFragment, filterText) => {
  */
 //------------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
-  RESET: () => ({
+  [RESET]: () => ({
     ...initialState,
   }),
   // command (consumed by sagas)
@@ -137,7 +136,7 @@ const reducer = createReducer(initialState, {
   }),
 
   // event
-  [READ_DIR_ERROR]: (state, { error }) => ({
+  [READ_DIR_ERROR]: (state, { payload: { error } }) => ({
     ...state,
     files: [],
     count: 0,
@@ -165,11 +164,11 @@ const reducer = createReducer(initialState, {
   }),
 
   // document
-  [RESET_DIR_REQUEST]: (state) => ({
+  [CLEAR_FETCH_HISTORY]: (state) => ({
     ...state,
     requests: undefined,
     readdirErrors: [],
-    status: STATUS.inactive,
+    status: STATUS.idle,
   }),
 });
 

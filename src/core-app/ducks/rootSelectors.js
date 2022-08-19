@@ -19,7 +19,7 @@
  *   * reserved for high-level unique qualities about the app
  *
  */
-import * as fromProjectMeta from './projectMeta.reducer';
+import * as fromProjectMeta from './project-meta.reducer';
 import * as fromFileView from './fileView.reducer';
 import * as fromHeaderView from './headerView.reducer';
 import * as fromEtlView from './etlView.reducer';
@@ -40,20 +40,24 @@ import * as fromModal from './modal.reducer';
 
 //------------------------------------------------------------------------------
 /**
- *   _projectMeta
+ *   $_projectMeta
  *
- *   state -> state._projectMeta
+ *   state -> state.$_projectMeta
  */
 export const getProjectId = (state) =>
-  fromProjectMeta.getProjectId(state._projectMeta);
+  fromProjectMeta.getProjectId(state.$_projectMeta);
+
 export const getSaveStatus = (state) =>
-  fromProjectMeta.getSaveStatus(state._projectMeta);
+  fromProjectMeta.getSaveStatus(state.$_projectMeta);
+
 export const isCacheStale = (state) =>
-  fromProjectMeta.isCacheStale(state._projectMeta);
+  fromProjectMeta.isCacheStale(state.$_projectMeta);
+
 export const getCacheStatus = (state) =>
-  fromProjectMeta.getCacheStatus(state._projectMeta);
-export const initRedux = (state) =>
-  fromProjectMeta.initRedux(state._projectMeta);
+  fromProjectMeta.getCacheStatus(state.$_projectMeta);
+
+export const getInitializingActions = (state) =>
+  fromProjectMeta.getInitializingActions(state.$_projectMeta);
 
 export const seedProjectState = (...args) =>
   fromProjectMeta.seedProjectState(...args);
@@ -83,7 +87,6 @@ export const peekRequestHistory = (state, emptyValue) =>
 
 export const peekParentRequestHistory = (state, emptyValue) =>
   fromFileView.peekParentRequestHistory(state.fileView, emptyValue);
-export const isActivated = (state) => fromFileView.isActivated(state.fileView);
 export const hasRequestHistory = (state) =>
   fromFileView.hasRequestHistory(state.fileView);
 

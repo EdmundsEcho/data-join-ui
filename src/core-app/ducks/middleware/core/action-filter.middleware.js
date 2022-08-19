@@ -1,9 +1,8 @@
 /**
- * Core middleware that converts known strings to action objects.
- * Throws errors where an action seems malformed.
  *
- * 👉 valid type?
- * 👉 ...others?
+ * ✨ Core middleware that converts known strings to action objects.
+ *
+ * Also, ensures all actions in the app system have a type value.
  *
  */
 import { actionError } from '../../actions/error.actions';

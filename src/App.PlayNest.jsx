@@ -72,7 +72,6 @@ const App = () => {
                       />
                     }
                   />
-
                   <Route path=':projectId/*' element={<ProjectView />} />
                   {/* Gateway to the core-app */}
                 </Route>

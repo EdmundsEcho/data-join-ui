@@ -21,16 +21,19 @@
  */
 class LuciError extends Error {
   constructor(error, ...params) {
+    /* eslint-disable no-console */
     console.debug('%cGENERATING LUCI ERROR', 'color:cyan');
+    console.debug(`error type: ${typeof error}`);
     console.dir(error);
-    console.debug(
-      `is this value true: ${typeof error === 'object' && 'message' in error}`,
-    );
 
-    const [message, cause] =
-      typeof error === 'object' && 'message' in error
-        ? [error.message, error]
-        : [error || '', undefined];
+    const message =
+      typeof error === 'object'
+        ? error?.message ?? error?.data?.message ?? 'No error message'
+        : error;
+
+    const cause = typeof error === 'object' ? error : undefined;
+
+    console.debug(`message: ${message}\ncause: ${cause}`);
 
     if (cause) {
       super(message, { cause });
@@ -65,6 +68,7 @@ class LevelsError extends LuciError {}
 class LookupError extends LuciError {}
 class MachineError extends LuciError {}
 class MiddlewareError extends LuciError {}
+class MissingProjectIdError extends LuciError {}
 class ReadWriteError extends LuciError {}
 class SagasError extends LuciError {}
 class TimeoutError extends LuciError {}
@@ -102,6 +106,7 @@ export {
   LookupError,
   MachineError, // xstate machine
   MiddlewareError,
+  MissingProjectIdError,
   ReadWriteError,
   SagasError,
   TimeoutError,

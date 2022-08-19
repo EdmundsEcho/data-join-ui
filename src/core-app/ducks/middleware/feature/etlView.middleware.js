@@ -1,7 +1,6 @@
-// src/ducks/middleware/feature/headerView.middleware.j;
-//
+// src/ducks/middleware/feature/headerView.middleware.js
+
 /**
- * @module middleware/feature/etl.middleware
  *
  * UI features hosted here:
  *
@@ -11,6 +10,8 @@
  *
  * 2. how get the comleted etlObject -> obsEtl to configure obs/mms?
  *    -> event: TRIGGER_ETL_START
+ *
+ * @module middleware/feature/etl.middleware
  *
  */
 import {
@@ -61,11 +62,9 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 /**
  * Receives commands from the ui. Compute in situ. Dispatches/documents results
  * to redux.
- *
- * @middleware
  */
 const middleware =
-  ({ getState, dispatch }) =>
+  ({ getState }) =>
   (next) =>
   (action) => {
     //
@@ -118,14 +117,14 @@ const middleware =
           headerViews = getHeaderViews(state),
           etlFieldChanges = getEtlFieldChanges(state),
         } = action;
-        dispatch([setEtlViewAsync(headerViews, etlFieldChanges, startTime)]);
+        next(setEtlViewAsync(headerViews, etlFieldChanges, startTime));
         break;
       }
 
       case MAKE_DERIVED_FIELD: {
         const state = getState();
         const startTime = action?.meta?.startTime || new Date();
-        dispatch([
+        next([
           setNotification({
             message: `${ETL_VIEW}.middleware: path to documenting (next: normalizer, reducer)`,
             feature: ETL_VIEW,
@@ -176,7 +175,7 @@ const middleware =
             state,
           });
 
-          dispatch([
+          next([
             setHeaderViews(headerViews),
             setEtlViewAsync(headerViews, getEtlFieldChanges(state), new Date()),
           ]);
@@ -206,7 +205,7 @@ const middleware =
 
           // when to call pivot(hvs) && applyFieldChanges(computedValue)
           if (typeof headerViews !== 'undefined') {
-            dispatch([
+            next([
               setHeaderViews(headerViews),
               setEtlViewAsync(
                 headerViews,
@@ -281,14 +280,15 @@ function setEtlViewAsync(headerViews, etlFieldChanges, startTime) {
 
       const endTime = new Date();
 
-      dispatch([
+      // 🔖 do not use an array of dispatches
+      dispatch(
         setEtlView(
           final.etlObject,
           final.etlFieldChanges,
           `${endTime - startTime} ms`,
         ),
-        setLoader({ toggle: false, feature: ETL_VIEW }),
-      ]);
+      );
+      dispatch(setLoader({ toggle: false, feature: ETL_VIEW }));
     },
   };
 }

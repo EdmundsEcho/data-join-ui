@@ -391,7 +391,10 @@ th {
   font-weight: 'normal';
 }
 
-.SplitPane {}
+/* FileDialog, EtlFieldView, Workbench */
+.SplitPane {
+    position: relative;
+}
 
 .SplitPane > .Pane {
     overflow: inherit;
@@ -411,7 +414,8 @@ div.stack {
 span.google-drive {
     display: block;
     text-align: center;
-    margin-top: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .input-row-group {

@@ -89,6 +89,7 @@ function ListOfFiles(props) {
             />
           )}
           {/* subsequent rows: drive or files ... */}
+          {/* 🗄️  or 📁 subsequent rows: drive or files ... */}
           {files.length > 0 &&
             files.map((file) =>
               file.is_drive ? (
@@ -109,19 +110,19 @@ function ListOfFiles(props) {
                   displayName={file.display_name}
                   isDirectory={file.is_directory}
                   {...file}
-                  // when !directory, download and analyze a file
+                  // when directory, search the remote drive
+                  fetchDirectory={() =>
+                    fetchDirectory({
+                      path_query: file.file_id, // for searching remote drive
+                    })
+                  }
+                  // OR when !directory, download and analyze a file
                   toggleFile={(isSelected) =>
                     toggleFile({
                       fileId: file.file_id,
                       path: file.path,
                       displayName: file.display_name,
                       isSelected,
-                    })
-                  }
-                  // OR when directory, search the remote drive
-                  fetchDirectory={() =>
-                    fetchDirectory({
-                      path_query: file.file_id, // for searching remote drive
                     })
                   }
                 />

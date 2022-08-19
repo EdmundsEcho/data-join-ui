@@ -7,6 +7,14 @@ import { Machine, actions } from 'xstate';
 //------------------------------------------------------------------------------
 // Worker - CHILD
 //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+const DEBUG =
+  process.env.REACT_APP_DEBUG_API === 'true' ||
+  process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
+// ------------------------------------------------------------------------------
+/* eslint-disable no-console */
+
+//
 /**
  *
  * Sends the parent a message to signal the request has completed
@@ -182,16 +190,17 @@ const pollingWorkerOptions = ({
     statusApiService: (context) =>
       statusApiService({
         meta: context.meta,
-        request: {
-          jobId: context.request.jobId,
-          processId: context.request.processId,
-        },
+        request: context.request,
       }),
   },
   actions: {
     // api response -> resolved:boolean
     setIsRequestReady: actions.assign({
       request: (context, event) => {
+        if (DEBUG) {
+          console.debug(`event.data`);
+          console.dir(event?.data);
+        }
         return {
           ...context.request,
           resolved: isResolved(event.data),
@@ -219,7 +228,7 @@ function pollingPause(context) {
   return Math.min(
     context.delayFactors.max,
     context.delayFactors.seed *
-      Math.pow(context.delayFactors.exponentialRate, context.request.tries),
+      context.delayFactors.exponentialRate ** context.request.tries,
   );
 }
 /* eslint-disable-next-line */

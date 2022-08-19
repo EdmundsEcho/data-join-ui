@@ -9,19 +9,18 @@
  * @module src/ducks/actions/fileView.actions
  *
  */
-import { makeActionCreator } from '../../utils/makeActionCreator';
 
 export { STATUS } from '../../lib/sum-types';
 
 // feature
 export const FILEVIEW = '[FileView]';
 
-export const READ_DIR_START = `${FILEVIEW} GET_READ_DIR_START`; // command
-export const READ_DIR_SUCCESS = `${FILEVIEW} GET_READ_DIR_SUCCESS`; // event
-export const READ_DIR_ERROR = `${FILEVIEW} GET_READ_DIR_ERROR`; // event
+export const READ_DIR_START = `${FILEVIEW} READ_DIR_START`; // command
+export const READ_DIR_SUCCESS = `${FILEVIEW} READ_DIR_SUCCESS`; // event
+export const READ_DIR_ERROR = `${FILEVIEW} READ_DIR_ERROR`; // event
 
 export const SET_DIR_STATUS = `${FILEVIEW} SET_DIR_STATUS`; // document
-export const RESET_DIR_REQUEST = `${FILEVIEW} RESET_DIR_REQUEST`; // document
+export const CLEAR_FETCH_HISTORY = `${FILEVIEW} CLEAR_FETCH_HISTORY (REQUESTS)`; // document
 export const PUSH_FETCH_HIST = `${FILEVIEW} PUSH_FETCH_HIST`; // document
 export const POP_FETCH_HIST = `${FILEVIEW} POP_FETCH_HIST`; // document
 
@@ -43,9 +42,9 @@ export const popFetchHistory = () => {
     type: POP_FETCH_HIST,
   };
 };
-export const resetFetchRequest = () => {
+export const clearFetchHistory = () => {
   return {
-    type: RESET_DIR_REQUEST,
+    type: CLEAR_FETCH_HISTORY,
   };
 };
 // action kind :: event -> document
@@ -64,9 +63,9 @@ export const fetchDirectorySuccess = (payload) => {
   };
 };
 // action kind :: event -> document
-export const fetchDirectoryError = (error) => {
+export const fetchDirectoryError = (payload) => {
   return {
     type: READ_DIR_ERROR,
-    error,
+    payload,
   };
 };

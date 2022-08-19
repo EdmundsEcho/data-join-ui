@@ -68,7 +68,7 @@ interface WithModal {
  */
 export const withConfirmation: WithModal = (action, modalProps) => {
   return {
-    type: 'SHOW_MODAL',
+    type: SHOW_MODAL,
     modalType: `ACTION_ONCE_CONFIRMED`,
     modalProps,
     modalActions: {

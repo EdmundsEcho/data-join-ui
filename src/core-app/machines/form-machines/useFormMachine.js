@@ -19,7 +19,7 @@
  *  })
  */
 
-import { useMachine, useService } from '@xstate/react';
+import { useMachine, useActor } from '@xstate/react';
 import formMachine, { initialContext } from './form-machine';
 
 /* eslint-disable no-console */
@@ -37,7 +37,7 @@ const formCallbacks = (send) => ({
  * Child machine
  */
 export const useFieldMachine = (fieldRef) => {
-  const [machineState, send] = useService(fieldRef);
+  const [machineState, send] = useActor(fieldRef);
 
   const getValue = (name) => machineState.context.changes[name];
   const isExcluded = () => !getValue('enabled');

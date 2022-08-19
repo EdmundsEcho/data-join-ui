@@ -11,22 +11,11 @@
  */
 import { makeActionCreator } from '../../utils/makeActionCreator';
 import { makeComputeAction, COMPUTE } from './compute.actionCreator';
-// import { colors } from '../../constants/variables';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
-
-//------------------------------------------------------------------------------
-// user input to configure the headerView
-export const TYPES = {
-  UPDATE_FILEFIELD: 'headerView/UPDATE_FILEFIELD',
-  // UPDATE_WIDE_TO_LONG_FIELDS: 'headerView/UPDATE_WIDE_TO_LONG_FIELDS',
-  UPDATE_IMPLIED_MVALUE: 'headerView/UPDATE_IMPLIED_MVALUE',
-  REPORT_HVS_FIX: 'headerView/REPORT_HVS_FIX',
-  REPORT_HVS_TIMEDOUT: 'headerView/REPORT_HVS_TIMEDOUT',
-};
 
 //------------------------------------------------------------------------------
 // middleware-related actions
@@ -61,6 +50,12 @@ export const REMOVE_INSPECTION_ERROR = `${HEADER_VIEW} REMOVE_INSPECTION_ERROR`;
 export const UPDATE_WIDE_TO_LONG_FIELDS = `${HEADER_VIEW} ${COMPUTE} WIDE_TO_LONG_FIELDS`;
 // document
 export const SET_WIDE_TO_LONG_FIELDS_IN_HV = `${HEADER_VIEW} SET/wide-to-long-fields (in HV)`;
+
+// ui command -> middleware compute action interface
+export const UPDATE_FILEFIELD = `${HEADER_VIEW} UPDATE_FILEFIELD`;
+export const UPDATE_IMPLIED_MVALUE = `${HEADER_VIEW} UPDATE_IMPLIED_MVALUE`;
+
+export const RESET_FILEFIELDS = `${HEADER_VIEW} RESET_FILEFIELDS`;
 
 //------------------------------------------------------------------------------
 // WIP: actions that fix errors in the fix reports
@@ -204,7 +199,7 @@ export const setDisabledFieldStack = setHeaderViews;
 
 // user input/configuration
 export const updateFileField = makeActionCreator(
-  TYPES.UPDATE_FILEFIELD,
+  UPDATE_FILEFIELD,
   'filename',
   'fieldIdx',
   'key',
@@ -233,12 +228,12 @@ export const setHvsFixes = (...args) => {
  * @return {{type: String, filename: String, mvalueFieldname: String}}
  */
 export const updateImpliedMvalue = makeActionCreator(
-  TYPES.UPDATE_IMPLIED_MVALUE,
+  UPDATE_IMPLIED_MVALUE,
   'filename',
   'mvalueFieldname',
 );
 export const resetFileFields = makeActionCreator(
-  TYPES.RESET_FILEFIELDS,
+  RESET_FILEFIELDS,
   'filename',
   'fields', // Array<FileFields>
 );

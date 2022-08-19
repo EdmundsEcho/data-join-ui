@@ -61,17 +61,21 @@ import { setNotification } from '../ducks/actions/notifications.actions';
 import * as UT from './sagas.helpers';
 import { colors } from '../constants/variables';
 
+const COLOR = colors.light.blue;
+
 //------------------------------------------------------------------------------
 const DEBUG =
   process.env.REACT_APP_DEBUG_API === 'true' ||
+  process.env.REACT_APP_DEBUG_MACINE === 'true' ||
   process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 // ------------------------------------------------------------------------------
 /* eslint-disable no-console, camelcase, no-underscore-dangle */
 
 /* --------------------------------------------------------------------------- */
 if (process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true') {
-  console.info('%cloaded polling-api.sagas', colors.orange);
+  console.info('%c👉 loaded polling-api.config.sagas', COLOR);
 }
+
 /* --------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------- */
@@ -145,6 +149,7 @@ function* _fetch(action) {
     }
 
     const channel = yield call(apiChannel, { ...channelSpec, commandEvent });
+
     yield race([
       call(_streamServiceMessages, channel),
       call(_listenForCancel, { uiKey, channel }),
@@ -188,9 +193,12 @@ function* _streamServiceMessages(channel) {
  */
 function* _listenForCancel({ uiKey, channel }) {
   if (DEBUG) console.log(`%clistening for CANCEL`, colors.orange);
+
+  // sends cancelAction to polling machine (when the uiKey in this closure
+  // matches the uiKey in the 'takeEvery' action)
   function tryCancel(action) {
-    // sends cancelAction to polling machine
     if (getUiKey(action?.event) === uiKey) {
+      console.debug(`__ 3️⃣  🦀 cancel ${uiKey}`);
       channel.close();
     }
   }
@@ -217,7 +225,6 @@ export function* watchForFetchRequest() {
       ({ type }) => type.includes(FETCH) || type.includes(RESUME),
       _fetch,
     ),
-    `📁 polling-api.sagas: taking every FETCH and RESUME related action`,
-    'start',
+    `📁 polling-api.config.sagas: taking every FETCH and RESUME related action`,
   );
 }

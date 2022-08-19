@@ -47,15 +47,15 @@ import { colors } from '../../../constants/variables';
 const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
+//
+//---------------------------------------------------------------------------
+const coreService = PENDING_REQUESTS;
+//---------------------------------------------------------------------------
 
 const pendingRequestsMiddleware =
-  ({ getState, dispatch }) =>
+  ({ getState }) =>
   (next) =>
   (action) => {
-    //
-    //---------------------------------------------------------------------------
-    const coreService = PENDING_REQUESTS;
-    //---------------------------------------------------------------------------
     //
     if (DEBUG) {
       console.info(`loaded pending-requests.middleware`);

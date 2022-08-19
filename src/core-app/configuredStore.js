@@ -27,7 +27,16 @@
  *
  */
 // import { createStore, applyMiddleware, compose } from 'redux';
-import { persistStore, persistReducer, purgeStoredState } from 'redux-persist';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
 import { configureStore } from '@reduxjs/toolkit'; // dev only
 
 // persist state
@@ -39,6 +48,7 @@ import rootSaga from './initSagas';
 
 // the appReducer (a combination of reducers)
 import appReducers from './combinedReducer';
+
 // the redux-persist configuration
 import { persistConfig } from './redux-persist-cfg';
 
@@ -49,8 +59,9 @@ import asyncMiddleware from './ducks/middleware/core/async.middleware';
 import pendingRequestsMiddleware from './ducks/middleware/core/pending-requests.middleware';
 import normalizeMiddleware from './ducks/middleware/core/normalize.middleware';
 import notificationsMiddleware from './ducks/middleware/core/notifications.middleware';
-import loggerMiddleware from './ducks/middleware/core/logging.middleware';
-import saveStoreMiddleware from './ducks/middleware/core/save-store.middleware';
+import saveMiddleware from './ducks/middleware/core/save.middleware'; // end of cycle
+import initMiddleware from './ducks/middleware/core/init.middleware'; // start of cycle
+// import loggerMiddleware from './ducks/middleware/core/logging.middleware';
 // feature
 import headerViewMiddleware from './ducks/middleware/feature/headerView.middleware';
 import etlViewMiddleware from './ducks/middleware/feature/etlView.middleware';
@@ -61,7 +72,7 @@ import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 //
 import { ADD_HEADER_VIEW } from './ducks/actions/headerView.actions';
 import { SET_TREE } from './ducks/actions/workbench.actions';
-import { SET_MATRIX } from './ducks/actions/matrix.actions';
+// import { SET_MATRIX } from './ducks/actions/matrix.actions';
 import { POLLING_RESOLVED } from './ducks/actions/api.actions';
 import { REMOVE as REMOVE_PENDING_REQUEST } from './ducks/actions/pendingRequests.actions';
 
@@ -70,11 +81,36 @@ const sagaMiddleware = createSagaMiddleware();
 
 const REDUCER_DIR = './combineReducers';
 
+/**
+ * See programming with Actions
+ *
+ * feature and core middleware
+ *
+ * feature commands ("talks to") core (which generates events); so, have
+ * the feature middleware come before the core middleware.
+ *
+ */
+const featureMiddleware = (projectId) => [
+  headerViewMiddleware(projectId),
+  etlViewMiddleware,
+  workbenchMiddleware(projectId),
+  matrixMiddleware,
+];
+const coreMiddleware = [
+  actionSplitterMiddleware, // Array -> single action
+  asyncMiddleware, // action:Function -> (dispatch(action))
+  actionFilterMiddleware, // sequesters bad actions
+  pendingRequestsMiddleware, // sequence dependent
+  normalizeMiddleware, // api data -> normalized data
+  notificationsMiddleware,
+  // loggerMiddleware,
+];
+
 // -----------------------------------------------------------------------------
 // 🚧 Reduce the memory and CPU usage
 //    Redux debugging
 // -----------------------------------------------------------------------------
-const resetData = (action) => ({
+const scrubbDown = (action) => ({
   ...action,
   event: {
     ...action.event,
@@ -92,7 +128,7 @@ const devToolsConfiguration = {
 
       case action.type.includes(POLLING_RESOLVED):
       case action.type.includes(REMOVE_PENDING_REQUEST):
-        return resetData(action);
+        return scrubbDown(action);
 
       case action.type.includes(ADD_HEADER_VIEW):
         return {
@@ -116,32 +152,17 @@ const devToolsConfiguration = {
 // -----------------------------------------------------------------------------
 // Production
 //
-const configureStoreProd = (initialState) => {
-  console.info('Loading the Production Version of the store');
-
-  // Programming with Actions
-  const featureMiddleware = [
-    headerViewMiddleware,
-    etlViewMiddleware,
-    workbenchMiddleware,
-    matrixMiddleware,
-  ];
-
-  const coreMiddleware = [
-    actionSplitterMiddleware, // Array -> single action
-    asyncMiddleware, // action:Function -> (dispatch(action))
-    actionFilterMiddleware, // sequesters bad actions
-    pendingRequestsMiddleware, // sequence dependent
-    normalizeMiddleware, // api data -> normalized data
-    notificationsMiddleware,
-    loggerMiddleware,
-  ];
+const configureStoreProd = (projectId, initialState) => {
+  console.info(
+    `Loading the Prod Version (v2.5) of the store for project: ${projectId}`,
+  );
 
   const middlewares = [
-    ...featureMiddleware, //
+    initMiddleware(projectId), // first
+    ...featureMiddleware(projectId), //
     ...coreMiddleware, // final processing before document
     sagaMiddleware, // schedule feature reports
-    saveStoreMiddleware, // ⚠️  must be last in the sequence
+    saveMiddleware(projectId), // ⚠️  must be last in the sequence
   ];
 
   console.assert(
@@ -175,32 +196,15 @@ const configureStoreProd = (initialState) => {
 // -----------------------------------------------------------------------------
 // Development
 //
-const configureStoreDev2 = (initialState) => {
-  console.info('Loading the Dev Version (v2) of the store');
-
-  // Programming with Actions
-  const featureMiddleware = [
-    headerViewMiddleware,
-    etlViewMiddleware,
-    workbenchMiddleware,
-    matrixMiddleware,
-  ];
-
-  const coreMiddleware = [
-    actionSplitterMiddleware, // Array -> single action
-    asyncMiddleware, // action:Function -> (dispatch(action))
-    actionFilterMiddleware, // sequesters bad actions
-    pendingRequestsMiddleware, // sequence dependent
-    normalizeMiddleware, // api data -> normalized data
-    notificationsMiddleware,
-    loggerMiddleware,
-  ];
+const configureStoreDev2 = (projectId, initialState) => {
+  console.info(`Loading the Dev Version (v2.5) of the store: ${projectId}`);
 
   const middlewares = [
-    ...featureMiddleware, //
+    initMiddleware(projectId), // first
+    ...featureMiddleware(projectId), //
     ...coreMiddleware, // final processing before document
     sagaMiddleware, // schedule feature reports
-    saveStoreMiddleware, // ⚠️  must be last in the sequence
+    saveMiddleware(projectId), // ⚠️  must be last in the sequence
   ];
 
   console.assert(
@@ -215,8 +219,10 @@ const configureStoreDev2 = (initialState) => {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: false,
-        serializableCheck: false,
-        immutableCheck: false,
+        serializableCheck: {
+          ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+        immutableCheck: true,
       }).prepend(middlewares),
     preloadedState: initialState,
     devTools: devToolsConfiguration,
@@ -229,8 +235,8 @@ const configureStoreDev2 = (initialState) => {
   sagaMiddleware.run(rootSaga);
 
   // fire-up hot-reloader
+  // Enable Webpack hot module replacement for reducers
   if (module.hot) {
-    // Enable Webpack hot module replacement for reducers
     module.hot.accept(REDUCER_DIR, () =>
       store.replaceReducer(persistedReducer),
     );

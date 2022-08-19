@@ -23,6 +23,8 @@ import {
   TAG_WAREHOUSE_STATE,
 } from './actions/workbench.actions';
 import { SET_MATRIX, SET_MATRIX_CACHE } from './actions/matrix.actions';
+import { RESET } from './actions/project-meta.actions';
+
 import { Tree } from '../lib/obsEtlToMatrix/tree';
 
 import { NODE_TYPES, PURPOSE_TYPES } from '../lib/sum-types';
@@ -645,7 +647,7 @@ const maybeSetAll = (compOrQualNode) => {
 // ----------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
   // Utility to reset all state
-  RESET: () => initialState,
+  [RESET]: () => initialState,
 
   // debugging utility
   RESET_TREE: (state) => {

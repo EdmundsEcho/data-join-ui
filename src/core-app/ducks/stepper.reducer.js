@@ -17,6 +17,7 @@
 
 import createReducer from '../utils/createReducer';
 import { TYPES } from './actions/stepper.actions';
+import { RESET } from './actions/project-meta.actions';
 
 // Selector
 export const isHidden = (stateFragment) => stateFragment.isHidden;
@@ -62,7 +63,7 @@ export const initialState = {
 };
 
 const reducer = createReducer(initialState, {
-  RESET: () => initialState,
+  [RESET]: () => initialState,
   RESET_STEPPER: () => initialState,
   [TYPES.REGISTER_NEXT_ROUTE]: (state, nextStep) => {
     return {

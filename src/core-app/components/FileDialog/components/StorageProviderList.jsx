@@ -12,11 +12,6 @@ import Grid from '@mui/material/Grid';
 import { IconButton } from '@mui/material';
 import { Google } from '@mui/icons-material';
 
-//------------------------------------------------------------------------------
-const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
-// e.g., http://localhost:3099/drive
-//------------------------------------------------------------------------------
-
 const CustomButton = (props) => {
   return <IconButton {...props} className='auth-button' />;
 };
@@ -28,12 +23,7 @@ const CustomButton = (props) => {
  * @component
  *
  */
-const StorageProviderList = ({ projectId, className }) => {
-  const handleAuth = (serviceName) => {
-    const driveAuthURL = `${DRIVE_AUTH_URL}/${serviceName}/${projectId}`;
-    window.location.replace(driveAuthURL);
-  };
-
+const StorageProviderList = ({ authFn, className }) => {
   return (
     <Toolbar variant='dense' className={clsx('Luci-Toolbar', className)}>
       <Grid
@@ -49,19 +39,17 @@ const StorageProviderList = ({ projectId, className }) => {
         </Grid>
         <Grid container item alignItems='center'>
           <Grid item>
-            <CustomButton title='Google' onClick={() => handleAuth('google')}>
+            <CustomButton title='Google' onClick={() => authFn('google')}>
               <Google />
             </CustomButton>
           </Grid>
           <Grid item>
-            <CustomButton
-              title='One Drive'
-              onClick={() => handleAuth('msgraph')}>
+            <CustomButton title='One Drive' onClick={() => authFn('msgraph')}>
               <span className='iconify' data-icon='mdi:microsoft-azure'></span>
             </CustomButton>
           </Grid>
           <Grid item>
-            <CustomButton title='Dropbox' onClick={() => handleAuth('dropbox')}>
+            <CustomButton title='Dropbox' onClick={() => authFn('dropbox')}>
               <span className='iconify' data-icon='mdi:dropbox'></span>
             </CustomButton>
           </Grid>
@@ -72,7 +60,7 @@ const StorageProviderList = ({ projectId, className }) => {
 };
 
 StorageProviderList.propTypes = {
-  projectId: PropTypes.string.isRequired,
+  authFn: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
 };
 

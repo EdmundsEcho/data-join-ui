@@ -28,13 +28,14 @@ import apiPollingMachine, {
 import { colors } from '../constants/variables';
 
 //------------------------------------------------------------------------------
-const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
-// const DEBUG = true;
+const DEBUG =
+  process.env.REACT_APP_DEBUG_API === 'true' ||
+  process.env.REACT_APP_DEBUG_MACHINE === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console, camelcase, no-underscore-dangle */
 
 if (DEBUG) {
-  console.info('%cloading polling.api', colors.grey);
+  console.info('%cloading polling.api', colors.yellow);
 }
 
 /* --------------------------------------------------------------------------- */
@@ -54,6 +55,9 @@ if (DEBUG) {
 const apiChannel = ({ commandEvent, debug: { devTools }, ...restOptions }) => {
   // 📬 specify the callback for the eventChannel
   return eventChannel((emit) => {
+    if (DEBUG) {
+      console.debug(`__ 5️⃣  🦀 polling.setup: ${DEBUG}`);
+    }
     const pollingMachine = apiPollingMachine({ emit, DEBUG, ...restOptions });
     /* ----------------------------------------------------------------------- */
     // xstate interprete generates events

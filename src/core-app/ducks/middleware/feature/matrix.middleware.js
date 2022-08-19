@@ -49,7 +49,7 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
     // -------------------------------------------------------------------------
     // map feature command -> api command
     // ui perspective -> api perspective
-    // fetchHeaderView -> apiFetch
+    // fetchMatrix -> apiFetch
     // -------------------------------------------------------------------------
     case `${FETCH_MATRIX} 'DISABLE'`: {
       // see matrix.sagas

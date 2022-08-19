@@ -10,7 +10,13 @@
  * see Programming with Actions
  *
  */
-import { SET_LOADER } from './actions/ui.actions';
+import {
+  REDIRECT,
+  CLEAR_REDIRECT,
+  CLEAR_BOOKMARK,
+  SET_LOADER,
+} from './actions/ui.actions';
+import { RESET } from './actions/project-meta.actions';
 
 // selector
 export const isLoading = (stateFragment) => ({
@@ -21,11 +27,13 @@ export const isLoading = (stateFragment) => ({
 const initState = {
   loading: false,
   message: '',
+  redirect: undefined,
+  bookmarkUrl: undefined,
 };
 
 const reducer = (state = initState, action) => {
   switch (true) {
-    case action.type === 'RESET':
+    case action.type === RESET:
     case action.type === 'RESET UI':
       return { ...initState };
 
@@ -41,6 +49,25 @@ const reducer = (state = initState, action) => {
             loading: action.value.toggle,
             message: action.value?.message,
           };
+
+    case action.type === REDIRECT:
+      return {
+        ...state,
+        redirect: action?.url,
+        bookmarkUrl: action?.bookmarkUrl,
+      };
+
+    case action.type === CLEAR_REDIRECT:
+      return {
+        ...state,
+        redirect: undefined,
+      };
+
+    case action.type === CLEAR_BOOKMARK:
+      return {
+        ...state,
+        bookmarkUrl: undefined,
+      };
 
     default:
       return state;

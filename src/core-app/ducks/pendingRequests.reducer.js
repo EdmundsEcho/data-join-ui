@@ -28,6 +28,7 @@ import {
   UPDATE, // document
   REMOVE, // document
 } from './actions/pendingRequests.actions';
+import { RESET } from './actions/project-meta.actions';
 import { ApiCallError } from '../lib/LuciErrors';
 import { getServiceType } from '../services/api';
 // import { colors } from '../constants/variables';
@@ -106,7 +107,7 @@ const reducer = (state = initialState, action) => {
   const { type } = action;
 
   switch (true) {
-    case type === 'RESET':
+    case type === RESET:
     case type === 'RESET_PENDING_REQUESTS':
       return initialState;
     case type === 'SET_PENDING_REQUESTS':

@@ -17,6 +17,7 @@ import {
   SHOW_MODAL, // document
   HIDE_MODAL, // document
 } from './actions/modal.actions';
+import { RESET } from './actions/project-meta.actions';
 
 // -----------------------------------------------------------------------------
 // const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
@@ -51,7 +52,7 @@ export const getModalState = (stateFragment) => stateFragment;
 const modalReducer = (state = initialState, action) => {
   const { type } = action;
   switch (true) {
-    case type === 'RESET':
+    case type === RESET:
     case type === 'RESET_MODAL':
       return initialState;
 

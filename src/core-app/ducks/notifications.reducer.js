@@ -11,6 +11,7 @@ import {
   ADD_NOTIFICATION,
   CLEAR_NOTIFICATION,
 } from './actions/notifications.actions';
+import { RESET } from './actions/project-meta.actions';
 
 const initialState = [];
 
@@ -25,7 +26,7 @@ const initialState = [];
 const reducer = (state = initialState, action) => {
   const { type } = action;
   switch (true) {
-    case type === 'RESET':
+    case type === RESET:
     case type === 'RESET_NOTIFICATIONS':
       return initialState;
 
