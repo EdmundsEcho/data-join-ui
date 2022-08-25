@@ -82,8 +82,7 @@ export const initObsEtl = ({ subject, measurements }) => {
 
 /**
  *
- * ⬜ Use fragment to generate the view
- * Call to view an already initialized obs/mms gql server (view state)
+ * View the obsEtl using gql
  *
  * @function
  * @return {Object} data.newObsEtl with subject, measurements keys
@@ -92,6 +91,7 @@ export const viewObsEtl = () => {
   return {
     query: `query view {
   getObsEtl {
+    id
     subject {
       subjectType
       qualities {

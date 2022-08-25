@@ -35,8 +35,8 @@ const API_BASE_URL =
 
 const GQL_BASE_URL =
   process.env.REACT_APP_ENV === 'production'
-    ? `${window.location.origin}/graphiql/v1`
-    : `http://${window.location.hostname}:5003/graphiql/v1`;
+    ? `${window.location.origin}/v1`
+    : `http://${window.location.hostname}:5003/v1`;
 //------------------------------------------------------------------------------
 
 if (DEBUG) {
@@ -62,7 +62,7 @@ export const gqlInstance = axios.create({
     'content-type': 'application/json',
     Accept: 'application/json',
   },
-  withCredentials: true,
+  withCredentials: process.env.REACT_APP_ENV === 'production',
 });
 
 //------------------------------------------------------------------------------
@@ -73,8 +73,6 @@ export const gqlInstance = axios.create({
  */
 export const ResponseTypePredicates = {
   RESOLVED: (response) => {
-    console.debug(`----xxx HERE 8888 =-====`);
-    console.dir(response);
     return (
       response?.data?.results === 'stopped' ||
       response?.data?.results.includes('object is not subscriptable') ||
@@ -133,6 +131,7 @@ export const ServiceConfigs = {
   EXTRACTION: {
     type: 'EXTRACTION',
     endpoint: statusEndpointMaker('extraction'),
+    graphql: statusEndpointMaker('warehouse'),
     feature: WORKBENCH,
     resultType: 'EtlObject',
     middleware: 'workbench',
@@ -231,7 +230,6 @@ export const initApiService = async (eventInterface) => {
 };
 // File Inspection
 async function queueFileInspectionRequest(eventInterface) {
-  console.debug(`%cHEADER_ queue`, colors.purple);
   // Aug 2022: partial validation
   validateEventRequest(eventInterface, 'path');
   const { feature } = eventInterface.meta;
@@ -250,8 +248,6 @@ async function queueFileInspectionRequest(eventInterface) {
 }
 // Extraction
 async function queueEtlExtraction(eventInterface) {
-  console.debug(`%cEXTRACTION_ queue`, colors.purple);
-  console.dir(eventInterface);
   validateEventRequest(eventInterface, 'etlObject');
   const { feature } = eventInterface.meta;
   const { project_id: projectId } = eventInterface.request;
@@ -294,8 +290,6 @@ async function queueMatrixRequest(eventInterface) {
  *
  */
 export const statusApiService = async (eventInterface) => {
-  console.debug(`Checking status ---------------`);
-  console.dir(eventInterface);
   validateEventInterface(eventInterface, true /* jobId */);
   const { jobId, project_id: projectId } = eventInterface.request;
   const { feature } = eventInterface.meta;
@@ -337,9 +331,10 @@ export const resultApiService = async (eventInterface) => {
       break;
 
     case EXTRACTION:
+      // hit the graphql endpoint
       response = await gqlInstance({
-        url: '/',
-        data: GQL.viewObsEtl(),
+        url: ServiceConfigs[serviceType].graphql(projectId),
+        data: GQL.viewObsEtl(), // gql-specified requested view
       });
       break;
 
@@ -355,6 +350,9 @@ export const resultApiService = async (eventInterface) => {
       );
   }
 
+  //
+  // 🚧 WIP - update errors
+  //
   if (response.status > 200) {
     throw new ApiCallError(
       `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(
@@ -607,7 +605,6 @@ export async function fetchProjectDrives(projectId) {
  * @return {Promise} response
  */
 export const readDirectory = (request) => {
-  console.debug(`%cHEADER_ dir`, colors.purple);
   const axiosOptions = {
     url: `/filesystem/readdir`,
     method: 'POST',
