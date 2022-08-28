@@ -48,7 +48,7 @@ import { renameEtlField } from '../../../lib/filesToEtlUnits/rename-etl-field';
 import {
   removeNonDerivedEtlField, // triggers async pivot
 } from '../../../lib/filesToEtlUnits/remove-etl-field';
-import { InvalidStateError } from '../../../lib/LuciErrors';
+import { InvalidStateInput } from '../../../lib/LuciFixableErrors';
 import { tagWarehouseState } from '../../actions/workbench.actions';
 import { isHostedWarehouseStateStale } from '../../workbench.reducer';
 
@@ -242,7 +242,7 @@ const middleware =
             );
           }
         } catch (e) {
-          if (e instanceof InvalidStateError) {
+          if (e instanceof InvalidStateInput) {
             next(setEtlViewErrors(e.fix));
           } else {
             throw e;

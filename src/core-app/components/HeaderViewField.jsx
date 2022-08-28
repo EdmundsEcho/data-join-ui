@@ -159,45 +159,40 @@ const HeaderViewField = ({ fieldIdx, stateId }) => {
           hasNullValues={hasNullValues}
           hasImpliedMvalue={hasImpliedMvalue}
         />
-      }
-    >
+      }>
       {/* Summary view */}
       {/* Children of SummaryDetailRow */}
 
       {/* Exclude Button - read/write */}
       <TableCell align='center'>
         <Button
+          className='Luci-field toggle-include'
           id={`${stateId}|enabled`}
           size='small'
           disableElevation
-          onClick={handleExcludeField}
-          style={{
-            cursor: 'pointer',
-          }}
-        >
+          onClick={handleExcludeField}>
           <ToggleIncludeField color='primary' checked={fieldData.enabled} />
         </Button>
       </TableCell>
 
       {/* Field Name - read-only */}
       <TableCell align='left'>
-        <button
+        <Button
+          className='Luci-field fieldname'
           type='button'
           tabIndex={-1}
           underline='none'
-          variant='body1'
-          color='textSecondary'
-          style={{ cursor: 'pointer' }}
-          onClick={handleExcludeField}
-        >
+          variant='text'
+          onClick={handleExcludeField}>
           <Typography>{getValue('default-name')}</Typography>
-        </button>
+        </Button>
       </TableCell>
 
       {/* Alias - read-write */}
       {/* Note: only display alias when different from default-name */}
       <TableCell align='left'>
         <TextField
+          className='Luci-field field-alias'
           key={`${stateId}|field-alias|${getValue('field-alias')}`}
           stateId={`${stateId}|field-alias`}
           name='field-alias'

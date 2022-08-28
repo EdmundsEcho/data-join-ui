@@ -25,6 +25,23 @@ if (DEBUG) {
 /* eslint-disable camelcase, no-console */
 
 /**
+ * Logout
+ * TnC-py
+ * @projects_blueprint.route("/v1/logout", methods=['GET'])
+ */
+export async function logout() {
+  const axiosOptions = {
+    url: '/logout',
+    method: 'GET',
+  };
+  if (DEBUG) {
+    console.debug(`%c testing POST @ "v1/logout" endpoint`, 'color:orange');
+  }
+
+  return apiInstance(axiosOptions);
+}
+
+/**
  * Save the store
  * TnC-py
  * @projects_blueprint.route("/v1/project-store/<project_id>",

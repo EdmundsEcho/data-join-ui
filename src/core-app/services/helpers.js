@@ -26,10 +26,10 @@ export const stdApiResponse = ({
   status,
   statusText,
 }) => {
-  if (response?.status === 401) {
-    // log out
-    // window.location.href = '/login';
-  }
+  // if (response?.status === 401) {
+  // log out
+  // window.location.href = '/login';
+  // }
   // When we're unable to reach the API
   if (!response && request && parseInt(request.status, 10) === 0) {
     return {

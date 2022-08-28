@@ -236,11 +236,12 @@ const configureStoreDev2 = (projectId, initialState) => {
 
   // fire-up hot-reloader
   // Enable Webpack hot module replacement for reducers
+  /*
   if (module.hot) {
     module.hot.accept(REDUCER_DIR, () =>
       store.replaceReducer(persistedReducer),
     );
-  }
+  } */
   return { store, persistor };
 };
 

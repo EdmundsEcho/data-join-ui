@@ -252,6 +252,8 @@ export const getSelectionModelEtl = (stateFragment, fieldName) => {
 };
 
 export const getEtlViewErrors = (stateFragment) => stateFragment.etlViewErrors;
+export const getHasEtlViewErrors = (stateFragment) =>
+  stateFragment?.etlViewErrors?.length > 0 ?? false;
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -275,6 +277,13 @@ const reducer = createReducer(initialState, {
       __derivedFields: {},
     },
   }),
+  /* Testing utility */
+  RESET_ETL_VIEW_ERRORS: (state) => {
+    return {
+      ...state,
+      etlViewErrors: [],
+    };
+  },
   /* Testing utility */
   RESET_ETL_CHANGES: (state) => ({
     ...state,

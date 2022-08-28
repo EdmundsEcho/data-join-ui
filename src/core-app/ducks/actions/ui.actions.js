@@ -13,6 +13,7 @@ export const CLEAR_BOOKMARK = 'CLEAR_BOOKMARK'; // document (state read by REDUX
 const feature = '[UI META]';
 
 // These impact the reducers
+// loader = true means loading
 export const setLoader = ({ toggle, feature, message }) => ({
   type: `${feature} ${SET_LOADER} ${toggle ? '... loading' : 'done'}`,
   value: { toggle, message },

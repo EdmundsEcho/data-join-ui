@@ -357,7 +357,12 @@ export const getHeaderViewsFixes = (stateFragment, sourceType) => {
   return stateFragment.headerViewFixes?.[sourceType] || {};
 };
 
-// note plural headerViews
+/**
+ * Note: plural headerViews
+ *
+ * @function
+ * @return {Boolean}
+ */
 export const getHasHeaderViewsFixes = (stateFragment /* sourceType */) => {
   if (typeof stateFragment.headerViewFixes === 'undefined') return false;
   if (Object.keys(stateFragment.headerViewFixes).length === 0) return false;

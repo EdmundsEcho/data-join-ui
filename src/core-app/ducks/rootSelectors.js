@@ -173,6 +173,10 @@ export const getHeaderViewsFixes = (state, sourceType) =>
   fromHeaderView.getHeaderViewsFixes(state.headerView, sourceType);
 
 // note plural headerViews
+/**
+ * @function
+ * @return {Boolean}
+ */
 export const getHasHeaderViewsFixes = (state, sourceType = undefined) =>
   fromHeaderView.getHasHeaderViewsFixes(state.headerView, sourceType);
 
@@ -311,6 +315,8 @@ export const getMeaEtlUnits = (state) =>
 // Errors (user to fix)
 export const getEtlViewErrors = (state) =>
   fromEtlView.getEtlViewErrors(state.etlView);
+export const getHasEtlViewErrors = (state) =>
+  fromEtlView.getHasEtlViewErrors(state.etlView);
 
 //------------------------------------------------------------------------------
 /**
@@ -438,15 +444,25 @@ export const resetCanvas = (state) =>
 export const getPendingRequests = (state) =>
   fromPendingRequests.getPendingRequests(state.pendingRequests);
 
-export const getNumPendingJobs = (state) =>
-  getPendingRequests(state)?.length || 0;
-
 export const getNumberOfPendingRequests = (state) =>
   fromPendingRequests.getNumberOfPendingRequests(state.pendingRequests);
 
-export const getHasPendingRequests = (state) =>
-  getPendingRequests(state)?.length > 0 ?? false;
+/**
+ * feature: INSPECTION | EXTRACTION | WORKBENCH | MATRIX
+ *
+ * @function
+ * @param {object} state
+ * @param {str} feature
+ * @returns {bool}
+ */
+export const getHasPendingRequests = (state, feature) =>
+  fromPendingRequests
+    .getFeaturesWithPendingDataRequests(state.fromPendingRequests)
+    .includes(feature);
 
+/**
+ * @returns {Array}
+ */
 export const getFeaturesWithPendingDataRequests = (state) =>
   fromPendingRequests.getFeaturesWithPendingDataRequests(state.pendingRequests);
 

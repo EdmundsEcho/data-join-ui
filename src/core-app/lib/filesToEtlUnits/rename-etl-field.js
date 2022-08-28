@@ -23,7 +23,8 @@ import {
   getActiveHvFields,
   removeProp,
 } from './headerview-helpers';
-import { InputError, InvalidStateError, ValueError } from '../LuciErrors';
+import { InputError, ValueError } from '../LuciErrors';
+import { InvalidStateInput } from '../LuciFixableErrors';
 
 import { PURPOSE_TYPES as TYPES } from '../sum-types';
 import ERRORS from '../../constants/error-messages';
@@ -72,6 +73,7 @@ const renameEtlUnitInEtlChanges = isEtlUnitInEtlChanges;
  *
  * @function
  * @throws InvalidStateError
+ * @throws InputError
  *
  * @param {Object} cfg
  * @param {Array.<Array<string,string>>} cfg.etlFieldNameAndPurposeValues
@@ -116,9 +118,9 @@ export function renameEtlField({
       case oldValue === newValue:
         return { headerViews: undefined, etlFieldChanges: undefined };
 
-      // Scenario: invalid change
+      // Scenario: invalid change (throw fixable error)
       case validation.unsafe():
-        throw new InvalidStateError(validation.getError());
+        throw new InvalidStateInput(validation.getError());
 
       // Scenario: Rename a derived field
       case oldValue in etlChanges.__derivedFields: {
@@ -454,13 +456,11 @@ function noEtlNameCollision(
     ([name]) => name === oldValue,
   );
 
-  const [
-    nameCollision,
-    purposeOfCollision,
-  ] = listOfFieldNameAndPurposeValues.find(([name]) => name === newValue) || [
-    '',
-    '',
-  ];
+  const [nameCollision, purposeOfCollision] =
+    listOfFieldNameAndPurposeValues.find(([name]) => name === newValue) || [
+      '',
+      '',
+    ];
 
   return (
     (purpose === purposeOfCollision && purpose === TYPES.QUALITY) ||

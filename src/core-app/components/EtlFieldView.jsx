@@ -46,13 +46,14 @@ import SubjectIcon from '@mui/icons-material/AccountCircle';
 
 import SplitPane from 'react-split-pane';
 
-import ErrorBoundary from '../shared/ErrorBoundary';
-import ErrorCard from '../shared/ErrorCard';
-import EtlFieldDetailView from '../EtlFieldDetailView';
-import EtlFieldGroupByFileDialog from '../EtlGroupByFileDialog';
-import EtlUnitMeas from '../EtlUnitMeas';
-import TextInput from '../shared/TextInput';
-import TableCellTrash from '../shared/TableCellTrash';
+import ErrorBoundary from './shared/ErrorBoundary';
+import ErrorCard from './shared/ErrorCard';
+import EtlFieldDetailView from './EtlFieldDetailView';
+import EtlFieldGroupByFileDialog from './EtlGroupByFileDialog';
+import EtlUnitMeas from './EtlUnitMeas';
+import TextInput from './shared/TextInput';
+import TableCellTrash from './shared/TableCellTrash';
+import LoadingSplash from './LoadingSplash';
 
 // ☎️
 import {
@@ -61,10 +62,11 @@ import {
   removeEtlField,
   renameEtlField,
   updateEtlField,
-} from '../../ducks/actions/etlView.actions';
+} from '../ducks/actions/etlView.actions';
 
 // 📖 Left pane data (which also feeds the right pane)
 import {
+  isLoading,
   getFieldsKeyedOnPurpose,
   // getSubEtlField,
   // getQualEtlFields,
@@ -72,24 +74,24 @@ import {
   getMeaEtlUnits,
   getEtlUnits,
   getEtlViewErrors,
-} from '../../ducks/rootSelectors';
+} from '../ducks/rootSelectors';
 // lib
-import { getNextDisplayField } from '../../lib/filesToEtlUnits/transforms/etl-unit-helpers';
+import { getNextDisplayField } from '../lib/filesToEtlUnits/transforms/etl-unit-helpers';
 import {
   isEtlFieldDerived as isDerived,
   mkViewFields,
-} from '../../lib/filesToEtlUnits/headerview-helpers';
-import { PURPOSE_TYPES } from '../../lib/sum-types';
+} from '../lib/filesToEtlUnits/headerview-helpers';
+import { PURPOSE_TYPES } from '../lib/sum-types';
 
-import usePersistedState from '../../hooks/use-persisted-state';
+import usePersistedState from '../hooks/use-persisted-state';
 
 // 🚧 WIP
 // remove field confirmation
-import WithModal, { useModal } from '../use-modal';
-import ConfirmModal from '../shared/ConfirmModal';
-import { fieldConfirmDelete } from '../../constants/strings';
+import WithModal, { useModal } from './use-modal';
+import ConfirmModal from './shared/ConfirmModal';
+import { fieldConfirmDelete } from '../constants/strings';
 
-import { colors, useTraceUpdate } from '../../constants/variables';
+import { colors, useTraceUpdate } from '../constants/variables';
 
 //-----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
@@ -113,7 +115,9 @@ const rightPaneStyle = {
  * EtlFieldView
  * Display and enable user input to the etl-field level configuration.
  *
- * The form also allows for backtracking via the "edit source" button.
+ * Deprecate: The form also allows for backtracking via the "edit source" button.
+ *
+ * 📖 etlView (the pivotted data)
  *
  * @component
  *
@@ -123,6 +127,10 @@ const rightPaneStyle = {
  *
  */
 const EtlFieldView = () => {
+  const loading = useSelector(isLoading);
+  if (loading) {
+    return <LoadingSplash />;
+  }
   return (
     <WithModal ModalComponent={ConfirmModal}>
       <Top />
@@ -131,6 +139,7 @@ const EtlFieldView = () => {
 };
 
 //-----------------------------------------------------------------------------
+// renders Main
 function Top() {
   //-----------------------------------------------------------------------------
   const stateId = 'etlFieldView';

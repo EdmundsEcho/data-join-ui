@@ -29,8 +29,6 @@ import { computeEtlView } from '../../ducks/actions/etlView.actions';
 /* eslint-disable react/prop-types */
 
 /**
- * A react-redux container
- * It does not fetch, but rather derives/computes the next state.
  *
  * ⬜ convert this to a custom hook; provide the component with data and
  * callbacks

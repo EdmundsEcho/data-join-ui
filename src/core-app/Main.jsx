@@ -15,19 +15,16 @@ import ErrorBoundary from './components/shared/ErrorBoundary';
 import ModalRoot from './components/ModalRoot';
 
 import Overview from './components/Overview';
-import FileDialog from './components/FileDialog/container';
-import EtlFieldView from './components/EtlFieldView/index.container';
-import Workbench from './components/Workbench/index';
-import HoldingArea from './components/HoldingArea';
-import StepBar from './components/StepBar/container';
-
-import { useStatus as useReduxCacheStatus } from '../hooks/use-status-provider';
-import { isCacheStale as isReduxCacheStale } from './ducks/rootSelectors';
-import { clearRedirect } from './ducks/actions/ui.actions';
+import FileDialog from './components/FileDialog';
+import EtlFieldView from './components/EtlFieldView';
+import Workbench from './components/Workbench';
+import WorkSplash from './components/LoadingSplashWorkbench';
+import StepBar from './components/StepBar';
 
 LicenseInfo.setLicenseKey(
-  'fa029d42fde6eb619eeabfea6cfb9c30T1JERVI6MjQ4NTgsRVhQSVJZPTE2NTI2NTE0NDIwMDAsS0VZVkVSU0lPTj0x',
+  'bfebe42cb36c320e53926d5c773b27e9Tz00OTgzOSxFPTE2OTMyMzE0NTQ3MDksUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
 );
+// 'fa029d42fde6eb619eeabfea6cfb9c30T1JERVI6MjQ4NTgsRVhQSVJZPTE2NTI2NTE0NDIwMDAsS0VZVkVSU0lPTj0x',
 
 //------------------------------------------------------------------------------
 // const DEBUG = false && process.env.REACT_APP_ENV === 'development';
@@ -63,8 +60,8 @@ function Main() {
                   <Route path='introduction' element={<Overview />} />
                   <Route path='files' element={<FileDialog />} />
                   <Route path='fields' element={<EtlFieldView />} />
+                  <Route path='pending' element={<WorkSplash />} />
                   <Route path='workbench' element={<Workbench />} />
-                  <Route path='pending' element={<HoldingArea />} />
                 </Routes>
               </div>
               <StepBar className='app-paging-controller'>

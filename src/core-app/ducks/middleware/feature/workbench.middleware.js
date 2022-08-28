@@ -11,6 +11,8 @@
  * Once we know the job is complete, the workbench page can go
  * ahead and use the graphql server.
  *
+ * 💫 run the extraction when hostedWarehouseState === 'STALE'
+ *
  * @module middleware/feature/workbench.middleware
  *
  */
@@ -451,6 +453,7 @@ const middleware =
       }
       // -------------------------------------------------------------------------
       // Fire-up the api core service
+      // 📖 when hostedWarehouseState === 'STALE'
       // -------------------------------------------------------------------------
       // map feature command -> api command
       // ui perspective -> api perspective
@@ -469,7 +472,7 @@ const middleware =
         if (!isHostedWarehouseStateStale(state)) {
           next(
             setNotification({
-              message: `${WORKBENCH}.middleware: Valid cache; no need recompute the warehouse`,
+              message: `${WORKBENCH}.middleware: Warehouse cache is valid; no need recompute the warehouse`,
               feature: WORKBENCH,
             }),
           );
@@ -500,7 +503,6 @@ const middleware =
                   maxTries: MAX_TRIES,
                 },
               }), // map + translation
-              tagWarehouseState('CURRENT'),
             ]);
           } catch (e) {
             // ERROR will have been thrown/catched if deeper
@@ -510,7 +512,6 @@ const middleware =
                 message: `${WORKBENCH}.middleware: ${e?.message || e}`,
                 feature: WORKBENCH,
               }),
-              tagWarehouseState('STALE'),
             ]);
           }
         }
@@ -541,6 +542,7 @@ const middleware =
           );
         } finally {
           next(setLoader({ toggle: false, feature: WORKBENCH }));
+          next(tagWarehouseState('CURRENT'));
         }
         break;
       }
@@ -597,6 +599,7 @@ const middleware =
               message: `Creating the ETL warehouse`,
             }),
             setTree(Tree.toFlatNodes(tree)),
+            next(tagWarehouseState('CURRENT')),
           ]);
         } catch (e) {
           if (e instanceof ApiCallError) {

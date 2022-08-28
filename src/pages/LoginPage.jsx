@@ -1,11 +1,17 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { PropTypes } from 'prop-types';
 
 import { Box, Button, IconButton, Paper, Typography } from '@mui/material';
 import { Google, GitHub, Twitter } from '@mui/icons-material';
 
-import './LoginPage.css';
 import clsx from 'clsx';
+
+import { purgeStoredState } from 'redux-persist';
+
+import { persistConfig } from '../core-app/redux-persist-cfg';
+import { logout as logoutApi } from '../services/dashboard.api';
+
+import './LoginPage.css';
 
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
@@ -22,14 +28,12 @@ const LoginForm = ({ handleSubmit, isLoading }) => {
   return (
     <form
       className={clsx('Luci-login')}
-      onSubmit={(event) => handleSubmit(event, formInput)}
-    >
+      onSubmit={(event) => handleSubmit(event, formInput)}>
       <Button
         sx={{ width: '100%', mt: 3, mb: 1, height: '36px' }}
         variant='contained'
         color='primary'
-        type={isLoading ? 'button' : 'submit'}
-      >
+        type={isLoading ? 'button' : 'submit'}>
         {isLoading ? <span className='spinner' /> : 'Sign In'}
       </Button>
     </form>
@@ -47,7 +51,7 @@ const AuthButton = (props) => {
 };
 /* eslint-enable react/jsx-props-no-spreading */
 
-export const LoginPage = () => {
+export const LoginPage = ({ logout }) => {
   const [isLoading, setLoading] = useState(false);
 
   // generic for supported authenticating services
@@ -61,6 +65,7 @@ export const LoginPage = () => {
     });
 
     if (event) event.preventDefault();
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -68,6 +73,22 @@ export const LoginPage = () => {
       window.location.replace(authURL);
     }, 1000);
   };
+
+  useEffect(() => {
+    if (logout) {
+      logoutApi();
+    }
+    // clear the user-agent's persisted state
+    (async () => {
+      try {
+        await purgeStoredState(persistConfig);
+        await purgeStoredState(persistConfig);
+      } catch (e) {
+        console.error(`Failed to purge local state`);
+        console.dir(e);
+      }
+    })();
+  }, [logout]);
 
   return (
     <Box
@@ -83,8 +104,7 @@ export const LoginPage = () => {
           theme.palette.mode === 'light'
             ? theme.palette.grey[100]
             : theme.palette.grey[900],
-      }}
-    >
+      }}>
       <Box sx={{ zIndex: 2 }}>
         <Paper sx={{ p: 6, width: '300px' }}>
           <Typography variant='h5' component='h2'>
@@ -96,8 +116,7 @@ export const LoginPage = () => {
               mt: 1,
               display: 'flex',
               justifyContent: 'space-between',
-            }}
-          >
+            }}>
             <AuthButton onClick={handleAuth('google')} disabled={isLoading}>
               <Google />
             </AuthButton>
@@ -122,6 +141,13 @@ export const LoginPage = () => {
       </Box>
     </Box>
   );
+};
+
+LoginPage.propTypes = {
+  logout: PropTypes.bool,
+};
+LoginPage.defaultProps = {
+  logout: false,
 };
 
 export default LoginPage;

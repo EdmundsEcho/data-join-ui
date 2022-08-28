@@ -42,73 +42,71 @@ const PurposeControl = (props) => {
       fullWidth={false}
       size='small'
       disabled={disabled}
-      disableElevation
-    >
-      {showSubject && (
-        <Circle
-          key={`${stateId}-S`}
-          id={`${stateId}-S`}
-          name={name}
-          value={value}
-          onChange={onChange}
-          title='Subject'
-          purpose={TYPES.SUBJECT}
-        >
-          S
-        </Circle>
-      )}
-      {showQuality && (
-        <Circle
-          key={`${stateId}-Q`}
-          id={`${stateId}-Q`}
-          name={name}
-          value={value}
-          onChange={onChange}
-          title='Quality'
-          purpose={TYPES.QUALITY}
-        >
-          Q
-        </Circle>
-      )}
-      {showComponent && (
-        <Circle
-          key={`${stateId}-C`}
-          id={`${stateId}-C`}
-          name={name}
-          value={value}
-          onChange={onChange}
-          title='Component'
-          purpose={TYPES.MCOMP}
-        >
-          C
-        </Circle>
-      )}
-      {showTiming && (
-        <Circle
-          key={`${stateId}-T`}
-          id={`${stateId}-T`}
-          name={name}
-          value={value}
-          onChange={onChange}
-          title='Timing'
-          purpose={TYPES.MSPAN}
-        >
-          T
-        </Circle>
-      )}
-      {showValue && (
-        <Circle
-          key={`${stateId}-V`}
-          id={`${stateId}-V`}
-          name={name}
-          value={value}
-          onChange={onChange}
-          title='Value'
-          purpose={TYPES.MVALUE}
-        >
-          V
-        </Circle>
-      )}
+      disableElevation>
+      <div className='subgroup'>
+        {showSubject && (
+          <Circle
+            key={`${stateId}-S`}
+            id={`${stateId}-S`}
+            name={name}
+            value={value}
+            onChange={onChange}
+            title='Subject'
+            purpose={TYPES.SUBJECT}>
+            S
+          </Circle>
+        )}
+        {showQuality && (
+          <Circle
+            key={`${stateId}-Q`}
+            id={`${stateId}-Q`}
+            name={name}
+            value={value}
+            onChange={onChange}
+            title='Quality'
+            purpose={TYPES.QUALITY}>
+            Q
+          </Circle>
+        )}
+      </div>
+      <div className='subgroup'>
+        {showComponent && (
+          <Circle
+            key={`${stateId}-C`}
+            id={`${stateId}-C`}
+            name={name}
+            value={value}
+            onChange={onChange}
+            title='Component'
+            purpose={TYPES.MCOMP}>
+            C
+          </Circle>
+        )}
+        {showTiming && (
+          <Circle
+            key={`${stateId}-T`}
+            id={`${stateId}-T`}
+            name={name}
+            value={value}
+            onChange={onChange}
+            title='Timing'
+            purpose={TYPES.MSPAN}>
+            T
+          </Circle>
+        )}
+        {showValue && (
+          <Circle
+            key={`${stateId}-V`}
+            id={`${stateId}-V`}
+            name={name}
+            value={value}
+            onChange={onChange}
+            title='Value'
+            purpose={TYPES.MVALUE}>
+            V
+          </Circle>
+        )}
+      </div>
     </ButtonGroup>
   );
 };

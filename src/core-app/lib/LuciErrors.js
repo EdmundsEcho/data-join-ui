@@ -58,6 +58,7 @@ class ApiTncError extends LuciError {}
 class ApiCallError extends LuciError {}
 class ApiResponseError extends LuciError {}
 class DesignError extends LuciError {}
+class ExpiredSessionError extends LuciError {}
 class GqlError extends LuciError {}
 class InputError extends LuciError {}
 class InputTypeError extends LuciError {}
@@ -112,6 +113,7 @@ export {
   TimeoutError,
   ValueError,
   WorkbenchError,
+  ExpiredSessionError,
 };
 
 /**

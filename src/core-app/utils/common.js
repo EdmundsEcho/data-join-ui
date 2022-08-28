@@ -161,6 +161,8 @@ export const getFilenameFromPath = (path) => {
   return path.split(delimiter).slice(-1)[0];
 };
 
+export const getRouteFromPath = (path) => getFilenameFromPath(path);
+
 /**
  *
  * @param {string} path string path

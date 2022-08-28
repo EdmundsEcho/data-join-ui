@@ -8,7 +8,12 @@
 import axios from 'axios';
 
 import { stdApiResponse } from './helpers';
-import { ApiCallError, GqlError, InvalidStateError } from '../lib/LuciErrors';
+import {
+  ApiCallError,
+  ExpiredSessionError,
+  GqlError,
+  InvalidStateError,
+} from '../lib/LuciErrors';
 import { HEADER_VIEW } from '../ducks/actions/headerView.actions';
 import { WORKBENCH } from '../ducks/actions/workbench.actions';
 import { MATRIX as MATRIX_FEATURE } from '../ducks/actions/matrix.actions';
@@ -529,7 +534,7 @@ export const fetchLevels = async (request) => {
 // extract jobId and processId from the job ticket
 // api response -> { jobId, processId }
 //
-async function jobIdInterface(response) {
+function jobIdInterface(response) {
   if (DEBUG) {
     console.debug(
       '%c** api response does it look as expected? **',
@@ -537,7 +542,16 @@ async function jobIdInterface(response) {
     );
     console.dir(response);
   }
-
+  if (response.status === 401) {
+    throw new ExpiredSessionError();
+  }
+  if (response.status === 403) {
+    throw new ApiCallError(
+      response?.data ?? {
+        message: `403 Unauthorized when retrieving job ticket`,
+      },
+    );
+  }
   if (response.status > 200) {
     throw new ApiCallError({
       message: `Retrieving the jobId failed.`,

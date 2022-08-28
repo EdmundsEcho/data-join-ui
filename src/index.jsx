@@ -1,7 +1,7 @@
 import './wdyr'; // why did you render debug utility
 
 import React, { version as reactVersion } from 'react';
-import ReactDOM from 'react-dom/client';
+import * as ReactDOMClient from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 
@@ -21,7 +21,10 @@ import Dashboard from './App.PlayNest.jsx';
 /* eslint-disable-next-line */
 console.info(`App using react version: ${reactVersion}`);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const container = document.getElementById('root');
+
+// create root
+const root = ReactDOMClient.createRoot(container);
 
 root.render(
   <React.StrictMode>

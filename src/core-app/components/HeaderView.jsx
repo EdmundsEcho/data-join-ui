@@ -156,10 +156,7 @@ function HeaderView(props) {
                         header={headerView.header}
                       />
                     </Collapse>
-                    <CollapseErrors
-                      key={`${filename}|CollapseErrors`}
-                      filename={filename}
-                    />
+                    <CollapseErrors filename={filename} />
                   </>
                 )}
               </>

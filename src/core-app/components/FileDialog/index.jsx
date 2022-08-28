@@ -1,15 +1,17 @@
+//
 // src/components/FileDialog/component.jsx
 
 /**
  *
- * ⬆ container
+ * ⬆ FileDialog container
  * 📖 files, headerViewErrors, others...
  * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
  */
-import React, { useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
+import { withSnackbar } from 'notistack';
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
@@ -26,7 +28,11 @@ import HeaderViews from './components/HeaderViews';
 import LeftPane from './LeftPane';
 
 // 📖 data
-import { getDriveTokenId, getSelected } from '../../ducks/rootSelectors';
+import {
+  getDriveTokenId,
+  getSelected,
+  getFileInspectionErrors,
+} from '../../ducks/rootSelectors';
 
 // ☎️  Callbacks to update data
 import {
@@ -35,6 +41,7 @@ import {
 } from '../../ducks/actions/headerView.actions';
 import { withConfirmation } from '../../ducks/actions/modal.actions';
 import { filesConfirmRemovingFileText } from '../../constants/strings';
+import { getFilenameFromPath } from '../../utils/common';
 
 // debug
 import { colors } from '../../constants/variables';
@@ -61,10 +68,25 @@ const rightPaneStyle = {
  * @component
  *
  */
-const FileDialogComponent = () => {
+const FileDialog = ({ enqueueSnackbar }) => {
   if (DEBUG) {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
+
+  // previously in container
+  const fileInspectionErrors = useSelector(getFileInspectionErrors);
+
+  // snackbars
+  useEffect(() => {
+    if (fileInspectionErrors.length) {
+      fileInspectionErrors.forEach((entry) => {
+        const [path, error] = Object.entries(entry)[0];
+        enqueueSnackbar(`${getFilenameFromPath(path)}: ${error}`, {
+          variant: 'warning',
+        });
+      });
+    }
+  }, [enqueueSnackbar, fileInspectionErrors]);
 
   // 📖 data (shared left and right side)
   const selectedFiles = useSelector(getSelected, shallowEqual);
@@ -115,14 +137,17 @@ const FileDialogComponent = () => {
       pane1Style={leftPaneStyle}
       pane2Style={rightPaneStyle}
       minSize={240}
-      defaultSize={454}>
+      defaultSize={434}>
       <LeftPane projectId={projectId} toggleFile={handleToggleFile} />
       <RightPane selectedFiles={selectedFiles} removeFile={handleRemoveFile} />
     </SplitPane>
   );
 };
 
-/* selected file view: 📖 headerViewErrors */
+FileDialog.propTypes = {
+  enqueueSnackbar: PropTypes.func.isRequired,
+};
+
 function RightPane({ selectedFiles, removeFile }) {
   const title = selectedFiles.length === 1 ? 'file selected' : 'files selected';
   // renders any time the list changes
@@ -146,4 +171,4 @@ RightPane.propTypes = {
   removeFile: PropTypes.func.isRequired,
 };
 
-export default FileDialogComponent;
+export default withSnackbar(FileDialog);

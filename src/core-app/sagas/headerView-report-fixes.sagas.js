@@ -78,7 +78,7 @@ function* _report() {
       );
     }
     // 🚧 WIP
-    throw error;
+    throw new SagasError(error);
     // yield put(
     // computeEventError({ message: error.message, feature: HEADER_VIEW }),
     // );
@@ -86,15 +86,15 @@ function* _report() {
 }
 
 function* _scheduleValidation(action) {
+  if (typeof action === 'undefined') {
+    console.warn(`Report sagas recieved undefined action`);
+  }
   if (DEBUG) {
     console.debug(
       '%cheaderView-report.sagas received an action',
       colors.orange,
     );
     console.dir(action);
-  }
-  if (typeof action === 'undefined') {
-    throw new SagasError('undefined action');
   }
 
   try {
@@ -148,6 +148,7 @@ function* _scheduleValidation(action) {
         break;
     }
   } catch (e) {
+    console.error(e);
     throw new SagasError(e);
   }
   // scrappy fix to deal with async timing

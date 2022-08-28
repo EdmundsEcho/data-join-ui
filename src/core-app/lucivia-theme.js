@@ -249,6 +249,10 @@ export default createTheme({
               '& thead tr th[class*=nullsCell]': { width: '10%' },
               '& thead tr th[class*=toggleDetailCell]': { width: '40px' },
             },
+            '&.headerView td > .Luci-field.fieldname > p': {
+              textAlign: 'left',
+              fontSize: '1.0vw',
+            },
             '&.headerView, &.factorNames': {
               '& .MuiTableCell-head': {
                 backgroundColor: theme.palette.secondary.superLight,
@@ -457,15 +461,6 @@ export default createTheme({
               float: 'left',
               width: `90%`,
             },
-          },
-          // see also parent MuiTableContainer DirectoryView (parent)
-          '&.Luci-DirectoryView': {
-            marginBottom: 'auto', // 🛈  this when parent is block?
-            flex: 1, // 🛈  this when parent is flex
-            overflow: 'inherit',
-            // height: 'calc(100vh - 244px)',
-            // 234 = footer: 122, appBar: 48, searchBar: 64
-            // margin of error provided by last row padding
           },
         },
       },
@@ -1602,6 +1597,7 @@ export default createTheme({
             flex: 1,
             overflow: 'inherit',
             marginRight: theme.spacingFn(3), // ⬜ match parent that set left
+            fontSize: '1.1vw', // ⬜ match parent that set left
           },
         }),
       },
@@ -1669,7 +1665,6 @@ export default createTheme({
           '&.Luci-HeaderViews': {
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
             marginLeft: theme.spacingFn(3),
             marginRight: theme.spacingFn(3),
             boxShadow: 'none',
@@ -1685,15 +1680,18 @@ export default createTheme({
             marginBottom: theme.spacingFn(3),
             paddingTop: theme.spacingFn(3),
             paddingBottom: theme.spacingFn(5),
-            paddingLeft: theme.spacingFn(5),
-            paddingRight: theme.spacingFn(5),
+            paddingLeft: theme.spacingFn(7),
+            paddingRight: theme.spacingFn(7),
             boxShadow: theme.shadows[1],
             '& .detail': {
               borderRadius: 0,
               boxShadow: 'none',
               marginTop: theme.spacingFn(3),
+              padding: 0,
             },
-            '& .summary': {},
+            '& .summary': {
+              padding: `${theme.spacingFn(3)} ${theme.spacingFn(4)}`,
+            },
           },
           //---------------------------------------------------------------------
           // EtlUnitBase & GroupBase (Card)
@@ -1924,14 +1922,17 @@ export default createTheme({
         root: ({ theme }) => ({
           '&.Luci-ButtonGroup-purpose': {
             justifyContent: 'center',
-            '& > button': {
+            flexWrap: 'wrap',
+            marginRight: '-5px',
+            marginLeft: '-5px',
+            '& .Luci-Button': {
               display: 'inline-block',
-              fontSize: '1.4vw',
+              fontSize: '1.0vw',
               fontFamily: 'Raleway',
               borderRadius: '50%',
               cursor: 'pointer',
-              height: '2.0vw',
-              width: '2.0vw',
+              height: '1.44vw',
+              width: '1.44vw',
               marginLeft: '1px',
               marginRight: '1px',
               padding: 0,
@@ -1966,11 +1967,11 @@ export default createTheme({
     //--------------------------------------------------------------------------
     MuiButton: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           padding: '0',
           minWidth: '10px',
           textTransform: 'none',
-        },
+        }),
       },
     },
     //----------------------------------------------------------------------------
@@ -1980,7 +1981,24 @@ export default createTheme({
       },
       styleOverrides: {
         root: ({ theme }) => ({
-          '&.Luci-ButtonBase': {
+          '&.Luci-button.error-flag': {
+            marginTop: theme.spacing(5),
+            marginBottom: theme.spacing(0),
+            marginLeft: theme.spacing(3),
+            color: theme.palette.error.main,
+            '&.animated': {
+              width: '30px',
+              height: '30px',
+            },
+            '&.static': {
+              width: '25px',
+              height: '25px',
+            },
+            '&.hidden': {
+              display: 'none',
+            },
+          },
+          /* '&.Luci-ButtonBase': {
             '& button': {
               borderRadius: `3px`,
               marginTop: theme.spacingFn(1),
@@ -2001,7 +2019,7 @@ export default createTheme({
                 },
               },
             },
-          },
+          }, */
         }),
       },
     },
