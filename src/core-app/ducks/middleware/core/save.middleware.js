@@ -11,9 +11,9 @@ import { PERSIST } from 'redux-persist';
 import { saveStore as saveStoreApi } from '../../../../services/dashboard.api';
 
 import {
-  setCacheStatusStale,
-  setLastSavedOn,
   setSaveStatus,
+  setReduxToSaved,
+  META,
   SAVE_STATUS,
   SAVE_PROJECT, // flush the save machine
   Actions as MetaActions,
@@ -85,9 +85,7 @@ const middleware = (projectId) => {
                 next(redirect('/login'));
                 return;
               }
-              next(setCacheStatusStale());
-              next(setSaveStatus(SAVE_STATUS.idle));
-              next(setLastSavedOn());
+              next(setReduxToSaved());
 
               if (typeof action?.callback === 'function') {
                 action.callback(response);
@@ -98,7 +96,7 @@ const middleware = (projectId) => {
             next(
               setNotification({
                 message: e?.message ?? 'Save-store error',
-                feature: 'SAVE_STORE',
+                feature: META,
               }),
             );
           }
@@ -149,6 +147,7 @@ function saveReduxManager(saveRoutine, waitingPeriod = 7000) {
 
   // function that generates side-effects with each new action
   return (action) => {
+    console.debug(`currentState: ${currentState}`);
     if (action.type === SAVE_PROJECT) {
       save(delayEngine);
     } else if (saveNow(action.type)) {

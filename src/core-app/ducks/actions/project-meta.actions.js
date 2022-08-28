@@ -20,11 +20,13 @@ export const SAVE_STATUS = {
 
 // feature
 export const META = '[Meta]';
+export const feature = META;
 
 // export const SET_PROJECT_ID = `${META} SET_PROJECT_ID`; // never use
 export const SET_CACHE_STATUS = `${META} SET_CACHE_STATUS`; // document
 export const SET_LAST_SAVED_ON = `${META} SET_LAST_SAVED_ON`; // document
 export const SET_SAVE_STATUS = `${META} SET_SAVE_STATUS`; // document
+export const SET_REDUX_TO_SAVED = `${META} SET_REDUX_TO_STATUS_SAVED`; // document
 
 export const RESET = `${META} RESET`; // document
 export const CLEAR_INITIALIZING_ACTIONS = `${META} CLEAR_INITIALIZING_ACTIONS`; // document
@@ -48,6 +50,10 @@ export const setSaveStatus = (value) => ({ type: SET_SAVE_STATUS, value });
 
 // External Cache
 export const setCacheStatus = (value) => ({ type: SET_CACHE_STATUS, value });
+
+export const setReduxToSaved = () => ({
+  type: SET_REDUX_TO_SAVED,
+});
 
 export const setCacheStatusStale = () => ({
   type: SET_CACHE_STATUS,

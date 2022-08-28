@@ -10,20 +10,21 @@
  *
  */
 
-import { PERSIST, PURGE } from 'redux-persist';
+import { PURGE } from 'redux-persist';
 
 import { MissingProjectIdError } from '../lib/LuciErrors';
 import createReducer from '../utils/createReducer';
 
 import {
   CLEAR_INITIALIZING_ACTIONS,
+  SET_REDUX_TO_SAVED,
   SET_LAST_SAVED_ON,
   SET_CACHE_STATUS,
   SET_SAVE_STATUS,
   SAVE_PROJECT,
-  CACHE_STATUS,
   SAVE_STATUS,
   RESET,
+  CACHE_STATUS,
   setSaveStatus,
 } from './actions/project-meta.actions';
 
@@ -91,16 +92,20 @@ export const seedProjectState = (projectId) => ({
 const reducer = createReducer(initialState, {
   // do not change meta data
   RESET: (state) => state,
-  // set once during initialization; otherwise immutable
-  /* [SET_PROJECT_ID]: (state, { projectId }) => ({
-    ...state,
-    projectId,
-  }), */
   [CLEAR_INITIALIZING_ACTIONS]: (state) => ({
     ...state,
     meta: {
       ...state.meta,
       initializingActions: [setSaveStatus(SAVE_STATUS.idle)],
+    },
+  }),
+  [SET_REDUX_TO_SAVED]: (state) => ({
+    ...state,
+    meta: {
+      ...state.meta,
+      saveStatus: SAVE_STATUS.idle,
+      cacheStatus: CACHE_STATUS.stale,
+      lastSavedOn: Date.now(),
     },
   }),
   [SET_CACHE_STATUS]: (state, { value }) => ({
