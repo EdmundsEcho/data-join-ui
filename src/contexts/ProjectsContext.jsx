@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, createContext } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { withSnackbar } from 'notistack';
-
 import {
   addNewProject as addNewApi,
   deleteProject as deleteApi,
@@ -21,10 +19,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 export const Context = createContext();
 Context.displayName = 'Projects-Context';
 
-const Provider = (props) => {
-  //
-  // 📌 wrapped on export
-  const { enqueueSnackbar, children } = props;
+const Provider = ({ children }) => {
   /**
    * fetch data
    * callback: set the initial value of the cache
@@ -37,7 +32,6 @@ const Provider = (props) => {
     cache: data,
   } = useFetchApi({
     fetchFn: fetchAllApi,
-    enqueueSnackbar,
     DEBUG,
   });
 
@@ -108,10 +102,9 @@ const Provider = (props) => {
 Provider.displayName = 'ProjectContext-Provider';
 
 Provider.propTypes = {
-  enqueueSnackbar: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
 };
 
 Provider.defaultProps = {};
 
-export default withSnackbar(Provider);
+export default Provider;

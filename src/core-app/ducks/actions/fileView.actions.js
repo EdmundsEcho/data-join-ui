@@ -14,6 +14,7 @@ export { STATUS } from '../../lib/sum-types';
 
 // feature
 export const FILEVIEW = '[FileView]';
+export const feature = FILEVIEW;
 
 export const READ_DIR_START = `${FILEVIEW} READ_DIR_START`; // command
 export const READ_DIR_SUCCESS = `${FILEVIEW} READ_DIR_SUCCESS`; // event

@@ -83,6 +83,10 @@ export const initialState = {
 // These functions should reflect what is defined in the `initialState`.
 //------------------------------------------------------------------------------
 export const getHeaderViews = (stateFragment) => stateFragment.headerViews;
+/**
+ * @function
+ * @return {Array}
+ */
 export const getSelected = (stateFragment) => stateFragment.selected;
 
 export const isFileSelected = (stateFragment, path) => {
@@ -486,6 +490,7 @@ export const reportHvsFixesP = ({
         .return(),
     timeout,
     DEBUG,
+    'hvs fix report', // caller tag
   );
   return result;
 };

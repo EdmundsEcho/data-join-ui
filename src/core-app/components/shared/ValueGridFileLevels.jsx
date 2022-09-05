@@ -149,13 +149,16 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
   // ... more generally, unify the wide etl view with what it
   //     the data presents when stacked with RAW
   //
-  let isDerivedField =
-    (getValue('map-files')?.arrows ?? false) || fieldType === FIELD_TYPES.WIDE;
+  const hasArrows = getValue('map-files')?.arrows ?? false;
 
-  console.assert(
-    (selectionModel.type === 'levels' && isDerivedField) || !isDerivedField,
-    `The assertion failed: levels missing for derived: ${isDerivedField}`,
-  );
+  let isDerivedField = hasArrows || fieldType === FIELD_TYPES.WIDE;
+
+  if (!selectionModel.type === 'levels' && !isDerivedField && isDerivedField) {
+    console.warn(
+      `The assertion failed - model ${selectionModel.type} isDerived: ${isDerivedField} hasArrows: ${hasArrows}`,
+    );
+    console.dir(getValue('map-files'));
+  }
   isDerivedField = selectionModel.type === 'levels';
 
   return (

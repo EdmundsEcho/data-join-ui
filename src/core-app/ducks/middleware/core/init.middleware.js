@@ -11,13 +11,13 @@
  * @category middleware
  *
  */
-import { purgeStoredState } from 'redux-persist';
-import { persistConfig } from '../../../redux-persist-cfg';
+import { purgePersistedState, clearIdb } from '../../../redux-persist-cfg';
 
 import { getInitializingActions } from '../../rootSelectors';
 
 // -----------------------------------------------------------------------------
 const DEBUG =
+  true ||
   process.env.REACT_APP_DEBUG_DASHBOARD === 'true' ||
   process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 // -----------------------------------------------------------------------------
@@ -25,40 +25,40 @@ const DEBUG =
 
 const middleware = (projectId) => {
   // ------------------------------
+  // singleton for a given project
   let initializationLatch = 'OPEN';
   // ------------------------------
+
   return ({ getState }) =>
     (next) =>
-    async (action) => {
+    (action) => {
       //
       if (DEBUG) {
         console.info('%c🟢 start of middleware cycle', 'color:orange');
         console.info(`loaded init.middleware: ${projectId}`);
       }
-
       if (initializationLatch === 'CLOSED') {
-        console.info(`%c 📌 CLOSED`, 'color.orange');
+        if (DEBUG) console.info(`%c 📌 CLOSED`, 'color.orange');
+        // --------------------------
         next(action);
+        // --------------------------
         return;
       }
 
       console.info(`%c 👉 👉 OPEN`, 'color.orange');
-      initializationLatch = 'CLOSED';
 
-      // clear the user-agent's persisted state
-      try {
-        await purgeStoredState(persistConfig);
-        await purgeStoredState(persistConfig);
-      } catch (e) {
-        console.error(`Failed to purge local state`);
-        console.dir(e);
-      }
-
-      const initializingActions = getInitializingActions(getState()) || [];
-      initializingActions.forEach(next);
-      next({ type: 'PING' });
-
-      next(action);
+      // Initialize when OPEN
+      // clearIdb().then(() => {
+      purgePersistedState().then(() => {
+        initializationLatch = 'CLOSED';
+        console.info(`%cCleared the LOCAL STORAGE`, 'color.yellow');
+        // introduce initializing actions (before next state)
+        const initializingActions = getInitializingActions(getState()) || [];
+        initializingActions.forEach(next);
+        // --------------------------
+        next(action);
+        // --------------------------
+      });
     };
 };
 

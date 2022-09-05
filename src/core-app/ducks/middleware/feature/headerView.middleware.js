@@ -69,6 +69,10 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 
 const MAX_TRIES = 15;
 
+// retrieve helpers for the headerView response
+const { isValid, getData, getApiError } =
+  ServiceConfigs[getServiceType(HEADER_VIEW)].response;
+
 /* --------------------------------------------------------------------------- */
 /**
  * Receives commands from the ui. Dispatches actions to api. Does not dispatch
@@ -85,20 +89,21 @@ const middleware =
     if (DEBUG) {
       console.info(`👉 loaded headerView.middleware: ${projectId}`);
     }
-
     if (action.type === 'PING')
       console.log(
         `%cPING recieved by headerView.middleware`,
         colors.light.purple,
       );
 
-    // retrieve helpers for the headerView response
-    const { isValid, getData, getApiError } =
-      ServiceConfigs[getServiceType(HEADER_VIEW)].response;
-
     // dispatch the current action in action.type with the closure that is
     // about to be returned.
     next(action);
+
+    if (!Object.keys(action).includes('type')) {
+      console.error(`headerView middleware skipped an action without a type`);
+      console.error(action);
+      return;
+    }
 
     switch (action.type) {
       // -------------------------------------------------------------------------

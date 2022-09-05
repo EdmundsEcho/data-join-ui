@@ -11,8 +11,8 @@
  */
 import createReducer from '../utils/createReducer';
 import {
-  TYPES, // original, no-middleware event design
   SET_TREE,
+  RESET_TREE,
   SET_NODE_STATE,
   SET_CHILDIDS,
   SET_DRAGGED_ID,
@@ -21,13 +21,20 @@ import {
   SET_COMP_VALUES,
   SET_GROUP_SEMANTIC,
   TAG_WAREHOUSE_STATE,
+  TOGGLE_VALUE,
+  TOGGLE_REDUCED,
+  UPDATE_ETLUNIT_TEXT,
 } from './actions/workbench.actions';
-import { SET_MATRIX, SET_MATRIX_CACHE } from './actions/matrix.actions';
+import {
+  SET_MATRIX,
+  SET_MATRIX_CACHE,
+  TAG_MATRIX_STATE,
+} from './actions/matrix.actions';
 import { RESET } from './actions/project-meta.actions';
 
 import { Tree } from '../lib/obsEtlToMatrix/tree';
 
-import { NODE_TYPES, PURPOSE_TYPES } from '../lib/sum-types';
+import { NODE_TYPES, PURPOSE_TYPES, ETL_UNIT_TYPES } from '../lib/sum-types';
 import { InputError } from '../lib/LuciErrors';
 import { removeProp } from '../utils/common';
 
@@ -41,7 +48,8 @@ const initialState = {
   tree: {},
   matrix: null, // hosts a paged view
   nowDragging: null, // supports dnd rendering
-  hostedWarehouseState: 'STALE', // STALE | CURRENT | RENAME
+  hostedWarehouseState: 'STALE', // STALE | CURRENT | RENAME (no structural change)
+  hostedMatrixState: 'STALE', // STALE | CURRENT | RENAME (no structural change)
 };
 
 // ------------------------------------------------------------------------------
@@ -52,15 +60,25 @@ const initialState = {
  * `initialState` for this state fragment.
  *
  */
-export const isHostedWarehouseStateStale = (stateFragment) =>
+export const isHostedWarehouseStale = (stateFragment) =>
   stateFragment.hostedWarehouseState === 'STALE';
 export const getMatrix = (stateFragment) => stateFragment.matrix;
 export const getRequest = (stateFragment) => stateFragment.matrix;
 export const getSelectedEtlUnits = (stateFragment) => stateFragment.selected;
 export const getPalette = (stateFragment) => stateFragment.palette;
 export const getTree = (stateFragment) => stateFragment?.tree ?? {};
+
+/**
+ * Predicate - computed tree
+ * @function
+ * @return {bool}
+ */
 export const isWorkbenchInitialized = (stateFragment) =>
   Object.keys(stateFragment.tree).length > 0;
+
+export const isHostedMatrixStale = (stateFragment) =>
+  stateFragment.hostedMatrixState === 'STALE';
+
 export const isCanvasDirty = (stateFragment) => {
   return Object.keys(stateFragment.tree).length === 0
     ? false
@@ -68,6 +86,33 @@ export const isCanvasDirty = (stateFragment) => {
         (node) => node.type === NODE_TYPES.CANVAS && node.height === 4,
       ).length > 0;
 };
+
+// -----------------------------------------------------------------------------
+// Validating the request spec
+// -----------------------------------------------------------------------------
+const validateRequestSpec = (tree) => {
+  // filter the node type = "canvas", height = 4
+  const filter = ({ type, height }) =>
+    type === NODE_TYPES.CANVAS && height === 4;
+  const canvasLeafNodes = Object.values(tree).filter(filter);
+  // find the required data types
+  const isQuality = ({ data }) => data.type === ETL_UNIT_TYPES.quality;
+  const isMeasurement = ({ data }) => data.type === ETL_UNIT_TYPES.mvalue;
+  //
+  return {
+    hasSubjectUniverse: () => canvasLeafNodes.findIndex(isQuality) !== -1,
+    hasMeasurement: () => canvasLeafNodes.findIndex(isMeasurement) !== -1,
+  };
+};
+export const runRequestSpecValidations = (stateFragment) => {
+  // cache
+  const validator = validateRequestSpec(stateFragment.tree);
+
+  return [validator.hasSubjectUniverse(), validator.hasMeasurement()].every(
+    (didPass) => didPass,
+  );
+};
+// -----------------------------------------------------------------------------
 export const selectPaletteGroup = (stateFragment) => stateFragment.paletteGroup;
 /**
  * Pulls what is required to render an EtlUnit in relation to the state of the
@@ -650,14 +695,6 @@ const reducer = createReducer(initialState, {
   [RESET]: () => initialState,
 
   // debugging utility
-  RESET_TREE: (state) => {
-    return {
-      ...state,
-      tree: {},
-    };
-  },
-
-  // debugging utility
   PING: (state) => {
     console.log(`PING from redux workbench.reducer`);
     return state;
@@ -687,13 +724,6 @@ const reducer = createReducer(initialState, {
       },
     };
   },
-  RESET_MATRIX: (state) => {
-    return {
-      ...state,
-      matrix: null,
-    };
-  },
-
   // dispatched by workbench.middleware
   [TAG_WAREHOUSE_STATE]: (state, { payload }) => {
     return {
@@ -701,25 +731,12 @@ const reducer = createReducer(initialState, {
       hostedWarehouseState: payload,
     };
   },
-
   // dispatched by workbench.middleware
-  [SET_MATRIX_CACHE]: (state, { payload, meta }) => {
-    const newState = {
-      ...state.tree[meta.id],
-      data: {
-        ...state.tree[meta.id].data,
-        cache: payload,
-      },
+  [TAG_MATRIX_STATE]: (state, { payload }) => {
+    return {
+      ...state,
+      hostedMatrixState: payload,
     };
-    return meta?.id
-      ? {
-          ...state,
-          tree: {
-            ...state.tree,
-            [meta.id]: newState,
-          },
-        }
-      : state;
   },
 
   // dispatched by workbench.middleware
@@ -737,6 +754,7 @@ const reducer = createReducer(initialState, {
       tree: payload,
     };
   },
+  [RESET_TREE]: () => initialState,
 
   // dispatched by workbench.middleware
   [SET_NODE_STATE]: (state, { payload }) => {
@@ -761,7 +779,7 @@ const reducer = createReducer(initialState, {
       },
     };
   },
-  [TYPES.UPDATE_ETLUNIT_TEXT]: (state, { cardIdentifier, text }) => {
+  [UPDATE_ETLUNIT_TEXT]: (state, { cardIdentifier, text }) => {
     return {
       ...state,
       selected: {
@@ -799,7 +817,7 @@ const reducer = createReducer(initialState, {
   // valueOrId :: number | string -> change a single value to isSelected
   // valueOrId :: Array empty -> set __ALL__ using isSelected
   //
-  [TYPES.TOGGLE_VALUE]: (state, { id, valueOrId, identifier, isSelected }) => {
+  [TOGGLE_VALUE]: (state, { id, valueOrId, identifier, isSelected }) => {
     //
     // 🔖 retrieve the node values; method depends on Component vs Quality
     //    store the keys required to update the specific comp node
@@ -916,10 +934,7 @@ const reducer = createReducer(initialState, {
   //    (the component is "is reduced out" of the measurement).
   //
   //
-  [TYPES.TOGGLE_REDUCED]: (
-    state,
-    { id, valueOrId, identifier: componentName },
-  ) => {
+  [TOGGLE_REDUCED]: (state, { id, valueOrId, identifier: componentName }) => {
     const updateType = ['number'].includes(typeof valueOrId)
       ? PURPOSE_TYPES.MSPAN
       : PURPOSE_TYPES.MCOMP;
@@ -1011,6 +1026,31 @@ const reducer = createReducer(initialState, {
     return {
       ...state,
       matrix: payload,
+    };
+  },
+  // dispatched by workbench.middleware
+  [SET_MATRIX_CACHE]: (state, { payload, meta }) => {
+    const newState = {
+      ...state.tree[meta.id],
+      data: {
+        ...state.tree[meta.id].data,
+        cache: payload,
+      },
+    };
+    return meta?.id
+      ? {
+          ...state,
+          tree: {
+            ...state.tree,
+            [meta.id]: newState,
+          },
+        }
+      : state;
+  },
+  RESET_MATRIX: (state) => {
+    return {
+      ...state,
+      matrix: null,
     };
   },
 });

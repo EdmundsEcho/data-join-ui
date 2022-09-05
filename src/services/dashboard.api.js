@@ -80,7 +80,7 @@ export async function saveStore({ projectId, store }) {
  * @projects_blueprint.route("/v1/project-store/<project_id>",
  *   methods=['GET', 'POST'])
  */
-export async function fetchStore(projectId = undefined) {
+export function fetchStore(projectId, normalizer) {
   //
   console.debug(`Load project store: ${projectId}`);
   //
@@ -90,6 +90,7 @@ export async function fetchStore(projectId = undefined) {
   const axiosOptions = {
     url: `/project-store/${projectId}`,
     method: 'GET',
+    transformResponse: normalizer,
   };
   //
   if (DEBUG) {
@@ -100,6 +101,8 @@ export async function fetchStore(projectId = undefined) {
   }
   return apiInstance(axiosOptions);
 }
+export const fetchStoreCurry = (normalizer) => (projectId) =>
+  fetchStore(projectId, normalizer);
 
 /**
  * @KM: test endpoints

@@ -11,8 +11,8 @@
  *      ✅ ValueGridCore
  *         - provides the data-fetching interface
  *            - external capacity to leverage usePagination
- *            - Provides state required to manage paging and filtering
- *            - Baseline configuration (e.g., min column spec)
+ *            - state required to manage paging and filtering
+ *            - baseline configuration (e.g., min column spec)
  *
  *         👉 ValueGridInner
  *            - Fixed layout (composition of custom components)

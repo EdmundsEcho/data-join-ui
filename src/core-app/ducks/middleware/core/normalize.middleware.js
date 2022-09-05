@@ -6,6 +6,7 @@
  */
 /* eslint-disable no-console */
 import { dataNormalized, NORMALIZE } from '../../actions/data.actions';
+import { MiddlewareError } from '../../../lib/LuciErrors';
 // import { colors } from '../../../constants/variables';
 
 /**
@@ -46,7 +47,12 @@ const normalizeMiddleware =
       console.info('loaded normalize.middleware');
     }
     //-----------------------------------------------------------------------------
-
+    if (!action || !Object.keys(action).includes('type')) {
+      throw new MiddlewareError(`Normalizer with invalid action`);
+    }
+    if (Array.isArray(action)) {
+      throw new MiddlewareError(`Normalizer: unexpected action type Array`);
+    }
     // content-aware filter
     // action interface: { payload, meta: {feature, normalizer} }
     if (

@@ -3,9 +3,20 @@
 /**
  * @module sagas/matrix.sagas
  *
+ * Services
+ *
+ * 👉 matrix: use the apiFetch to initialize polling (pull data from warehouse)
+ * 👉 build the spec using the graphql server (multiple calls)
  *
  */
-import { all, call, put, takeLatest, select } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  put,
+  getContext,
+  select,
+  takeLatest,
+} from 'redux-saga/effects';
 import {
   MATRIX,
   FETCH_MATRIX,
@@ -13,17 +24,20 @@ import {
   setMatrixCache,
 } from '../ducks/actions/matrix.actions';
 import { setNotification } from '../ducks/actions/notifications.actions';
-import { apiFetch } from '../ducks/actions/api.actions';
 
+// -----------------------------------------------------------------------------
+// 📡
+// direct calls to fetch (see api MATRIX)
+//
 import {
-  fetchMatrixSpec, // generates the matrix request
-  fetchRequestFieldNames, // preview field names
+  fetchMatrixSpec as fetchMatrixSpecInner, // generates the matrix request
+  fetchRequestFieldNames as fetchFieldNamesInner, // preview field names
 } from '../services/api';
-import { range } from '../utils/common';
-
+// indirect - fetch by way of api polling-machine
+import { apiFetch } from '../ducks/actions/api.actions';
+// -----------------------------------------------------------------------------
+import { setUiLoadingState } from '../ducks/actions/ui.actions';
 import * as UT from './sagas.helpers';
-
-import { setLoader } from '../ducks/actions/ui.actions';
 
 import {
   requestFromTree,
@@ -32,7 +46,8 @@ import {
   dedupMeaExpressions,
 } from '../lib/obsEtlToMatrix/matrix-request';
 
-import { SagasError } from '../lib/LuciErrors';
+import { SagasError, InvalidStateError } from '../lib/LuciErrors';
+import { range } from '../utils/common';
 import { colors } from '../constants/variables';
 
 //------------------------------------------------------------------------------
@@ -42,6 +57,18 @@ const COLOR = colors.light.blue;
 /* eslint-disable no-console */
 
 const MAX_TRIES = 20;
+
+// ⬜ is it project_id or projectId???
+const fetchRequestFieldNames =
+  (projectId) =>
+  (...args) =>
+    fetchFieldNamesInner(projectId, ...args);
+
+// ⬜ is it project_id or projectId???
+const fetchMatrixSpec =
+  (projectId) =>
+  (...args) =>
+    fetchMatrixSpecInner(projectId, ...args);
 
 if (DEBUG) {
   console.info(`%c👉 matrix.sagas`, COLOR);
@@ -56,6 +83,7 @@ function* _queueMatrixCache({ payload }) {
       }),
     );
     const flatTree = yield select((state) => state.workbench.tree);
+    const { projectId } = yield getContext('projectId');
     const { id, displayType } = payload;
 
     // requestFromNode depends on id and displayType hosted in payload
@@ -64,7 +92,7 @@ function* _queueMatrixCache({ payload }) {
     // ⌛ request for gql obs service
     const requestFragments = yield fetchFragmentedRequest(
       request,
-      fetchRequestFieldNames,
+      fetchRequestFieldNames(projectId),
     );
 
     //
@@ -92,10 +120,24 @@ function* _queueMatrixCache({ payload }) {
  * Pull the configuration made using the workbench to generate the request.
  * Requires using graphql to complete the build. Forward the request to the
  * spec to the tnc-py backend: the data (warehouse -> matrix).
+ *
+ * ⬜ review how throw/catch error
+ *
  */
-function* _queueMatrixRequest() {
+function* _queueMatrixRequest(action) {
   try {
-    yield put(setLoader({ toggle: true, feature: MATRIX }));
+    yield put(
+      setUiLoadingState({
+        toggle: true,
+        feature: MATRIX,
+        message: 'Queued the matrix request',
+      }),
+    );
+    //
+    const projectId = yield getContext('projectId');
+    if (projectId !== action.projectId) {
+      throw new InvalidStateError(`matrix saggas: project missmatch`);
+    }
 
     const request = yield buildMatrixSpec();
     // NEW - engage the polling api
@@ -105,7 +147,11 @@ function* _queueMatrixRequest() {
         {
           // ::event
           meta: { uiKey: 'matrix', feature: MATRIX },
-          request: { spec: request, maxTries: MAX_TRIES },
+          request: {
+            project_id: projectId,
+            spec: request,
+            maxTries: MAX_TRIES,
+          },
         }, // map + translation
       ),
     );
@@ -128,6 +174,7 @@ function* buildMatrixSpec() {
     // 👉 Pull the tree from state
     //
     const flatTree = yield select((state) => state.workbench.tree);
+    const projectId = yield getContext('projectId');
     //
     // 👉 transform: tree -> request for gql obs service
     //
@@ -147,7 +194,7 @@ function* buildMatrixSpec() {
     // ⬜ This final processing could be done by tnc-py
     let requestFragments = yield fetchFragmentedRequest(
       request,
-      fetchMatrixSpec,
+      fetchMatrixSpec(projectId),
     );
 
     // 🦀 Check if the field count is correct

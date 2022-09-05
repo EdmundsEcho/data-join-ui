@@ -6,28 +6,37 @@
  * @category middleware
  *
  */
-import { PERSIST } from 'redux-persist';
+import { FLUSH } from 'redux-persist';
 
 import { saveStore as saveStoreApi } from '../../../../services/dashboard.api';
+import debounce from '../../../utils/debounce';
 
 import {
-  setSaveStatus,
-  setReduxToSaved,
   META,
-  SAVE_STATUS,
   SAVE_PROJECT, // flush the save machine
   Actions as MetaActions,
+  setInitializingActions,
+  saveProject,
+  resetMeta,
 } from '../../actions/project-meta.actions';
 import {
   SET_HVS_FIXES,
   UPDATE_FILEFIELD,
 } from '../../actions/headerView.actions';
+import {
+  ADD_DERIVED_FIELD,
+  DELETE_FIELD,
+  DELETE_DERIVED_FIELD,
+  SET_ETL_VIEW,
+  SET_ETL_FIELD_CHANGES,
+  UPDATE_ETL_FIELD,
+} from '../../actions/etlView.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import { redirect } from '../../actions/ui.actions';
 
-import { getSaveStatus } from '../../rootSelectors';
+import { DesignError } from '../../../lib/LuciErrors';
 
-// import { colors } from '../../../constants/variables';
+import { colors } from '../../../constants/variables';
 
 // -----------------------------------------------------------------------------
 const DEBUG =
@@ -35,7 +44,8 @@ const DEBUG =
   process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
-const SAVE_PROJECT_ON = process.env.REACT_APP_TURN_SAVE_FEATURE_ON === 'true';
+const SAVE_PROJECT_ON =
+  true && process.env.REACT_APP_TURN_SAVE_FEATURE_ON === 'true';
 
 // -----------------------------------------------------------------------------
 // The parts of the store that we save to the server
@@ -44,124 +54,126 @@ export const saveThisState = ({
   notifications,
   modal,
   ui,
+  $_projectMeta: saveWithThisUpdated,
   ...saveThis
-}) => saveThis;
+}) => ({
+  ...saveThis,
+  $_projectMeta: resetMeta(saveWithThisUpdated),
+});
+
+let lastAction;
 // -----------------------------------------------------------------------------
-
-// Middleware that is initialized with the projectId
+//
+// ✅ Initialized with projectId to ensure data integrity
+// ✅ Avoid mutating redux state when saving (e.g., no notifications)
+// ✅ When fail to save, redirects to login with next action: save
+// ✅ Middleware is the last middleware in the middleware cycle
+//
 const middleware = (projectId) => {
+  // ------------------------------
+  // singleton for a given project
   let saveManager;
+  // ------------------------------
 
-  return ({ getState }) =>
+  return ({ getState, dispatch }) =>
     (next) =>
     async (action) => {
       //
       if (DEBUG) {
         console.info(`loaded save.middleware: ${projectId}`);
-        console.info(`%c🏁 END of middleware cycle`, 'color.orange');
+        console.info(`%c🏁 END of middleware cycle`, colors.orange);
       }
-
+      // --------------------------
       next(action);
+      // --------------------------
 
       // The rest of the middleware requires project_id
       if (typeof projectId !== 'undefined' && SAVE_PROJECT_ON) {
         //
-        if (typeof saveManager !== 'undefined') {
-          saveManager(action);
-          return;
-        }
+        switch (true) {
+          //
+          case typeof saveManager !== 'undefined' &&
+            action.type !== SAVE_PROJECT:
+            await saveManager(action);
+            break;
 
-        saveManager = saveReduxManager(async () => {
-          try {
-            const state = getState();
-            if (getSaveStatus(state) !== SAVE_STATUS.saving) {
-              next(setSaveStatus(SAVE_STATUS.saving));
+          // dispatched by the saveManager (and StepBar)
+          case typeof saveManager !== 'undefined' &&
+            action.type === SAVE_PROJECT:
+            try {
+              if (DEBUG) {
+                console.debug(
+                  `%csave middleware lastAction: ${lastAction}`,
+                  colors.yellow,
+                );
+              }
+              const state = getState();
               const response = await saveStoreApi({
                 projectId,
-                store: saveThisState(getState()),
+                store: saveThisState(state),
               });
 
               if (response.status === 401) {
+                next(setInitializingActions([saveProject()]));
                 next(redirect('/login'));
-                return;
               }
-              next(setReduxToSaved());
-
-              if (typeof action?.callback === 'function') {
-                action.callback(response);
-              }
+            } catch (e) {
+              console.error(e);
+              dispatch(
+                setNotification({
+                  message: e?.message ?? 'Error: save store',
+                  feature: META,
+                }),
+              );
             }
-          } catch (e) {
-            console.error(e);
-            next(
-              setNotification({
-                message: e?.message ?? 'Save-store error',
-                feature: META,
-              }),
-            );
-          }
-        }, 10000);
+            break;
 
-        await saveManager(action);
+          //
+          case typeof saveManager === 'undefined': {
+            saveManager = saveReduxManager(() => {
+              dispatch(saveProject());
+            }, 1000);
+            await saveManager(action);
+            break;
+          }
+          default:
+            throw new DesignError(`🚫 Unreachable save.middleware`);
+        }
       }
     };
 };
 
-function saveReduxManager(saveRoutine, waitingPeriod = 7000) {
-  const states = {
-    IDLE: 'IDLE: nothing to do',
-    JOB_DONE: 'JOB_DONE: saved the image and nothing new to save',
-    WAITING_TO_SAVE: 'WAITING_TO_SAVE: waiting for pause in action activity',
-    SAVING: 'SAVING: awaiting completion of the save function',
-  };
+function saveReduxManager(saveFn, delay = 7000) {
+  const save = debounce(saveFn, delay);
 
-  let currentState = states.IDLE;
-  let delayEngine;
-
-  const save = async (delayEngineInner) => {
-    currentState = states.SAVING;
-    clearTimeout(delayEngineInner); // turn off the timer
-    await saveRoutine();
-    currentState = states.JOB_DONE;
-  };
-
-  // every action resets the timer
-  const machine = {
-    [states.IDLE]: () => {
-      // next state
-      currentState = states.WAITING_TO_SAVE;
-      delayEngine = setTimeout(() => save(delayEngine), waitingPeriod);
+  const closure = {
+    trySave: (action) => {
+      if (saveAction(action?.type)) {
+        lastAction = action.type;
+        save();
+      }
     },
-    [states.WAITING_TO_SAVE]: () => {
-      // next state
-      currentState = states.WAITING_TO_SAVE;
-      delayEngine = setTimeout(() => save(delayEngine), waitingPeriod);
-    },
-    [states.JOB_DONE]: () => {
-      // next state
-      currentState = states.WAITING_TO_SAVE;
-      delayEngine = setTimeout(() => save(delayEngine), waitingPeriod);
-    },
-    [states.SAVING]: () => {},
   };
 
-  // function that generates side-effects with each new action
-  return (action) => {
-    console.debug(`currentState: ${currentState}`);
-    if (action.type === SAVE_PROJECT) {
-      save(delayEngine);
-    } else if (saveNow(action.type)) {
-      machine[currentState](action);
-    }
-  };
+  return closure.trySave;
 }
 
 // prefixes that capture the actions::document
-const WHITE_LIST = [UPDATE_FILEFIELD, 'RESET_PENDING_REQUESTS', SET_HVS_FIXES];
-const BLACK_LIST = [Object.values(MetaActions)];
-const PREFIX = ['ADD', 'REMOVE', 'SET'];
+const WHITE_LIST = [
+  UPDATE_FILEFIELD,
+  UPDATE_ETL_FIELD,
+  ADD_DERIVED_FIELD,
+  SET_ETL_VIEW,
+  SET_ETL_FIELD_CHANGES,
+  DELETE_FIELD,
+  DELETE_DERIVED_FIELD,
+  // `${ETL_VIEW} ${SET_LOADER} done`,
+];
+const BLACK_LIST = [...Object.values(MetaActions), '@@INIT'];
+// const PREFIX = ['ADD', 'REMOVE'];
+const PREFIX = [];
 
-function saveNow(actionType) {
+function saveAction(actionType) {
   if (typeof actionType === 'undefined') {
     return false;
   }
@@ -173,9 +185,12 @@ function saveNow(actionType) {
 
   if (DEBUG) {
     const color = guard
-      ? 'color: green; font-weight: bold'
-      : 'color: red; font-weight: bold';
-    console.log(`%c 🎉 about to save: ${actionType} -> save: ${guard}`, color);
+      ? `${colors.green}; font-weight: bold`
+      : `${colors.red}; font-weight: bold`;
+    console.debug(
+      `%c 📋 About to save: ${actionType} -> save: ${guard}`,
+      color,
+    );
   }
 
   return guard;

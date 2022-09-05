@@ -33,20 +33,18 @@
  *    👉 <SubApp>{child}</SubApp> where child is the "core-app"
  *
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useParams } from 'react-router-dom';
-
-import { withSnackbar } from 'notistack';
 
 import {
   // useStatus as useCacheStatus,
   StatusProvider as CacheStatusProvider,
 } from './hooks/use-status-provider';
 import ErrorPage from './pages/ErrorPage';
-import { DesignError } from './core-app/lib/LuciErrors';
+import { FetchStoreError, InvalidStateError } from './core-app/lib/LuciErrors';
 
 // 📖 data
 import { useFetchApi } from './hooks/use-fetch-api';
@@ -54,59 +52,41 @@ import { fetchStore as fetchFn } from './services/dashboard.api';
 import { seedProjectState } from './core-app/ducks/rootSelectors';
 
 // ⚙️  Redux
-import loadStore from './core-app/configuredStore';
+import { initStore } from './core-app/redux-store';
 
 // -----------------------------------------------------------------------------
 const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const SubApp = (props) => {
+// serverResponse and newStore
+// requires a valid serverResponse
+const initialStore = (serverResponse, newStore) => {
+  if (serverResponse === null) {
+    return null;
+  }
+  const { store } = serverResponse;
+  return store === null ? newStore : store;
+};
+
+const SubApp = ({ children }) => {
   // used to initialize middleware
   const { projectId } = useParams();
-  // used to track when the project id has changed
-  const loadedProjectRef = useRef(null);
-
-  const { enqueueSnackbar, children } = props;
-  // const { isStale: isCacheStale, setToLoaded } = useCacheStatus();
+  const newProjectStore = seedProjectState(projectId);
+  const loadedProjectRef = useRef(undefined);
 
   //
   // 📖 data using the fetchApi
   // 💫 🛈
   //
   const {
-    fetch: fetchStoredRedux,
-    cache: initialStore,
+    fetch: fetchServerStore,
+    cache: serverResponse,
     error,
     status: fetchStatus,
     STATUS: FETCH_STATUS,
-    // reset: resetFetchReduxStore,
   } = useFetchApi({
     fetchFn,
-    // 🔖 response includes meta store data:
-    // help validate store and/or determine which normalizing function
-    // to use (help with managing store versions)
-    //
-    // The SubApp only needs the project_id to proceed in the event
-    // the project does not yet already exist.
-    //
-    // 🔑 For new projects: minimum store value with project_id, with flag to
-    //    save the store.
-    //
-    //             v from server
-    normalizer: ({ project_id: savedProjectId, store: maybeStore }) => {
-      console.assert(
-        savedProjectId === projectId,
-        'The store id does not align with the projectId',
-      );
-      // null => newly created project
-      return maybeStore === null ? seedProjectState(projectId) : maybeStore;
-    },
-    // when status.resolved
-    callback: (/* data */) => {
-      loadedProjectRef.current = projectId;
-    },
-    enqueueSnackbar,
     DEBUG,
   });
 
@@ -117,24 +97,23 @@ const SubApp = (props) => {
   //    already has the required Redux state.
   //
   useEffect(() => {
+    let ignore = false;
     try {
-      if (typeof loadedProjectRef !== 'undefined') {
-        fetchStoredRedux(projectId);
-        console.log(`FETCHING from the server b/c loading a new project`);
+      if (projectId !== loadedProjectRef.current && !ignore) {
+        fetchServerStore(projectId);
+        loadedProjectRef.current = projectId;
       }
     } catch (e) {
-      console.error(`🦀 what is this error; how treat? (display on page)`);
-      console.dir(e);
-      throw new DesignError(e);
-    } finally {
-      // anything?
+      throw new FetchStoreError(e);
     }
-
     return () => {
-      loadedProjectRef.current = undefined;
+      ignore = true;
     };
-  }, [projectId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [projectId, fetchServerStore]);
 
+  if (typeof projectId === 'undefined') {
+    return null;
+  }
   // ---------------------------------------------------------------------------
   // report on state of the component
   //
@@ -153,15 +132,14 @@ const SubApp = (props) => {
     console.dir({
       projectInUrl: projectId,
       loadedProjectRef: loadedProjectRef.current,
-      // reloadingProject: reloadingProject(),
       fetchStatus,
-      storeNull: initialStore === null,
-      storeMinValue: Object.keys(initialStore || {}).length === 1,
-      cachedStore: initialStore,
-      storeLocation: 'Provider instantiated here',
+      serverStoreNull: serverResponse?.store === null ?? 'undefined',
+      storeMinValue:
+        Object.keys(initialStore(serverResponse, newProjectStore) || {})
+          .length === 1,
+      cachedStore: serverResponse,
     });
   }
-  // ---------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------
   // Render based on redux cache state
@@ -169,30 +147,38 @@ const SubApp = (props) => {
   switch (fetchStatus) {
     case FETCH_STATUS.IDLE:
     case FETCH_STATUS.PENDING:
-      return <p>...loading</p>;
+      return (
+        <div
+          sx={{
+            mt: '55px',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margins: '10px auto',
+          }}>
+          <i className='spinner spinner-lucivia spinner-lg' />
+        </div>
+      );
 
     case FETCH_STATUS.RESOLVED: {
       //
       // 🎉 Redux Provider
       //
-      // use the initialStore (aka initialState), to generate
-      // the store and persistor used in the Provider
+      // use the initialStore function to return
+      // serverStore | newProjectStore
       //
       // 🔗 see Main to access rendered child
+      // 👉 next: load middleware instantiated with projectId (e.g., init.middleware)
       //
-      // 👉 load middleware instantiated with projectId (e.g., init.middleware)
-      //
-      const { store, persistor } = loadStore(projectId, initialStore);
+      const { store /* persistor */ } = initStore(
+        projectId,
+        initialStore(serverResponse, newProjectStore),
+      );
       Provider.displayName = 'TncReduxStore-Provider';
       loadedProjectRef.current = projectId;
 
-      return (
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            {children}
-          </PersistGate>
-        </Provider>
-      );
+      return <Provider store={store}>{children}</Provider>;
     }
 
     case FETCH_STATUS.REJECTED:
@@ -207,19 +193,14 @@ const SubApp = (props) => {
 };
 
 SubApp.propTypes = {
-  enqueueSnackbar: PropTypes.func,
   children: PropTypes.node.isRequired,
 };
-SubApp.defaultProps = {
-  enqueueSnackbar: undefined,
-};
-
-const SubAppWithSnack = withSnackbar(SubApp);
+SubApp.defaultProps = {};
 
 /* eslint-disable react/jsx-props-no-spreading */
 const SubAppWithCacheStatus = (props) => (
   <CacheStatusProvider>
-    <SubAppWithSnack {...props} />
+    <SubApp {...props} />
   </CacheStatusProvider>
 );
 /* eslint-enable react/jsx-props-no-spreading */

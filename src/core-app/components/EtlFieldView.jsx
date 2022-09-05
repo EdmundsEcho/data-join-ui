@@ -53,11 +53,11 @@ import EtlFieldGroupByFileDialog from './EtlGroupByFileDialog';
 import EtlUnitMeas from './EtlUnitMeas';
 import TextInput from './shared/TextInput';
 import TableCellTrash from './shared/TableCellTrash';
-import LoadingSplash from './LoadingSplash';
+import LoadingSplash from './shared/LoadingSplash';
 
 // ☎️
 import {
-  // buildEtlStart, // action creator that uses sagas (alternative)
+  computeEtlView,
   makeDerivedField,
   removeEtlField,
   renameEtlField,
@@ -66,7 +66,7 @@ import {
 
 // 📖 Left pane data (which also feeds the right pane)
 import {
-  isLoading,
+  isUiLoading,
   getFieldsKeyedOnPurpose,
   // getSubEtlField,
   // getQualEtlFields,
@@ -74,6 +74,8 @@ import {
   getMeaEtlUnits,
   getEtlUnits,
   getEtlViewErrors,
+  getCountSelectedFiles,
+  listOfFieldNameAndPurposeValues,
 } from '../ducks/rootSelectors';
 // lib
 import { getNextDisplayField } from '../lib/filesToEtlUnits/transforms/etl-unit-helpers';
@@ -115,7 +117,14 @@ const rightPaneStyle = {
  * EtlFieldView
  * Display and enable user input to the etl-field level configuration.
  *
- * Deprecate: The form also allows for backtracking via the "edit source" button.
+ * State sequence
+ * 1. step-bar sets ui state to loading
+ * 2. this component renders when both withData and !isUiLoading
+ * 3. middleware processes
+ *
+ * FYI: layers of computation:
+ * 1. from hvs
+ * 2. from pivot(hvs)
  *
  * 📖 etlView (the pivotted data)
  *
@@ -126,31 +135,53 @@ const rightPaneStyle = {
  * ⬜ Refactor/adjust the WithModal to something like withModal hook or HOC.
  *
  */
-const EtlFieldView = () => {
-  const loading = useSelector(isLoading);
-  if (loading) {
-    return <LoadingSplash />;
-  }
-  return (
-    <WithModal ModalComponent={ConfirmModal}>
-      <Top />
-    </WithModal>
-  );
-};
 
-//-----------------------------------------------------------------------------
-// renders Main
-function Top() {
-  //-----------------------------------------------------------------------------
-  const stateId = 'etlFieldView';
-
-  // 📬
-  const dispatch = useDispatch();
-
-  // 📖 ... at some point, render each independently.
+function EtlFieldView() {
+  // the ui state depends on changes to hvs (headerViews)
+  // isLoading flag: middleware knows when hvs has changed and
+  // sets ui to loading accordingly.
+  const { isLoading } = useSelector(isUiLoading);
+  // view version of the data
+  const fileCount = useSelector(getCountSelectedFiles);
   const fieldsKeyedOnPurpose = useSelector(
     (state) => getFieldsKeyedOnPurpose(state, true), // useLean sources
   );
+
+  // 💢 coordinate display with data
+  // compute (fetch) the data
+  // refresh every time isLoading changes (flag for hvs changes)
+  const dispatch = useDispatch();
+  useEffect(() => dispatch(computeEtlView()), [isLoading, dispatch]);
+
+  // const isValidData = Object.keys(fieldsKeyedOnPurpose).length > 0;
+
+  if (isLoading) {
+    return (
+      <LoadingSplash
+        title='Building the stack'
+        message={`Processing ${fileCount} files`}
+      />
+    );
+  }
+  return (
+    <WithModal ModalComponent={ConfirmModal}>
+      <Top data={fieldsKeyedOnPurpose} />
+    </WithModal>
+  );
+}
+
+// constants for Top
+const dummySeedData = {
+  purpose: PURPOSE_TYPES.QUALITY,
+  etlUnit: null, // etlUnit name
+};
+//-----------------------------------------------------------------------------
+// renders Main
+// reactive: data
+function Top({ data: fieldsKeyedOnPurpose }) {
+  //-----------------------------------------------------------------------------
+  const stateId = 'etlFieldView';
+  const dispatch = useDispatch();
 
   const [subEtlField] = fieldsKeyedOnPurpose.subject;
   const qualEtlFields = fieldsKeyedOnPurpose.quality;
@@ -179,6 +210,7 @@ function Top() {
   */
   const etlUnits = useSelector(getEtlUnits, shallowEqual);
   const meaEtlUnits = useSelector(getMeaEtlUnits, shallowEqual);
+  const listNameAndPurpose = useSelector(listOfFieldNameAndPurposeValues);
   const etlViewErrors = useSelector(getEtlViewErrors);
   const hasEtlViewErrors =
     typeof etlViewErrors !== 'undefined' && etlViewErrors.length > 0;
@@ -192,21 +224,7 @@ function Top() {
     meaRelatedEtlFields, // : [field]
   );
 
-  // validation input for renaming an etl field
-  // ⬜ move to lib?
-  //    issue, sending etl data to the file state slice
-  const listOfFieldNameAndPurposeValues = useMemo(
-    () => [
-      [subEtlField.name, 'subject'],
-      ...qualEtlFieldsView.map((field) => [field.name, PURPOSE_TYPES.QUALITY]),
-      ...meaRelatedEtlFieldsView.map((field) => [field.name, field.purpose]),
-    ],
-    [meaRelatedEtlFieldsView, qualEtlFieldsView, subEtlField.name],
-  );
-  const listOfFieldNames = useMemo(
-    () => listOfFieldNameAndPurposeValues.map((entry) => entry[0]),
-    [listOfFieldNameAndPurposeValues],
-  );
+  const listOfFieldNames = listNameAndPurpose.map((entry) => entry[0]);
 
   // ---------------------------------------------------------------------------
   // Feature:
@@ -244,18 +262,10 @@ function Top() {
     [meaRelatedEtlFields, subEtlField.sources],
   );
 
-  const dummySeedData = useMemo(
-    () => ({
-      purpose: PURPOSE_TYPES.QUALITY,
-      etlUnit: null, // etlUnit name
-    }),
-    [],
-  );
-
   const [newFieldSeedData, setNewFieldSeedData] = useState(() => dummySeedData);
   const resetFieldSeedData = useCallback(
     () => setNewFieldSeedData(dummySeedData),
-    [dummySeedData],
+    [],
   );
 
   // ---------------------------------------------------------------------------
@@ -264,31 +274,38 @@ function Top() {
     `${stateId}|selectedFieldName`,
     subEtlField.name,
   );
-  // cache in the event the user old -> new fieldname
+  // cache in the event the user old -> new fieldName
   // 🔖  newFieldName: [oldName, newName]
   const [nextDetailViewArray, setNextDetailViewArray] = usePersistedState(
     `${stateId}|newFieldNameArray`,
     undefined,
   );
 
-  // sync access to which field to put in the detail view
+  //
+  // used by both right and left sides
+  //
+  // Sync access to which field to put in the detail view
+  // This field changes based on user-input && "next best" when deletes
+  // a field.
   const getSelectedFieldName = useCallback(
     (/* selectedFieldName, listOfFieldNames */) => {
       switch (true) {
         // first choice:
         // next detail view set when adding or removing a field
-        // ...with a fallback when in error.
+        // ...with a fallback when in error state.
         case typeof nextDetailViewArray !== 'undefined': {
-          const tmp = hasEtlViewErrors
+          const newName = hasEtlViewErrors
             ? nextDetailViewArray[0] // fallback, revert to the oldName
             : nextDetailViewArray[1]; // proceed with the newName
-          setSelectedFieldName(tmp); // async
+          setSelectedFieldName(newName); // async
           setNextDetailViewArray(undefined);
-          return tmp;
+          return newName;
         }
+
         // next best: the latest user-selected field
         case listOfFieldNames.includes(selectedFieldName):
           return selectedFieldName;
+
         // failsafe: subject field
         default:
           return subEtlField.name;
@@ -307,11 +324,19 @@ function Top() {
 
   // retrieve the field itself from the index of EtlFields
   // 📖 this is my local state
+  //
+  // 🦀 This returns undefined when deleting a field
+  //
   const selectFieldData = useCallback(
-    (fieldName) =>
-      [subEtlField, ...qualEtlFields, ...meaRelatedEtlFields].find(
-        (field) => field.name === fieldName,
-      ),
+    (fieldName) => {
+      const firstTry = [
+        subEtlField,
+        ...qualEtlFields,
+        ...meaRelatedEtlFields,
+      ].find((field) => field.name === fieldName);
+      // hack
+      return typeof firstTry !== 'undefined' ? firstTry : subEtlField;
+    },
     [meaRelatedEtlFields, qualEtlFields, subEtlField],
   );
 
@@ -367,8 +392,10 @@ function Top() {
     [confirmP, etlUnits, listOfFieldNames, setNextDetailViewArray],
   );
 
-  // 💫 ...once the selected field has been moved off of the removed field
-  //    slot, dispatch the removal of the field.
+  // 💫 ...once the selected field has been moved off of the
+  //    removed field slot, dispatch the removal of the field.
+  //    🦀 react 18: calls twice; the second time, may fail only
+  //       when the field is a derived etlField (group-by-file)
   useEffect(() => {
     // 2️⃣  Remove the previously marked field
     if (removingFieldName) {
@@ -454,11 +481,9 @@ function Top() {
   const handleRenameField = useCallback(
     (oldName, newName) => {
       setNextDetailViewArray([oldName, newName]);
-      dispatch(
-        renameEtlField(oldName, newName, listOfFieldNameAndPurposeValues),
-      );
+      dispatch(renameEtlField(oldName, newName, listNameAndPurpose));
     },
-    [dispatch, listOfFieldNameAndPurposeValues, setNextDetailViewArray],
+    [dispatch, listNameAndPurpose, setNextDetailViewArray],
   );
 
   // 💰 nrows (records) === nlevels of a subject source
@@ -595,7 +620,7 @@ function LeftPane({
   enableAddNewField,
   meaEtlUnits,
 }) {
-  const [selectedFieldName, _setSelectedFieldName] = useState('not-me');
+  const [selectedFieldName, _setSelectedFieldName] = useState(() => 'not-me');
 
   useEffect(
     () => _setSelectedFieldName(getSelectedFieldName()),
@@ -665,14 +690,16 @@ LeftPane.defaultProps = {
 LeftPane.whyDidYouRender = true;
 
 function tableCellTrashFn(handleDelete) {
-  return (fieldName, purpose) => (
-    <TableCellTrash
-      className='measurement'
-      fieldName={fieldName}
-      purpose={purpose}
-      handleDelete={handleDelete}
-    />
-  );
+  return function TableCellTrashWrapper(fieldName, purpose) {
+    return (
+      <TableCellTrash
+        className='measurement'
+        fieldName={fieldName}
+        purpose={purpose}
+        handleDelete={handleDelete}
+      />
+    );
+  };
 }
 function RightPane({
   stateId,
@@ -738,6 +765,9 @@ RightPane.defaultProps = {
 // 🔧
 RightPane.whyDidYouRender = true;
 
+/**
+ * right side
+ */
 function DetailView(props) {
   const {
     stateId,
@@ -763,8 +793,8 @@ function DetailView(props) {
             <InputLabel>Field Name</InputLabel>
             <TextInput
               className={clsx('Luci-EtlFieldView title-input')}
-              key={`${stateId}|fieldname-${field.name}`}
-              stateId={`${stateId}|fieldname-${field.name}`}
+              key={`${stateId}|fieldName-${field.name}`}
+              stateId={`${stateId}|fieldName-${field.name}`}
               value={`${field.name}`}
               variant='filled'
               id='name'

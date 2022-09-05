@@ -9,10 +9,15 @@
  *    Part of standardizing the messaging system using middleware
  *
  */
-import { MATRIX, FETCH_MATRIX, setMatrix } from '../../actions/matrix.actions';
+import {
+  MATRIX,
+  FETCH_MATRIX,
+  setMatrix,
+  tagMatrixState,
+} from '../../actions/matrix.actions';
 
 import { POLLING_RESOLVED, POLLING_ERROR } from '../../actions/api.actions';
-import { setLoader } from '../../actions/ui.actions';
+import { setUiLoadingState } from '../../actions/ui.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import { ApiResponseError } from '../../../lib/LuciErrors';
 import { ServiceConfigs, getServiceType } from '../../../services/api';
@@ -23,6 +28,11 @@ import { colors } from '../../../constants/variables';
 const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
+
+//------------------------------------------------------------------------------
+// Global values
+const { isValid, getData } = ServiceConfigs[getServiceType(MATRIX)].response;
+//------------------------------------------------------------------------------
 
 /* --------------------------------------------------------------------------- */
 const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
@@ -37,8 +47,6 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
   if (action.type === 'MIDDLE')
     console.log(`%cMIDDLE recieved by matrix.middleware`, colors.light.purple);
 
-  const { isValid, getData } = ServiceConfigs[getServiceType(MATRIX)].response;
-
   // dispatch the current action in action.type with the closure that is
   // about to be returned.
   next(action);
@@ -51,8 +59,10 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
     // ui perspective -> api perspective
     // fetchMatrix -> apiFetch
     // -------------------------------------------------------------------------
-    case `${FETCH_MATRIX} 'DISABLE'`: {
-      // see matrix.sagas
+    case `${FETCH_MATRIX} 'SEE matrix.sagas'`: {
+      // delegates to: matrix.sagas
+      // The saga builds the spec (required for the request)
+      // using a series of repeated calls to the graphql server.
       break;
     }
     // -------------------------------------------------------------------------
@@ -70,18 +80,27 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
           `matrix.middleware: unexpected response; see ServiceConfigs`,
         );
       }
+
+      const recordCount =
+        getData(action.event.request)?.totalCount || 'unknown';
       next([
         setNotification({
-          message: `Matrix record count: ${
-            getData(action.event.request)?.totalCount || 'unknown'
-          }`,
+          message: `Matrix record count: ${recordCount}`,
           feature: MATRIX,
         }),
 
+        // 🔖 this is just the first 100 or so records used to configure/seed
+        //    Subsequent records are served using a pagination strategy.
         setMatrix(
           JSON.parse(getData(action.event.request)) || 'error parsing data',
         ),
-        setLoader({ toggle: false, feature: MATRIX }),
+
+        setUiLoadingState({
+          toggle: false,
+          feature: MATRIX,
+          message: `Now hosting a matrix with ${recordCount} records`,
+        }),
+        tagMatrixState('CURRENT'),
       ]);
       break;
     }
@@ -106,7 +125,7 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
             'The API polling request failed',
           feature: MATRIX,
         }),
-        setLoader({ toggle: false, feature: MATRIX }),
+        setUiLoadingState({ toggle: false, feature: MATRIX }),
       ]);
 
       break;

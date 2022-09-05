@@ -1,6 +1,6 @@
 // src/components/Workbench/components/EtlUnitGroupContext.jsx
 
-import React, { useState, createContext, useCallback } from 'react';
+import React, { useMemo, useState, createContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import usePersistedState from '../../../../hooks/use-persisted-state';
@@ -30,31 +30,37 @@ const Provider = ({
   clickFabCallback,
   stateId,
 }) => {
+  console.assert(
+    typeof clearCallback === 'function',
+    `EtlUnitGroupContext: need a function`,
+  );
   // display state for the context
   const [displayType, setDisplayType] = useState(() => displayTypeProp);
-
-  // callbacks for the context
-  const handleClearCommand = useCallback(clearCallback, [clearCallback]);
-  const handleClickFab = useCallback(clickFabCallback, [clickFabCallback]);
 
   const [showDetail, setShowDetail] = usePersistedState(
     `${stateId}|showDetail|TooContext`,
     showDetailProp,
   );
 
-  const toggleShowDetail = useCallback(() => {
-    setShowDetail(!showDetail);
-  }, [setShowDetail, showDetail]);
-
-  const state = {
-    displayType,
-    setDisplayType,
-    showDetail,
-    toggleShowDetail,
-    setShowDetail,
-    handleClearCommand,
-    handleClickFab,
-  };
+  const state = useMemo(
+    () => ({
+      displayType,
+      setDisplayType,
+      showDetail,
+      toggleShowDetail: () => setShowDetail(!showDetail),
+      setShowDetail,
+      handleClearCommand: clearCallback,
+      handleClickFab: clickFabCallback,
+    }),
+    [
+      clearCallback,
+      clickFabCallback,
+      displayType,
+      setDisplayType,
+      showDetail,
+      setShowDetail,
+    ],
+  );
 
   return (
     <EtlUnitGroupContext.Provider value={state}>
@@ -74,8 +80,8 @@ Provider.propTypes = {
 Provider.defaultProps = {
   displayType: 'empty',
   showDetail: false,
-  clearCallback: () => {},
-  clickFabCallback: () => console.log(`Clicked fab: Not configured`),
+  clearCallback: undefined,
+  clickFabCallback: undefined,
 };
 
 export default Provider;

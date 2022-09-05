@@ -13,12 +13,16 @@ import { debug } from '../constants/variables';
  * @param {integer?} msLimit time out period in ms
  * @return {Promise}
  */
-export function computeWithTimeout(computation, msLimit = 300, DEBUG = false) {
+export function computeWithTimeout(
+  computation,
+  msLimit = 300,
+  DEBUG = false,
+  caller_ = undefined,
+) {
+  const caller = computation.name || caller_ || 'no-name';
   if (DEBUG) {
     console.debug(
-      `%cinitiating promise-based computeWithTimeout: ${
-        computation.name || 'no-name'
-      }`,
+      `%cinitiating promise-based computeWithTimeout: ${caller}`,
       debug.color.blue,
     );
   }
@@ -27,11 +31,7 @@ export function computeWithTimeout(computation, msLimit = 300, DEBUG = false) {
     // create a timeout to reject promise if not resolved
     const timer = delayWithSilentCancel(msLimit);
     timer.then(() =>
-      reject(
-        new TimeoutError(
-          `The computation timed-out: ${computation.name || 'no-name'}.`,
-        ),
-      ),
+      reject(new TimeoutError(`The computation timed-out: ${caller}.`)),
     );
 
     // const promise = Promise.resolve(computation);
@@ -40,7 +40,7 @@ export function computeWithTimeout(computation, msLimit = 300, DEBUG = false) {
     const logFn = DEBUG
       ? () =>
           console.debug(
-            `%ccomputeWithTimeout resolved! ${computation.name || 'no-name'}`,
+            `%ccomputeWithTimeout resolved! ${caller}`,
             debug.color.blue,
           )
       : () => {};

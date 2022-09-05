@@ -26,7 +26,6 @@
  * @module configuredStore
  *
  */
-// import { createStore, applyMiddleware, compose } from 'redux';
 import {
   persistStore,
   persistReducer,
@@ -68,18 +67,15 @@ import etlViewMiddleware from './ducks/middleware/feature/etlView.middleware';
 import workbenchMiddleware from './ducks/middleware/feature/workbench.middleware';
 import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 
-// actions to sanitize by the redux devTools extension
-//
-import { ADD_HEADER_VIEW } from './ducks/actions/headerView.actions';
-import { SET_TREE } from './ducks/actions/workbench.actions';
-// import { SET_MATRIX } from './ducks/actions/matrix.actions';
-import { POLLING_RESOLVED } from './ducks/actions/api.actions';
-import { REMOVE as REMOVE_PENDING_REQUEST } from './ducks/actions/pendingRequests.actions';
+import { devToolsConfiguration } from './dev-tools-cfg';
+
+// -----------------------------------------------------------------------------
+const Ref = { store: null };
+// -----------------------------------------------------------------------------
 
 /* eslint-disable no-console */
-const sagaMiddleware = createSagaMiddleware();
-
-const REDUCER_DIR = './combineReducers';
+const sagaMiddlewareWithPid = (projectId) =>
+  createSagaMiddleware({ context: { projectId } });
 
 /**
  * See programming with Actions
@@ -107,49 +103,6 @@ const coreMiddleware = [
 ];
 
 // -----------------------------------------------------------------------------
-// 🚧 Reduce the memory and CPU usage
-//    Redux debugging
-// -----------------------------------------------------------------------------
-const scrubbDown = (action) => ({
-  ...action,
-  event: {
-    ...action.event,
-    request: { ...action.event.request, data: '<<LONG_BLOB>>' },
-  },
-});
-const devToolsConfiguration = {
-  actionSanitizer: (action) => {
-    switch (true) {
-      // case action.type.includes('persist/REHYDRATE'):
-
-      case action.type.includes(SET_TREE):
-        // case action.type.includes(SET_MATRIX):
-        return { ...action, payload: '<<LONG_BLOB>>' };
-
-      case action.type.includes(POLLING_RESOLVED):
-      case action.type.includes(REMOVE_PENDING_REQUEST):
-        return scrubbDown(action);
-
-      case action.type.includes(ADD_HEADER_VIEW):
-        return {
-          ...action,
-          payload: { ...action.payload, fields: '<<LONG_BLOB>>' },
-        };
-
-      default:
-        return action;
-    }
-  },
-  stateSanitizer: (state) =>
-    state.workbench?.matrix
-      ? { ...state, workbench: { ...state.workbench, matrix: '<<LONG_BLOB>>' } }
-      : state,
-
-  traceLimit: 20,
-  trace: true,
-};
-
-// -----------------------------------------------------------------------------
 // Production
 //
 const configureStoreProd = (projectId, initialState) => {
@@ -157,11 +110,13 @@ const configureStoreProd = (projectId, initialState) => {
     `Loading the Prod Version (v2.5) of the store for project: ${projectId}`,
   );
 
+  const sagaMiddleware = sagaMiddlewareWithPid(projectId);
+
   const middlewares = [
     initMiddleware(projectId), // first
     ...featureMiddleware(projectId), //
-    ...coreMiddleware, // final processing before document
-    sagaMiddleware, // schedule feature reports
+    ...coreMiddleware, // processing before document
+    sagaMiddleware,
     saveMiddleware(projectId), // ⚠️  must be last in the sequence
   ];
 
@@ -172,7 +127,7 @@ const configureStoreProd = (projectId, initialState) => {
 
   const persistedReducer = persistReducer(persistConfig, appReducers);
 
-  const store = configureStore({
+  Ref.store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
@@ -185,12 +140,12 @@ const configureStoreProd = (projectId, initialState) => {
   });
 
   // register as a listener
-  const persistor = persistStore(store);
+  const persistor = persistStore(Ref.store);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  return { store, persistor };
+  return { store: Ref.store, persistor };
 };
 
 // -----------------------------------------------------------------------------
@@ -199,11 +154,13 @@ const configureStoreProd = (projectId, initialState) => {
 const configureStoreDev2 = (projectId, initialState) => {
   console.info(`Loading the Dev Version (v2.5) of the store: ${projectId}`);
 
+  const sagaMiddleware = sagaMiddlewareWithPid(projectId);
+
   const middlewares = [
     initMiddleware(projectId), // first
     ...featureMiddleware(projectId), //
     ...coreMiddleware, // final processing before document
-    sagaMiddleware, // schedule feature reports
+    sagaMiddleware,
     saveMiddleware(projectId), // ⚠️  must be last in the sequence
   ];
 
@@ -214,35 +171,35 @@ const configureStoreDev2 = (projectId, initialState) => {
 
   const persistedReducer = persistReducer(persistConfig, appReducers);
 
-  const store = configureStore({
-    reducer: persistedReducer,
+  Ref.store = configureStore({
+    reducer: appReducers,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: false,
         serializableCheck: {
           ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-        immutableCheck: true,
+        immutableCheck: false,
       }).prepend(middlewares),
     preloadedState: initialState,
     devTools: devToolsConfiguration,
   });
 
   // register as a listener
-  const persistor = persistStore(store);
+  // const persistor = persistStore(store);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  return { store, persistor };
+  return { store: Ref.store };
 };
 
-// ⬜ Merge shared codebase
-const configuredStore =
+// fn (projectId, initialState)
+const initStore =
   process.env.REACT_APP_ENV === 'production'
     ? configureStoreProd
     : configureStoreDev2;
 
-export default configuredStore;
+export { initStore, Ref };
 
 // END

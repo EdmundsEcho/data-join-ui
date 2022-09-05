@@ -16,13 +16,13 @@
 
 import createReducer from '../utils/createReducer';
 import {
-  TYPES,
   SET_ETL_VIEW,
   SET_ETL_FIELD_CHANGES,
   SET_ETL_VIEW_ERROR,
   RESET_ETL_VIEW_ERROR,
   ADD_DERIVED_FIELD,
   DELETE_DERIVED_FIELD,
+  UPDATE_ETL_FIELD,
 } from './actions/etlView.actions';
 import { RESET } from './actions/project-meta.actions';
 
@@ -61,6 +61,14 @@ export const getEtlFieldCount = (stateFragment) =>
 
 export const getEtlFields = (stateFragment) =>
   stateFragment.etlObject.etlFields;
+
+/**
+ * Predicate that tests the existence of a field
+ * @function
+ * @return {bool}
+ */
+export const etlFieldExists = (stateFragment, fieldName) =>
+  Object.keys(getEtlFields(stateFragment)).includes(fieldName);
 
 /**
  * ⚠️  EtlUnit name uses the user versions of the name (displayName);
@@ -113,6 +121,29 @@ export const getEtlFieldViewData = (stateFragment) => {
 };
 
 /**
+ * Selector(state): etlFields -> [[name, purpose]]
+ * Utilized by EtlFieldView
+ *
+ * Optional filter using purpose.
+ *
+ * @function
+ * @param {Object} etlView
+ * @return {Array}
+ */
+export const listOfFieldNameAndPurposeValues = (
+  { etlObject } /* stateFragment */,
+  purpose = undefined /* optional */,
+) => {
+  const predicate = purpose
+    ? ([, tryPurpose]) => tryPurpose === purpose
+    : () => true;
+
+  return Object.entries(etlObject.etlFields)
+    .map(([name, field]) => [name, field.purpose])
+    .filter(predicate);
+};
+
+/**
  *
  * sources -> lean sources for the EtlView
  *
@@ -155,6 +186,10 @@ function getLeanEtlFields(stateFragment /* viewProps */) {
 // 🚧 Concluding which is better, whether to use a single select that makes
 //    it more difficult to manage rendering, vs a split but repeated
 //    scan of the data remains in flux.
+//
+//    🔖 useLean is *less* relevant now that we use a separate process for
+//       viewing levels. Remains useful b/c we can still load when mspan.
+//
 export const getFieldsKeyedOnPurpose = (stateFragment, useLean = false) => {
   return useLean
     ? fieldsKeyedOnPurpose(Object.values(getLeanEtlFields(stateFragment)))
@@ -178,14 +213,16 @@ export const getSubEtlField = (stateFragment) => {
 // quality fields
 export const getQualEtlFields = (stateFragment) =>
   Object.values(getEtlFields(stateFragment)).filter(
-    (field) => field.purpose === TYPES.QUALITY,
+    (field) => field.purpose === PURPOSE_TYPES.QUALITY,
   );
 
 // ----------------------------------------------------------------------------
 // measurement units & fields (ex subject)
 export const getMeaRelatedEtlFields = (stateFragment) =>
   Object.values(getEtlFields(stateFragment)).filter((field) =>
-    [TYPES.MSPAN, TYPES.MCOMP, TYPES.MVALUE].includes(field.purpose),
+    [PURPOSE_TYPES.MSPAN, PURPOSE_TYPES.MCOMP, PURPOSE_TYPES.MVALUE].includes(
+      field.purpose,
+    ),
   );
 
 export const getMeaEtlUnits = (stateFragment) =>
@@ -305,7 +342,7 @@ const reducer = createReducer(initialState, {
    *        Delegate component that displays purpose-specific combinations
    *        of inputs. e.g, Format, null-value-extension (unlike add/remove derived).
    */
-  [TYPES.UPDATE_ETL_FIELD]: (state, { fieldName, key, value: rawValue }) => {
+  [UPDATE_ETL_FIELD]: (state, { fieldName, key, value: rawValue }) => {
     // process "one-offs"
     let value = rawValue;
     try {

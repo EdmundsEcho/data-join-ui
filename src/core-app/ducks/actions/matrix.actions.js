@@ -12,15 +12,19 @@
 // middleware-related actions
 // feature
 export const MATRIX = '[Matrix]'; // feature
+export const feature = MATRIX;
 export const FETCH_MATRIX = `${MATRIX} FETCH`; // command
 export const FETCH_MATRIX_CACHE = `${MATRIX} FETCH CACHE`; // command
 export const SET_MATRIX = `${MATRIX} SET`; // document
 export const SET_MATRIX_CACHE = `${MATRIX} SET CACHE`; // document
 export const MATRIX_ERROR = `${MATRIX} ERROR`; // document
+export const TAG_MATRIX_STATE = `${MATRIX} TAG MATRIX STATE`;
 
 // command
-export const fetchMatrix = (/* from state */) => ({
+// 🔖 projectId used to assert with matrix.saga context
+export const fetchMatrix = (projectId /* rest from state */) => ({
   type: FETCH_MATRIX,
+  projectId,
 });
 
 // command
@@ -37,6 +41,12 @@ export const matrixEventError = (payload) => ({
 // action kind :: document
 export const setMatrix = (payload) => ({
   type: SET_MATRIX,
+  payload,
+});
+
+// document
+export const tagMatrixState = (payload) => ({
+  type: TAG_MATRIX_STATE,
   payload,
 });
 

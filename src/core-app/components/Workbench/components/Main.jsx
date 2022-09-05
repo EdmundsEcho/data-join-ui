@@ -1,3 +1,4 @@
+//
 // src/components/Workbench/Board.presentation.jsx
 
 /**
@@ -33,11 +34,12 @@
  *
  */
 import React, { useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import clsx from 'clsx';
 
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext } from '@hello-pangea/dnd';
 
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -65,8 +67,8 @@ const COLOR = colors.blue;
 */
 /* eslint-disable no-console */
 
-const Board = () => {
-  // 📬
+const Main = () => {
+  //
   const dispatch = useDispatch();
 
   // manage the Board state in response to user-driven dnd events
@@ -91,8 +93,7 @@ const Board = () => {
   return (
     <DragDropContext
       onDragEnd={handleOnDragEnd}
-      onBeforeCapture={handleOnBeforeCapture}
-    >
+      onBeforeCapture={handleOnBeforeCapture}>
       <Container className={clsx('Luci-Workbench-board')}>
         <WorkbenchButtons />
         <Palette rootNode={1} />
@@ -103,9 +104,11 @@ const Board = () => {
   );
 };
 
+// ⬜ move to step bar; include a save icon
 function WorkbenchButtons() {
   // 📬
   const dispatch = useDispatch();
+  const { projectId } = useParams();
 
   // 📖 Only requires the Canvas Node count to set reset/matrix toggles
   const isCanvasDirty = useSelector(getIsCanvasDirty, shallowEqual);
@@ -116,8 +119,9 @@ function WorkbenchButtons() {
   }, [dispatch]);
 
   const handleBuildMatrix = useCallback(() => {
-    dispatch(fetchMatrix());
-  }, [dispatch]);
+    dispatch(fetchMatrix(projectId));
+  }, [dispatch, projectId]);
+
   return (
     <Container className={clsx('Luci-Float', 'workbench')}>
       <Button disabled={!isCanvasDirty} onClick={handleResetCanvas}>
@@ -130,4 +134,4 @@ function WorkbenchButtons() {
   );
 }
 
-export default Board;
+export default Main;

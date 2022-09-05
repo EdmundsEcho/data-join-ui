@@ -10,7 +10,7 @@ import axios from 'axios';
 import { stdApiResponse } from './helpers';
 import {
   ApiCallError,
-  ExpiredSessionError,
+  // ExpiredSessionError,
   GqlError,
   InvalidStateError,
 } from '../lib/LuciErrors';
@@ -94,6 +94,8 @@ export const ResponseTypes = {
   CANCELLED: 'cancelled',
 };
 
+// tnc-py init, status, kill and results
+// does not include gql endpoints
 const statusEndpointMaker = (SERVICE) => {
   return (projectId, jid, resultsOrCancel, pid) => {
     let suffix = '';
@@ -118,7 +120,7 @@ export const ServiceConfigs = {
   // @inspection_blueprint.route("/v1/inspection/<project_id>", methods=['POST'])
   INSPECTION: {
     type: 'INSPECTION',
-    endpoint: statusEndpointMaker('inspection'),
+    endpoint: statusEndpointMaker('inspection'), // init and job status
     feature: HEADER_VIEW,
     resultType: 'HeaderView',
     middleware: 'headerView',
@@ -126,7 +128,7 @@ export const ServiceConfigs = {
       isValid: (response) => {
         return response?.data?.data?.results;
       },
-      getData: (response) => response?.data?.data?.results,
+      getData: (response) => response.data.data.results,
       getApiError: (event) => event.request.data?.cause,
       setData: (value) => ({
         response: { data: { data: { results: value } } },
@@ -135,14 +137,16 @@ export const ServiceConfigs = {
   },
   EXTRACTION: {
     type: 'EXTRACTION',
-    endpoint: statusEndpointMaker('extraction'),
+    endpoint: statusEndpointMaker('extraction'), // init and job status
     graphql: statusEndpointMaker('warehouse'),
     feature: WORKBENCH,
     resultType: 'EtlObject',
     middleware: 'workbench',
     response: {
-      isValid: (response) => response?.data?.data?.data?.getObsEtl,
-      getData: (response) => response?.data?.data?.data?.getObsEtl,
+      isValidError: ({ error }) => error,
+      getError: ({ errorMessage }) => errorMessage,
+      isValid: (response) => response?.data?.data.data.getObsEtl,
+      getData: (response) => response.data.data.data.getObsEtl,
       setData: (value) => ({
         response: { data: { data: { data: { getObsEtl: value } } } },
       }),
@@ -150,7 +154,7 @@ export const ServiceConfigs = {
   },
   MATRIX: {
     type: 'MATRIX',
-    endpoint: (projectId) => `/extraction/${projectId}`,
+    endpoint: statusEndpointMaker('matrix'), // init and job status
     feature: MATRIX_FEATURE,
     resultType: 'Matrix',
     middleware: 'matrix',
@@ -221,64 +225,45 @@ const { INSPECTION, EXTRACTION, MATRIX } = ServiceTypes;
  *
  */
 export const initApiService = async (eventInterface) => {
+  //
+  // local routine
+  // input required to complete the feature request
+  // 'path' | 'spec' | 'etlObject'
+  //
+  const sendQueueRequest = async (featureInput) => {
+    validateEventRequest(eventInterface, featureInput);
+    const { project_id: projectId } = eventInterface.request;
+    const serviceType = getServiceType(eventInterface.meta.feature);
+    const axiosOptions = {
+      method: 'POST',
+      url: ServiceConfigs[serviceType].endpoint(projectId),
+      data: eventInterface.request,
+    };
+    const response = await apiInstance(axiosOptions);
+
+    return jobIdInterface(response);
+  };
+
   validateEventInterface(eventInterface, false /* jobId */);
+
+  let featureInput = '';
+
   switch (eventInterface.meta.feature) {
     case HEADER_VIEW:
-      return queueFileInspectionRequest(eventInterface);
+      featureInput = 'path';
+      break;
     case WORKBENCH:
-      return queueEtlExtraction(eventInterface);
+      featureInput = 'etlObject';
+      break;
     case MATRIX_FEATURE:
-      return queueMatrixRequest(eventInterface);
+      featureInput = 'spec';
+      break;
     default:
       throw new InvalidStateError('Unreachable');
   }
+
+  return sendQueueRequest(featureInput);
 };
-// File Inspection
-async function queueFileInspectionRequest(eventInterface) {
-  // Aug 2022: partial validation
-  validateEventRequest(eventInterface, 'path');
-  const { feature } = eventInterface.meta;
-  const { project_id: projectId } = eventInterface.request;
-  const serviceType = getServiceType(feature);
-  const axiosOptions = {
-    method: 'POST',
-    url: ServiceConfigs[serviceType].endpoint(projectId),
-    data: {
-      force: false,
-      ...eventInterface.request,
-    },
-  };
-  const response = await apiInstance(axiosOptions);
-  return jobIdInterface(response);
-}
-// Extraction
-async function queueEtlExtraction(eventInterface) {
-  validateEventRequest(eventInterface, 'etlObject');
-  const { feature } = eventInterface.meta;
-  const { project_id: projectId } = eventInterface.request;
-  const serviceType = getServiceType(feature);
-  const axiosOptions = {
-    method: 'POST',
-    url: ServiceConfigs[serviceType].endpoint(projectId),
-    data: eventInterface.request.etlObject,
-  };
-  const response = await apiInstance(axiosOptions);
-  return jobIdInterface(response);
-}
-// Matrix
-async function queueMatrixRequest(eventInterface) {
-  validateEventRequest(eventInterface, 'spec');
-  const { feature } = eventInterface.meta;
-  const { project_id: projectId } = eventInterface.request;
-  const serviceType = getServiceType(feature);
-  const axiosOptions = {
-    method: 'POST',
-    url: ServiceConfigs[serviceType].endpoint(projectId),
-    data: eventInterface.request.spec,
-  };
-  const response = await apiInstance(axiosOptions);
-  return jobIdInterface(response);
-}
 //------------------------------------------------------------------------------
 /**
  * Polling for the status of a queued task.
@@ -325,7 +310,7 @@ export const resultApiService = async (eventInterface) => {
   const { feature } = eventInterface.meta;
   const serviceType = getServiceType(feature);
 
-  let response = {};
+  let response;
 
   switch (serviceType) {
     case INSPECTION:
@@ -339,12 +324,13 @@ export const resultApiService = async (eventInterface) => {
       // hit the graphql endpoint
       response = await gqlInstance({
         url: ServiceConfigs[serviceType].graphql(projectId),
-        data: GQL.viewObsEtl(), // gql-specified requested view
+        data: GQL.viewObsEtl(), // hydrates workbench
       });
       break;
 
     case MATRIX:
-      response = await fetchRenderedMatrix();
+      // pull data from the warehouse
+      response = await fetchRenderedMatrix(projectId); // used both by machine and directly when paging
       break;
 
     default:
@@ -430,7 +416,9 @@ export const getFileLevels = ({
 //------------------------------------------------------------------------------
 /**
  * Page through the matrix data.
- * Utilized both locally and by the ui
+ * Utilized both by the machine and ui
+ *
+ * @matrix_blueprint.route("/v1/matrix/<project_id>", methods=['POST'])
  *
  * @function
  * @param {Object} input
@@ -438,9 +426,12 @@ export const getFileLevels = ({
  * @param {number} input.limit
  * @return {Promise} matrix records
  */
-export async function fetchRenderedMatrix({ page = 1, limit = 100 } = {}) {
+export async function fetchRenderedMatrix(
+  projectId,
+  { page = 1, limit = 100 } = {},
+) {
   const axiosOptions = {
-    url: '/matrix/view',
+    url: `/matrix/${projectId}/results`,
     method: 'POST',
     data: { page, limit },
   };
@@ -449,6 +440,24 @@ export async function fetchRenderedMatrix({ page = 1, limit = 100 } = {}) {
   }
   return apiInstance(axiosOptions);
 }
+/**
+ * Utilized by MatrixGrid
+ * @function
+ * @return {Object}
+ */
+export const fetchRenderedMatrixWithProjectId =
+  (projectId) =>
+  async (...args) =>
+    fetchRenderedMatrix(projectId, ...args);
+export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
+  const result = {
+    pageInfo: raw.data.payload.pageInfo,
+    edges: edgesFn(JSON.parse(raw.data.payload.data)),
+    totalCount: raw.data.payload.totalCount,
+  };
+  return result;
+};
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 /**
@@ -462,9 +471,9 @@ export async function fetchRenderedMatrix({ page = 1, limit = 100 } = {}) {
  * @param {Object} request
  * @return {Promise}
  */
-export const fetchMatrixSpec = async (request) => {
+export const fetchMatrixSpec = async (projectId, request) => {
   const config = {
-    url: '/',
+    url: `/warehouse/${projectId}`,
     data: GQL.requestMatrix(request),
   };
 
@@ -486,10 +495,10 @@ export const fetchMatrixSpec = async (request) => {
  * @param {Object} request
  * @return {Promise}
  */
-export const fetchRequestFieldNames = async (request) => {
+export const fetchRequestFieldNames = async ({ projectId, ...request }) => {
   const requestConfig = GQL.requestFieldNames(request);
   const config = {
-    url: '/',
+    url: `/warehouse/${projectId}`,
     data: requestConfig.gql,
   };
   return gqlInstance(config).then((response) => {
@@ -514,9 +523,10 @@ export const fetchRequestFieldNames = async (request) => {
  * @param {Object} request
  * @return {Object}
  */
-export const fetchLevels = async (request) => {
+export const fetchLevels = async ({ projectId, ...request }) => {
+  console.log(GQL.requestLevels(request));
   const config = {
-    url: '/',
+    url: `/warehouse/${projectId}`,
     data: GQL.requestLevels(request),
   };
 
@@ -542,6 +552,7 @@ function jobIdInterface(response) {
     );
     console.dir(response);
   }
+  /*
   if (response.status === 401) {
     throw new ExpiredSessionError();
   }
@@ -552,9 +563,10 @@ function jobIdInterface(response) {
       },
     );
   }
+  */
   if (response.status > 200) {
     throw new ApiCallError({
-      message: `Retrieving the jobId failed.`,
+      message: `Request failed: no job ticket returned.`,
       ...response.data,
     });
   }

@@ -15,7 +15,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from '@hello-pangea/dnd';
 import Container from '@mui/material/Container';
 
 /* eslint-disable react/jsx-props-no-spreading */
@@ -56,8 +56,7 @@ const Dragger = (props) => {
       key={`dnd-draggable-${config.id}`}
       draggableId={config.id}
       index={config.index}
-      isDragDisabled={config?.isDragDisabled ?? false}
-    >
+      isDragDisabled={config?.isDragDisabled ?? false}>
       {(provided, snapshot) => {
         return (
           <>
@@ -73,8 +72,7 @@ const Dragger = (props) => {
                 {
                   dragging: snapshot.isDragging,
                 },
-              )}
-            >
+              )}>
               {/* children = Node */}
               {children}
             </Container>

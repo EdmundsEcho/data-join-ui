@@ -85,7 +85,7 @@ const COLOR = colors.light.purple;
  *
  * @param {Object} hv
  * @param {?Array<FileFields>} previousHvFields
- * @returns {Object} hv with more or fieldname -> value slots.
+ * @returns {Object} hv with more or fieldName -> value slots.
  *
  */
 export function buildWideToLongFields(
@@ -145,7 +145,7 @@ export function buildWideToLongFields(
   wtlf.config['header-idxs'] = W.headerIdxs(mvalues);
   wtlf.config['alias-idx-map'] = W.aliasIdxMap(mvalues);
 
-  // ⬜ Only append the table of fieldname -> value when a previous
+  // ⬜ Only append the table of fieldName -> value when a previous
   //    configuration prop exists.
 
   // 🚧 make sure if starting from seed, fields are in place using config.factors.

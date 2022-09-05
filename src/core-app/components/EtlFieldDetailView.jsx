@@ -47,6 +47,8 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
  *
  * @component
  *
+ * Part of the right-hand side
+ *
  */
 const EtlFieldDetailView = (props) => {
   const {

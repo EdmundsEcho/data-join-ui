@@ -1,5 +1,5 @@
 import mergeFixtures from '../../utils/mergeFixtures';
-import Container from './index';
+import Container from './Workbench';
 import obsetl from '../../datasets/workbench/obsetl-response';
 
 Container.displayName = 'Workbench2/Container';

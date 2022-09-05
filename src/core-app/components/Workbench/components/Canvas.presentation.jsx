@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from '@hello-pangea/dnd';
 
 import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
@@ -51,29 +51,25 @@ const Canvas = ({ rootNode }) => {
       droppableId={`${rootNode}`}
       direction='horizontal'
       isDropDisabled={false}
-      type='column'
-    >
+      type='column'>
       {(provided) => (
         <Container
           key='Canvas-Container'
           className={clsx('canvas-root')}
           {...provided.droppableProps}
-          ref={provided.innerRef}
-        >
+          ref={provided.innerRef}>
           {canvasLists.map((superGroupId, index) => (
             <Draggable
               key={`draggable-superGroup-${superGroupId}`}
               draggableId={`${superGroupId}`}
-              index={index}
-            >
+              index={index}>
               {/* map of superGroup-roots (vs singleton for Palette) */}
               {(provided) => (
                 <Container
                   className={clsx('Node-root', 'superGroup', 'canvas')}
                   key={`superGroup-${superGroupId}`}
                   {...provided.draggableProps}
-                  ref={provided.innerRef}
-                >
+                  ref={provided.innerRef}>
                   {/* WIP - Improve the handle for columns */}
                   <Divider
                     className={clsx('top-bar')}

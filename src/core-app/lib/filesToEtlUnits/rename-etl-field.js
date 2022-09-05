@@ -389,7 +389,7 @@ function renameDerivedField(oldValue, newValue, derivedFields) {
   return updatedDerivedFields;
 }
 /**
- * Chain of tests to validate the requested change to a etl fieldname.
+ * Chain of tests to validate the requested change to a etl fieldName.
  *
  * @param {string} oldName
  * @param {string} newName
@@ -469,7 +469,7 @@ function noEtlNameCollision(
 }
 /**
  *
- * ✅ file/hv test to determine whether a etl fieldname will corrupt
+ * ✅ file/hv test to determine whether a etl fieldName will corrupt
  *    the integrity of the configuration.
  *
  * ✨ given the constraint of one name per "naming slot" in a given headerView,

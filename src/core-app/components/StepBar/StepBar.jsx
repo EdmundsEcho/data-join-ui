@@ -19,9 +19,9 @@
  * @module /components/StepBar
  *
  */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 // part of the transition away from container for this component
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,22 +49,26 @@ import Machine, {
   tryNextEvent,
   tryPrevEvent,
 } from './stepper-machine';
+import { setCurrentPage } from '../../ducks/actions/stepper.actions';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
+const DEBUG = false && process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
 const StepBarComponent = ({ classes }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { projectId } = useParams();
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state);
 
-  // current page (local state) is derived by Router url
+  // current page (local state) is derived from Router url
   const { pathname } = location;
+  // depends on static import of objects
   const currentPage = lookupPageWithPathname(pathname);
-  const [machine] = useState(() => Machine(dispatch));
+  // immutable reference recorded in local state
+  const [machine] = useState(() => Machine(projectId, dispatch));
   const nextPage = useCallback(
     (event) => `${machine.transition(reduxState, currentPage, event)}`,
     [machine, reduxState, currentPage],

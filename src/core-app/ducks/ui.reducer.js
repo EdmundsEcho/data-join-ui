@@ -19,14 +19,14 @@ import {
 import { RESET } from './actions/project-meta.actions';
 
 // selector
-export const isLoading = (stateFragment) => ({
+export const isUiLoading = (stateFragment) => ({
   isLoading: stateFragment.loading,
   message: stateFragment.message,
 });
 
 const initState = {
   loading: false,
-  message: '',
+  message: null,
   redirect: undefined,
   bookmarkUrl: undefined,
 };
@@ -37,18 +37,13 @@ const reducer = (state = initState, action) => {
     case action.type === 'RESET UI':
       return { ...initState };
 
+    // type: `${feature} ${SET_LOADER} ${toggle ? '... loading' : 'done'}`,
+    // payload: { toggle, message, feature },
     case action.type.includes(SET_LOADER):
-      return typeof action.value === 'boolean'
-        ? {
-            ...state,
-            loading: action.value,
-            message: '',
-          }
-        : {
-            ...state,
-            loading: action.value.toggle,
-            message: action.value?.message,
-          };
+      return {
+        ...state,
+        ...action.payload,
+      };
 
     case action.type === REDIRECT:
       return {

@@ -2,21 +2,18 @@
 
 import { makeActionCreator } from '../../utils/makeActionCreator';
 
-export const TYPES = {
-  UPDATE_ETLUNIT_TEXT: 'workbench/UPDATE_ETLUNIT_TEXT',
-
-  // Part of the March '20 push
-  TOGGLE_VALUE: 'workbench/SET REQUEST VALUE',
-  TOGGLE_REDUCED: 'workbench/SET REDUCED',
-};
-
-export const initWorkbench = makeActionCreator(TYPES.INIT_WORKBENCH, 'payload');
-
 //------------------------------------------------------------------------------
 // middleware-related actions
 // feature
 export const WORKBENCH = '[Workbench]'; // feature
+export const feature = WORKBENCH;
 
+// Part of the March '20 push
+export const TOGGLE_VALUE = `${WORKBENCH} SET REQUEST VALUE`;
+export const TOGGLE_REDUCED = `${WORKBENCH} SET REDUCED`;
+
+export const UPDATE_ETLUNIT_TEXT = `${WORKBENCH} UPDATE etlUnit TEXT`;
+//
 // commands
 // Migrating to middleware WIP
 export const FETCH_WAREHOUSE = `${WORKBENCH} FETCH`; // command from StepBar
@@ -32,6 +29,7 @@ export const REMOVE_NODE = `${WORKBENCH} REMOVE NODE`; // command
 
 // document
 export const SET_TREE = `${WORKBENCH} SET TREE`;
+export const RESET_TREE = `${WORKBENCH} CLEAR`;
 export const SET_CHILDIDS = `${WORKBENCH} SET CHILDIDS`;
 export const SET_DRAGGED_ID = `${WORKBENCH} SET DRAGGED ID`;
 export const SET_MSPAN_REQUEST = `${WORKBENCH} SET MSPAN REQUEST`;
@@ -67,8 +65,10 @@ export const removeNode = (payload) => ({
 // action kind :: command
 // retrieve the value from the store
 // function* _fetch({ type, meta: { feature, uiKey } }) {
-export const fetchWarehouse = (/* { etlObject } */) => ({
+// 🔖 project id is injected using middleware
+export const fetchWarehouse = (startTime /* { etlObject } */) => ({
   type: FETCH_WAREHOUSE,
+  startTime,
   payload:
     'middleware to pull etlObject from store (see extraction in network)',
 });
@@ -83,6 +83,10 @@ export const cancelWarehouse = () => ({
 export const setTree = (payload) => ({
   type: SET_TREE,
   payload,
+});
+
+export const resetTree = () => ({
+  type: RESET_TREE,
 });
 
 // action kind :: document
@@ -198,7 +202,7 @@ export const resetCanvas = () => ({
 
 // Updates to Canvas ETL units
 export const updateEtlUnitIdentifier = makeActionCreator(
-  TYPES.UPDATE_ETLUNIT_TEXT,
+  UPDATE_ETLUNIT_TEXT,
   'cardIdentifier',
   'text',
 );
@@ -213,7 +217,7 @@ export const updateEtlUnitIdentifier = makeActionCreator(
 // see also: setCompValues
 //
 export const toggleValue = makeActionCreator(
-  TYPES.TOGGLE_VALUE,
+  TOGGLE_VALUE,
   'id', // nodeId number
   'valueOrId', // number | number[]
   'identifier', // string
@@ -221,7 +225,7 @@ export const toggleValue = makeActionCreator(
 );
 // 🚧 WIP: part of March '20 push
 export const toggleReduced = makeActionCreator(
-  TYPES.TOGGLE_REDUCED,
+  TOGGLE_REDUCED,
   'id', // nodeId number
   'valueOrId', // for mspan values; number?
   'identifier', // string

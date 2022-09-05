@@ -28,7 +28,7 @@ export const range = (start, stop, step = 1) =>
  * @param {Object} obj
  * @return {Object} without the prop/props
  */
-export const removeProp = (remove, obj) => {
+export const removeProp = (remove, obj, deepCopy = false) => {
   try {
     switch (true) {
       case typeof obj === 'undefined': {
@@ -45,7 +45,7 @@ export const removeProp = (remove, obj) => {
         throw new InputError(`removeProp: called with a null value`);
       }
 
-      // several props to remove
+      // more than one prop to remove
       /* eslint-disable no-param-reassign */
       case Array.isArray(remove): {
         return Object.keys(obj)
@@ -63,6 +63,10 @@ export const removeProp = (remove, obj) => {
 
       default: {
         const { [remove]: _, ...rest } = obj;
+
+        if (deepCopy) {
+          return JSON.parse(JSON.stringify(rest));
+        }
         return rest;
       }
     }

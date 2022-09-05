@@ -18,6 +18,8 @@ import EtlUnitGroupBase from './EtlUnitGroupBase';
  * ⚠️  ⬜ Streamline dependency on type that can change by user.
  *        ... may cause rerender.
  *
+ * 🔖 context is a paletteOrCanvas tag
+ *
  * @component
  *
  * @category Components

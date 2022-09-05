@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import makeStyles from '@mui/styles/makeStyles';
-import cogs from '../assets/cogs.gif';
+import cogs from '../../assets/cogs.gif';
 
 const useStyles = makeStyles({
   container: {

@@ -21,6 +21,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
 // middleware-related actions
 // feature
 export const HEADER_VIEW = '[HeaderView]';
+export const feature = HEADER_VIEW;
 
 // commands
 export const FETCH_HEADER_VIEW = `${HEADER_VIEW} FETCH`; // command
@@ -56,6 +57,8 @@ export const UPDATE_FILEFIELD = `${HEADER_VIEW} UPDATE_FILEFIELD`;
 export const UPDATE_IMPLIED_MVALUE = `${HEADER_VIEW} UPDATE_IMPLIED_MVALUE`;
 
 export const RESET_FILEFIELDS = `${HEADER_VIEW} RESET_FILEFIELDS`;
+
+export const RUN_FIX_REPORT = `${HEADER_VIEW} RUN_FIX_REPORT`;
 
 //------------------------------------------------------------------------------
 // WIP: actions that fix errors in the fix reports
@@ -237,3 +240,5 @@ export const resetFileFields = makeActionCreator(
   'filename',
   'fields', // Array<FileFields>
 );
+
+export const runFixReport = () => ({ type: RUN_FIX_REPORT });

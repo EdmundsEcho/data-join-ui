@@ -1,13 +1,20 @@
-// src/components/Workbench/components/MatrixGrid.jsx
+// src/components/Matrix/MatrixGrid.jsx
 
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import clsx from 'clsx';
 
-import ValueGridCore from '../../shared/ValueGridCore';
-import { fetchRenderedMatrix } from '../../../services/api';
+import ValueGridCore from '../shared/ValueGridCore';
+import {
+  fetchRenderedMatrixWithProjectId as fetchLevels,
+  matrixPaginationNormalizer as normalizer,
+} from '../../services/api';
 
+//----------------------------------------------------------------------------
+// Static utilized by MatrixGrid
+//----------------------------------------------------------------------------
+const identityFn = (x) => x;
 function rowsFn(data) {
   return Object.entries(data).reduce((rows, [subject, values]) => {
     rows.push({
@@ -21,14 +28,12 @@ function rowsFn(data) {
 
 function fromMatrixApi(matrix) {
   /* eslint-disable no-shadow */
-  const rows = rowsFn(matrix);
   const columns = Object.keys(Object.values(matrix)[0]).map((columnName) => ({
     field: columnName,
     flex: 1,
     headerClassName: 'fieldname',
   }));
   return {
-    rows,
     columns: [
       { field: 'subject', headerClassName: clsx('fieldname', 'subject') },
       ...columns,
@@ -37,36 +42,25 @@ function fromMatrixApi(matrix) {
   /* eslint-enable no-shadow */
 }
 
+//----------------------------------------------------------------------------
+// Data grid options
+// See the theme overrides for other formatting options
+const gridOptions = {
+  headerHeight: 85,
+  rowHeight: 35,
+  disableColumnMenu: true,
+};
+//----------------------------------------------------------------------------
 /**
- *
- * @param {Object} matrix
- *
  * @component
  */
-function MatrixGrid({ matrix }) {
+function MatrixGrid({ matrix /* first 100 used to seed */ }) {
   /* eslint-disable react/jsx-props-no-spreading */
 
+  // read the first sample of the data to configure
+  // the grid columns.
   const { columns } = fromMatrixApi(matrix);
-  //----------------------------------------------------------------------------
-  // Data grid options
-  // See the theme overrides for other formatting options
-  const options = {
-    headerHeight: 85,
-    rowHeight: 35,
-    disableColumnMenu: true,
-  };
-
-  /*
-   * @return cache { totalCount, data: {edges} }
-   */
-  const normalizer = (raw) => {
-    const result = {
-      pageInfo: raw.data.payload.pageInfo,
-      edges: rowsFn(JSON.parse(raw.data.payload.data)),
-      totalCount: raw.data.payload.totalCount,
-    };
-    return result;
-  };
+  const { projectId } = useParams();
 
   return (
     <ValueGridCore
@@ -74,16 +68,16 @@ function MatrixGrid({ matrix }) {
       columns={columns}
       identifier='matrix'
       purpose='matrix'
-      fetchFn={fetchRenderedMatrix}
-      normalizer={normalizer}
-      edgeToGridRowFn={(x) => x}
+      fetchFn={fetchLevels(projectId)}
+      normalizer={normalizer(rowsFn)}
+      edgeToGridRowFn={identityFn}
       edgeToIdFn={({ subject }) => subject}
       baseSelectAll={{}}
       feature='LIMIT'
       limitRowCount={17}
-      pageSize={30}
+      pageSize={100}
       DEBUG={false}
-      {...options}
+      {...gridOptions}
     />
   );
 }

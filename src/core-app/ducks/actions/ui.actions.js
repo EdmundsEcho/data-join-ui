@@ -5,7 +5,7 @@
  * Over-all status of the ui
  *
  */
-export const SET_LOADER = 'SET LOADER'; // document
+export const SET_LOADER = 'SET_LOADER'; // document
 export const REDIRECT = 'REDIRECT'; // document (state read by REDUX INIT)
 export const CLEAR_REDIRECT = 'CLEAR_REDIRECT'; // document (state read by REDUX INIT)
 export const CLEAR_BOOKMARK = 'CLEAR_BOOKMARK'; // document (state read by REDUX INIT)
@@ -14,11 +14,12 @@ const feature = '[UI META]';
 
 // These impact the reducers
 // loader = true means loading
-export const setLoader = ({ toggle, feature, message }) => ({
+/* eslint-disable no-shadow */
+export const setUiLoadingState = ({ toggle, feature, message }) => ({
   type: `${feature} ${SET_LOADER} ${toggle ? '... loading' : 'done'}`,
-  value: { toggle, message },
-  meta: { feature },
+  payload: { toggle, message, feature },
 });
+/* eslint-enable no-shadow */
 
 /**
  * A component has access to useNavigate.  The ReduxInitializer

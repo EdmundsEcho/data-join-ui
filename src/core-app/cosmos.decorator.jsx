@@ -6,7 +6,7 @@ import React from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline'; // fixes some html
 
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext } from '@hello-pangea/dnd';
 import luciviaTheme from './lucivia-theme';
 
 // configured and ready to go

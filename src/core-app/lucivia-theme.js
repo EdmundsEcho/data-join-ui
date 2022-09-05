@@ -242,8 +242,8 @@ export default createTheme({
             '&.headerView': {
               tableLayout: 'fixed',
               '& thead tr th[class*=excludeCell]': { width: '40px' },
-              '& thead tr th[class*=fieldnameCell]': { width: '23%' },
-              '& thead tr th[class*=aliasCell]': { width: '22%' },
+              '& thead tr th[class*=fieldnameCell]': { width: '25%' },
+              '& thead tr th[class*=aliasCell]': { width: '20%' },
               '& thead tr th[class*=purposeCell]': { width: '25%' },
               '& thead tr th[class*=levelsCell]': { width: '10%' },
               '& thead tr th[class*=nullsCell]': { width: '10%' },
@@ -251,7 +251,7 @@ export default createTheme({
             },
             '&.headerView td > .Luci-field.fieldname > p': {
               textAlign: 'left',
-              fontSize: '1.0vw',
+              fontSize: '0.9vw',
             },
             '&.headerView, &.factorNames': {
               '& .MuiTableCell-head': {
@@ -757,6 +757,12 @@ export default createTheme({
             },
           },
           //----------------------------------------------------------------------
+          // EtlField detail view
+          //----------------------------------------------------------------------
+          '&.Luci-DataContainer.levels > .stack': {
+            width: '100%',
+          },
+          //----------------------------------------------------------------------
           // ValueGrid-actions
           //----------------------------------------------------------------------
           [`&.${FIELD_TYPES.ETL}  .Luci-ValueGrid-header`]: {
@@ -1183,6 +1189,29 @@ export default createTheme({
         root: ({ theme }) => ({
           backgroundColor: 'inherit',
           //---------------------------------------------------------------------
+          // CoreAppLayout
+          //---------------------------------------------------------------------
+          '&.Luci-CoreAppLayout.root': {
+            maxWidth: '1440px',
+            padding: '0px',
+            margin: '0px',
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            overflow: 'hidden',
+            '& .app-paging-view': {
+              overflow: 'hidden',
+              display: 'flex',
+              flexGrow: 1,
+            },
+            '& .app-paging-view > div': {
+              flexGrow: 1,
+            },
+            '& .app-paging-controller': {},
+            '& .Luci-App-Footer': {},
+          },
+          //---------------------------------------------------------------------
           // HeaderViews
           //---------------------------------------------------------------------
           '&.Luci-HeaderViews.root': {
@@ -1355,25 +1384,6 @@ export default createTheme({
                 },
               },
             },
-          },
-          //---------------------------------------------------------------------
-          // CoreAppLayout
-          //---------------------------------------------------------------------
-          '&.Luci-CoreAppLayout.root': {
-            padding: '0px',
-            margin: '0px',
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexDirection: 'column',
-            flexGrow: 1,
-            overflow: 'hidden',
-            '& .app-paging-view': {
-              overflow: 'hidden',
-              display: 'flex',
-              flexGrow: 1,
-            },
-            '& .app-paging-controller': {},
-            '& .Luci-App-Footer': {},
           },
           '&.Luci-Float.workbench': {
             backgroundColor: theme.palette.secondary.light,
@@ -1597,7 +1607,7 @@ export default createTheme({
             flex: 1,
             overflow: 'inherit',
             marginRight: theme.spacingFn(3), // ⬜ match parent that set left
-            fontSize: '1.1vw', // ⬜ match parent that set left
+            fontSize: '1.0vw', // ⬜ match parent that set left
           },
         }),
       },
@@ -1645,7 +1655,7 @@ export default createTheme({
             boxShadow: 'none',
             borderRadius: 0,
             backgroundColor: 'inherit',
-            fontSize: '1.0rem',
+            fontSize: '0.9rem',
             height: '100%',
             '& .grow-max': {
               display: 'flex',
@@ -1748,6 +1758,7 @@ export default createTheme({
               },
             },
           },
+          /* Group */
           '&.EtlUnitGroupBase-root': {
             margin: 0,
             padding: 0,
@@ -1794,6 +1805,41 @@ export default createTheme({
                     color: theme.palette.grey[800],
                   },
                 },
+              },
+            },
+            '& .Luci-tools': {
+              display: 'flex',
+              flex: 0.3,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              '&.v1': {
+                justifyContent: 'flex-end',
+              },
+              '& .tool': {
+                color: theme.palette.primary.main,
+                padding: 0,
+              },
+              '& .icon': {
+                margin: 0,
+                padding: 0,
+                fontSize: '1.3rem',
+                '&.clear': {
+                  padding: theme.spacingFn(1),
+                  fontSize: '1.2rem',
+                },
+                '&.menu': {
+                  padding: theme.spacingFn(1),
+                  fontSize: '1.2rem',
+                },
+                '&.expandMoreIcon': {
+                  fontSize: '1.5rem',
+                  padding: theme.spacingFn(1),
+                },
+              },
+              '& > .folding': {
+                display: 'flex',
+                justifyContent: 'flex-start',
+                width: '50px',
               },
             },
             '& > .footer-wrapper': {

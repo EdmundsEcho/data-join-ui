@@ -32,25 +32,13 @@
  */
 import { call, put, race, take, takeEvery } from 'redux-saga/effects';
 import apiChannel from '../services/polling.setup'; // machine/saga channel
-
-import {
-  initApiService,
-  statusApiService,
-  resultApiService,
-  cancelApiService,
-  ResponseTypePredicates,
-} from '../services/api';
+import { channelSpec } from './polling-api.config';
 
 // core api actions for the machine to exploit
 import {
   FETCH,
   RESUME,
   CANCEL,
-  pollingEventStart,
-  pollingEventEnd,
-  pollingEventResolved,
-  pollingEventCancelled,
-  pollingEventError,
   validateEventInterface,
   getUiKey,
 } from '../ducks/actions/api.actions';
@@ -83,47 +71,10 @@ if (process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true') {
 /* --------------------------------------------------------------------------- */
 const MAX_TRIES = 15; // number of polling requests
 
-// wrap actions with dispatch
-//
-// 🔖 To learn what is reported/returned by the machine console.log the
-//    event and context values returned by the machine
-//
-// -----------------------------------------------------------------------------
-/**
- *
- *  🔧 Link the api calls to the machine
- *     Predicate for knowing when the status has changed to resolved
- *     Set the initial command
- *     Set the max number of polling events
- *
- *     services are called with param::eventInterface
- *
- */
-const channelSpec = {
-  services: {
-    initApiService,
-    statusApiService,
-    resultApiService,
-    cancelApiService,
-  },
-  actions: {
-    pollingEventStart,
-    pollingEventEnd,
-    pollingEventResolved,
-    pollingEventCancelled,
-    pollingEventError,
-  },
-  guards: {
-    isResolved: ResponseTypePredicates.RESOLVED,
-    isCancelled: ResponseTypePredicates.CANCELLED,
-  },
-  debug: {
-    devTools: DEBUG,
-  },
-};
 // -----------------------------------------------------------------------------
 /**
  * 🔖 Kicks-off the polling api service
+ *     Gateway to api fetch request that requires polling
  */
 function* _fetch(action) {
   if (DEBUG) {

@@ -126,8 +126,9 @@ export function etlFromPivot() {
     },
 
     removeDerivedField: (fieldName) => {
-      if (DEBUG)
+      if (DEBUG) {
         console.debug(`%cremoveDerivedField: ${fieldName}`, colors.blue);
+      }
       ({ etlObject, etlFieldChanges } = removeDerivedField(fieldName, {
         etlObject,
         etlFieldChanges,
@@ -336,6 +337,7 @@ export function removeDerivedField(fieldName, { etlFieldChanges, etlObject }) {
       __derivedFields: removeProp(
         fieldName,
         etlFieldChanges?.__derivedFields ?? {},
+        true, // deepCopy
       ),
     },
   };

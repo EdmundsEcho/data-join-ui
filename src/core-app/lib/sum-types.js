@@ -38,6 +38,8 @@ export const PURPOSE_TYPES_DESC = {
 export const ETL_UNIT_TYPES = {
   [PURPOSE_TYPES.QUALITY]: `etlUnit::quality`,
   [PURPOSE_TYPES.MVALUE]: `etlUnit::measurement`,
+  quality: `etlUnit::quality`,
+  mvalue: `etlUnit::measurement`,
 };
 export const NODE_TYPES = {
   CANVAS: 'canvas',

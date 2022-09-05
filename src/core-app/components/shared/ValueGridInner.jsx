@@ -99,8 +99,7 @@ function Footer({
           size='small'
           aria-label='toggle-filter'
           disabled={!inFilterState}
-          onClick={clearFilter}
-        >
+          onClick={clearFilter}>
           <FilterListIcon size='small' />
         </IconButton>
       </div>
@@ -162,7 +161,7 @@ const options = (
   hideFooterSelectedRowCount: true,
   components: {
     LoadingOverlay: CustomLoadingOverlay,
-    Checkbox,
+    BaseCheckbox: Checkbox,
     Footer: function customFooter() {
       return (
         <Footer
@@ -256,8 +255,8 @@ const ValueGridInner = ({
           onRowClick(row);
         }}
         onRowSelected={({ data: rowModel, isSelected }) => {
-          // applies the callback passing it a synthetic event that reverses
-          // the isSelected value
+          // applies the callback passing it a synthetic event
+          // that reverses the isSelected value
           return onRowSelected({
             id: rowModel.id,
             level: rowModel.level,

@@ -13,7 +13,7 @@ import Box from '@mui/material/Box';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 import { TableContainer } from '@mui/material';
 import DraggableIcon from '../../../assets/DraggableIcon';
@@ -103,104 +103,97 @@ function SourcesBox(props) {
     [mapFiles],
   );
 
-  return (
-    <>
-      {sources.length > 0 ? (
-        <HeadingBox heading='Sources' stateId={`${stateId}|heading-box`}>
-          <Box mb={5}>{children}</Box>
-          <TableContainer>
-            <table className={clsx('Luci-Table-Sources', 'sequence')}>
-              <tbody>
-                {sources.map((_, idx) => (
-                  <tr key={idx}>
-                    <td>
-                      {canReorderSources && (
-                        <Typography variant='body1'>{idx + 1}</Typography>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId='droppable'>
-                {(droppableProvided /* droppableSnapshot */) => (
-                  <table
-                    className={clsx('Luci-Table-Sources', 'filenames')}
-                    ref={droppableProvided.innerRef}
-                  >
-                    <tbody>
-                      {sources.map((source, idx) => (
-                        <Draggable
-                          key={source.filename}
-                          draggableId={source.filename}
-                          index={idx}
-                          isDragDisabled={!canReorderSources}
-                        >
-                          {(draggableProvided, draggableSnapshot) => (
-                            <tr
-                              ref={draggableProvided.innerRef}
-                              {...draggableProvided.draggableProps}
-                              {...draggableProvided.dragHandleProps}
-                              style={filenameHandleStyle(
-                                draggableSnapshot,
-                                draggableProvided,
-                              )}
-                            >
-                              <td style={{ width: 325 }}>
-                                <Typography variant='body1' noWrap>
-                                  {canReorderSources && (
-                                    <DraggableIcon
-                                      className={clsx(
-                                        'Luci-Sources',
-                                        'Luci-Icon',
-                                        'sourceDragIcon',
-                                      )}
-                                    />
+  return sources.length > 0 ? (
+    <HeadingBox heading='Sources' stateId={`${stateId}|heading-box`}>
+      <Box mb={5}>{children}</Box>
+      <TableContainer>
+        <table className={clsx('Luci-Table-Sources', 'sequence')}>
+          <tbody>
+            {sources.map((_, idx) => (
+              <tr key={`sequence-${idx}`}>
+                <td>
+                  {canReorderSources && (
+                    <Typography variant='body1'>{idx + 1}</Typography>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId='droppable'>
+            {(droppableProvided /* droppableSnapshot */) => (
+              <table
+                className={clsx('Luci-Table-Sources', 'filenames')}
+                ref={droppableProvided.innerRef}>
+                <tbody>
+                  {sources.map((source, idx) => (
+                    <Draggable
+                      key={source.filename}
+                      draggableId={source.filename}
+                      index={idx}
+                      isDragDisabled={!canReorderSources}>
+                      {(draggableProvided, draggableSnapshot) => (
+                        <tr
+                          ref={draggableProvided.innerRef}
+                          {...draggableProvided.draggableProps}
+                          {...draggableProvided.dragHandleProps}
+                          style={filenameHandleStyle(
+                            draggableSnapshot,
+                            draggableProvided,
+                          )}>
+                          <td style={{ width: 325 }}>
+                            <Typography variant='body1' noWrap>
+                              {canReorderSources && (
+                                <DraggableIcon
+                                  className={clsx(
+                                    'Luci-Sources',
+                                    'Luci-Icon',
+                                    'sourceDragIcon',
                                   )}
-                                  <Box component='span' title={source.filename}>
-                                    {getFilenameFromPath(source.filename)}
-                                    {getDerivedValue(source.filename)
-                                      ? ` (derived value: ${getDerivedValue(
-                                          source.filename,
-                                        )})`
-                                      : ''}
-                                  </Box>
-                                </Typography>
-                              </td>
-                            </tr>
-                          )}
-                        </Draggable>
-                      ))}
-                    </tbody>
-                    {droppableProvided.placeholder}
-                  </table>
-                )}
-              </Droppable>
-            </DragDropContext>
-            <table style={{ float: 'right' }}>
-              <tbody>
-                {sources.map((source, idx) => (
-                  <tr key={idx}>
-                    <td style={{ height: 50 }}>
-                      {canEditSources &&
-                        getDerivedValue(source.filename) === '' && (
-                          <EditIcon
-                            style={{ fontSize: 16 }}
-                            onClick={() => onViewSource(source.filename)}
-                          />
-                        )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ clear: 'both' }} />
-          </TableContainer>
-        </HeadingBox>
-      ) : null}
-    </>
-  );
+                                />
+                              )}
+                              <Box component='span' title={source.filename}>
+                                {getFilenameFromPath(source.filename)}
+                                {getDerivedValue(source.filename)
+                                  ? ` (derived value: ${getDerivedValue(
+                                      source.filename,
+                                    )})`
+                                  : ''}
+                              </Box>
+                            </Typography>
+                          </td>
+                        </tr>
+                      )}
+                    </Draggable>
+                  ))}
+                  {droppableProvided.placeholder}
+                </tbody>
+              </table>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <table style={{ float: 'right' }}>
+          <tbody>
+            {sources.map((source, idx) => (
+              <tr key={`${source}-${idx}`}>
+                <td style={{ height: 50 }}>
+                  {canEditSources &&
+                    getDerivedValue(source.filename) === '' && (
+                      <EditIcon
+                        style={{ fontSize: 16 }}
+                        onClick={() => onViewSource(source.filename)}
+                      />
+                    )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div style={{ clear: 'both' }} />
+      </TableContainer>
+    </HeadingBox>
+  ) : null;
 }
 
 SourcesBox.propTypes = {

@@ -56,6 +56,7 @@ class LuciError extends Error {
 class ActionError extends LuciError {}
 class ApiTncError extends LuciError {}
 class ApiCallError extends LuciError {}
+class FetchStoreError extends LuciError {}
 class ApiResponseError extends LuciError {}
 class DesignError extends LuciError {}
 class ExpiredSessionError extends LuciError {}
@@ -97,6 +98,7 @@ export {
   ApiCallError,
   ApiResponseError,
   DesignError,
+  FetchStoreError,
   GqlError,
   InputError,
   InputTypeError,

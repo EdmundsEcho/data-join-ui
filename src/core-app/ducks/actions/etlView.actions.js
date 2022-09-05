@@ -2,13 +2,10 @@
 
 import { makeActionCreator } from '../../utils/makeActionCreator';
 
-export const TYPES = {
-  UPDATE_ETL_FIELD: 'etlView/UPDATE_ETL_FIELD',
-  RENAME_ETL_FIELD: 'etlView/RENAME_ETL_FIELD', // backtrack
-};
-
-// middleware-related
 export const ETL_VIEW = '[EtlView]';
+export const feature = ETL_VIEW;
+
+export const UPDATE_ETL_FIELD = `${ETL_VIEW} UPDATE_ETL_FIELD`; // command
 
 export const COMPUTE_ETL_VIEW = `${ETL_VIEW} COMPUTE STATE`; // command
 export const SET_ETL_VIEW = `${ETL_VIEW} SET VIEW STATE`; // document
@@ -27,24 +24,6 @@ export const SET_ETL_VIEW_ERROR = `${ETL_VIEW} SET/etlViewErrors`;
 export const RESET_ETL_VIEW_ERROR = `${ETL_VIEW} RESET/etlViewErrors`;
 
 /**
- * {object} headerViews
- */
-export const buildEtlStart = makeActionCreator(
-  TYPES.BUILD_ETL_START,
-  // 'headerViews', // must function when backtracking
-  // ... sagas will access state directly instead of action
-);
-
-/**
- * Called by sagas
- */
-export const buildEtlSuccess = makeActionCreator(
-  TYPES.BUILD_ETL_SUCCESS,
-  'computedEtlObject',
-  // 'builtAt',
-);
-
-/**
  * @function
  * Action creator used to configure the etlObject data.
  * ... derived using pivot(headerViews).
@@ -55,7 +34,7 @@ export const buildEtlSuccess = makeActionCreator(
  * @return void
  */
 export const updateEtlField = makeActionCreator(
-  TYPES.UPDATE_ETL_FIELD,
+  UPDATE_ETL_FIELD,
   'fieldName',
   'key',
   'value',
@@ -108,18 +87,26 @@ export const removeEtlField = makeActionCreator(
   'purpose',
 );
 
+// ::document
 export const deleteDerivedField = makeActionCreator(
   DELETE_DERIVED_FIELD,
   'fieldName',
 );
 
-export const computeEtlView = makeActionCreator(
-  COMPUTE_ETL_VIEW,
-  'startTime',
-  'headerViews', // optional
-  'etlFieldChanges', // optional
-);
+// ::command
+export const computeEtlView = (startTime) => ({
+  type: COMPUTE_ETL_VIEW,
+  startTime,
+});
 
+// ::document
+export const setEtlView = makeActionCreator(
+  SET_ETL_VIEW,
+  'etlObject',
+  'etlFieldChanges',
+  'elapsedTime',
+);
+/*
 export const setEtlView = (...args) => {
   const result = makeActionCreator(
     SET_ETL_VIEW,
@@ -129,6 +116,7 @@ export const setEtlView = (...args) => {
   )(...args);
   return result;
 };
+*/
 
 export const makeDerivedField = makeActionCreator(
   MAKE_DERIVED_FIELD,

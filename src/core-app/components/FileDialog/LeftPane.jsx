@@ -122,10 +122,11 @@ function LeftPane({ projectId, toggleFile }) {
   // initial state = [] -> post fetch state
   //
   useEffect(() => {
+    let ignore = false;
     if (latchState.current === 'OPEN') {
       latchState.current = 'CLOSED';
 
-      if (fetchStatus === STATUS.idle) {
+      if (fetchStatus === STATUS.idle && !ignore) {
         // fetchDirectoryStart changes the fetchStatus
         switch (true) {
           case !hasHistory: {
@@ -142,7 +143,10 @@ function LeftPane({ projectId, toggleFile }) {
         }
       } // else: user-driven requests for data
     }
-  }, []);
+    return () => {
+      ignore = true;
+    };
+  }, [dispatch, fetchStatus, initialFetch, previousRequest, hasHistory]);
 
   // the deconstructed result used to render the state of the component
   const { path_query: pathQuery, display_name: displayName } = hasHistory

@@ -20,6 +20,7 @@ import {
   REMOVE_HEADER_VIEW,
   SET_WIDE_TO_LONG_FIELDS_IN_HV,
   SET_FIXED_HVS,
+  RUN_FIX_REPORT,
   setHvsFixes,
 } from '../ducks/actions/headerView.actions';
 import {
@@ -30,7 +31,7 @@ import { setNotification } from '../ducks/actions/notifications.actions';
 
 // ⚠️  returns a timeout promise
 import { reportHvsFixesP } from '../ducks/rootSelectors';
-import { SagasError, TimeoutError } from '../lib/LuciErrors';
+import { SagasError, TimeoutError, DesignError } from '../lib/LuciErrors';
 
 import * as UT from './sagas.helpers';
 import { colors } from '../constants/variables';
@@ -61,6 +62,7 @@ const scheduleFixReportActions = [
   ADD_HEADER_VIEW, // document
   REMOVE_HEADER_VIEW, // document
   SET_FIXED_HVS, // document updated hvs using lazyAction
+  RUN_FIX_REPORT, // command (direct to sagas)
   // (action) => action?.type?.includes(`${HEADER_VIEW} ${FIX}`),
 ];
 
@@ -68,7 +70,7 @@ function* _report() {
   try {
     const state = yield select();
     // the computation
-    const fixes = yield call(reportHvsFixesP, { state, DEBUG });
+    const fixes = yield call(reportHvsFixesP, { state, timeout: 200, DEBUG });
     return fixes; // receiver, informs the race condition
   } catch (error) {
     if (error instanceof TimeoutError) {
@@ -85,21 +87,18 @@ function* _report() {
   }
 }
 
-function* _scheduleValidation(action) {
-  if (typeof action === 'undefined') {
-    console.warn(`Report sagas recieved undefined action`);
-  }
+function* _scheduleValidation(action = undefined) {
   if (DEBUG) {
+    const { type = 'undefined (ok)' } = action;
     console.debug(
-      '%cheaderView-report.sagas received an action',
+      `%cheaderView-report.sagas reset timer with: ${type}`,
       colors.orange,
     );
-    console.dir(action);
   }
 
   try {
     // 👉 The race starts here
-    const [report, timedout, nextRequest] = yield race([
+    const [report, timedout, nextActionRequest] = yield race([
       call(_report),
       take(`${HEADER_VIEW} ${TIMED_OUT}`),
       take(scheduleFixReportActions),
@@ -136,16 +135,18 @@ function* _scheduleValidation(action) {
 
       // when another request is recieved,
       // 👉 start the race over.
-      case typeof nextRequest !== 'undefined':
+      case typeof nextActionRequest !== 'undefined':
         if (DEBUG) {
-          console.debug(`%c⬜ The next request won the race!!!`, COLOR);
+          console.debug(`%c 👉 The next request won the race!!!`, COLOR);
         }
         /* just cancel others in the race */
-        yield call(_scheduleValidation); // restart the process
+        yield call(_scheduleValidation, nextActionRequest); // restart the process
         break;
 
       default:
-        break;
+        throw new DesignError(
+          'Sagas race condition ended with unexpected state',
+        );
     }
   } catch (e) {
     console.error(e);

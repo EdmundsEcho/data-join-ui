@@ -128,6 +128,7 @@ const usePagination = ({
         // startCursor,
       } = cache.pageInfo;
 
+      // btoa - base64 encoded ascii
       const overrideCursor = typeof after !== 'undefined';
       const endCursor = overrideCursor ? btoa(after) : defaultEndCursor;
       const hasNextPage = overrideCursor || defaultHasNext;
@@ -166,34 +167,38 @@ const usePagination = ({
         //
         // move forward
         //
-        case newPage > currentPageIdx1:
-          if (hasNextPage) {
-            setCurrentPageIdx1(newPage);
-            setCursor({
-              page: newPage,
-              limit: pageSize,
-            });
-          } else {
-            throw new InputError(
-              `Trying to move past the data boundary: ${currentPageIdx1} ${newPage}`,
-            );
-          }
+        case newPage > currentPageIdx1: // ~ moving forward
+          try {
+            if (hasNextPage) {
+              setCurrentPageIdx1(newPage);
+              setCursor({
+                page: newPage,
+                limit: pageSize,
+              });
+            } else {
+              throw new InputError(
+                `Trying to move past the data boundary: ${currentPageIdx1} ${newPage}`,
+              );
+            }
+          } catch (x) {}
           break;
         //
         // move backwards
         //
-        case newPage < currentPageIdx1:
-          if (hasPreviousPage) {
-            setCurrentPageIdx1(newPage);
-            setCursor({
-              page: newPage,
-              limit: pageSize,
-            });
-          } else {
-            throw new InputError(
-              `Trying to move before the data boundary: ${currentPageIdx1} ${newPage}`,
-            );
-          }
+        case newPage < currentPageIdx1: // ~ moving backwards
+          try {
+            if (hasPreviousPage) {
+              setCurrentPageIdx1(newPage);
+              setCursor({
+                page: newPage,
+                limit: pageSize,
+              });
+            } else {
+              throw new InputError(
+                `Trying to move before the data boundary: ${currentPageIdx1} ${newPage}`,
+              );
+            }
+          } catch (x) {}
           break;
         default:
       }
@@ -239,11 +244,11 @@ const usePagination = ({
   // 🔗 side-effect: setCache (triggers the user state to change)
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    let isMounted = true;
+    let ignore = false; // react 18
 
     if (!isOn) {
       return () => {
-        isMounted = false;
+        ignore = true;
       };
     }
 
@@ -256,20 +261,19 @@ const usePagination = ({
     //
     fetchFn({ filter, ...cursor }).then(
       (response) => {
-        if (!isMounted) {
-          return;
+        if (!ignore) {
+          setCache({ ...normalizer(response), page: currentPageIdx1 });
+          setStatus('success');
         }
-        setCache({ ...normalizer(response), page: currentPageIdx1 });
-        setStatus('success');
       },
       (error) => {
         setCache(error);
         setStatus('error');
       },
     );
-    // effect returns how to "clean-up" after each call to useEffect
+    // Only the last request is not ignored
     return () => {
-      isMounted = false;
+      ignore = true;
     };
   }, [currentPageIdx1, cursor, fetchFn, filter, isOn, normalizer]);
 

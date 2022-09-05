@@ -19,7 +19,6 @@ import Button from '@mui/material/Button';
 
 // debugging
 import { useClear } from '../hooks/use-persisted-state';
-import { hideStepper } from '../ducks/actions/stepper.actions';
 
 // public resources
 import logo from '../assets/images/Logo.png';
@@ -104,7 +103,6 @@ const projects = [
 ];
 
 function Projects(/* props tbd */) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const stepStrings = ['Data Sources', 'Stack Sources', 'Matrix'];
@@ -112,10 +110,6 @@ function Projects(/* props tbd */) {
   const openProject = (project) => {
     navigate(`/campaigns/${project.id}/files`);
   };
-
-  useEffect(() => {
-    dispatch(hideStepper());
-  }, [dispatch]);
 
   return (
     <>
@@ -126,8 +120,7 @@ function Projects(/* props tbd */) {
           {projects.map((project) => (
             <TableRow
               key={project.displayName}
-              onClick={() => openProject(project)}
-            >
+              onClick={() => openProject(project)}>
               <TableCell style={{ width: '40%' }}>
                 {project.displayName}
               </TableCell>
@@ -188,8 +181,7 @@ function Debugging({ hide }) {
 
   return hide ? null : (
     <div
-      style={{ display: 'flex', justifyContent: 'center', fontSize: '12px' }}
-    >
+      style={{ display: 'flex', justifyContent: 'center', fontSize: '12px' }}>
       <div>
         <Button onClick={printStore}>Print State To Console</Button>
       </div>
@@ -219,8 +211,7 @@ function CopyRight() {
         justifyContent: 'center',
         alignContent: 'center',
         margin: '30px',
-      }}
-    >
+      }}>
       <Typography style={{ margin: 'auto' }} variant='subtitle1'>
         {`\u00A9 Copyright ${/\d{4}/.exec(Date())[0]} Lucivia LLC`}
       </Typography>

@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import Container from '@mui/material/Container';
 import clsx from 'clsx';
 
-import { Droppable } from 'react-beautiful-dnd';
+import { Droppable } from '@hello-pangea/dnd';
 
 /* eslint-disable react/jsx-props-no-spreading */
 
@@ -38,8 +38,7 @@ const DropZone = (props) => {
             activeZone: snapshot.isDraggingOver,
           })}
           {...provided.droppableProps}
-          ref={provided.innerRef}
-        >
+          ref={provided.innerRef}>
           {/* Draggable children */}
           {children}
           {provided.placeholder}

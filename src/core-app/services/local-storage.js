@@ -9,8 +9,8 @@
 import { createStore, clear as clear_, del, keys, set, get } from 'idb-keyval';
 import { ReadWriteError } from '../lib/LuciErrors';
 
-const DB = 'redux-store-db';
-const TBL = 'store_v2';
+const DB = 'redux-store-db-v3';
+const TBL = 'store_v3';
 
 const idbStore = createStore(DB, TBL);
 

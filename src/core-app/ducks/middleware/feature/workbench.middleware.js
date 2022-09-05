@@ -18,7 +18,8 @@
  */
 import {
   // pass-through document
-  TYPES,
+  TOGGLE_VALUE,
+  TOGGLE_REDUCED,
   SET_MSPAN_REQUEST,
   SET_COMP_REDUCED,
   //
@@ -37,16 +38,11 @@ import {
   setDraggedId, // document
   setGroupSemantic, // document
   moveTree,
+  resetTree as resetWorkbench,
   tagWarehouseState,
   // MAKE_COMP_SERIES, // command
   // setCompValues, // document
 } from '../../actions/workbench.actions';
-import {
-  ApiCallError,
-  InvalidStateError,
-  ApiResponseError,
-  InvalidTreeStateError,
-} from '../../../lib/LuciErrors';
 import {
   fetchMatrixCache,
   SET_MATRIX_CACHE, // command
@@ -54,14 +50,18 @@ import {
 import {
   POLLING_RESOLVED,
   POLLING_ERROR,
-  // CANCEL, ⬜ using the back button will cancel
   apiCancel,
   apiFetch,
-  // pollingEventError,
 } from '../../actions/api.actions';
 import { setNotification } from '../../actions/notifications.actions';
-// import { POLLING_API } from '../../actions/polling.actions'; // tmp
-import { setLoader } from '../../actions/ui.actions';
+import { setUiLoadingState } from '../../actions/ui.actions';
+import { saveProject } from '../../actions/project-meta.actions';
+import {
+  ApiCallError,
+  InvalidStateError,
+  ApiResponseError,
+  InvalidTreeStateError,
+} from '../../../lib/LuciErrors';
 import prepareForTransit from '../../../lib/filesToEtlUnits/transforms/prepare-for-transit';
 
 import { ServiceConfigs, getServiceType } from '../../../services/api';
@@ -73,7 +73,7 @@ import {
   selectNodeState,
   getEtlObject,
   resetCanvas,
-  isHostedWarehouseStateStale,
+  isHostedWarehouseStale,
 } from '../../rootSelectors';
 import { Tree } from '../../../lib/obsEtlToMatrix/tree';
 import { moveItemInArray, removeProp } from '../../../utils/common';
@@ -95,6 +95,8 @@ const DEBUG =
 /* eslint-disable no-console */
 
 const MAX_TRIES = 20;
+const { isValid, getData, isValidError, getError } =
+  ServiceConfigs[getServiceType(WORKBENCH)].response;
 
 /* --------------------------------------------------------------------------- */
 const middleware =
@@ -117,6 +119,7 @@ const middleware =
     next(action);
 
     switch (action.type) {
+      //
       case 'VALIDATE_TREE': {
         const tree = getTree(getState());
         const hasDanglingBranches = Object.keys(tree).reduce((acc, key) => {
@@ -150,7 +153,7 @@ const middleware =
         };
         next([setGroupSemantic(nodeState)]);
         // sagas -> SET_MATRIX_CACHE // document
-        dispatch(fetchMatrixCache(nodeState));
+        dispatch(fetchMatrixCache({ projectId, ...nodeState }));
 
         break;
       }
@@ -183,8 +186,8 @@ const middleware =
       // semantic.
       //
       // event -> split/map
-      case TYPES.TOGGLE_VALUE:
-      case TYPES.TOGGLE_REDUCED:
+      case TOGGLE_VALUE:
+      case TOGGLE_REDUCED:
       case SET_COMP_REDUCED:
       case SET_MSPAN_REQUEST: {
         // next(action);
@@ -454,41 +457,44 @@ const middleware =
       // -------------------------------------------------------------------------
       // Fire-up the api core service
       // 📖 when hostedWarehouseState === 'STALE'
+      //    render the warehouse (extraction)
       // -------------------------------------------------------------------------
       // map feature command -> api command
       // ui perspective -> api perspective
       // fetchWarehouse -> apiFetch
       // -------------------------------------------------------------------------
       case FETCH_WAREHOUSE: {
-        // the payload required to make the request is pulled directly
-        // from the redux::store
+        // the payload required to make the warehouse request is pulled directly
+        // from the redux store (nothing in the action).
         const state = getState();
 
         if (getProjectId(state) !== projectId) {
           throw new InvalidStateError(`Mismatch project: redux and middleware`);
         }
 
-        // instantiate | update the hosted warehouse
-        if (!isHostedWarehouseStateStale(state)) {
+        // rebuild warehouse (changed etlObj) | use the current tree
+        // 🔖 there is no reason (yet), to pull from graphql more than once, once the
+        //    tree has been instantiated
+        if (!isHostedWarehouseStale(state)) {
           next(
             setNotification({
-              message: `${WORKBENCH}.middleware: Warehouse cache is valid; no need recompute the warehouse`,
+              message: `${WORKBENCH}.middleware: Warehouse cache is valid; no need re-render the warehouse`,
               feature: WORKBENCH,
             }),
           );
         } else {
           try {
-            // uses action-splitter to process multiple actions
             next([
               setNotification({
                 message: `${WORKBENCH}.middleware: action::feature -> ::api (next: polling-api.sagas)`,
                 feature: WORKBENCH,
               }),
-              setLoader({
+              setUiLoadingState({
                 toggle: true,
                 feature: WORKBENCH,
-                message: `Creating the ETL warehouse`,
+                message: `Creating (or recreating) the ETL warehouse`,
               }),
+              resetWorkbench(),
               /*-----------------------------------------------------------------*/
               apiFetch({
                 /*-----------------------------------------------------------------*/
@@ -499,7 +505,7 @@ const middleware =
                 },
                 request: {
                   project_id: projectId,
-                  etlObject: prepareForTransit(getEtlObject(state)),
+                  etlObject: prepareForTransit(getEtlObject(state)), // config for extraction
                   maxTries: MAX_TRIES,
                 },
               }), // map + translation
@@ -507,12 +513,12 @@ const middleware =
           } catch (e) {
             // ERROR will have been thrown/catched if deeper
             console.error(e);
-            next([
+            next(
               setNotification({
                 message: `${WORKBENCH}.middleware: ${e?.message || e}`,
                 feature: WORKBENCH,
               }),
-            ]);
+            );
           }
         }
         break;
@@ -541,7 +547,13 @@ const middleware =
             }),
           );
         } finally {
-          next(setLoader({ toggle: false, feature: WORKBENCH }));
+          next(
+            setUiLoadingState({
+              toggle: false,
+              feature: WORKBENCH,
+              message: 'Done cancel warehouse',
+            }),
+          );
           next(tagWarehouseState('CURRENT'));
         }
         break;
@@ -553,9 +565,6 @@ const middleware =
       // The response has a view of the obsEtl (representation of the warehouse)
       // api event for this feature -> document feature
       case `${WORKBENCH} ${POLLING_RESOLVED}`: {
-        const { isValid, getData } =
-          ServiceConfigs[getServiceType(WORKBENCH)].response;
-
         if (DEBUG) {
           console.log(`👉 middleware - resolved`);
           console.log(action);
@@ -571,11 +580,25 @@ const middleware =
           );
         }
         try {
-          const { subject, measurements } = getData(action.event.request);
+          const { id, subject, measurements } = getData(action.event.request);
           const { etlFields, etlUnits } = getEtlObject(getState());
 
+          if (id !== projectId) {
+            throw new InvalidStateError(
+              `Mismatch project: graphql and middleware`,
+            );
+          }
+
+          next(
+            setUiLoadingState({
+              toggle: true,
+              feature: WORKBENCH,
+              message: `Initializing the workbench`,
+            }),
+          );
           //
-          // Normalizer-like
+          // Normalizer-like: raw -> tree
+          //
           // ⬜ This should be something we can configure to better encapsulate
           //    the tree structure vs how it can be used.
           //
@@ -593,13 +616,9 @@ const middleware =
 
           // document the flat version of the tree
           next([
-            setLoader({
-              toggle: false,
-              feature: WORKBENCH,
-              message: `Creating the ETL warehouse`,
-            }),
             setTree(Tree.toFlatNodes(tree)),
-            next(tagWarehouseState('CURRENT')),
+            tagWarehouseState('CURRENT'),
+            saveProject(), // required until stop resetting redux between pages
           ]);
         } catch (e) {
           if (e instanceof ApiCallError) {
@@ -617,6 +636,14 @@ const middleware =
               }),
             );
           }
+        } finally {
+          next(
+            setUiLoadingState({
+              toggle: false,
+              feature: WORKBENCH,
+              message: 'Done processing new warehouse',
+            }),
+          );
         }
 
         break;
@@ -624,11 +651,8 @@ const middleware =
 
       // action :: pollingEventError
       case `${WORKBENCH} ${POLLING_ERROR}`: {
-        const { isValid, getData } =
-          ServiceConfigs[getServiceType(WORKBENCH)].response;
-
         // expects event
-        if (!isValid(action?.event?.request)) {
+        if (!isValidError(action?.event?.request)) {
           console.dir(action);
           throw new ApiResponseError(
             'workbench.middleware: unexpected response; see api.ServiceConfigs',
@@ -641,10 +665,15 @@ const middleware =
         next([
           setNotification({
             message:
-              getData(action.event.request) || 'The API polling request failed',
+              getError(action.event.request) ||
+              'The API polling request failed',
             feature: WORKBENCH,
           }),
-          setLoader({ toggle: false, feature: WORKBENCH }),
+          setUiLoadingState({
+            toggle: false,
+            feature: WORKBENCH,
+            message: 'Done workbench',
+          }),
         ]);
 
         break;

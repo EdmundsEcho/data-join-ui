@@ -111,6 +111,18 @@ export function removeNonDerivedEtlField({
     const etlChanges = etlFieldChangesSelector(state);
     const etlUnits = etlUnitsSelector(state);
     const etlUnit = selectEtlUnitWithName(fieldName, etlUnits);
+    if (typeof etlUnit === 'undefined') {
+      if (DEBUG) {
+        console.warn(
+          `%cTried to remove a fieldName that doesn't exist: ${fieldName}`,
+          COLOR,
+        );
+      }
+      /* nothing to do */
+      return {
+        headerViews: hvs,
+      };
+    }
 
     // ⬜ figure out what is error, usefull?
     // 🦀 This needs to perform the check without derived-fields

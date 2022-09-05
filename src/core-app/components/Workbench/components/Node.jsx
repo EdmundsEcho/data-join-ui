@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 
 import { useSelector, shallowEqual } from 'react-redux';
 
-// import { DragDropContext } from 'react-beautiful-dnd';
-
-// import { makeStyles } from '@mui/material/styles';
 import clsx from 'clsx';
 
 import Card from '@mui/material/Card';
@@ -24,7 +21,7 @@ import EtlUnitGroup from './EtlUnit/EtlUnitGroup';
 import { InvalidStateError } from '../../../lib/LuciErrors';
 
 import { NODE_TYPES } from '../../../lib/sum-types';
-import { useTraceUpdate } from '../../../constants/variables';
+// import { useTraceUpdate } from '../../../constants/variables';
 // import { colors } from '../../../constants/variables';
 
 function parentIndex(paletteOrCanvas, height) {
@@ -93,9 +90,10 @@ function Node(props) {
   } = props;
 
   // debugging tool, override = true turns it on (otherwise env)
-  useTraceUpdate(props, { override: false, tag: `${id}` });
+  // useTraceUpdate(props, { override: false, tag: `${id}` });
 
   // 📖
+  // use shallowEqual to avoid re-render when values remain the same
   const {
     height,
     childIds = [],
@@ -115,10 +113,7 @@ function Node(props) {
   // the next line is deprecated to prevent re-rendering; use getAmIDropDisabled
   // const nowDragging = useSelector(getDraggedId, shallowEqual);
   //
-  const isDropDisabled = useSelector(
-    (state) => getAmIDropDisabled(state, id),
-    shallowEqual,
-  );
+  const isDropDisabled = useSelector((state) => getAmIDropDisabled(state, id));
 
   // 💫 increment the height value
   const renderChildren = (
@@ -150,8 +145,7 @@ function Node(props) {
             type: 'leaf',
             context: paletteOrCanvas,
           }}
-          moveOrCopy={moveOrCopy}
-        >
+          moveOrCopy={moveOrCopy}>
           <EtlUnit
             className={clsx('Node-inner', 'unit', paletteOrCanvas)}
             context={paletteOrCanvas}
@@ -171,16 +165,14 @@ function Node(props) {
             type: 'group',
             context: paletteOrCanvas,
           }}
-          moveOrCopy={moveOrCopy}
-        >
+          moveOrCopy={moveOrCopy}>
           <EtlUnitGroup
             context={paletteOrCanvas}
             className={clsx('Node-inner', 'group', paletteOrCanvas)}
             config={{
               type: groupType,
               nodeId: id,
-            }}
-          >
+            }}>
             <DropZone
               key={`drop-zone-${id}`}
               config={{
@@ -191,8 +183,7 @@ function Node(props) {
               }}
               droppableId={`${id}`}
               direction={direction}
-              isDropDisabled={isDropDisabled}
-            >
+              isDropDisabled={isDropDisabled}>
               {/* Draggable children */}
               {childIds?.length === 0 ? (
                 <Typography>Drop zone</Typography>
@@ -212,8 +203,7 @@ function Node(props) {
       return (
         <Card
           key={`node-card-${id}`}
-          className={clsx('Node-inner', 'superGroup', paletteOrCanvas)}
-        >
+          className={clsx('Node-inner', 'superGroup', paletteOrCanvas)}>
           <DropZone
             key={`drop-zone-${id}`}
             config={{
@@ -225,8 +215,7 @@ function Node(props) {
             droppableId={`${id}`}
             direction={direction}
             isDropDisabled={isDropDisabled}
-            isCombineEnabled
-          >
+            isCombineEnabled>
             {/* Draggable children */}
             {childIds?.length === 0
               ? index === 2 && (

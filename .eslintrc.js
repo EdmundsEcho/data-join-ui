@@ -87,6 +87,7 @@ module.exports = {
     // extends prefix: plugin:name
     // 'prettier',
     'redux-saga',
+    // 'material-ui',
     'import',
     'react',
     'react-hooks',

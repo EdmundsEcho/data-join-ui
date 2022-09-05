@@ -1,26 +1,48 @@
 // 📖 Data pulls
-import { computeEtlView } from '../../ducks/actions/etlView.actions';
-import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
+import { setUiLoadingState } from '../../ducks/actions/ui.actions';
+import { saveProject } from '../../ducks/actions/project-meta.actions';
+import { runFixReport } from '../../ducks/actions/headerView.actions';
+import {
+  computeEtlView,
+  feature as ETL_FEATURE,
+} from '../../ducks/actions/etlView.actions';
+import {
+  feature as WORK_FEATURE,
+  fetchWarehouse,
+} from '../../ducks/actions/workbench.actions';
+import {
+  feature as MATRIX_FEATURE,
+  fetchMatrix,
+} from '../../ducks/actions/matrix.actions';
+import { setCurrentPage } from '../../ducks/actions/stepper.actions';
 import {
   getHasHeaderViewsFixes,
   getHasSelectedFiles,
   getHasEtlViewErrors,
   getHasPendingRequests,
+  runRequestSpecValidations as passRequestSpecValidations,
 } from '../../ducks/rootSelectors';
 
 // utility location.pathname -> route
 import { getRouteFromPath as routeFromPathname } from '../../utils/common';
+import { colors } from '../../constants/variables';
+
+// -----------------------------------------------------------------------------
+const DEBUG = true || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
+// -----------------------------------------------------------------------------
+/* eslint-disable no-console */
 
 // -----------------------------------------------------------------------------
 // Configuration
 // State machine (collection of pages keyed using route)
 //
 // ✅ pure (no-state)
-// ✅ ref functions required to parse the reduxState
+// ✅ string ref functions required to parse the reduxState
 // ✅ ref action creators
 //
 // Map key: route
 //
+// NEXT: Set the component values; have it read by the router
 //
 const pagesMachine = {
   meta: {
@@ -34,7 +56,6 @@ const pagesMachine = {
     on: {
       NEXT: { target: 'files' },
     },
-    forwardGuard: () => true,
   },
   files: {
     key: 'files',
@@ -45,7 +66,10 @@ const pagesMachine = {
     prevPage: 'meta',
     nextPage: 'fields',
     entry: {
-      actions: [],
+      actions: [runFixReport()], // refresh the report
+    },
+    exit: {
+      actions: ['saveProject'],
     },
     on: {
       NEXT: {
@@ -53,13 +77,6 @@ const pagesMachine = {
         cond: 'forwardGuard',
       },
       PREV: { target: 'meta' },
-    },
-    forwardGuard: (reduxState) => {
-      return (
-        !getHasHeaderViewsFixes(reduxState) &&
-        !getHasPendingRequests(reduxState, 'INSPECTION') &&
-        getHasSelectedFiles(reduxState)
-      );
     },
   },
   fields: {
@@ -71,7 +88,17 @@ const pagesMachine = {
     prevPage: 'files',
     nextPage: 'workbench',
     entry: {
-      actions: [() => computeEtlView(new Date())],
+      actions: [
+        setUiLoadingState({
+          toggle: true,
+          feature: ETL_FEATURE,
+          message: `Loading EtlView`,
+        }),
+        'computeEtlView',
+      ],
+    },
+    exit: {
+      actions: [],
     },
     on: {
       NEXT: {
@@ -79,12 +106,6 @@ const pagesMachine = {
         cond: 'forwardGuard',
       },
       PREV: { target: 'files' },
-    },
-    forwardGuard: (reduxState) => {
-      return (
-        !getHasEtlViewErrors(reduxState) &&
-        !getHasPendingRequests(reduxState, 'EXTRACTION')
-      );
     },
   },
   workbench: {
@@ -96,14 +117,21 @@ const pagesMachine = {
     prevPage: 'fields',
     nextPage: 'matrix',
     entry: {
-      actions: [fetchWarehouse()],
+      actions: [
+        setUiLoadingState({
+          toggle: true,
+          feature: WORK_FEATURE,
+          message: `Loading Warehouse`,
+        }),
+        'fetchWarehouse',
+      ],
+    },
+    exit: {
+      actions: ['saveProject'],
     },
     on: {
       NEXT: { target: 'matrix', cond: 'forwardGuard' },
       PREV: { target: 'fields' },
-    },
-    forwardGuard: (reduxState) => {
-      // validate the canvas-side of the tree
     },
   },
   matrix: {
@@ -114,23 +142,22 @@ const pagesMachine = {
     stepDisplay: 'Run the analysis',
     prevPage: 'workbench',
     nextPage: undefined,
+    entry: {
+      actions: [
+        setUiLoadingState({
+          toggle: true,
+          feature: MATRIX_FEATURE,
+          message: `Pulling the requested data`,
+        }),
+        'fetchMatrix',
+      ],
+    },
     on: {
       PREV: { target: 'workbench' },
     },
-    forwardGuard: () => false,
   },
 };
 
-function dispatchInit(dispatch) {
-  return (action) => {
-    let actionObj = action;
-    if (typeof action === 'function') {
-      actionObj = action();
-    }
-    console.debug(`dispatching: ${action.type}`);
-    dispatch(actionObj);
-  };
-}
 /**
  *
  * Machine instance that returns functions required to inform
@@ -141,42 +168,134 @@ function dispatchInit(dispatch) {
  * ✅ know what actions to dispatch when transitioning between pages
  * ✅ compute next page for each call to NEXT and PREV for a given state
  *
+ * @function Machine
  */
-export default ((machine) => (dispatch) => {
-  let nextRoute;
-
-  const closure = {
-    isNextStepEnabled: (reduxState, { route }) => {
-      return machine[route].forwardGuard(reduxState);
+export default ((machine) => (projectId, dispatch) => {
+  /**
+   * non-serializable
+   * functions keyed by name
+   */
+  const fns = {
+    computeEtlView: () => computeEtlView(new Date()),
+    fetchWarehouse: () => fetchWarehouse(new Date()),
+    fetchMatrix: () => fetchMatrix(projectId), // pid used to assert with saga
+    saveProject: () => saveProject(),
+  };
+  /**
+   * Read-only state
+   */
+  const forwardGuards = {
+    meta: () => true,
+    files: (reduxState) => {
+      return (
+        !getHasHeaderViewsFixes(reduxState) &&
+        !getHasPendingRequests(reduxState, 'INSPECTION') &&
+        getHasSelectedFiles(reduxState)
+      );
     },
+    fields: (reduxState) => {
+      return (
+        !getHasEtlViewErrors(reduxState) &&
+        !getHasPendingRequests(reduxState, 'EXTRACTION')
+      );
+    },
+    workbench: (reduxState) => {
+      return passRequestSpecValidations(reduxState);
+    },
+    matrix: () => false,
+  };
 
+  const backwardGuards = {
+    meta: () => false,
+  };
+
+  /**
+   * utility fn
+   * pure: does not depend on context
+   * @function
+   * @return {function}
+   */
+  const getPredFn = (name, lookup) => {
+    if (name in lookup) {
+      return lookup[name];
+    }
+    return () => true;
+  };
+
+  // depends on dispatch in context
+  const emit = (action) => {
+    if (DEBUG) {
+      console.debug(
+        `%cemitting action of type: ${typeof action}`,
+        colors.yellow,
+      );
+      console.dir(action);
+    }
+    let actionObj = action;
+
+    if (typeof action === 'string') {
+      actionObj = fns[action]();
+    } else if (typeof action === 'function') {
+      actionObj = action();
+    }
+    dispatch(actionObj);
+  };
+
+  //-----------------------------------------------------
+  let nextRoute;
+  //-----------------------------------------------------
+  const goNewPage = (route, event) => {
+    // 1️⃣  compute next page
+    nextRoute = machine[route].on?.[event.type].target ?? route;
+    // 2️⃣  run the actions
+    if (nextRoute !== route) {
+      console.debug(`SET ${nextRoute}`);
+      emit(setCurrentPage(nextRoute));
+      (machine[route]?.exit?.actions ?? []).forEach(emit /* (action) */);
+      (machine[nextRoute]?.entry?.actions ?? []).forEach(emit /* (action) */);
+    }
+  };
+
+  // interface for the component
+  return {
+    isNextStepEnabled: (reduxState, page) => {
+      const { route } = page;
+      if (typeof route !== 'undefined') {
+        return forwardGuards?.[route](reduxState) ?? true;
+      }
+      return false;
+    },
+    // process the event types; used by onClick handler
     transition: (reduxState, { route }, event) => {
       switch (event.type) {
+        // thus far, a mirror image of PREV
+        // abstraction = change state protocol
         case 'NEXT': {
-          if (machine[route].forwardGuard(reduxState)) {
-            nextRoute = machine[route].on?.NEXT.target ?? route;
-            const dispatchInner = dispatchInit(dispatch);
-            machine[nextRoute].entry.actions.forEach((action) => {
-              dispatchInner(action);
-            });
+          const fn = getPredFn(route, forwardGuards);
+          if (fn(reduxState)) {
+            goNewPage(route, event);
           }
           break;
         }
+        // thus far, a mirror image of NEXT
+        // abstraction = change state protocol
         case 'PREV': {
-          nextRoute = machine[route].on?.PREV.target ?? route;
+          const fn = getPredFn(route, backwardGuards);
+          if (fn(reduxState)) {
+            goNewPage(route, event);
+          }
           break;
         }
 
         default:
+        /* nothing */
       }
       return nextRoute;
     },
   };
-
-  return closure;
 })(pagesMachine);
 
-// ⚠️  Relies on insertion order
+// ⚠️  Relies on insertion order to maintain page order
 const pages = Object.values(pagesMachine);
 
 /**

@@ -16,7 +16,7 @@ import './assets/index.css';
 import './assets/dashboard.css';
 import './assets/fonts.css';
 
-import Dashboard from './App.PlayNest.jsx';
+import Dashboard from './App.V2.jsx';
 
 /* eslint-disable-next-line */
 console.info(`App using react version: ${reactVersion}`);
@@ -29,14 +29,14 @@ const root = ReactDOMClient.createRoot(container);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <SnackbarProvider maxSnack={3}>
-        <ThemeProvider theme={luciviaTheme}>
+      <ThemeProvider theme={luciviaTheme}>
+        <SnackbarProvider maxSnack={3}>
           <StyledEngineProvider injectFirst>
             <CssBaseline />
             <Dashboard />
           </StyledEngineProvider>
-        </ThemeProvider>
-      </SnackbarProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

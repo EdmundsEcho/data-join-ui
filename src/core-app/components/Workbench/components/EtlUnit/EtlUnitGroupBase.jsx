@@ -8,7 +8,6 @@ import clsx from 'clsx';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import makeStyles from '@mui/styles/makeStyles';
 import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
 import Grid from '@mui/material/Grid';
@@ -16,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMoreRounded';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLessRounded';
+// import UnfoldLessIcon from '@mui/icons-material/UnfoldLessRounded';
 import MenuIcon from '@mui/icons-material/Menu';
 import Card from '@mui/material/Card';
 // icons
@@ -34,8 +33,6 @@ import {
   addDerivedField,
   removeNode,
 } from '../../../../ducks/actions/workbench.actions';
-
-// import { colors } from '../../../../constants/variables';
 
 // custom components used to fill the shell/base
 import EtlUnitGroupProvider, {
@@ -65,20 +62,19 @@ import EtlUnitGroupProvider, {
  */
 function EtlUnitGroupBase({ nodeId, context, children }) {
   // 📖
-  const { data } = useSelector((state) => selectNodeState(state, nodeId));
-
   const dispatch = useDispatch();
-
-  const handleRemoveGroup = useCallback(() => {
-    dispatch(removeNode(nodeId));
-  }, [dispatch, nodeId]);
+  const { data } = useSelector((state) => selectNodeState(state, nodeId));
 
   const [showDetailInit, setShowDetailInit] = useState(() => undefined);
 
-  const handleAddDerivedField = useCallback(() => {
+  // the provider wraps these in a memo or useCallback
+  const handleRemoveGroup = () => dispatch(removeNode(nodeId));
+
+  // the provider wraps these in a memo or useCallback
+  const handleAddDerivedField = () => {
     dispatch(addDerivedField({ id: nodeId }));
     setShowDetailInit(true);
-  }, [dispatch, nodeId]);
+  };
 
   /*
   const handleRemoveDerivedField = useCallback(() => {
@@ -102,8 +98,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
       data={data}
       showDetail={showDetailInit}
       stateId={`groupNodeContext-${nodeId}`}
-      showMoreMenu={false}
-    >
+      showMoreMenu={false}>
       {/* only use class to show/hide header 🦀 ? */}
       <EtlUnitGroupContext.Consumer>
         {({ showDetail, handleClickFab }) => (
@@ -114,8 +109,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
                 className={clsx(
                   'header-wrapper',
                   displayType === 'shell' && 'shell',
-                )}
-              >
+                )}>
                 <Header
                   className={clsx('header')}
                   type={displayType}
@@ -129,8 +123,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
                   <Collapse
                     in={showDetail}
                     timeout='auto'
-                    unmountOnExit={false}
-                  >
+                    unmountOnExit={false}>
                     {displayType === 'derivedField' ? (
                       <DerivedFieldConfig
                         nodeId={nodeId}
@@ -148,8 +141,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
                 className={clsx(
                   'footer-wrapper',
                   displayType === 'shell' && 'shell',
-                )}
-              >
+                )}>
                 <Footer type={displayType} showFab={displayType === 'empty'} />
               </div>
             </Card>
@@ -160,8 +152,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
                   className='fab'
                   size='small'
                   color='secondary'
-                  onClick={handleClickFab}
-                >
+                  onClick={handleClickFab}>
                   <AddIcon fontSize='small' />
                 </Fab>
                 <div className={clsx('spacer')} />
@@ -205,86 +196,47 @@ Title.propTypes = {
 
 //------------------------------------------------------------------------------
 // Tools
-const useToolStyles = makeStyles((theme) => ({
-  icon: {
-    margin: 0,
-    padding: 0,
-    fontSize: '1.3rem',
-  },
-  toolBox: {
-    display: 'flex',
-    flex: 0.3,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  version1: { justifyContent: 'flex-end' },
-  tool: {
-    color: theme.palette.primary.main,
-    padding: 0,
-  },
-
-  clearIcon: { padding: theme.spacingFn(1), fontSize: '1.2rem' },
-  menuIcon: { padding: theme.spacingFn(1), fontSize: '1.2rem' },
-  expandMoreIcon: { fontSize: '1.5rem', padding: theme.spacingFn(1) },
-
-  foldingToolBox: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    width: '50px',
-  },
-
-  foldIcon: {},
-  //
-}));
 function Tools({ version, withShowMore }) {
-  const classes = useToolStyles();
-
   const { handleClearCommand, toggleShowDetail, showDetail } =
     useContext(EtlUnitGroupContext);
 
   /* eslint-disable no-nested-ternary */
   return version === 1 ? (
-    <div className={clsx('tools-root', classes.toolBox, classes.version1)}>
+    <div className={clsx('Luci-tools', 'v1')}>
       {withShowMore && (
         <ShowDetail
-          iconButtonClass={clsx(classes.tool, classes.version1)}
-          expandIconClass={clsx(classes.icon, classes.expandMoreIcon)}
+          iconButtonClass={clsx('v1', 'tool')}
+          expandIconClass={clsx('icon', 'expandMoreIcon')}
           onChange={toggleShowDetail}
           showDetail={showDetail}
         />
       )}
-      <Clear classes={classes} handleClearCommand={handleClearCommand} />
-      <Menu classes={classes} />
+      <Clear handleClearCommand={handleClearCommand} />
+      <Menu />
     </div>
   ) : version === 2 ? (
-    <div className={clsx('tools-root', classes.toolBox, classes.version1)}>
+    <div className={clsx('Luci-tools', 'v1')}>
       {withShowMore && (
         <ShowDetail
-          iconButtonClass={clsx(classes.tool, classes.version1)}
-          expandIconClass={clsx(classes.icon, classes.expandMoreIcon)}
+          iconButtonClass={clsx('v1', 'tool')}
+          expandIconClass={clsx('icon', 'expandMoreIcon')}
           onChange={toggleShowDetail}
           showDetail={showDetail}
         />
       )}
-      <Menu classes={classes} />
+      <Menu />
     </div>
   ) : (
-    <div className={clsx('tools-root', classes.toolBox)}>
-      <div className={clsx(classes.foldingToolBox)}>
-        <IconButton
-          className={clsx(classes.tool, classes.version2)}
-          size='large'
-        >
-          <UnfoldMoreIcon className={clsx(classes.icon, classes.foldIcon)} />
+    <div className={clsx('Luci-tools')}>
+      <div className={clsx('folding')}>
+        <IconButton className={clsx('tool', 'v2')} size='large'>
+          <UnfoldMoreIcon className={clsx('icon')} />
         </IconButton>
-        <IconButton
-          className={clsx(classes.tool, classes.version2)}
-          size='large'
-        >
-          <UnfoldLessIcon className={clsx(classes.icon, classes.foldIcon)} />
+        <IconButton className={clsx('tool', 'v2')} size='large'>
+          <UnfoldMoreIcon className={clsx('icon')} />
         </IconButton>
       </div>
-      <Clear classes={classes} handleClearCommand={handleClearCommand} />
+      <Clear handleClearCommand={handleClearCommand} />
     </div>
   );
   /* eslint-enable no-nested-ternary */
@@ -298,22 +250,25 @@ Tools.defaultProps = {
   withShowMore: false,
 };
 
-function Clear(classes, handleClearCommand) {
+function Clear({ handleClearCommand }) {
   return (
     <IconButton
-      className={clsx(classes.tool)}
+      className={clsx('tool')}
       onClick={handleClearCommand}
-      size='large'
-    >
-      <ClearIcon className={clsx(classes.icon, classes.clearIcon)} />
+      size='large'>
+      <ClearIcon className={clsx('icon', 'clear')} />
     </IconButton>
   );
 }
+Clear.propTypes = {
+  handleClearCommand: PropTypes.func.isRequired,
+};
+Clear.defaultProps = {};
 
-function Menu({ classes }) {
+function Menu() {
   return (
-    <IconButton className={clsx(classes.tool)} size='large'>
-      <MenuIcon className={clsx(classes.icon, classes.menuIcon)} />
+    <IconButton className={clsx('tool')} size='large'>
+      <MenuIcon className={clsx('icon', 'menu')} />
     </IconButton>
   );
 }
@@ -370,14 +325,3 @@ Header.defaultProps = {
 };
 
 export default EtlUnitGroupBase;
-
-/*
-  <IconButton
-        className={clsx(classes.tool, classes.version1)}
-        onClick={toggleShowDetail}
-      >
-        <ExpandMoreIcon
-          className={clsx(classes.icon, classes.expandMoreIcon)}
-        />
-  </IconButton>
-*/

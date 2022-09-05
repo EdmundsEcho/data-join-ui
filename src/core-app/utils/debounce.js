@@ -10,7 +10,7 @@
 const debounce = (fn, wait, immediate) => {
   let timeout;
 
-  return ({ ...args }) => {
+  return (...args) => {
     const context = this;
     const later = () => {
       timeout = null;

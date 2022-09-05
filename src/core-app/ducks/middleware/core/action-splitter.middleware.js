@@ -22,7 +22,7 @@ const actionSplitterMiddleware =
     }
 
     if (Array.isArray(action)) {
-      action.forEach((action_) => dispatch(action_));
+      action.forEach(dispatch);
     } else {
       next(action);
     }

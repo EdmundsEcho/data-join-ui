@@ -47,15 +47,6 @@ import * as fromModal from './modal.reducer';
 export const getProjectId = (state) =>
   fromProjectMeta.getProjectId(state.$_projectMeta);
 
-export const getSaveStatus = (state) =>
-  fromProjectMeta.getSaveStatus(state.$_projectMeta);
-
-export const isCacheStale = (state) =>
-  fromProjectMeta.isCacheStale(state.$_projectMeta);
-
-export const getCacheStatus = (state) =>
-  fromProjectMeta.getCacheStatus(state.$_projectMeta);
-
 export const getInitializingActions = (state) =>
   fromProjectMeta.getInitializingActions(state.$_projectMeta);
 
@@ -104,6 +95,8 @@ export const { STATUS } = fromFileView;
 export const getSelected = (state) =>
   fromHeaderView.getSelected(state.headerView);
 
+export const getCountSelectedFiles = (state) => getSelected(state).length;
+
 export const isFileSelected = (state, path) =>
   fromHeaderView.isFileSelected(state.headerView, path);
 
@@ -146,10 +139,9 @@ export function getHeaderViewsA(state) {
     }, {});
 } */
 
-export const reportHvsFixesP = ({ state, priorHvsFixes, timeout, DEBUG }) =>
+export const reportHvsFixesP = ({ state, timeout, DEBUG }) =>
   fromHeaderView.reportHvsFixesP({
     headerViews: getHeaderViewsA(state),
-    priorHvsFixes,
     timeout,
     DEBUG,
   });
@@ -251,6 +243,14 @@ export const scrubHeaderViews = (state) =>
 export const getEtlObject = (state) => fromEtlView.getEtlObject(state.etlView);
 export const getEtlFields = (state) => fromEtlView.getEtlFields(state.etlView);
 
+/**
+ * Predicate to confirm presence of etlField
+ * @function
+ * @return {bool}
+ */
+export const etlFieldExists = (state, fieldName) =>
+  fromEtlView.etlFieldExists(state.etlView, fieldName);
+
 export const getSelectionModelEtl = (state, fieldName) =>
   fromEtlView.getSelectionModelEtl(state.etlView, fieldName);
 
@@ -283,8 +283,8 @@ export const getEtlFieldChanges = (state) =>
 export const isEtlFieldDerived = (state, fieldName) =>
   fromEtlView.isEtlFieldDerived(state.etlView, fieldName);
 
-export const selectEtlFieldChanges = (state, fieldname) =>
-  fromEtlView.selectEtlFieldChanges(state.etlView, fieldname);
+export const selectEtlFieldChanges = (state, fieldName) =>
+  fromEtlView.selectEtlFieldChanges(state.etlView, fieldName);
 
 export const selectEtlField = (state, fieldName) =>
   fromEtlView.selectEtlField(state.etlView, fieldName);
@@ -294,6 +294,12 @@ export const selectEtlUnit = (state, qualOrMeaName) =>
 
 export const getIsEtlProcessing = (state) =>
   fromEtlView.getIsEtlProcessing(state.etlView);
+
+/**
+ * state => [[name, purpose]]
+ */
+export const listOfFieldNameAndPurposeValues = (state, purpose) =>
+  fromEtlView.listOfFieldNameAndPurposeValues(state.etlView, purpose);
 
 /* derived etlView fields */
 export const getEtlFieldViewData = (state) =>
@@ -327,8 +333,8 @@ export const getHasEtlViewErrors = (state) =>
 export const getSelectedEtlUnits = (state) =>
   fromWorkbench.getSelectedEtlUnits(state.workbench);
 
-export const isHostedWarehouseStateStale = (state) =>
-  fromWorkbench.isHostedWarehouseStateStale(state.workbench);
+export const isHostedWarehouseStale = (state) =>
+  fromWorkbench.isHostedWarehouseStale(state.workbench);
 
 export const getMatrix = (state) => fromWorkbench.getMatrix(state.workbench);
 
@@ -341,11 +347,22 @@ export const getPalette = (state) => fromWorkbench.getPalette(state.workbench);
 export const selectPaletteGroup = (state) =>
   fromWorkbench.selectPaletteGroup(state.workbench);
 
+/**
+ * Predicate - computed tree
+ * @function
+ * @return {bool}
+ */
 export const isWorkbenchInitialized = (state) =>
   fromWorkbench.isWorkbenchInitialized(state.workbench);
 
+export const isHostedMatrixStale = (state) =>
+  fromWorkbench.isHostedMatrixStale(state.workbench);
+
 export const isCanvasDirty = (state) =>
   fromWorkbench.isCanvasDirty(state.workbench);
+
+export const runRequestSpecValidations = (state) =>
+  fromWorkbench.runRequestSpecValidations(state.workbench);
 
 /**
  * Seed for graphql levels
@@ -510,8 +527,11 @@ export const isStepperHidden = (state) => fromStepper.isHidden(state.stepper);
 
 /**
  * UI-loading
+ * Returns { isLoading, message }
+ * @function
+ * @return {Object}
  */
-export const isLoading = (state) => fromUi.isLoading(state.ui);
+export const isUiLoading = (state) => fromUi.isUiLoading(state.ui);
 
 //------------------------------------------------------------------------------
 /**

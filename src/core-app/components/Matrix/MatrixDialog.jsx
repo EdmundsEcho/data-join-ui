@@ -22,7 +22,13 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import Button from '@mui/material/Button';
 
-import MatrixGrid from './MatrixGrid';
+import MatrixGrid from '../Workbench/components/MatrixGrid';
+
+// -----------------------------------------------------------------------------
+// ⬜ Put this in the .env
+const SAVE_MATRIX_ENDPOINT = process.env.REACT_APP_SAVE_MATRIX_ENDPOINT;
+
+// -----------------------------------------------------------------------------
 
 const MatrixDialog = (props) => {
   const { matrix, open, handleClose } = props;
@@ -33,14 +39,13 @@ const MatrixDialog = (props) => {
       open={open}
       onClose={handleClose}
       maxWidth='lg'
-      fullWidth
-    >
+      fullWidth>
       <DialogTitle>
         Matrix
         <IconButton
           data-testid='closable-card-close-button'
           onClick={() => handleClose()}
-          size="large">
+          size='large'>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -50,9 +55,7 @@ const MatrixDialog = (props) => {
       </DialogContent>
       {Object.keys(matrix).length > 0 && (
         <DialogActions>
-          <Button href='http://localhost:5005/v1/matrix/export'>
-            Export File
-          </Button>
+          <Button href={SAVE_MATRIX_ENDPOINT}>Export File</Button>
         </DialogActions>
       )}
     </Dialog>

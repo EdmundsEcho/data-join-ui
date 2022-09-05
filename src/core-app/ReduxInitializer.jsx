@@ -1,6 +1,6 @@
 // src/core-app/ReduxInitializer.jsx
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,11 +23,6 @@ const ReduxInitializer = ({ persistor, children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const redirect = useSelector((state) => state.ui?.redirect);
-
-  const purge = async () => {
-    await persistor.purge();
-    await persistor.purge();
-  };
 
   useEffect(() => {
     if (typeof redirect !== 'undefined') {

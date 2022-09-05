@@ -3,7 +3,9 @@
  *
  * @description
  * Action: Function -> action(dispatch)
- * so function: (dispatch) => dispatch (// create an action //)
+ * so function: (dispatch, getState) => dispatch (// create an action //)
+ *
+ * Utilized by: etlView.middleware (and others)
  *
  */
 
@@ -15,7 +17,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 /* eslint-disable no-console */
 
 const asyncMiddleware =
-  ({ dispatch }) =>
+  ({ getState, dispatch }) =>
   (next) =>
   (action) => {
     //
@@ -30,11 +32,11 @@ const asyncMiddleware =
     // ...notify and process the action:function
     dispatch(
       setNotification({
-        message: `Processing an async action`,
-        feature: action?.meta?.feature ?? `unknown`,
+        message: `Processing an async action: ${action.type}`,
+        feature: action?.meta?.feature ?? 'unknown',
       }),
     );
-    return action.payload(dispatch);
+    return action.payload(dispatch, getState);
   };
 
 export default asyncMiddleware;

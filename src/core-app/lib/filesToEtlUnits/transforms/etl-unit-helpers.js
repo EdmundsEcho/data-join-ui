@@ -226,6 +226,8 @@ export function selectRelatedRemovableFields(removeName, etlUnit, DEBUG) {
 /**
  * only valid for non-subject purpose fields
  *
+ * returns undefined if the fieldName does not exist
+ *
  * @function
  * @param {string} fieldName
  * @param {Object<string,Object>} etlUnits

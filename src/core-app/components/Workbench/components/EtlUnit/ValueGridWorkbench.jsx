@@ -2,12 +2,13 @@
 
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
 // api
-import { fetchLevels } from '../../../../services/api';
+import { fetchLevels as fetchLevelsInner } from '../../../../services/api';
 
 // import { SearchField } from './ValueSearchToolbar';
 // ☎️  Update state
@@ -42,12 +43,18 @@ const columns = [
     // renderHeader: () => <SearchField />,
   },
 ];
-/**
- * api data -> grid
- */
-function parseResponse(response) {
-  return response.data.levels;
-}
+
+//-------------------------------------------------------------------------------
+// api data -> grid
+//
+// 🔖 Calls the api directly
+//    (i.e., without generating a redux action
+//           thereby does not invoke middleware, nor reducers)
+//
+const fetchLevels = (projectId) => (request) => {
+  return fetchLevelsInner({ projectId, ...request });
+};
+const parseResponse = (response) => response.data.levels;
 
 //------------------------------------------------------------------------------
 // The main component
@@ -86,6 +93,8 @@ function ValueGridWorkbench(props) {
 
   const { type, identifier, measurementType, nodeId } = props;
 
+  const { projectId } = useParams();
+
   if (!['txtValues', 'intValues'].includes(type)) {
     throw new InputTypeError(
       `EtlUnitValueGrid received the wrong data type: ${type}`,
@@ -102,7 +111,7 @@ function ValueGridWorkbench(props) {
   const [selectAll, isQuality] = useMemo(() => {
     return typeof measurementType === 'undefined'
       ? [{ qualityName: identifier }, true]
-      : [{ componentName: identifier, measurementType }];
+      : [{ componentName: identifier, measurementType }, false];
   }, [identifier, measurementType]);
 
   const selectionModel = useSelector((state) =>
@@ -121,7 +130,7 @@ function ValueGridWorkbench(props) {
       identifier={identifier}
       purpose={isQuality ? PURPOSE_TYPES.QUALITY : PURPOSE_TYPES.MCOMP}
       baseSelectAll={selectAll}
-      fetchFn={fetchLevels}
+      fetchFn={fetchLevels(projectId)}
       normalizer={parseResponse}
       edgeToGridRowFn={edgeToGridRowFn}
       selectionModel={selectionModel}

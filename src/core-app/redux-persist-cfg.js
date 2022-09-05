@@ -6,6 +6,7 @@
  *
  */
 import { purgeStoredState } from 'redux-persist';
+import autoMergeLevel1 from 'redux-persist/lib/stateReconciler/autoMergeLevel1';
 import idbStorage from './services/local-storage';
 /*
  * configuration for the persistor
@@ -40,6 +41,7 @@ export const persistConfig = {
   serialize: false,
   deserialize: false,
   blacklist: ['workbench.matrix', '_persist'],
+  stateReconciler: autoMergeLevel1,
 };
 
 // -----------------------------------------------------------------------------
@@ -50,4 +52,6 @@ export const persistConfig = {
  *
  * @function
  */
-export const purgePersistedState = () => purgeStoredState(persistConfig);
+const purgePersistedState = () => purgeStoredState(persistConfig);
+const clearIdb = () => idbStorage.clear();
+export { purgePersistedState, clearIdb };

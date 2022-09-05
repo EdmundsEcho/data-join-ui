@@ -27,7 +27,7 @@ const actionFilterMiddleware = () => (next) => (action) => {
 
       case !Object.keys(action).includes('type'): {
         throw new ActionError(
-          `Malformed action - missing a type value:\n${JSON.stringify(action)}`,
+          `Malformed action - missing a type value: ${JSON.stringify(action)}`,
         );
       }
 

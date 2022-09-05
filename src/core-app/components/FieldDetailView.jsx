@@ -103,8 +103,7 @@ function FieldDetailView(props) {
       <Grid
         container
         spacing={5}
-        className={clsx('Luci-FileField', 'detail', 'root', fieldType)}
-      >
+        className={clsx('Luci-FileField', 'detail', 'root', fieldType)}>
         {/* column 1 */}
         <Grid item xs={3} container className={clsx('inputGroup')}>
           <FieldInputDelegate
@@ -120,7 +119,10 @@ function FieldDetailView(props) {
         </Grid>
         <Grid item flex={0} />
         {/* column 2 */}
-        <Grid item xs className={clsx('levels', getValue('purpose'))}>
+        <Grid
+          item
+          xs
+          className={clsx('Luci-DataContainer levels', getValue('purpose'))}>
           <Levels
             fieldType={fieldType}
             getValue={getValue}
