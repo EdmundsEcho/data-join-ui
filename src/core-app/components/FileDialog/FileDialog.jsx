@@ -3,7 +3,9 @@
 
 /**
  *
- * ⬆ FileDialog container
+ * Core-App page
+ *
+ * 👉 FileDialog
  * 📖 files, headerViewErrors, others...
  * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
@@ -11,7 +13,7 @@
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { withSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
@@ -64,14 +66,17 @@ const rightPaneStyle = {
 };
 
 /**
+ * core-app page
  *
  * @component
  *
  */
-const FileDialog = ({ enqueueSnackbar }) => {
+const FileDialog = () => {
   if (DEBUG) {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
+
+  const enqueueSnackbar = useSnackbar();
 
   // previously in container
   const fileInspectionErrors = useSelector(getFileInspectionErrors);
@@ -144,9 +149,7 @@ const FileDialog = ({ enqueueSnackbar }) => {
   );
 };
 
-FileDialog.propTypes = {
-  enqueueSnackbar: PropTypes.func.isRequired,
-};
+FileDialog.propTypes = {};
 
 function RightPane({ selectedFiles, removeFile }) {
   const title = selectedFiles.length === 1 ? 'file selected' : 'files selected';
@@ -171,4 +174,4 @@ RightPane.propTypes = {
   removeFile: PropTypes.func.isRequired,
 };
 
-export default withSnackbar(FileDialog);
+export default FileDialog;

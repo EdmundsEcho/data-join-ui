@@ -1,11 +1,12 @@
 // src/components/EtlFieldView.jsx
 
 /**
- * @module src/components/EtlFieldView/component.jsx
  *
  * @description
  *
- * 📖 The parent container determines when to re-run the pivot computation.
+ * Core-App page
+ *
+ * 👉 EtlFieldView
  *
  * 🚧 WIP This view provide the backtracking capacity to edit a file source.
  * ✅ LeftPane: User selects what etlField to view
@@ -15,6 +16,8 @@
  *
  * 🔖 The sources prop is a *view*, a subset of what the prop hosts on the
  *    etlField object. As such, use the "lean" selector to update what is required.
+ *
+ * @module src/components/EtlFieldView.jsx
  *
  */
 import React, { useMemo, useEffect, useState, useCallback } from 'react';

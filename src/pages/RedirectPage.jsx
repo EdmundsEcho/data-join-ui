@@ -6,14 +6,13 @@ import { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { Box, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { withSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 import { fetchUserProfile } from '../services/dashboard.api';
 
 /* eslint-disable no-console */
 
-const RedirectPage = (props) => {
-  const { enqueueSnackbar } = props;
+export const RedirectPage = () => {
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -30,28 +29,16 @@ const RedirectPage = (props) => {
       const { error, status } = response.data;
 
       if (!error && status !== 'Error' && response?.status === 200) {
-        // 🚧 temp skip user-profile
-        /*
-        const { data } = response
-        const { email, last_name, first_name } = data[0]
-        if (!email || !last_name || !first_name) {
-          navigate('/user-profile')
-          enqueueSnackbar('Welcome! Please fill your basic user information.', {
-            variant: 'info',
-          })
+        const { data } = response;
+        const { email, last_name: lastName, first_name: firstName } = data[0];
+        if (!email || !lastName || !firstName) {
+          navigate('/user-profile');
         } else {
-*/
-        // localhost:5005/v1/projects
-        navigate('/projects');
-        enqueueSnackbar('Welcome!', {
-          variant: 'success',
-        });
-        //        }
+          // localhost:5005/v1/projects
+          navigate('/projects');
+        }
       } else {
         navigate('/login');
-        enqueueSnackbar(`Error: ${error || response?.data?.message}`, {
-          variant: 'error',
-        });
       }
     } catch (e) {
       // false && error
@@ -81,8 +68,7 @@ const RedirectPage = (props) => {
           theme.palette.mode === 'light'
             ? theme.palette.grey[100]
             : theme.palette.grey[900],
-      }}
-    >
+      }}>
       <Box sx={{ zIndex: 2 }}>
         <Paper sx={{ p: '20px', width: '300px' }}>
           <Typography variant='h5' component='h5'>
@@ -96,8 +82,7 @@ const RedirectPage = (props) => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <span className='spinner spinner-lucivia spinner-lg' />
           </Box>
         </Paper>
@@ -106,10 +91,6 @@ const RedirectPage = (props) => {
   );
 };
 
-RedirectPage.propTypes = {
-  enqueueSnackbar: PropTypes.func,
-};
-RedirectPage.defaultProps = {
-  enqueueSnackbar: undefined,
-};
-export default withSnackbar(RedirectPage);
+RedirectPage.propTypes = {};
+RedirectPage.defaultProps = {};
+export default RedirectPage;

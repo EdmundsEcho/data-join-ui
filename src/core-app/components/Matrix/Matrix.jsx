@@ -1,11 +1,13 @@
 // src/core-app/components/Matrix.jsx
 
 /**
+ *
+ * Core-App page
+ *
  * @module components/Matrix
  *
  */
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { Card, CardContent, CardHeader, CardActions } from '@mui/material';

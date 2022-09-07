@@ -18,6 +18,9 @@ const DEBUG = true || process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
 /* eslint-disable no-console */
 
 /**
+ *
+ * Core-App page
+ *
  * Workbench:
  * 👉 diplay splash until ready
  * 👉 initialize the raw data -> tree

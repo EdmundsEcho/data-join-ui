@@ -65,17 +65,16 @@ export const filterOperators = getGridStringOperators().filter(({ value }) =>
 
 //------------------------------------------------------------------------------
 // Custom components for the grid
-// 🦀 Clicking on the component does not generate an event
-//    Future versions of the data-grid fail outright
+// ⬜ reverse the css highlighting
 //------------------------------------------------------------------------------
 const Checkbox = React.forwardRef((e, ref) => {
   switch (true) {
     case e?.indeterminate ?? false:
       return <IndeterminateCheckBoxIcon ref={ref} color='primary' />;
     case e.checked:
-      return <Clear inputRef={ref} />;
+      return <Clear ref={ref} />;
     default:
-      return <Check inputRef={ref} color='primary' />;
+      return <Check ref={ref} color='primary' />;
   }
 });
 Checkbox.displayName = 'GridCheckbox';

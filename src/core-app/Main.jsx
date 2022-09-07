@@ -8,16 +8,10 @@ import Container from '@mui/material/Container';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 // core-app related
-import SubApp from '../SubApp'; // with Provider
-import ReduxInitializer from './ReduxInitializer';
+import AppInitializer from './AppInitializer';
 import { ErrorBoundary, Fallback } from './components/shared/ErrorBoundary';
 import ModalRoot from './components/ModalRoot';
 
-import Overview from './components/Overview';
-import FileDialog from './components/FileDialog/FileDialog';
-import EtlFieldView from './components/EtlFieldView';
-import Workbench from './components/Workbench/Workbench';
-import Matrix from './components/Matrix/Matrix';
 import StepBar from './components/StepBar/StepBar';
 
 LicenseInfo.setLicenseKey(
@@ -48,28 +42,19 @@ function Main() {
 */
 
   return (
-    <SubApp>
-      <ReduxInitializer>
-        <ErrorBoundary FallbackComponent={Fallback}>
-          <div className='box stack project-view'>
-            <Container className={clsx('Luci-CoreAppLayout', 'root')}>
-              <div className='app-paging-view'>
-                <Outlet />
-                <Routes>
-                  <Route path='introduction' element={<Overview />} />
-                  <Route path='files' element={<FileDialog />} />
-                  <Route path='fields' element={<EtlFieldView />} />
-                  <Route path='workbench' element={<Workbench />} />
-                  <Route path='matrix' element={<Matrix />} />
-                </Routes>
-              </div>
-              <StepBar className='app-paging-controller'></StepBar>
-            </Container>
-            <ModalRoot />
-          </div>
-        </ErrorBoundary>
-      </ReduxInitializer>
-    </SubApp>
+    <AppInitializer>
+      <ErrorBoundary FallbackComponent={Fallback}>
+        <div className='box stack project-view'>
+          <Container className={clsx('Luci-CoreAppLayout', 'root')}>
+            <div className='app-paging-view'>
+              <Outlet />
+            </div>
+            <StepBar className='app-paging-controller'></StepBar>
+          </Container>
+          <ModalRoot />
+        </div>
+      </ErrorBoundary>
+    </AppInitializer>
   );
 }
 

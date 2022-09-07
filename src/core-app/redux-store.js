@@ -69,10 +69,6 @@ import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 
 import { devToolsConfiguration } from './dev-tools-cfg';
 
-// -----------------------------------------------------------------------------
-const Ref = { store: null };
-// -----------------------------------------------------------------------------
-
 /* eslint-disable no-console */
 const sagaMiddlewareWithPid = (projectId) =>
   createSagaMiddleware({ context: { projectId } });
@@ -105,7 +101,7 @@ const coreMiddleware = [
 // -----------------------------------------------------------------------------
 // Production
 //
-const configureStoreProd = (projectId, initialState) => {
+const configureStoreProd = (projectId) => (preloadedState) => {
   console.info(
     `Loading the Prod Version (v2.5) of the store for project: ${projectId}`,
   );
@@ -127,7 +123,7 @@ const configureStoreProd = (projectId, initialState) => {
 
   const persistedReducer = persistReducer(persistConfig, appReducers);
 
-  Ref.store = configureStore({
+  const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
@@ -135,24 +131,24 @@ const configureStoreProd = (projectId, initialState) => {
         serializableCheck: false,
         immutableCheck: false,
       }).prepend(middlewares),
-    preloadedState: initialState,
+    preloadedState,
     devTools: devToolsConfiguration,
   });
 
   // register as a listener
-  const persistor = persistStore(Ref.store);
+  const persistor = persistStore(store);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  return { store: Ref.store, persistor };
+  return { store, persistor };
 };
 
 // -----------------------------------------------------------------------------
 // Development
 //
-const configureStoreDev2 = (projectId, initialState) => {
-  console.info(`Loading the Dev Version (v2.5) of the store: ${projectId}`);
+const configureStoreDev2 = (projectId) => (preloadedState) => {
+  console.info(`Loading the Dev Version (v2.6) of the store: ${projectId}`);
 
   const sagaMiddleware = sagaMiddlewareWithPid(projectId);
 
@@ -169,9 +165,9 @@ const configureStoreDev2 = (projectId, initialState) => {
     `appReducers: ${typeof appReducers}`,
   );
 
-  const persistedReducer = persistReducer(persistConfig, appReducers);
+  // const persistedReducer = persistReducer(persistConfig, appReducers);
 
-  Ref.store = configureStore({
+  const store = configureStore({
     reducer: appReducers,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
@@ -181,7 +177,7 @@ const configureStoreDev2 = (projectId, initialState) => {
         },
         immutableCheck: false,
       }).prepend(middlewares),
-    preloadedState: initialState,
+    preloadedState,
     devTools: devToolsConfiguration,
   });
 
@@ -191,15 +187,15 @@ const configureStoreDev2 = (projectId, initialState) => {
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  return { store: Ref.store };
+  return { store };
 };
 
-// fn (projectId, initialState)
-const initStore =
+// fn (projectId) => (initialState) => {..}
+export const initStore =
   process.env.REACT_APP_ENV === 'production'
     ? configureStoreProd
     : configureStoreDev2;
 
-export { initStore, Ref };
+// export { initStore };
 
 // END

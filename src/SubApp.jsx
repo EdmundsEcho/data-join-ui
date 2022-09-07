@@ -33,11 +33,11 @@
  *    👉 <SubApp>{child}</SubApp> where child is the "core-app"
  *
  */
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { useParams } from 'react-router-dom';
+import { useParams, Outlet } from 'react-router-dom';
 
 import {
   // useStatus as useCacheStatus,
@@ -45,6 +45,9 @@ import {
 } from './hooks/use-status-provider';
 import ErrorPage from './pages/ErrorPage';
 import { FetchStoreError, InvalidStateError } from './core-app/lib/LuciErrors';
+
+// import StepBar from './core-app/components/StepBar/StepBar';
+import CoreApp from './core-app/Main';
 
 // 📖 data
 import { useFetchApi } from './hooks/use-fetch-api';
@@ -72,8 +75,15 @@ const initialStore = (serverResponse, newStore) => {
 const SubApp = ({ children }) => {
   // used to initialize middleware
   const { projectId } = useParams();
-  const newProjectStore = seedProjectState(projectId);
+  const newProjectStore = useMemo(
+    () => seedProjectState(projectId),
+    [projectId],
+  );
   const loadedProjectRef = useRef(undefined);
+  //
+  // How to initialize the store
+  //
+  const storeWithoutState = useMemo(() => initStore(projectId), [projectId]);
 
   //
   // 📖 data using the fetchApi
@@ -171,16 +181,20 @@ const SubApp = ({ children }) => {
       // 🔗 see Main to access rendered child
       // 👉 next: load middleware instantiated with projectId (e.g., init.middleware)
       //
-      const { store /* persistor */ } = initStore(
-        projectId,
-        initialStore(serverResponse, newProjectStore),
-      );
       Provider.displayName = 'TncReduxStore-Provider';
       loadedProjectRef.current = projectId;
 
-      return <Provider store={store}>{children}</Provider>;
-    }
+      const { store /* persistor */ } = storeWithoutState(
+        initialStore(serverResponse, newProjectStore),
+      );
 
+      // WIP - Could this be Main?
+      return (
+        <Provider store={store}>
+          <CoreApp />
+        </Provider>
+      );
+    }
     case FETCH_STATUS.REJECTED:
       return (
         // 🚧 WIP

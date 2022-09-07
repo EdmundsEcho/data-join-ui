@@ -3,14 +3,17 @@ import { PropTypes } from 'prop-types';
 import { ErrorBoundary as Inner } from 'react-error-boundary';
 
 /* See core-app ErrorBoundary */
-const ErrorBoundary = ({ children }) => {
+export const ErrorBoundary = ({ children }) => {
   return <Inner>{children}</Inner>;
 };
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const Fallback = ({ error, resetErrorBoundary /* componentStack */ }) => {
+export const Fallback = ({
+  error,
+  resetErrorBoundary /* componentStack */,
+}) => {
   return (
     <div>
       <h1>An error occurred: {error.message}</h1>

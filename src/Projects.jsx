@@ -54,7 +54,7 @@ const Projects = () => {
   // Initialize the shared context for Projects
   // list of projects
   const {
-    fetch: fetchProp,
+    fetch,
     data: list = undefined,
     error,
     status,
@@ -62,7 +62,6 @@ const Projects = () => {
     deleteById: deleteItem,
   } = useContext(ProjectsContext);
 
-  const fetch = useCallback(fetchProp, [fetchProp]);
   //
   // 💢 the side-effect:
   // update the context state with the fetched data
@@ -109,10 +108,11 @@ const Projects = () => {
  *   * project view
  *
  */
+
+const linkTo = (itemId) => `${itemId}/meta`; // project_id
 function ShowProjects({ list, lookupBy, deleteItem }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const linkTo = (itemId) => `${itemId}/files`; // project_id
 
   Outlet.displayName = 'ProjectsOutlet';
 
@@ -127,7 +127,7 @@ function ShowProjects({ list, lookupBy, deleteItem }) {
           </div>
 
           {/* New project link */}
-          <NavLink to='/projects' key='summaryLink|new-project-key'>
+          <NavLink to='new-project' key='summaryLink|new-project-key'>
             <SummaryView addNewPlaceholder />
           </NavLink>
 

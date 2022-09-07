@@ -19,7 +19,7 @@ import { clearRedirect } from './ducks/actions/ui.actions';
  * WIP - help with redirects
  *
  */
-const ReduxInitializer = ({ persistor, children }) => {
+const AppInitializer = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const redirect = useSelector((state) => state.ui?.redirect);
@@ -34,4 +34,4 @@ const ReduxInitializer = ({ persistor, children }) => {
   return children;
 };
 
-export default ReduxInitializer;
+export default AppInitializer;
