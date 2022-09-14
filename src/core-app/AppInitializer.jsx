@@ -1,10 +1,6 @@
 // src/core-app/ReduxInitializer.jsx
 
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import { clearRedirect } from './ducks/actions/ui.actions';
+import React from 'react';
 
 //------------------------------------------------------------------------------
 // const DEBUG = false && process.env.REACT_APP_ENV === 'development';
@@ -20,17 +16,6 @@ import { clearRedirect } from './ducks/actions/ui.actions';
  *
  */
 const AppInitializer = ({ children }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const redirect = useSelector((state) => state.ui?.redirect);
-
-  useEffect(() => {
-    if (typeof redirect !== 'undefined') {
-      navigate(redirect);
-      dispatch(clearRedirect);
-    }
-  }, [dispatch, redirect, navigate]);
-
   return children;
 };
 

@@ -35,7 +35,7 @@ const reducer = (state = initState, action) => {
   switch (true) {
     case action.type === RESET:
     case action.type === 'RESET UI':
-      return { ...initState };
+      return initState;
 
     // type: `${feature} ${SET_LOADER} ${toggle ? '... loading' : 'done'}`,
     // payload: { toggle, message, feature },

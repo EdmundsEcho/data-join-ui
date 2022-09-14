@@ -52,15 +52,25 @@ export const NODE_TYPES = {
 // consumer interface
 export const STATUS = {
   INACTIVE: 'inactive',
+  UNINITIALIZED: 'uninitialized',
   IDLE: 'idle',
   PENDING: 'pending',
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
+  EMPTY: 'empty',
   inactive: 'inactive',
   idle: 'idle',
   pending: 'pending',
   resolved: 'resolved',
   rejected: 'rejected',
+};
+
+export const ROUTES = {
+  meta: 'meta',
+  files: 'files',
+  fields: 'fields',
+  workbench: 'workbench',
+  matrix: 'matrix',
 };
 
 // -----------------------------------------------------------------------------

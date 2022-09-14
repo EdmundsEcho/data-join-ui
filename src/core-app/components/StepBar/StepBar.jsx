@@ -19,9 +19,9 @@
  * @module /components/StepBar
  *
  */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // part of the transition away from container for this component
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,6 +44,8 @@ import logo from '../../assets/l@3x.png';
 import { styles } from './styles';
 
 import Machine, {
+  getBookmark,
+  forwardGuards,
   pages,
   lookupPageWithPathname,
   tryNextEvent,
@@ -52,28 +54,37 @@ import Machine, {
 import { setCurrentPage } from '../../ducks/actions/stepper.actions';
 
 // -----------------------------------------------------------------------------
-const DEBUG = false && process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
+const DEBUG = true && process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
 const StepBarComponent = ({ classes }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { projectId } = useParams();
   const dispatch = useDispatch();
-  const reduxState = useSelector((state) => state);
+  // const reduxState = useSelector((state) => state);
+
+  const isNextStepEnabled = {
+    meta: useSelector(forwardGuards.meta),
+    files: useSelector(forwardGuards.files),
+    fields: useSelector(forwardGuards.fields),
+    workbench: useSelector(forwardGuards.workbench),
+    matrix: useSelector(forwardGuards.matrix),
+  };
+  const bookmark = useSelector(getBookmark);
 
   // current page (local state) is derived from Router url
   const { pathname } = location;
   // depends on static import of objects
   const currentPage = lookupPageWithPathname(pathname);
   // immutable reference recorded in local state
-  const [machine] = useState(() => Machine(projectId, dispatch));
-  const nextPage = useCallback(
-    (event) => `${machine.transition(reduxState, currentPage, event)}`,
-    [machine, reduxState, currentPage],
-  );
-  const isNextStepEnabled = machine.isNextStepEnabled(reduxState, currentPage);
+
+  const nextPage = (event) =>
+    Machine(dispatch).transition(
+      isNextStepEnabled[currentPage.route],
+      currentPage,
+      event,
+    );
 
   if (DEBUG) {
     console.debug(`🔗 pathname (route): ${pathname}`);
@@ -81,15 +92,22 @@ const StepBarComponent = ({ classes }) => {
     console.dir(currentPage);
   }
 
-  const handleNextStep = useCallback(() => {
-    console.debug(`👉 ${nextPage(tryNextEvent)}`);
-    navigate(nextPage(tryNextEvent));
-  }, [navigate, nextPage]);
+  const handleNextStep = () => navigate(nextPage(tryNextEvent));
+  const handlePrevStep = () => navigate(nextPage(tryPrevEvent));
 
-  const handlePrevStep = useCallback(() => {
-    console.debug(`👉 ${nextPage(tryPrevEvent)}`);
-    navigate(nextPage(tryPrevEvent));
-  }, [navigate, nextPage]);
+  useEffect(() => {
+    // navigate to the bookmark
+    navigate(bookmark);
+  }, []);
+
+  /*
+  useEffect(() => {
+    // record the current page to redux to reload the app from where
+    // the user left-off
+    dispatch(setCurrentPage(currentPage));
+  }, [dispatch, currentPage]);
+  // 🚨 currentPage is an object
+*/
 
   return currentPage.hideStepper ? null : (
     /* Stepper */
@@ -121,7 +139,7 @@ const StepBarComponent = ({ classes }) => {
               {/* Next */}
               <Button
                 className={clsx({
-                  [classes.disabled]: !isNextStepEnabled,
+                  [classes.disabled]: !isNextStepEnabled[currentPage.route],
                 })}
                 endIcon={<NextArrow fontSize='small' />}
                 onClick={handleNextStep}>

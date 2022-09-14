@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { InputError, InvalidStateError } from '../lib/LuciErrors';
+import useAbortController from '../../hooks/use-abort-controller';
 
 /* eslint-disable no-console */
 
@@ -62,6 +63,7 @@ const usePagination = ({
           after: null,
         };
   });
+  const abortController = useAbortController();
 
   // ---------------------------------------------------------------------------
   // Initial state to call when hit reset
@@ -74,7 +76,7 @@ const usePagination = ({
       first: pageSize,
       after: null,
     });
-    setCurrentPage(1);
+    setCurrentPageIdx1(1);
   }, [filterProp, pageSize, pageSizeProp]);
 */
 
@@ -231,7 +233,8 @@ const usePagination = ({
   // const parseFnH = (response) => response.data.levels;
   // ---------------------------------------------------------------------------
   // 📌
-  // the fetch-routine
+  //
+  // 💢 the fetch-routine
   //
   // 💫 anytime local state is updated; accomplished using
   //    callbacks provided to the user of the hook
@@ -246,36 +249,40 @@ const usePagination = ({
   useEffect(() => {
     let ignore = false; // react 18
 
-    if (!isOn) {
-      return () => {
-        ignore = true;
-      };
+    if (isOn) {
+      setStatus('pending');
+      //
+      // create the request by reading the cursor from the current state
+      // and filter prop (fixed for a given hook)
+      //
+      // Returns a promise that updates local state
+      //
+      fetchFn({ signal: abortController.signal, filter, ...cursor }).then(
+        (response) => {
+          if (!ignore) {
+            setCache({ ...normalizer(response), page: currentPageIdx1 });
+            setStatus('success');
+          }
+        },
+        (error) => {
+          setCache(error);
+          setStatus('error');
+        },
+      );
     }
-
-    setStatus('pending');
-    //
-    // create the request by reading the cursor from the current state
-    // and filter prop (fixed for a given hook)
-    //
-    // Returns a promise that updates local state
-    //
-    fetchFn({ filter, ...cursor }).then(
-      (response) => {
-        if (!ignore) {
-          setCache({ ...normalizer(response), page: currentPageIdx1 });
-          setStatus('success');
-        }
-      },
-      (error) => {
-        setCache(error);
-        setStatus('error');
-      },
-    );
-    // Only the last request is not ignored
     return () => {
       ignore = true;
+      abortController.abort();
     };
-  }, [currentPageIdx1, cursor, fetchFn, filter, isOn, normalizer]);
+  }, [
+    abortController,
+    currentPageIdx1,
+    cursor,
+    fetchFn,
+    filter,
+    isOn,
+    normalizer,
+  ]);
 
   // Array.from(map)[map.size - 1];
   return feature === 'LIMIT'

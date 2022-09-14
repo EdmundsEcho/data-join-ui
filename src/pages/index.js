@@ -1,5 +1,5 @@
 export * from './UserProfilePage';
-export * from './ProjectsPage';
+export * from './ProjectPage';
 export * from './LoginPage';
 export * from './NotFoundPage';
 export * from './RedirectPage';

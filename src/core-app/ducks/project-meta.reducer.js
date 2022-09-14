@@ -16,6 +16,8 @@ import { MissingProjectIdError } from '../lib/LuciErrors';
 import createReducer from '../utils/createReducer';
 
 import {
+  LOAD_PROJECT_STATUS as LOAD_STATUS,
+  SET_LOAD_PROJECT_STATUS,
   CLEAR_INITIALIZING_ACTIONS,
   SET_INITIALIZING_ACTIONS,
   SAVE_PROJECT,
@@ -27,54 +29,71 @@ import {
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-// used by subApp to initialize the state with a projectId
-const initialState = (projectId) => {
-  if (typeof projectId === 'undefined') {
-    throw new MissingProjectIdError(
-      'Cannot initialize redux: Missing project id',
-    );
-  }
-  return {
-    projectId,
-    version: '0.3.5',
-    meta: {
-      lastSavedOn: undefined,
-      // dispatched by the init.middleware
-      initializingActions: [
-        { type: RESET },
-        { type: CLEAR_INITIALIZING_ACTIONS },
-        { type: SAVE_PROJECT },
-      ],
-    },
-  };
-};
-
 //------------------------------------------------------------------------------
 //
 // selectors
 //
 export const getProjectId = (stateFragment) => stateFragment.projectId;
-
+export const getLoadingProjectStatus = (stateFragment) =>
+  stateFragment.meta.loadingStatus;
 export const getInitializingActions = (stateFragment) =>
   stateFragment.meta?.initializingActions;
 
-// maker: initial state object
-export const seedProjectState = (projectId) => ({
-  $_projectMeta: initialState(projectId),
-});
+// -----------------------------------------------------------------------------
+// Utility functions
+/** ----------------------------------------------------------------------------
+ * Return either the serverResponse or newStore
+ * ... newStore when server store is null.
+ *
+ * @function
+ * @param {String} projectId
+ * @param {Object} serverResponse
+ * @return {Object}
+ */
+export const loadStore = (projectId, serverResponse) => {
+  if (typeof projectId === 'undefined') {
+    throw new MissingProjectIdError(
+      'Cannot initialize redux: Missing project id',
+    );
+  }
+  // process server response
+  if (serverResponse === null) {
+    return null;
+  }
+  const { store } = serverResponse;
 
+  // default for a new project
+  const newStore = {
+    $_projectMeta: {
+      projectId,
+      version: '0.3.6',
+      meta: {
+        loadingStatus: LOAD_STATUS.EMPTY,
+        lastSavedOn: undefined,
+        // dispatched by the init.middleware
+        initializingActions: [
+          { type: RESET },
+          { type: CLEAR_INITIALIZING_ACTIONS },
+          { type: SAVE_PROJECT },
+        ],
+      },
+    },
+  };
+  return store === null ? newStore : store;
+};
+//------------------------------------------------------------------------------
+const resetState = {
+  projectId: null,
+  version: '0.3.6',
+  meta: { loadingStatus: LOAD_STATUS.UNINITIALIZED },
+};
 //------------------------------------------------------------------------------
 // Reducer
+// action types :: document
 //------------------------------------------------------------------------------
-/**
- *
- * The action types should all be `document` (see Programming with Actions)
- *
- */
-//------------------------------------------------------------------------------
-const reducer = createReducer(initialState, {
+const reducer = createReducer(resetState, {
   // do not change meta data
-  RESET: (state) => state,
+  RESET: () => resetState,
   [CLEAR_INITIALIZING_ACTIONS]: (state) => ({
     ...state,
     meta: {
@@ -87,6 +106,13 @@ const reducer = createReducer(initialState, {
     meta: {
       ...state.meta,
       initializingActions: payload,
+    },
+  }),
+  [SET_LOAD_PROJECT_STATUS]: (state, { payload }) => ({
+    ...state,
+    meta: {
+      ...state.meta,
+      loadingStatus: payload,
     },
   }),
 });

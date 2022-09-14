@@ -10,7 +10,7 @@
  * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
  */
-import React, { useEffect, useCallback } from 'react';
+import React, { useMemo, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -53,18 +53,6 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const style = {
-  position: 'relative',
-};
-const leftPaneStyle = {
-  overflow: 'auto',
-};
-const rightPaneStyle = {
-  flexGrow: 1,
-  height: 'auto',
-  overflow: 'auto', // NEW
-};
-
 /**
  * core-app page
  *
@@ -76,30 +64,37 @@ const FileDialog = () => {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
 
-  const enqueueSnackbar = useSnackbar();
+  const leftPaneStyle = useMemo(
+    () => ({
+      overflow: 'auto',
+    }),
+    [],
+  );
 
-  // previously in container
-  const fileInspectionErrors = useSelector(getFileInspectionErrors);
-
-  // snackbars
-  useEffect(() => {
-    if (fileInspectionErrors.length) {
-      fileInspectionErrors.forEach((entry) => {
-        const [path, error] = Object.entries(entry)[0];
-        enqueueSnackbar(`${getFilenameFromPath(path)}: ${error}`, {
-          variant: 'warning',
-        });
-      });
-    }
-  }, [enqueueSnackbar, fileInspectionErrors]);
+  const rightPaneStyle = useMemo(
+    () => ({
+      flexGrow: 1,
+      height: 'auto',
+      overflow: 'auto', // NEW
+    }),
+    [],
+  );
+  const style = useMemo(
+    () => ({
+      position: 'relative',
+    }),
+    [],
+  );
 
   // 📖 data (shared left and right side)
+  const fileInspectionErrors = useSelector(getFileInspectionErrors);
   const selectedFiles = useSelector(getSelected, shallowEqual);
   const currentDriveToken = useSelector(getDriveTokenId);
   const { projectId } = useParams();
 
   // 📬 remove a headerView/file with confirmation
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   // guarded/displays a confirmation dialog
   // ☎️  toggle/remove file (shared)
@@ -133,6 +128,18 @@ const FileDialog = () => {
     },
     [dispatch, handleRemoveFile, projectId, currentDriveToken],
   );
+
+  // snackbars
+  useEffect(() => {
+    if (fileInspectionErrors.length) {
+      fileInspectionErrors.forEach((entry) => {
+        const [path, error] = Object.entries(entry)[0];
+        enqueueSnackbar(`${getFilenameFromPath(path)}: ${error}`, {
+          variant: 'warning',
+        });
+      });
+    }
+  }, [enqueueSnackbar, fileInspectionErrors]);
 
   return (
     /* ROOT VIEW */

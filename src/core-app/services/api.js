@@ -72,6 +72,40 @@ export const gqlInstance = axios.create({
 
 //------------------------------------------------------------------------------
 /**
+ * fetch the redux store
+ * (core-app state)
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ *
+ * TnC-py (GET)
+ * @projects_blueprint.route("/v1/project-store/<project_id>",
+ *   methods=['GET', 'POST'])
+ */
+export function fetchStore(projectId, signal) {
+  //
+  console.debug(`Load project store: ${projectId}`);
+  //
+  if (typeof projectId === 'undefined') {
+    throw new ApiCallError('Missing projectId');
+  }
+  const axiosOptions = {
+    url: `/project-store/${projectId}`,
+    method: 'GET',
+    signal,
+  };
+  //
+  if (DEBUG) {
+    console.debug(
+      `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
+      'color:orange',
+    );
+  }
+  return apiInstance(axiosOptions);
+}
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/**
  * usage ResultTypePredicates.RESOLVED(response)
  * @function
  * @return {boolean}
@@ -384,6 +418,8 @@ export const cancelApiService = async (eventInterface) => {
  * tnc-py
  * Retrieve levels from the  file inspection results
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * ⬜ Implement pagination support using 'Connection' pattern
  *
  * @function
@@ -398,6 +434,7 @@ export const getFileLevels = ({
   projectId,
   sources,
   purpose,
+  signal,
   arrows = {},
   page = 1,
   limit = 10,
@@ -410,6 +447,13 @@ export const getFileLevels = ({
     limit: purpose === 'mspan' ? 99999999999 : limit,
     sources,
   };
+  const axiosOptions = {
+    url: `/levels/${projectId}`,
+    method: 'POST',
+    signal,
+    body,
+  };
+  // ⬜ figure out why axiosOptions does not work
   return apiInstance.post(`/levels/${projectId}`, body);
 };
 
@@ -517,25 +561,28 @@ export const fetchRequestFieldNames = async ({ projectId, ...request }) => {
  *
  * Relay compliant graphql request for levels
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * ✅ Pulled directly to the ui (not hosted in Redux)
  *
  * @function
  * @param {Object} request
  * @return {Object}
  */
-export const fetchLevels = async ({ projectId, ...request }) => {
+export const fetchLevels = async ({ projectId, signal, ...request }) => {
   console.log(GQL.requestLevels(request));
   const config = {
     url: `/warehouse/${projectId}`,
     data: GQL.requestLevels(request),
+    signal,
   };
 
-  return gqlInstance(config).then(({ data }) => {
-    if (typeof data?.errors !== 'undefined') {
+  return gqlInstance(config).then((response) => {
+    if (typeof response.data?.errors !== 'undefined') {
+      console.error(response);
       throw new GqlError(`The graphql request failed`);
-      // throw new GqlError(JSON.stringify(data.errors));
     }
-    return data;
+    return response.data;
   });
 };
 /*-----------------------------------------------------------------------------*/
@@ -591,13 +638,16 @@ function validateEventRequest(event, requestKey) {
 /**
  * Get the project drives
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * @function
  * @return {Promise} response
  */
-export async function fetchProjectDrives(projectId) {
+export async function fetchProjectDrives(projectId, signal) {
   const axiosOptions = {
     url: `/project-drives/${projectId}`,
     method: 'GET',
+    signal,
   };
   if (DEBUG) {
     console.debug(
@@ -609,6 +659,8 @@ export async function fetchProjectDrives(projectId) {
 }
 /**
  * List files | drives
+ *
+ * 🪟 uses signal to abort; good for useEffect
  *
  *  request = {
  *      project_id, # required
@@ -630,11 +682,12 @@ export async function fetchProjectDrives(projectId) {
  * @function
  * @return {Promise} response
  */
-export const readDirectory = (request) => {
+export const readDirectory = (request, signal) => {
   const axiosOptions = {
     url: `/filesystem/readdir`,
     method: 'POST',
     data: request,
+    signal,
   };
   if (DEBUG) {
     console.debug(

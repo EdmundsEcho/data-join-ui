@@ -41,6 +41,8 @@ function Main() {
         </Provider>
 */
 
+  Outlet.displayName = 'CoreApp-Outlet';
+
   return (
     <AppInitializer>
       <ErrorBoundary FallbackComponent={Fallback}>

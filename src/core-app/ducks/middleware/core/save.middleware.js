@@ -45,7 +45,7 @@ const DEBUG =
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 const SAVE_PROJECT_ON =
-  true && process.env.REACT_APP_TURN_SAVE_FEATURE_ON === 'true';
+  false && process.env.REACT_APP_TURN_SAVE_FEATURE_ON === 'true';
 
 // -----------------------------------------------------------------------------
 // The parts of the store that we save to the server
@@ -62,6 +62,7 @@ export const saveThisState = ({
 });
 
 let lastAction;
+let saveManager;
 // -----------------------------------------------------------------------------
 //
 // ✅ Initialized with projectId to ensure data integrity
@@ -69,18 +70,18 @@ let lastAction;
 // ✅ When fail to save, redirects to login with next action: save
 // ✅ Middleware is the last middleware in the middleware cycle
 //
-const middleware = (projectId) => {
+const middleware =
   // ------------------------------
   // singleton for a given project
-  let saveManager;
   // ------------------------------
 
-  return ({ getState, dispatch }) =>
+
+    ({ getState, dispatch }) =>
     (next) =>
     async (action) => {
       //
       if (DEBUG) {
-        console.info(`loaded save.middleware: ${projectId}`);
+        console.info(`loaded save.middleware`);
         console.info(`%c🏁 END of middleware cycle`, colors.orange);
       }
       // --------------------------
@@ -109,7 +110,7 @@ const middleware = (projectId) => {
               }
               const state = getState();
               const response = await saveStoreApi({
-                projectId,
+                projectId: state.$_projectMeta.projectId,
                 store: saveThisState(state),
               });
 
@@ -141,7 +142,6 @@ const middleware = (projectId) => {
         }
       }
     };
-};
 
 function saveReduxManager(saveFn, delay = 7000) {
   const save = debounce(saveFn, delay);

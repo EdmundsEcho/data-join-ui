@@ -1,4 +1,4 @@
-import SelectedListOfFiles from '../SelectedListOfFiles';
+import SelectedListOfFiles from '../ListOfFiles';
 import mergeFixtures from '../../../../utils/mergeFixtures';
 
 SelectedListOfFiles.displayName = 'FileDialog/SelectedListOfFiles';

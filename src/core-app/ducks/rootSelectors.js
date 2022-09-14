@@ -38,7 +38,7 @@ import * as fromModal from './modal.reducer';
  *
  */
 
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 /**
  *   $_projectMeta
  *
@@ -47,12 +47,13 @@ import * as fromModal from './modal.reducer';
 export const getProjectId = (state) =>
   fromProjectMeta.getProjectId(state.$_projectMeta);
 
+export const getLoadingProjectStatus = (state) =>
+  fromProjectMeta.getLoadingProjectStatus(state.$_projectMeta);
+
 export const getInitializingActions = (state) =>
   fromProjectMeta.getInitializingActions(state.$_projectMeta);
 
-export const seedProjectState = (...args) =>
-  fromProjectMeta.seedProjectState(...args);
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 /**  fileView
  *   process scope: fileSystem -> selected files
  *
@@ -524,6 +525,7 @@ export const selectPendingRequestWithJobId = (state, requestType, jobId) =>
  * Stepper
  */
 export const isStepperHidden = (state) => fromStepper.isHidden(state.stepper);
+export const getBookmark = (state) => fromStepper.getBookmark(state.stepper);
 
 /**
  * UI-loading

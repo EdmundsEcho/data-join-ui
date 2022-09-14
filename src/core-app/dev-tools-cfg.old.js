@@ -1,5 +1,7 @@
 // actions to sanitize by the redux devTools extension
 //
+// DEPRECATED
+//
 import { ADD_HEADER_VIEW } from './ducks/actions/headerView.actions';
 import { SET_TREE } from './ducks/actions/workbench.actions';
 // import { SET_MATRIX } from './ducks/actions/matrix.actions';
@@ -11,6 +13,8 @@ import { REMOVE as REMOVE_PENDING_REQUEST } from './ducks/actions/pendingRequest
 //    Redux debugging
 // -----------------------------------------------------------------------------
 export const devToolsConfiguration = {
+  traceLimit: 20,
+  trace: true,
   actionSanitizer: (action) => {
     switch (true) {
       // case action.type.includes('persist/REHYDRATE'):
@@ -37,9 +41,6 @@ export const devToolsConfiguration = {
     state.workbench?.matrix
       ? { ...state, workbench: { ...state.workbench, matrix: '<<LONG_BLOB>>' } }
       : state,
-
-  traceLimit: 20,
-  trace: true,
 };
 
 function scrubbDown(action) {

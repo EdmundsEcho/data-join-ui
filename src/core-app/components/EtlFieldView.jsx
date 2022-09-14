@@ -153,8 +153,11 @@ function EtlFieldView() {
   // 💢 coordinate display with data
   // compute (fetch) the data
   // refresh every time isLoading changes (flag for hvs changes)
-  const dispatch = useDispatch();
-  useEffect(() => dispatch(computeEtlView()), [isLoading, dispatch]);
+  /* const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(computeEtlView());
+  }, [isLoading, dispatch]);
+*/
 
   // const isValidData = Object.keys(fieldsKeyedOnPurpose).length > 0;
 

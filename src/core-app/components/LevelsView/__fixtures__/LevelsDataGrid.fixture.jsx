@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { DataGridPro as XGrid } from '@mui/x-data-grid-pro';
 
-import { getLevels as innerGetLevels } from '../../../services/api';
+import { getFileLevels as innerGetLevels } from '../../../services/api';
 import stateField from './state-field.json';
 
 function buildSources(field) {

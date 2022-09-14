@@ -9,7 +9,7 @@ import ConsoleLog from '../ConsoleLog';
 import { PURPOSE_TYPES } from '../../../lib/sum-types';
 // api
 import {
-  getLevels as getLevelsInternal,
+  getFileLevels as getLevelsInternal,
   fetchLevels,
 } from '../../../services/api';
 

@@ -19,9 +19,7 @@
  * * redux-devtools
  *
  * ### redux-devtools-extension
- * * install the extension in the browser
- * * configuration is manually performed per the documentation
- *   [see docs](https://github.com/zalmoxisus/redux-devtools-extension)
+ * * @redux-devtools/extension
  *
  * @module configuredStore
  *
@@ -37,6 +35,8 @@ import {
   REGISTER,
 } from 'redux-persist';
 import { configureStore } from '@reduxjs/toolkit'; // dev only
+import { composeWithDevTools } from '@redux-devtools/extension'; // dev only
+import { createStore, applyMiddleware } from 'redux';
 
 // persist state
 // import localforage from 'localforage';
@@ -48,18 +48,15 @@ import rootSaga from './initSagas';
 // the appReducer (a combination of reducers)
 import appReducers from './combinedReducer';
 
-// the redux-persist configuration
-import { persistConfig } from './redux-persist-cfg';
-
 // core
 import actionSplitterMiddleware from './ducks/middleware/core/action-splitter.middleware';
 import actionFilterMiddleware from './ducks/middleware/core/action-filter.middleware';
-import asyncMiddleware from './ducks/middleware/core/async.middleware';
+import thunkMiddleware from './ducks/middleware/core/thunk.middleware';
 import pendingRequestsMiddleware from './ducks/middleware/core/pending-requests.middleware';
 import normalizeMiddleware from './ducks/middleware/core/normalize.middleware';
 import notificationsMiddleware from './ducks/middleware/core/notifications.middleware';
 import saveMiddleware from './ducks/middleware/core/save.middleware'; // end of cycle
-import initMiddleware from './ducks/middleware/core/init.middleware'; // start of cycle
+// import initMiddleware from './ducks/middleware/core/init.middleware'; // start of cycle
 // import loggerMiddleware from './ducks/middleware/core/logging.middleware';
 // feature
 import headerViewMiddleware from './ducks/middleware/feature/headerView.middleware';
@@ -67,7 +64,9 @@ import etlViewMiddleware from './ducks/middleware/feature/etlView.middleware';
 import workbenchMiddleware from './ducks/middleware/feature/workbench.middleware';
 import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 
-import { devToolsConfiguration } from './dev-tools-cfg';
+// the redux-persist configuration
+import { persistConfig } from './redux-persist-cfg';
+import { addActionLogging, options as devTools } from './redux-tools-cfg';
 
 /* eslint-disable no-console */
 const sagaMiddlewareWithPid = (projectId) =>
@@ -82,15 +81,15 @@ const sagaMiddlewareWithPid = (projectId) =>
  * the feature middleware come before the core middleware.
  *
  */
-const featureMiddleware = (projectId) => [
-  headerViewMiddleware(projectId),
+const featureMiddleware = [
+  headerViewMiddleware,
   etlViewMiddleware,
-  workbenchMiddleware(projectId),
+  workbenchMiddleware,
   matrixMiddleware,
 ];
 const coreMiddleware = [
   actionSplitterMiddleware, // Array -> single action
-  asyncMiddleware, // action:Function -> (dispatch(action))
+  thunkMiddleware, // action:Function -> (dispatch(action))
   actionFilterMiddleware, // sequesters bad actions
   pendingRequestsMiddleware, // sequence dependent
   normalizeMiddleware, // api data -> normalized data
@@ -101,19 +100,17 @@ const coreMiddleware = [
 // -----------------------------------------------------------------------------
 // Production
 //
-const configureStoreProd = (projectId) => (preloadedState) => {
-  console.info(
-    `Loading the Prod Version (v2.5) of the store for project: ${projectId}`,
-  );
+const configureStoreProd = (preloadedState) => {
+  console.info(`Loading the Prod Version (v2.6) of the store`);
 
-  const sagaMiddleware = sagaMiddlewareWithPid(projectId);
+  const sagaMiddleware = createSagaMiddleware();
 
   const middlewares = [
-    initMiddleware(projectId), // first
-    ...featureMiddleware(projectId), //
+    // initMiddleware, // first
+    ...featureMiddleware, //
     ...coreMiddleware, // processing before document
     sagaMiddleware,
-    saveMiddleware(projectId), // ⚠️  must be last in the sequence
+    saveMiddleware, // ⚠️  must be last in the sequence
   ];
 
   console.assert(
@@ -132,7 +129,7 @@ const configureStoreProd = (projectId) => (preloadedState) => {
         immutableCheck: false,
       }).prepend(middlewares),
     preloadedState,
-    devTools: devToolsConfiguration,
+    devTools,
   });
 
   // register as a listener
@@ -147,17 +144,19 @@ const configureStoreProd = (projectId) => (preloadedState) => {
 // -----------------------------------------------------------------------------
 // Development
 //
-const configureStoreDev2 = (projectId) => (preloadedState) => {
-  console.info(`Loading the Dev Version (v2.6) of the store: ${projectId}`);
-
-  const sagaMiddleware = sagaMiddlewareWithPid(projectId);
+const configureStoreDev2 = (preloadedState) => {
+  console.info(`Loading the Dev Version (v2.6) of the store`);
+  //
+  // project dependent closure
+  //
+  const sagaMiddleware = sagaMiddlewareWithPid();
 
   const middlewares = [
-    initMiddleware(projectId), // first
-    ...featureMiddleware(projectId), //
+    // initMiddleware, // first
+    ...featureMiddleware, //
     ...coreMiddleware, // final processing before document
     sagaMiddleware,
-    saveMiddleware(projectId), // ⚠️  must be last in the sequence
+    saveMiddleware, // ⚠️  must be last in the sequence
   ];
 
   console.assert(
@@ -165,33 +164,25 @@ const configureStoreDev2 = (projectId) => (preloadedState) => {
     `appReducers: ${typeof appReducers}`,
   );
 
-  // const persistedReducer = persistReducer(persistConfig, appReducers);
+  const composeDevToolsWithOptions = composeWithDevTools(devTools);
 
-  const store = configureStore({
-    reducer: appReducers,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        thunk: false,
-        serializableCheck: {
-          ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
-        immutableCheck: false,
-      }).prepend(middlewares),
+  const store = createStore(
+    appReducers,
     preloadedState,
-    devTools: devToolsConfiguration,
-  });
+    composeDevToolsWithOptions(applyMiddleware(...middlewares)),
+  );
 
-  // register as a listener
-  // const persistor = persistStore(store);
+  // add loging actions
+  store.dispatch = addActionLogging(store);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  return { store };
+  return { store /* persistor */ };
 };
 
 // fn (projectId) => (initialState) => {..}
-export const initStore =
+export const storeWithoutState =
   process.env.REACT_APP_ENV === 'production'
     ? configureStoreProd
     : configureStoreDev2;

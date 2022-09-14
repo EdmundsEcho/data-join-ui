@@ -1,21 +1,12 @@
 // 📖 Data pulls
-import { setUiLoadingState } from '../../ducks/actions/ui.actions';
 import { saveProject } from '../../ducks/actions/project-meta.actions';
 import { runFixReport } from '../../ducks/actions/headerView.actions';
+import { computeEtlView } from '../../ducks/actions/etlView.actions';
+import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
+import { fetchMatrix } from '../../ducks/actions/matrix.actions';
+import { bookmark } from '../../ducks/actions/stepper.actions';
 import {
-  computeEtlView,
-  feature as ETL_FEATURE,
-} from '../../ducks/actions/etlView.actions';
-import {
-  feature as WORK_FEATURE,
-  fetchWarehouse,
-} from '../../ducks/actions/workbench.actions';
-import {
-  feature as MATRIX_FEATURE,
-  fetchMatrix,
-} from '../../ducks/actions/matrix.actions';
-import { setCurrentPage } from '../../ducks/actions/stepper.actions';
-import {
+  getBookmark,
   getHasHeaderViewsFixes,
   getHasSelectedFiles,
   getHasEtlViewErrors,
@@ -28,9 +19,58 @@ import { getRouteFromPath as routeFromPathname } from '../../utils/common';
 import { colors } from '../../constants/variables';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
+const DEBUG = false || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
+
+export { getBookmark };
+// -----------------------------------------------------------------------------
+/**
+ * Read-only state
+ * Selectors
+ * StepBar: useSelector to create local state
+ * const forwardFiles = useSelector(forwardGuards.files)
+ * const forwardFields = useSelector(forwardGuards.fields)
+ * const forwardWorkbench = useSelector(forwardGuards.workbench)
+ * const forwardMatrix = useSelector(forwardGuards.matrix)
+ */
+export const forwardGuards = {
+  meta: () => true,
+  files: (reduxState) => {
+    return (
+      !getHasHeaderViewsFixes(reduxState) &&
+      !getHasPendingRequests(reduxState, 'INSPECTION') &&
+      getHasSelectedFiles(reduxState)
+    );
+  },
+  fields: (reduxState) => {
+    return (
+      !getHasEtlViewErrors(reduxState) &&
+      !getHasPendingRequests(reduxState, 'EXTRACTION')
+    );
+  },
+  workbench: (reduxState) => {
+    return passRequestSpecValidations(reduxState);
+  },
+  matrix: () => false,
+};
+
+const backwardGuards = {
+  meta: () => false,
+};
+
+/**
+ * utility fn
+ * pure: does not depend on context
+ * @function
+ * @return {function}
+ */
+const getPredFn = (name, lookup) => {
+  if (name in lookup) {
+    return lookup[name];
+  }
+  return () => true;
+};
 
 // -----------------------------------------------------------------------------
 // Configuration
@@ -66,10 +106,10 @@ const pagesMachine = {
     prevPage: 'meta',
     nextPage: 'fields',
     entry: {
-      actions: [runFixReport()], // refresh the report
+      actions: [bookmark('files'), runFixReport()], // refresh the report
     },
     exit: {
-      actions: ['saveProject'],
+      actions: [],
     },
     on: {
       NEXT: {
@@ -88,14 +128,7 @@ const pagesMachine = {
     prevPage: 'files',
     nextPage: 'workbench',
     entry: {
-      actions: [
-        setUiLoadingState({
-          toggle: true,
-          feature: ETL_FEATURE,
-          message: `Loading EtlView`,
-        }),
-        'computeEtlView',
-      ],
+      actions: [bookmark('fields'), 'computeEtlView'],
     },
     exit: {
       actions: [],
@@ -117,17 +150,10 @@ const pagesMachine = {
     prevPage: 'fields',
     nextPage: 'matrix',
     entry: {
-      actions: [
-        setUiLoadingState({
-          toggle: true,
-          feature: WORK_FEATURE,
-          message: `Loading Warehouse`,
-        }),
-        'fetchWarehouse',
-      ],
+      actions: [bookmark('workbench'), 'fetchWarehouse'],
     },
     exit: {
-      actions: ['saveProject'],
+      actions: [],
     },
     on: {
       NEXT: { target: 'matrix', cond: 'forwardGuard' },
@@ -143,14 +169,7 @@ const pagesMachine = {
     prevPage: 'workbench',
     nextPage: undefined,
     entry: {
-      actions: [
-        setUiLoadingState({
-          toggle: true,
-          feature: MATRIX_FEATURE,
-          message: `Pulling the requested data`,
-        }),
-        'fetchMatrix',
-      ],
+      actions: ['fetchMatrix', bookmark('matrix')],
     },
     on: {
       PREV: { target: 'workbench' },
@@ -170,7 +189,7 @@ const pagesMachine = {
  *
  * @function Machine
  */
-export default ((machine) => (projectId, dispatch) => {
+export default ((machine) => (dispatch) => {
   /**
    * non-serializable
    * functions keyed by name
@@ -178,50 +197,9 @@ export default ((machine) => (projectId, dispatch) => {
   const fns = {
     computeEtlView: () => computeEtlView(new Date()),
     fetchWarehouse: () => fetchWarehouse(new Date()),
-    fetchMatrix: () => fetchMatrix(projectId), // pid used to assert with saga
+    fetchMatrix: () => fetchMatrix(),
     saveProject: () => saveProject(),
   };
-  /**
-   * Read-only state
-   */
-  const forwardGuards = {
-    meta: () => true,
-    files: (reduxState) => {
-      return (
-        !getHasHeaderViewsFixes(reduxState) &&
-        !getHasPendingRequests(reduxState, 'INSPECTION') &&
-        getHasSelectedFiles(reduxState)
-      );
-    },
-    fields: (reduxState) => {
-      return (
-        !getHasEtlViewErrors(reduxState) &&
-        !getHasPendingRequests(reduxState, 'EXTRACTION')
-      );
-    },
-    workbench: (reduxState) => {
-      return passRequestSpecValidations(reduxState);
-    },
-    matrix: () => false,
-  };
-
-  const backwardGuards = {
-    meta: () => false,
-  };
-
-  /**
-   * utility fn
-   * pure: does not depend on context
-   * @function
-   * @return {function}
-   */
-  const getPredFn = (name, lookup) => {
-    if (name in lookup) {
-      return lookup[name];
-    }
-    return () => true;
-  };
-
   // depends on dispatch in context
   const emit = (action) => {
     if (DEBUG) {
@@ -241,16 +219,14 @@ export default ((machine) => (projectId, dispatch) => {
     dispatch(actionObj);
   };
 
-  //-----------------------------------------------------
+  //-------------
   let nextRoute;
-  //-----------------------------------------------------
+  //-------------
   const goNewPage = (route, event) => {
     // 1️⃣  compute next page
     nextRoute = machine[route].on?.[event.type].target ?? route;
     // 2️⃣  run the actions
     if (nextRoute !== route) {
-      console.debug(`SET ${nextRoute}`);
-      emit(setCurrentPage(nextRoute));
       (machine[route]?.exit?.actions ?? []).forEach(emit /* (action) */);
       (machine[nextRoute]?.entry?.actions ?? []).forEach(emit /* (action) */);
     }
@@ -258,21 +234,13 @@ export default ((machine) => (projectId, dispatch) => {
 
   // interface for the component
   return {
-    isNextStepEnabled: (reduxState, page) => {
-      const { route } = page;
-      if (typeof route !== 'undefined') {
-        return forwardGuards?.[route](reduxState) ?? true;
-      }
-      return false;
-    },
     // process the event types; used by onClick handler
-    transition: (reduxState, { route }, event) => {
+    transition: (predFromRedux, { route }, event) => {
       switch (event.type) {
         // thus far, a mirror image of PREV
         // abstraction = change state protocol
         case 'NEXT': {
-          const fn = getPredFn(route, forwardGuards);
-          if (fn(reduxState)) {
+          if (predFromRedux) {
             goNewPage(route, event);
           }
           break;
@@ -280,8 +248,7 @@ export default ((machine) => (projectId, dispatch) => {
         // thus far, a mirror image of NEXT
         // abstraction = change state protocol
         case 'PREV': {
-          const fn = getPredFn(route, backwardGuards);
-          if (fn(reduxState)) {
+          if (predFromRedux) {
             goNewPage(route, event);
           }
           break;
@@ -300,7 +267,7 @@ const pages = Object.values(pagesMachine);
 
 /**
  * Required export
- * The caller is reponsible for deriving the current state
+ * The caller is responsible for deriving the current state
  * using the useLocation hook.  This function
  * location -> route
  */

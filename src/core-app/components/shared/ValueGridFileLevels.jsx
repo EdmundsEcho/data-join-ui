@@ -17,8 +17,10 @@ import LabelIcon from '@mui/icons-material/Label';
 import WeightIcon from '@mui/icons-material/FitnessCenter';
 import SeriesIcon from '@mui/icons-material/LinearScale';
 
-// api (note: no use of action creators)
+// 📡 Note: does not use actions (levels is outside of redux scope)
 import { getFileLevels as fetchLevelsInner } from '../../services/api';
+import useAbortController from '../../../hooks/use-abort-controller';
+
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { FIELD_TYPES, PURPOSE_TYPES } from '../../lib/sum-types';
@@ -34,6 +36,9 @@ const DEBUG = false;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
+//
+// ⚙️  for the value grid
+//
 const columns = [
   { field: 'id', headerName: 'ID', hide: true },
   {
@@ -82,9 +87,9 @@ const edgeToGridRowFn = (edge) => ({
 //           thereby does not invoke middleware, nor reducers)
 //
 const fetchLevels =
-  (projectId) =>
+  (projectId, signal = undefined) =>
   ({ filter, ...rest }) => {
-    return fetchLevelsInner({ projectId, ...filter, ...rest });
+    return fetchLevelsInner({ projectId, signal, ...filter, ...rest });
   };
 const parseResponse = (response) => response.data.levels;
 //-------------------------------------------------------------------------------
@@ -117,6 +122,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
   );
 
   const { projectId } = useParams();
+  const abortController = useAbortController();
 
   const selectionModel = useSelector((state) => {
     switch (fieldType) {
@@ -175,7 +181,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
         }
         purpose={getValue('purpose')}
         baseSelectAll={selectAll}
-        fetchFn={fetchLevels(projectId)}
+        fetchFn={fetchLevels(projectId, abortController.signal)}
         normalizer={parseResponse}
         edgeToGridRowFn={edgeToGridRowFn}
         // required to determine the height of the grid

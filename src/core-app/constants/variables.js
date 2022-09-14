@@ -27,25 +27,30 @@ export const timeIntervalUnitOptions = {
   Y: 'Year',
 };
 
+const purple = 'color: #9600cd';
+const orange = 'color: #ff9966';
+
 export const colors = {
   red: 'color: #dc143c',
   yellow: 'color: #f0db4f',
   green: 'color: #339966',
   blue: 'color: #007fff',
   orange: 'color: #ffa500',
-  purple: 'color: #9600cd',
+  purple,
   grey: 'color: #808080',
   pink: 'color: #ffc0cb',
   light: {
     blue: 'color: #add8e6',
     purple: 'color: #d5a6e6',
     red: 'color: #b04632',
-    orange: 'color: #ff9966',
+    orange,
     yellow: 'color: #fce883',
   },
   dark: {
     red: 'color: #b04632',
   },
+  purpleGrey: `${purple};background-color:#ededed`,
+  orangeGrey: `${orange};background-color:#ededed`,
 };
 
 // deprecate in favor of colors
@@ -115,6 +120,36 @@ export function diffObjects(first = {}, second = {}) {
     }
     return diff;
   }, {});
+}
+
+/**
+ * Predicate
+ * Returns true when key/value pairs match.
+ *
+ * Shallow comparison of two objects. Returns false when the second
+ * object is undefined.
+ *
+ * @function
+ * @param {Object}
+ * @param {Object}
+ * @return {bool}
+ */
+export function areSimilarObjects(first = {}, second = undefined) {
+  const noBuenoTypes = [
+    'undefined',
+    'null',
+    'function',
+    'string',
+    'number',
+    'boolean',
+  ];
+  if (Array.isArray(first) || noBuenoTypes.includes(typeof first)) {
+    return false;
+  }
+  if (Array.isArray(second) || noBuenoTypes.includes(typeof second)) {
+    return false;
+  }
+  return Object.keys(diffObjects(first, second)).length === 0;
 }
 /* Usage
 function MyComponent(props) {

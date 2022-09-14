@@ -4,7 +4,7 @@ import React from 'react';
 import ReduxMock from '../../../cosmos.mock-store';
 // import { getSelected } from '../../../ducks/rootSelectors';
 
-import FileDialog from '../component';
+import FileDialog from '../FileDialog';
 
 const fixture = (
   <ReduxMock>

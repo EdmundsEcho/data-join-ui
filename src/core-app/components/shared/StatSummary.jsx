@@ -5,7 +5,7 @@
  * View of the levels::summary from the api
  *
  */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 
 // api
 import { getFileLevels as getLevelsInternal } from '../../services/api';
+import useAbortController from '../../../hooks/use-abort-controller';
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 
 import { FIELD_TYPES, SOURCE_TYPES } from '../../lib/sum-types';
@@ -57,7 +58,7 @@ const displayData = (prop, withZero, data) => {
       [value, 1],
     );
     return {
-      value: Math.round(result[0]) / Math.pow(10, result[1]),
+      value: Math.round(result[0]) / 10 ** result[1], // 🦀 ? changed from Math.power
       magnitude: result[1],
     };
   };
@@ -123,12 +124,11 @@ const displayData = (prop, withZero, data) => {
  */
 function StatSummary({ getValue, fieldType }) {
   //
-  // local state
-  //
   const [localStore, setLocalStore] = useState(() => undefined);
   const [status, setStatus] = useState(() => 'idle');
-  const { projectId } = useParams();
   // error | success | idle | pending
+  const { projectId } = useParams();
+  const abortController = useAbortController();
 
   //
   // identify when impliedMvalue to avoid the api call for now
@@ -138,58 +138,56 @@ function StatSummary({ getValue, fieldType }) {
       ? typeof getValue('implied-mvalue') !== 'undefined'
       : getValue('sources')[0]['source-type'] === SOURCE_TYPES.IMPLIED;
 
-  //
-  // ⌛ async call to the api
-  //
-  const getFileLevels = useCallback(
-    async (isMounted, callback) => {
-      //
-      // short-circuit the effect when...
-      //
-      if (hasImpliedMvalue) {
-        setLocalStore({ message: 'Implied measurement' });
-        setStatus('error');
-        return;
-      }
-      const response = await getLevelsInternal({
-        projectId,
-        ...fileLevelsRequest(getValue, fieldType),
-      });
-      if (!isMounted) {
-        return;
-      }
-      if (response.status > 200) {
-        setStatus('error');
-        return;
-      }
-      callback(response);
-      setStatus('success');
-    },
-    [projectId, fieldType, getValue, hasImpliedMvalue],
-  );
-
+  /**
+   * 💢 async api call
+   */
   useEffect(() => {
-    let isMounted = true;
+    let ignore = false;
+
+    // guarded calling of the effect
     if (typeof localStore === 'undefined') {
       setStatus('pending');
-      getFileLevels(isMounted, (response) => {
-        setLocalStore(response.data.payload);
-      });
+      (async () => {
+        //
+        // short-circuit the effect when...
+        //
+        if (hasImpliedMvalue) {
+          setLocalStore({ message: 'Implied measurement' });
+          setStatus('error');
+          return;
+        }
+        const response = await getLevelsInternal({
+          projectId,
+          signal: abortController.signal,
+          ...fileLevelsRequest(getValue, fieldType),
+        });
+        // continue if not cancelled by a repeated request
+        if (!ignore) {
+          if (response.status > 200) {
+            setStatus('error');
+            return;
+          }
+          setLocalStore(response.data.payload);
+          setStatus('success');
+        }
+      })();
     }
     return () => {
-      isMounted = false;
+      ignore = true;
+      abortController.abort();
     };
-  }, [getFileLevels, localStore]);
+  }, [
+    abortController,
+    localStore,
+    projectId,
+    fieldType,
+    getValue,
+    hasImpliedMvalue,
+  ]);
 
   //
   // Individual chunks of information
   //
-  const title = (leftOrRight) => (
-    <Typography align={leftOrRight} variant='h6'>
-      Stats per interval
-    </Typography>
-  );
-
   let view = null;
   let displayVersion = 'one';
   switch (true) {
@@ -247,6 +245,14 @@ StatSummary.propTypes = {
   getValue: PropTypes.func.isRequired,
   fieldType: PropTypes.oneOf(Object.values(FIELD_TYPES)).isRequired,
 };
+
+function title(leftOrRight) {
+  return (
+    <Typography align={leftOrRight} variant='h6'>
+      Stats per interval
+    </Typography>
+  );
+}
 
 function summaryView(withZero, data) {
   return (

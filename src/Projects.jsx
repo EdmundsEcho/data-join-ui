@@ -13,17 +13,20 @@
  *
  * @component
  */
-import React, { useEffect, useContext, useCallback } from 'react';
+import React from 'react';
 import { PropTypes } from 'prop-types';
 import clsx from 'clsx';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-// 📖
-import ProjectsListProvider, {
-  Context as ProjectsContext,
-} from './contexts/ProjectsContext';
-import ErrorPage from './pages/ErrorPage';
+import { Spinner } from './components/shared';
 
+// 📖
+import { useProjectsApiContext } from './contexts/ProjectsDataContext';
+import { useProjectsDataContext } from './contexts/ProjectsDataContext';
+
+// -----------------------------------------------------------------------------
+const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+// -----------------------------------------------------------------------------
 /* eslint-disable react/jsx-props-no-spreading */
 
 /*
@@ -38,63 +41,31 @@ import ErrorPage from './pages/ErrorPage';
 
 /**
  *
- * 📖 ProjectListContext
- *
- * 📥 calls fetch to load the context
- *
- * 👉 renders states associated with fetching data
- * 👉 when ready, ShowProjects includes Outlet
- *
  * @component
  */
 const Projects = () => {
-  // const list = getSummaryList()
-  const lookupBy = 'project_id';
-
-  // Initialize the shared context for Projects
-  // list of projects
-  const {
-    fetch,
-    data: list = undefined,
-    error,
-    status,
-    STATUS,
-    deleteById: deleteItem,
-  } = useContext(ProjectsContext);
-
   //
-  // 💢 the side-effect:
-  // update the context state with the fetched data
-  //
-  useEffect(() => {
-    fetch();
-  }, []);
 
-  switch (true) {
-    case status === STATUS.IDLE || status === STATUS.PENDING:
-      return <p>...loading</p>;
+  return (
+    <Layout>
+      {/* New project link */}
+      <NavLink to='new-project' key='summaryLink|new-project-key'>
+        <SummaryView addNewPlaceholder />
+      </NavLink>
 
-    case status === STATUS.RESOLVED:
-      return (
-        <ShowProjects list={list} lookupBy={lookupBy} deleteItem={deleteItem} />
-      );
+      {/* User projects */}
+      <ListOfProjects />
 
-    case status === STATUS.REJECTED:
-      return (
-        // 🚧 WIP parsing through error: first look at keys
-        <ErrorPage
-          message={error?.message ?? JSON.stringify(Object.keys(error || {}))}
-        />
-      );
-
-    default:
-      throw new Error('Unreachable SubApp fetch state');
-  }
+      {/* ⬜ use a custom summary component from props (should accept isActive) */}
+    </Layout>
+  );
 };
 
+const linkTo = (itemId) => `${itemId}/meta`; // project_id
 /**
  * Render a list of summary views for each project in the list.
- * <SummaryView>
+ *
+ * 🪟 Outlet
  *
  *   👉 renders a link to pid/files
  *   👉 includes <Outlet /> for children (to the right)
@@ -108,14 +79,10 @@ const Projects = () => {
  *   * project view
  *
  */
-
-const linkTo = (itemId) => `${itemId}/meta`; // project_id
-function ShowProjects({ list, lookupBy, deleteItem }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  Outlet.displayName = 'ProjectsOutlet';
-
+function Layout({ children }) {
+  //
+  Outlet.displayName = 'Projects-Outlet';
+  //
   return (
     <div className='main-controller-root nostack'>
       <div className='main-controller'>
@@ -125,37 +92,7 @@ function ShowProjects({ list, lookupBy, deleteItem }) {
             <p>Controls which project to show; defaults to new project form</p>
             <p>Eventually will have 4 states</p>
           </div>
-
-          {/* New project link */}
-          <NavLink to='new-project' key='summaryLink|new-project-key'>
-            <SummaryView addNewPlaceholder />
-          </NavLink>
-
-          {/* ⬜ use a custom summary component from props (should accept isActive) */}
-          {list.map(({ [lookupBy]: itemId, ...restSummaryProps }) => (
-            <div key={`fragment|projectSummaryView|${itemId}`}>
-              <NavLink to={linkTo(itemId)} key={`summaryLink|${itemId}`}>
-                {({ isActive }) => (
-                  <SummaryView
-                    isActive={isActive}
-                    itemId={itemId}
-                    {...restSummaryProps}
-                  />
-                )}
-              </NavLink>
-
-              <div className='box no-border' key={`project-delete|${itemId}`}>
-                <button
-                  className='delete-project right-align'
-                  type='button'
-                  onClick={() => {
-                    deleteItem(itemId, navigate(`/projects${location.search}`));
-                  }}>
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+          {children}
         </div>
       </div>
       <div className='main-view inner'>
@@ -167,15 +104,41 @@ function ShowProjects({ list, lookupBy, deleteItem }) {
   );
 }
 
-ShowProjects.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.shape({})),
-  lookupBy: PropTypes.string.isRequired,
-  deleteItem: PropTypes.func,
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
-ShowProjects.defaultProps = {
-  list: [],
-  deleteItem: undefined,
-};
+Layout.defaultProps = {};
+
+/**
+ * Renders a list (map)
+ * 🔖 only use spinner when there is no data (not when updating)
+ */
+function ListOfProjects() {
+  const { data: projects, isReady } = useProjectsDataContext();
+
+  const lookupBy = 'project_id';
+  if (!isReady && projects.length === 0) {
+    return <Spinner />;
+  }
+  return projects.map(({ [lookupBy]: projectId, ...restSummaryProps }) => (
+    /* ------------------ Summary list item --------------------------- */
+    <div key={`fragment|projectSummaryView|${projectId}`}>
+      <NavLink to={linkTo(projectId)} key={`summaryLink|${projectId}`}>
+        {({ isActive }) => (
+          <SummaryView
+            isActive={isActive}
+            projectId={projectId}
+            {...restSummaryProps}
+          />
+        )}
+      </NavLink>
+      <DeleteButton projectId={projectId} />
+    </div>
+    /* ---------------------------------------------------------------- */
+  ));
+}
+ListOfProjects.propTypes = {};
+ListOfProjects.defaultProps = {};
 
 /**
  *
@@ -185,12 +148,12 @@ ShowProjects.defaultProps = {
  */
 function SummaryView({
   isActive,
-  itemId = '0000',
+  projectId = '0000',
   name,
   permission,
   addNewPlaceholder,
 }) {
-  const shortId = itemId.slice(itemId.length - 4);
+  const shortId = projectId.slice(projectId.length - 4);
   return (
     <div
       className={clsx({
@@ -198,8 +161,6 @@ function SummaryView({
         'project-mini-card box nostack': true,
       })}>
       {addNewPlaceholder ? (
-        /* use a callback with axios to history.push or
-           navigate to the new project */
         <div>New project</div>
       ) : (
         <>
@@ -212,22 +173,41 @@ function SummaryView({
 }
 SummaryView.propTypes = {
   isActive: PropTypes.bool,
-  itemId: PropTypes.string,
+  projectId: PropTypes.string,
   name: PropTypes.string,
   permission: PropTypes.string,
   addNewPlaceholder: PropTypes.bool,
 };
 SummaryView.defaultProps = {
   isActive: false,
-  itemId: '00000',
+  projectId: '00000',
   name: undefined,
   permission: undefined,
   addNewPlaceholder: false,
 };
 
-const WithProvider = (props) => (
-  <ProjectsListProvider>
-    <Projects {...props} />
-  </ProjectsListProvider>
-);
-export default WithProvider;
+function DeleteButton({ projectId }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { remove: deleteProject } = useProjectsApiContext();
+
+  return (
+    <div className='box no-border' key={`project-delete|${projectId}`}>
+      <button
+        className='delete-project right-align'
+        type='button'
+        onClick={() => {
+          deleteProject(projectId, () =>
+            navigate(`/projects${location.search}`),
+          );
+        }}>
+        Delete
+      </button>
+    </div>
+  );
+}
+DeleteButton.propTypes = {
+  projectId: PropTypes.string.isRequired,
+};
+
+export default Projects;

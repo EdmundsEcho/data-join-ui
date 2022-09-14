@@ -13,6 +13,7 @@
  */
 import { combineReducers } from 'redux';
 import * as reducers from './ducks';
+import { LOAD_PROJECT } from './ducks/actions/project-meta.actions';
 // import { purgePersistedState } from './redux-persist-cfg';
 
 // Add a root reducer to enable a full reset
@@ -24,14 +25,11 @@ const appReducer = combineReducers(reducers);
 //
 // 2️⃣  add a root reducer
 //
-/*
-const rootReducer = (state, action) => {
-  if (action.type === 'CLOSE_PROJECT') {
-    purgePersistedState();
-    return appReducer(undefined, action);
+const withLoadProjectReducer = (state, action) => {
+  if (action.type === LOAD_PROJECT) {
+    return appReducer(action.payload, action);
   }
   return appReducer(state, action);
 };
-*/
 
-export default appReducer;
+export default withLoadProjectReducer;

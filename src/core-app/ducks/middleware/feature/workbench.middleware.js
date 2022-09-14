@@ -100,10 +100,11 @@ const { isValid, getData, isValidError, getError } =
 
 /* --------------------------------------------------------------------------- */
 const middleware =
-  (projectId) =>
   ({ dispatch, getState }) =>
   (next) =>
   (action) => {
+    const state = getState();
+    const { projectId } = state.$_projectMeta;
     //
     if (DEBUG) {
       console.info(`👉 loaded workbench.middleware: ${projectId}`);
@@ -466,8 +467,6 @@ const middleware =
       case FETCH_WAREHOUSE: {
         // the payload required to make the warehouse request is pulled directly
         // from the redux store (nothing in the action).
-        const state = getState();
-
         if (getProjectId(state) !== projectId) {
           throw new InvalidStateError(`Mismatch project: redux and middleware`);
         }

@@ -1,6 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
+import { Css } from '@mui/icons-material';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -14,9 +16,12 @@ import ModalRoot from './core-app/components/ModalRoot';
 import { useThemeMode } from './hooks/use-theme-mode';
 import { ThemeContext } from './contexts/ThemeContext';
 
+import { storeWithoutState /* persistor */ } from './core-app/redux-store';
+
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 //------------------------------------------------------------------------------
+const { store } = storeWithoutState();
 
 const Root = () => {
   const [themeMode, setThemeMode] = useThemeMode();
@@ -30,21 +35,24 @@ const Root = () => {
     [themeMode, toggleThemeMode],
   );
 
+  Provider.displayName = 'CoreApp-Redux';
+
   return (
-    <React.StrictMode>
-      <BrowserRouter>
-        <ThemeContext.Provider value={contextValue}>
-          <ThemeProvider theme={theme}>
-            <StyledEngineProvider injectFirst>
+    <Provider store={store}>
+      <ThemeContext.Provider value={contextValue}>
+        <ThemeProvider theme={theme}>
+          <StyledEngineProvider injectFirst>
+            <BrowserRouter>
               <SnackbarProvider maxSnack={3}>
                 <CssBaseline />
                 <Dashboard />
+                <ModalRoot />
               </SnackbarProvider>
-            </StyledEngineProvider>
-          </ThemeProvider>
-        </ThemeContext.Provider>
-      </BrowserRouter>
-    </React.StrictMode>
+            </BrowserRouter>
+          </StyledEngineProvider>
+        </ThemeProvider>
+      </ThemeContext.Provider>
+    </Provider>
   );
 };
 export default Root;

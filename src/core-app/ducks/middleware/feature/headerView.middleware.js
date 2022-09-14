@@ -81,10 +81,11 @@ const { isValid, getData, getApiError } =
  * @middleware
  */
 const middleware =
-  (projectId) =>
   ({ getState }) =>
   (next) =>
   async (action) => {
+    const state = getState();
+    const { projectId } = state.$_projectMeta;
     //
     if (DEBUG) {
       console.info(`👉 loaded headerView.middleware: ${projectId}`);
@@ -362,6 +363,7 @@ const middleware =
               projectId,
               sources: [{ filename, 'header-index': fieldIdx }],
               purpose: PURPOSE_TYPES.MSPAN,
+              signal: undefined,
             });
             if (response.status > 200 || response.data.status === 'Error') {
               next(

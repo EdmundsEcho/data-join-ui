@@ -3,8 +3,8 @@ import { ReduxMock as ReduxMockInternal } from 'react-cosmos-redux';
 import { createStore } from 'redux';
 import PropTypes from 'prop-types';
 
-import combinedReducer from './combinedReducer';
-import defaultStore from './datasets/store_v4.json';
+import combinedReducer from './core-app/combinedReducer';
+import defaultStore from './core-app/datasets/store_v4.json';
 
 /**
  * ReduxMock

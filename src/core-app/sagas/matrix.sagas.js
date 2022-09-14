@@ -83,7 +83,7 @@ function* _queueMatrixCache({ payload }) {
       }),
     );
     const flatTree = yield select((state) => state.workbench.tree);
-    const { projectId } = yield getContext('projectId');
+    const { projectId } = yield select((state) => state.$_projectMeta);
     const { id, displayType } = payload;
 
     // requestFromNode depends on id and displayType hosted in payload
@@ -124,7 +124,7 @@ function* _queueMatrixCache({ payload }) {
  * ⬜ review how throw/catch error
  *
  */
-function* _queueMatrixRequest(action) {
+function* _queueMatrixRequest() {
   try {
     yield put(
       setUiLoadingState({
@@ -135,10 +135,6 @@ function* _queueMatrixRequest(action) {
     );
     //
     const projectId = yield getContext('projectId');
-    if (projectId !== action.projectId) {
-      throw new InvalidStateError(`matrix saggas: project missmatch`);
-    }
-
     const request = yield buildMatrixSpec();
     // NEW - engage the polling api
     // 📬 send to polling-api.sagas (requires event { meta, request })

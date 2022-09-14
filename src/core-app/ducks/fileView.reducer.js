@@ -114,9 +114,7 @@ export const selectFilesF = (stateFragment, filterText) => {
  */
 //------------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
-  [RESET]: () => ({
-    ...initialState,
-  }),
+  [RESET]: () => initialState,
   // command (consumed by sagas)
   [READ_DIR_START]: (state) => ({
     ...state,

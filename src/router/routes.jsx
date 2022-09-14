@@ -8,11 +8,12 @@ import {
 } from '@mui/icons-material';
 
 import {
-  UserProfilePage,
-  ProjectsPage,
+  ErrorPage,
+  ProjectPage,
   LoginPage,
   NotFoundPage,
   RedirectPage,
+  UserProfilePage,
 } from '../pages';
 import NewProjectPage from '../forms/ProjectForm';
 import ProjectDetail from '../SubApp';
@@ -38,22 +39,32 @@ export const routesConfig = [
   {
     path: '*', // nomatch -> 404
     element: <NotFoundPage />,
+    mainMenu: false,
   },
   {
     path: '/', // index page
     element: <RedirectPage />,
+    mainMenu: false,
+  },
+  {
+    path: '/error',
+    element: <ErrorPage />,
+    mainMenu: false,
   },
   {
     path: '/login',
     element: <LoginPage />,
+    mainMenu: false,
   },
   {
     path: '/user-profile',
     element: <UserProfilePage />,
+    mainMenu: true,
   },
   {
     path: '/projects', // -> Outlet
     element: <Projects />,
+    mainMenu: true,
     children: [
       {
         path: '',
@@ -97,12 +108,7 @@ export const routesConfig = [
   },
   /*
   {
-    path: '/introduction',
-    Component: Overview,
-    showProjectsList: true,
-  },
-  {
-    path: '/campaigns/:campaignId/files',
+    path: ':projectId/files',
     Component: FileDialog,
     showProjectsList: true,
     showStepper: true,

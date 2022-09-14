@@ -8,11 +8,13 @@
  */
 import { PropTypes } from 'prop-types';
 import { Box, Button, Paper, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-export const ErrorPage = (props) => {
-  const { message = 'No message' } = props;
+export const ErrorPage = ({ message: msgProp = 'Error' }) => {
+  const [search] = useSearchParams();
+  //
   const navigate = useNavigate();
+  const message = search.get('message') || msgProp;
 
   return (
     <Box

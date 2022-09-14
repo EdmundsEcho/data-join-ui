@@ -249,9 +249,10 @@ const ValueGridCore = ({
         setInNewClearedState(false);
       }
 
-      feature === 'SCROLL'
-        ? fetchPage({ pageSize: nextPageSize, after: max })
-        : fetchPage();
+      const _ =
+        feature === 'SCROLL'
+          ? fetchPage({ pageSize: nextPageSize, after: max })
+          : fetchPage();
       setReadyForMore(true);
     }
   };

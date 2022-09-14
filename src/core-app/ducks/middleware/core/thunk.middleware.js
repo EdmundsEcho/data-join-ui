@@ -17,7 +17,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 /* eslint-disable no-console */
 
 const asyncMiddleware =
-  ({ getState, dispatch }) =>
+  ({ getState }) =>
   (next) =>
   (action) => {
     //
@@ -30,13 +30,13 @@ const asyncMiddleware =
     //---------------------------------------------------------------------------
 
     // ...notify and process the action:function
-    dispatch(
+    next(
       setNotification({
         message: `Processing an async action: ${action.type}`,
         feature: action?.meta?.feature ?? 'unknown',
       }),
     );
-    return action.payload(dispatch, getState);
+    return action.payload(next, getState);
   };
 
 export default asyncMiddleware;

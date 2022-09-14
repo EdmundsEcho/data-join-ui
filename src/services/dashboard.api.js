@@ -25,14 +25,17 @@ if (DEBUG) {
 /* eslint-disable camelcase, no-console */
 
 /**
- * Logout
- * TnC-py
+ * Logout TnC-py
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * @projects_blueprint.route("/v1/logout", methods=['GET'])
  */
-export async function logout() {
+export async function logout(signal) {
   const axiosOptions = {
     url: '/logout',
     method: 'GET',
+    signal,
   };
   if (DEBUG) {
     console.debug(`%c testing POST @ "v1/logout" endpoint`, 'color:orange');
@@ -42,12 +45,14 @@ export async function logout() {
 }
 
 /**
- * Save the store
- * TnC-py
+ * Save the store TnC-py
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * @projects_blueprint.route("/v1/project-store/<project_id>",
  *   methods=['GET', 'POST'])  # noqa: E501
  */
-export async function saveStore({ projectId, store }) {
+export async function saveStore({ projectId, store, signal }) {
   //
   console.debug(`Save project store: ${projectId}`);
   //
@@ -57,6 +62,7 @@ export async function saveStore({ projectId, store }) {
   const axiosOptions = {
     url: `/project-store/${projectId}`,
     method: 'POST',
+    signal,
     data: {
       project_id: projectId,
       new_store: store,
@@ -73,48 +79,20 @@ export async function saveStore({ projectId, store }) {
 }
 
 /**
- * fetch the redux store
- * (core-app state)
- *
- * TnC-py (GET)
- * @projects_blueprint.route("/v1/project-store/<project_id>",
- *   methods=['GET', 'POST'])
- */
-export function fetchStore(projectId, normalizer) {
-  //
-  console.debug(`Load project store: ${projectId}`);
-  //
-  if (typeof projectId === 'undefined') {
-    throw new ApiCallError('Missing projectId');
-  }
-  const axiosOptions = {
-    url: `/project-store/${projectId}`,
-    method: 'GET',
-    transformResponse: normalizer,
-  };
-  //
-  if (DEBUG) {
-    console.debug(
-      `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
-      'color:orange',
-    );
-  }
-  return apiInstance(axiosOptions);
-}
-export const fetchStoreCurry = (normalizer) => (projectId) =>
-  fetchStore(projectId, normalizer);
-
-/**
  * @KM: test endpoints
  * test endpoint
+ *
+ * 🪟 uses signal to abort; good for useEffect
  *
  * @function
  * @return {Promise} response
  */
-export async function fetchAllProjects() {
+export async function fetchProjects(signal) {
+  console.debug(`API signal:`, signal);
   const axiosOptions = {
     url: '/projects',
     method: 'GET',
+    signal,
   };
   if (DEBUG) {
     console.debug(`%c testing "v1/projects" endpoint`, 'color:orange');
@@ -124,36 +102,63 @@ export async function fetchAllProjects() {
 
 /**
  * @KM: test endpoints
- * test endpoint
+ *
+ * 🪟 uses signal to abort; good for useEffect
  *
  * @function
  * @return {Promise} response
  */
-export async function addNewProject(data) {
+export async function addNewProject(data, signal) {
   const axiosOptions = {
     url: '/projects',
     method: 'POST',
-    data: {
-      ...data,
-    },
+    signal,
+    data,
   };
   if (DEBUG) {
     console.debug(`%c testing POST @ "v1/projects" endpoint`, 'color:orange');
   }
   return apiInstance(axiosOptions);
 }
-
 /**
- * @KM: test endpoints
- * test endpoint
+ *
+ * Update the project meta (not the store)
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ * @projects_blueprint.route("/v1/projects/<project_id>"
  *
  * @function
  * @return {Promise} response
  */
-export async function deleteProject(projectId) {
+export async function updateProject(projectId, data, signal) {
+  const axiosOptions = {
+    url: `/projects/${projectId}`,
+    method: 'PATCH',
+    signal,
+    data,
+  };
+  if (DEBUG) {
+    console.debug(
+      `%c testing PATCH @ "v1/projects/<project_id>" endpoint`,
+      'color:orange',
+    );
+  }
+  return apiInstance(axiosOptions);
+}
+
+/**
+ * @KM: test endpoints
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ *
+ * @function
+ * @return {Promise} response
+ */
+export async function deleteProject(projectId, signal) {
   const axiosOptions = {
     url: `/projects/${projectId}`,
     method: 'DELETE',
+    signal,
   };
   if (DEBUG) {
     console.debug(`%c testing DELETE @ "v1/projects" endpoint`, 'color:orange');
@@ -165,6 +170,8 @@ export async function deleteProject(projectId) {
  *
  * User perspective - drives
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  *  url="http://restapi:3000/user_drive_tokens",
  *
  * ⚠️  See dashboard.api for project-centric drives
@@ -173,10 +180,11 @@ export async function deleteProject(projectId) {
  * @function
  * @return {Promise} response
  */
-export async function fetchUserDrives() {
+export async function fetchUserDrives(signal) {
   const axiosOptions = {
     url: `/user-drives`,
     method: 'GET',
+    signal,
   };
   if (DEBUG) {
     console.debug(
@@ -189,40 +197,48 @@ export async function fetchUserDrives() {
 
 /**
  * @KM: test endpoints
- * test endpoint
+ *
+ * 🪟 uses signal to abort; good for useEffect
  *
  * @function
  * @return {Promise} response
  */
-export async function fetchUserProfile() {
+export async function fetchUserProfile(signal) {
   const axiosOptions = {
     url: '/users/profile',
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/vnd.pgrst.object+json',
+    },
+    signal,
   };
   if (DEBUG) {
-    console.debug(`%c testing "users/profile" endpoint`, 'color:orange');
+    console.debug(`%c testing "users/profile GET" endpoint`, 'color:orange');
   }
   return apiInstance(axiosOptions);
 }
 
 /**
  * @KM: test endpoints
- * test endpoint
+ *
+ * 🪟 uses signal to abort; good for useEffect
  *
  * @function
  * @return {Promise} response
  */
-export async function editUserProfile(data) {
+export async function editUserProfile(data, signal = undefined) {
   const axiosOptions = {
     url: '/users/profile',
     method: 'PATCH',
+    signal,
     headers: {
       'Content-Type': 'application/json',
     },
     data,
   };
   if (DEBUG) {
-    console.debug(`%c testing "users/profile" endpoint`, 'color:orange');
+    console.debug(`%c testing "users/profile PATCH" endpoint`, 'color:orange');
   }
   return apiInstance(axiosOptions);
 }

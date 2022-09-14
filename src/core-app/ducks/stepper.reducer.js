@@ -1,37 +1,53 @@
 // src/ducks/stepper.reducer.js
 
 /**
- * @module ducks/stepper-reducer
  *
- * @description
- * Tracks progress within the Etl configuration process.
+ * This reducer is part of the saved project state. It may be
+ * useful to help restore the user's location in the process.
  *
- * @todo complete the description
- * How does it control the flow.  Is each reducer (for each phase) respondible
- * for updating the value of this property? If so, what is the mechanism.
- *
+ * The StepBar component dispatches change to this reducer.
  *
  * @category Reducers
+ * @module ducks/stepper-reducer
  *
  */
 
 import createReducer from '../utils/createReducer';
-import { SET_CURRENT_PAGE } from './actions/stepper.actions';
+import { SET_CURRENT_PAGE, SET_BOOKMARK } from './actions/stepper.actions';
 import { RESET } from './actions/project-meta.actions';
+import { ROUTES } from '../lib/sum-types';
 
-// Selector
+// ----------------------------------------------------------------------------
+// Selectors
+// ----------------------------------------------------------------------------
 export const isHidden = (stateFragment) => stateFragment.isHidden;
+export const getBookmark = (stateFragment) => stateFragment.bookmark;
 
+// ----------------------------------------------------------------------------
+// Initial state
+// ----------------------------------------------------------------------------
 export const initialState = {
+  isHidden: false,
   currentPage: undefined,
+  bookmark: ROUTES.meta,
 };
 
+// ----------------------------------------------------------------------------
+// The Reducer
+// ----------------------------------------------------------------------------
 const reducer = createReducer(initialState, {
   [RESET]: () => initialState,
+
   RESET_STEPPER: () => initialState,
-  [SET_CURRENT_PAGE]: (state, { currentPage }) => ({
+
+  [SET_CURRENT_PAGE]: (state, { payload }) => ({
     ...state,
-    currentPage,
+    currentPage: payload,
+  }),
+  // route name (e.g., meta, files, fields, etc. )
+  [SET_BOOKMARK]: (state, { payload }) => ({
+    ...state,
+    bookmark: payload,
   }),
 });
 

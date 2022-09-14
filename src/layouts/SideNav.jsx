@@ -9,6 +9,15 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListSubheader from '@mui/material/ListSubheader';
 import {
+  Assignment,
+  Layers,
+  Dashboard,
+  Chat,
+  Person,
+  BackupTable,
+} from '@mui/icons-material';
+
+import {
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -46,77 +55,22 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
   },
 }));
 
-export const SideNav = ({ open, toggleDrawer }) => {
-  const theme = useTheme();
-  const pageWidth = usePageWidth();
-  const isMobile = pageWidth < 770;
-  const [showSidenav, setShowSidenav] = useState(false);
-
-  const setSidenavState = useCallback((location) => {
-    const { pathname } = location;
-    const show = isValidRoute(pathname) && !['/login', '/'].includes(pathname);
-    setShowSidenav(show);
-  }, []);
-
-  useLocationChange(setSidenavState);
-
-  const { toggleThemeMode } = useContext(ThemeContext);
-
-  if (!showSidenav) {
-    return null;
-  }
-
+export const SideNav = () => {
   return (
-    <Drawer
-      anchor='left'
-      className='luci-drawer'
-      variant={isMobile ? 'temporary' : 'permanent'}
-      open={open}>
-      <Toolbar
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          px: [1],
-        }}>
-        <IconButton onClick={toggleDrawer}>
-          <ChevronLeftIcon />
-        </IconButton>
-      </Toolbar>
-      <Divider />
-      {/* Display a link item || subtitle */}
-      <List component='nav' sx={{ height: 'inherit' }}>
-        {mainListItems.map((route, index) =>
-          route.type === 'link' && route.path ? (
-            <Link
-              to={route.path}
-              key={`${route.text}-${index}`}
-              onClick={() => {
-                if (isMobile) toggleDrawer();
-              }}>
-              <ListItemButton>
-                <ListItemIcon>{route.icon ?? ''}</ListItemIcon>
-                <ListItemText primary={route.text} />
-              </ListItemButton>
-            </Link>
-          ) : (
-            <div key={`${route.text}-${index}`}>
-              <Divider sx={{ my: 1 }} />
-              <ListSubheader component='div' inset>
-                {route.text}
-              </ListSubheader>
-            </div>
-          ),
-        )}
-      </List>
-    </Drawer>
+    <div>
+      {mainListItems.map((menuItem) => (
+        <Link key={menuItem.text} to={menuItem.path}>
+          <ListItemButton>
+            <ListItemIcon>{menuItem.icon}</ListItemIcon>
+            <ListItemText primary={menuItem.text} />
+          </ListItemButton>
+        </Link>
+      ))}
+    </div>
   );
 };
 
-SideNav.propTypes = {
-  open: PropTypes.bool,
-  toggleDrawer: PropTypes.func.isRequired,
-};
+SideNav.propTypes = {};
 SideNav.defaultProps = {
   open: true,
 };
