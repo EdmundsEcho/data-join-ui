@@ -1,26 +1,25 @@
 // src/hooks/use-fetch-api.js
 
-import { useCallback, useReducer, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSnackbar } from 'notistack';
+import { useCallback, useRef, useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
 
 import {
   STATUS,
   START,
-  SUCCESS,
-  UNCHANGED,
-  ERROR,
-  IDLE,
+  SUCCESS_NOCHANGE,
   RESET,
   SET_FETCH_ARGS,
-  SET_REDIRECT_URL,
-  SET_NOTICE,
 } from './shared-action-types';
 
-import { colors, areSimilarObjects } from '../core-app/constants/variables';
+import {
+  colors,
+  areSimilarObjects,
+  equal,
+} from '../core-app/constants/variables';
 import { DesignError } from '../core-app/lib/LuciErrors';
 
 import useAbortController from './use-abort-controller';
+import { useSharedFetchApi, is200ResponseError } from './use-shared-fetch-api';
 
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
@@ -28,375 +27,260 @@ import useAbortController from './use-abort-controller';
 /**
  * use-fetch-api hook
  *
- * Feature: unified request/response handling for the dashboard
- *
- * ✅ cache data with compare capability
- *
- * ✅ status reporting
- *
+ * ✅ calls the api with asyncFn
+*
  * ✅ cleanup with abortController
  *
- * ✅ error handling, redirect and snackbar service
+ * ✅ optional use of cache (consumeDataFn to prevent use of cache)
  *
- * 🔖 this module should handle all errors
- *    error -> reporting, redirecting etc..
-*     (see also use-error-handling)
+ * ✅ prevents cache update with same value
+ *
+ * ✅ error handling, cache and status using use-shared-fetch-api
  *
  ----------------------------------------------------------------------------- */
 /**
  *
+ *  return {
+ *    execute,
+ *    status: state.status,
+ *    cache: state.cache,
+ *    error: state.error,
+ *    fetchArgs: state.fetchArgs,
+ *    cancel,
+ *    reset,
+ *    isReady: [STATUS.RESOLVED, STATUS.REJECTED].includes(state.status),
+ *  };
  * @function
  * @return {React.hook}
  *
+ *   setCacheFn = undefined, // fn ::(response.data, cache)
+ *   consumeDataFn = undefined, // fn :: (response.data, fetchArgs)
  */
 const useFetchApi = ({
   asyncFn,
-  initialValue, // optional
-  consumeDataFn, // alternative to using the cache, response.data
+  blockAsyncWithEmptyParams = false,
+  setCacheFn = undefined, // fn :: (response.data, cache) -> newCache
+  consumeDataFn, // fn :: (response.data, fetchArgs) alternative to using the cache
   immediate = true,
   useSignal = true,
-  caller = 'anonymous',
-  equalityFnName = 'identity',
+  equalityFnName = 'identity', // cache: avoids updates with same value
   abortController: abortControllerProp = undefined,
+  caller = 'anonymous',
+  initialCacheValue, // optional, passed to shared-fetch-api
+  turnOff = false,
   DEBUG = false,
 }) => {
-  console.assert(
-    typeof asyncFn === 'function',
-    `use-fetch-api: ${caller} did not provide asyncFn`,
-  );
-  // -----------------------------------------------------------------------------
-  //
-  // initialize the local state
-  // hosts the status of the fetch and the data
-  //
-  const [fetchState, dispatch] = useReducer(fetchReducer(DEBUG), {
-    status: STATUS.UNINITIALIZED,
-    cache: initialValue || null,
-    error: null,
-    notice: null,
-    fetchArgs: null, // important
-  });
   // -----------------------------------------------------------------------------
   const redirectData = typeof consumeDataFn !== 'undefined';
-  console.assert(
-    !redirectData || (redirectData && typeof consumeDataFn === 'function'),
-    `Fetch api consume data fn is not a function`,
-  );
+  validateInput(caller, asyncFn, consumeDataFn, setCacheFn);
   // -----------------------------------------------------------------------------
+  const {
+    state,
+    dispatch,
+    middlewareWithDispatch: runMiddleware, // fn :: (dispatch, partial state)
+    reset,
+  } = useSharedFetchApi({
+    blockAsyncWithEmptyParams,
+    initialCacheValue,
+    caller: `useFetchApi c/o: ${caller}`,
+    DEBUG,
+  });
+  // -----------------------------------------------------------------------------
+  // other hooks
   const previousCacheRef = useRef(undefined);
+  const previousFetchArgsRef = useRef(undefined);
   const abortController = useAbortController(abortControllerProp);
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   // -----------------------------------------------------------------------------
   if (DEBUG) {
-    console.debug(`%cfetch hook loading: ${caller}`, colors.purpleGrey);
-    console.debug(abortController);
+    const { aborted } = abortController.signal;
+    const color = aborted ? colors.purpleDarkGrey : colors.purpleGrey;
+    console.debug(
+      `%cuseFetchApi loading: ${caller}      Aborted: ${aborted}`,
+      color,
+    );
   }
   // -----------------------------------------------------------------------------
   // 🟢 entry-point: useEffect listens for changes to args
   // -----------------------------------------------------------------------------
-  const execute = useCallback((...args) => {
-    dispatch({ type: SET_FETCH_ARGS, payload: args });
-    dispatch({ type: START });
-  }, []);
+  const execute = useCallback(
+    (...args) => {
+      //
+      if (!turnOff) {
+        const hasRequiredParams =
+          !blockAsyncWithEmptyParams ||
+          (blockAsyncWithEmptyParams && !isArgsEmpty(args));
 
-  const reset = () => {
-    return () => {
-      dispatch({ type: RESET });
-    };
-  };
+        if (hasRequiredParams) {
+          dispatch({ type: SET_FETCH_ARGS, payload: args });
+          dispatch({ type: START });
+        }
+      }
+    },
+    [dispatch, turnOff, blockAsyncWithEmptyParams],
+  );
 
   const cancel = useCallback(() => {
     return () => {
       abortController.abort();
       dispatch({ type: RESET });
     };
-  }, [abortController]);
+  }, [dispatch, abortController]);
 
   // ---------------------------------------------------------------------------
-  // 💢 async api calls augmented with abortController.signal
+  // 💢 async api call
+  //
   // Triggering this effect:
-  // 1. immediate = true
-  // 2. set fetch args
+  // 1. useEffect immediate prop = true
+  // 2. useCallback set fetch args
+  // 3.
+  //
+  // 👉 input to the runMiddleware
+  //
   // ---------------------------------------------------------------------------
+  //
   useEffect(() => {
-    if (fetchState.status === STATUS.UNINITIALIZED) return cancel;
-    if (fetchState.status === STATUS.RESOLVED) return cancel;
-    (async () => {
-      //
-      const augmentedArgs = useSignal
-        ? [...fetchState.fetchArgs, abortController.signal]
-        : fetchState.fetchArgs;
-      if (DEBUG) {
-        console.debug(`Fetch api args for caller ${caller}:`, augmentedArgs);
-      }
-      try {
-        // ---------------------------------------------------------------------
-        // ⏰
-        const response = await asyncFn(...augmentedArgs);
+    //
+    const hasRequiredParams =
+      !blockAsyncWithEmptyParams ||
+      (blockAsyncWithEmptyParams && !isArgsEmpty(state.fetchArgs));
 
-        if (
-          compare(equalityFnName, previousCacheRef, response, caller, DEBUG)
-        ) {
-          dispatch({ type: UNCHANGED });
-          return;
+    // this wont' be true when the cache change forces an update to the
+    // middleware function in this effect.
+    const changedFetchArgs = previousFetchArgsRef.current !== state.fetchArgs;
+
+    const isInitialized = state.fetchArgs !== null;
+
+    // Block the effect when triggered by changes in the cache.
+    // Required b/c the middleware function updates with the cache. So yes,
+    // re-run the useEffect, but block a repeated fetch.
+    if (hasRequiredParams && isInitialized && changedFetchArgs) {
+      (async () => {
+        //
+        const fetchArgs = state.fetchArgs === null ? [] : state.fetchArgs;
+        const augmentedArgs = useSignal
+          ? [...fetchArgs, abortController.signal]
+          : state.fetchArgs;
+        try {
+          // ---------------------------------------------------------------------
+          // ⌛
+          const response = await asyncFn(...augmentedArgs);
+
+          const isEqual = compare(previousCacheRef, response, equalityFnName);
+
+          if (
+            // 👍 avoid changing the cache when possible
+            !redirectData &&
+            compare(previousCacheRef, response, equalityFnName, caller, DEBUG)
+          ) {
+            dispatch({ type: SUCCESS_NOCHANGE });
+            return; // of the effect (not cleanup)
+          }
+
+          previousCacheRef.current = response.data;
+
+          // update reducer state
+          runMiddleware({
+            response,
+            consumeDataFn,
+            setCacheFn,
+            caller,
+            DEBUG,
+          });
+        } catch (e) {
+          if (e instanceof DOMException && e.name === 'AbortError') {
+            console.warn(`use-fetch-api call was cancelle: ${caller}`);
+          } else if (e.name === 'CanceledError') {
+            console.warn(`fetch: ${e.message}`);
+          } else throw e;
         }
-
-        previousCacheRef.current = response.data;
-
-        // update reducer state
-        fetchRoutine({
-          response,
-          dispatch,
-          navigate,
-          caller,
-          DEBUG,
-        });
-      } catch (e) {
-        if (e instanceof DOMException && e.name === 'AbortError') {
-          console.warn(`use-fetch-api call was cancelle: ${caller}`);
-        } else if (e.name === 'CanceledError') {
-          console.warn(`fetch: ${e.message}`);
-        } else throw e;
-      }
-    })();
-    // effect();
+      })();
+      previousFetchArgsRef.current = state.fetchArgs; // used to limit effect that depends on args
+      // effect();
+    }
     return cancel;
   }, [
-    // props
-    useSignal,
-    equalityFnName,
-    caller,
+    runMiddleware, // guard against running the effect when changes
     asyncFn,
-    // local
-    previousCacheRef,
-    fetchState.fetchArgs,
-    fetchState.status,
+    consumeDataFn,
+    blockAsyncWithEmptyParams,
+    equalityFnName,
+    setCacheFn,
+    useSignal,
+    caller,
     cancel,
-    navigate, // hook
+    dispatch,
+    state.fetchArgs,
+    redirectData, // bool
     abortController, // hook
     DEBUG,
   ]);
-
-  // ----------------------------------------------------------------------------
-  // Run the effects that consume the error states
-  // 💢 Run the effects that depend on state
-  // 🔖 each link to a global, external context
-  // ⚠️  does not reset state
-  // ----------------------------------------------------------------------------
-  useEffect(() => {
-    if (fetchState.notice) {
-      enqueueSnackbar(fetchState.notice.message, {
-        variant: fetchState.notice.variant,
-      });
-    }
-  }, [enqueueSnackbar, fetchState.notice]);
-
-  useEffect(() => {
-    if (fetchState.redirectUrl) {
-      navigate(fetchState.redirectUrl);
-    }
-  }, [navigate, fetchState.redirectUrl]);
-
+  // ---------------------------------------------------------------------------
+  // Immediate effect
+  // 🔖 cannot accept arguments (use a closure if required)
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     if (immediate) {
       execute(); // change args null -> []
     }
     return cancel;
   }, [execute, cancel, immediate]);
-
+  // ---------------------------------------------------------------------------
+  // debuggin effect
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (DEBUG) {
+      console.debug(
+        `%cuseFetchApi status: ${caller} - ${state.status}`,
+        'color:orangered',
+      );
+    }
+  }, [DEBUG, state.status, caller]);
   // ---------------------------------------------
   // hook API
   return {
     execute,
-    status: fetchState.status,
-    cache: fetchState.cache,
-    error: fetchState.error,
+    status: state.status,
+    cache: state.cache,
+    error: state.error,
+    fetchArgs: state.fetchArgs,
     cancel,
     reset,
+    isReady: [STATUS.RESOLVED, STATUS.REJECTED].includes(state.status),
   };
   // ---------------------------------------------
 };
 
-/**
- * fetch reducer tracks the status of the async call
- */
-function fetchReducer(DEBUG) {
-  return (state, action) => {
-    if (DEBUG) {
-      console.debug(`use-fetch-api service:`);
-      console.debug(`%c${action.type}`, 'color:cyan');
-    }
-    switch (action.type) {
-      case IDLE: {
-        return {
-          ...state,
-          status: STATUS.IDLE,
-        };
-      }
-      case START: {
-        return {
-          ...state,
-          status: STATUS.PENDING,
-        };
-      }
-      case SUCCESS: {
-        return {
-          ...state,
-          status: STATUS.RESOLVED,
-          cache: action.payload,
-        };
-      }
-      // SUCCESS retrieving already cached data
-      case UNCHANGED: {
-        return {
-          ...state,
-          status: STATUS.RESOLVED,
-        };
-      }
-      case ERROR: {
-        return {
-          ...state,
-          status: STATUS.REJECTED,
-          error: action.payload,
-        };
-      }
-      case RESET: {
-        return {
-          ...state,
-          status: STATUS.UNINITIALIZED,
-          cache: null,
-          fetchArgs: null,
-        };
-      }
-      case SET_NOTICE: {
-        return {
-          ...state,
-          notice: action.payload,
-        };
-      }
-      case SET_REDIRECT_URL: {
-        return {
-          ...state,
-          redirectUrl: action.payload,
-        };
-      }
-      case SET_FETCH_ARGS: {
-        if (DEBUG) {
-          console.log(
-            `✉️  the fetch parameters ${JSON.stringify(
-              action.fetchArgs,
-              null,
-              2,
-            )}`,
-          );
-        }
-        return {
-          ...state,
-          fetchArgs: action.payload,
-        };
-      }
-      default: {
-        throw new Error(`Unhandled action type: ${action.type}`);
-      }
-    }
-  };
-}
-
-// -----------------------------------------------------------------------------
-// 💢 update reducer (dispatch)
-// 🔖 reuse this when retrieving the core-project store
-// -----------------------------------------------------------------------------
-function fetchRoutine({
-  response,
-  dispatch,
-  consumeDataFn,
-  caller = 'anonymous',
-  DEBUG = false,
-}) {
-  // -----------------------------------------------------------------------------
-  const { error = false, status } = response.data;
-  const is200Error = error && status !== 'Error' && response.status === 200;
-
-  if (DEBUG) {
-    console.debug(`%c${caller}`, colors.light.blue);
-    console.debug(
-      `%c------------------------ useFetchApi response`,
-      colors.light.blue,
-    );
-    console.dir(response);
-  }
-
-  console.assert(
-    'status' in response,
-    `Unexpected response: Missing status\n${Object.keys(response)}`,
-  );
-  //
-  // 🚧 expand on this to make it the main way to navigate
-  //    through various errors?
-  //
-  switch (response.status) {
-    case 200: {
-      if (is200Error) {
-        dispatch({ type: ERROR, payload: error });
-        dispatch({
-          type: SET_REDIRECT_URL,
-          payload: `/error?message=${JSON.stringify(error)}`,
-        });
-        break;
-      }
-
-      // -----------------------------
-      // 📦 response.data
-      // -----------------------------
-      if (typeof consumeDataFn !== 'undefined') {
-        dispatch({ type: SUCCESS });
-        consumeDataFn(response.data);
-        break;
-      }
-      dispatch({ type: SUCCESS, payload: response.data });
-      break;
-    }
-
-    case 204:
-      dispatch({
-        type: SET_NOTICE,
-        payload: {
-          message: `Success`,
-          variant: 'success',
-        },
-      });
-      dispatch({ type: SUCCESS });
-      break;
-
-    case 401:
-      dispatch({
-        type: SET_NOTICE,
-        payload: {
-          message: `Unauthorized: Session expired`,
-          variant: 'info',
-        },
-      });
-      dispatch({
-        type: SET_REDIRECT_URL,
-        payload: '/login',
-      });
-      break;
-
-    default:
-      dispatch({
-        type: SET_NOTICE,
-        payload: {
-          message: `Error: Api response error`,
-          variant: 'error',
-        },
-      });
-  }
-}
-
+useFetchApi.propTypes = {
+  abortController: PropTypes.shape({
+    signal: PropTypes.shape({
+      aborted: PropTypes.bool.isRequired,
+      onabort: PropTypes.shape({}),
+    }),
+  }),
+  asyncFn: PropTypes.func.isRequired,
+  blockAsyncWithEmptyParams: PropTypes.bool,
+  caller: PropTypes.string,
+  consumeDataFn: PropTypes.func,
+  equalityFnName: PropTypes.string,
+  immediate: PropTypes.bool.isRequired,
+  initialCacheValue: PropTypes.shape({}),
+  setCacheFn: PropTypes.func,
+  useSignal: PropTypes.bool.isRequired,
+  DEBUG: PropTypes.bool,
+};
+useFetchApi.defaultProps = {
+  abortController: undefined,
+  blockAsyncWithEmptyParams: false,
+  caller: 'anonymous',
+  consumeDataFn: undefined,
+  equalityFnName: undefined,
+  initialCacheValue: undefined,
+  setCacheFn: undefined,
+  DEBUG: false,
+};
 // -----------------------------------------------------------------------------
 // ⚙️  map function name -> function
-//    Utilized by compare
+//    Utilized by compare (result values)
 //
 const equalityFns = {
   length: (value) => {
@@ -416,19 +300,24 @@ const equalityFns = {
     );
   },
   similarObjects: areSimilarObjects,
+  equal,
   identity: (x) => x,
 };
 /**
  * Local predicate
  * Avoid changing cache using configured equalityFnName
  *
- * Quietly reports false when the equality function does not align with
+ * Prints a warning when the equality function does not align with
  * the values being compared (type mismatch).
  *
  * @function
  * @return {bool}
  */
-function compare(equalityFnName, cacheRef, response, caller, DEBUG) {
+function compare(cacheRef, response_, equalityFnName) {
+  //
+  const maybeErr = is200ResponseError(response_); // false | error
+  const response = maybeErr ? maybeErr : response_; // eslint-disable-line
+
   try {
     const cache = cacheRef.current;
     // ---------------------------------------------------------------------
@@ -436,7 +325,7 @@ function compare(equalityFnName, cacheRef, response, caller, DEBUG) {
     //
     let isEqual = false;
     switch (true) {
-      case typeof cache === 'undefined':
+      case ['undefined', 'null'].includes(typeof cache):
         isEqual = false;
         break;
 
@@ -450,10 +339,15 @@ function compare(equalityFnName, cacheRef, response, caller, DEBUG) {
         break;
       }
 
+      case equalityFnName === 'equal':
+        isEqual = equalityFns.similarObjects(cache, response.data);
+        break;
+
       case equalityFnName === 'similarObjects':
         isEqual = equalityFns.similarObjects(cache, response.data);
         break;
 
+      // 'functionName, propName'
       case equalityFnName.includes('compareProp'): {
         const prop = equalityFnName.split(',')[1];
         isEqual =
@@ -466,15 +360,6 @@ function compare(equalityFnName, cacheRef, response, caller, DEBUG) {
         isEqual = false;
     }
 
-    if (DEBUG) {
-      console.debug(`EQUALITY fn: ${equalityFnName} - ${isEqual}`);
-      console.dir({
-        caller,
-        cache,
-        response: response.data,
-        isEqual,
-      });
-    }
     return isEqual;
   } catch (e) {
     if (e instanceof DesignError) {
@@ -485,4 +370,42 @@ function compare(equalityFnName, cacheRef, response, caller, DEBUG) {
     throw e;
   }
 }
-export { useFetchApi, STATUS };
+
+function validateInput(caller, asyncFn, consumeDataFn, setCacheFn) {
+  const fnWhenDefined = (fn) => {
+    return typeof fn === 'undefined' ? true : typeof fn === 'function';
+  };
+  console.assert(
+    typeof asyncFn === 'function',
+    `use-fetch-api: ${caller} did not provide asyncFn`,
+  );
+  console.assert(
+    fnWhenDefined(setCacheFn),
+    `use-fetch-api: ${caller} did not provide a valid setCacheFn`,
+  );
+  // -----------------------------------------------------------------------------
+  console.assert(
+    fnWhenDefined(consumeDataFn),
+    `use-fetch-api: ${caller} did not provide a valid consumeDataFn`,
+  );
+}
+
+function isArgsEmpty(...args) {
+  return args.length === 0;
+}
+
+/**
+ * @function
+ * @param {Array} args
+ * @param {String} caller
+ * @param {String} status
+ * @return {String}
+ */
+function argsDisplayString(args, caller, status) {
+  return `fetch status: ${status}\n\n✉️  fetch args for ${caller}: ${JSON.stringify(
+    args,
+    null,
+    2,
+  )}`;
+}
+export { useFetchApi, STATUS, argsDisplayString };

@@ -1,7 +1,18 @@
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
+@import 'luci-theme.css';
+
 /* Document
    ========================================================================== */
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 
 /**
  * 1. Correct the line height in all browsers.
@@ -39,7 +50,6 @@ main {
  */
 
 h1 {
-  font-size: 2em;
   margin: 0.67em 0;
 }
 
@@ -383,7 +393,68 @@ th {
 
 
 /* miscellaneous custom
-   ========================================================================== */
+============================================================================== */
+div.stack {
+  display: flex;
+  flex-direction: column;
+}
+div.nostack {
+  display: flex;
+  flex-direction: row;
+}
+div.nostack.center {
+    justify-content: center;
+}
+div.nowrap {
+  flex-wrap: nowrap;
+}
+div.hidden {
+    display: hidden;
+}
+div.hidden-o {
+    opacity: 0;
+}
+div.hidden-n {
+    display: none;
+}
+/* stepbar */
+.stepbar.nav-root {
+    margin-top: 7px;
+}
+.stepbar.nav {
+    width: 90px
+}
+.stepbar.nav.disabled {
+    opacity: 0;
+}
+.stepbar.logo {
+    margin-left: auto
+}
+.flex-1 {
+    flex: 1;
+}
+/* workbench */
+
+div.workbench.button-group {
+    background-color: var(--color-secondary-main);
+    opacity: 0.7;
+    border: none;
+    border-radius: 18px;
+    position: fixed;
+    right: 3.5%;
+    top: 75%;
+    padding: 15px;
+    width: min-content;
+    z-index: 9;
+}
+div.workbench.button-group * {
+    color: #fff;
+}
+.Luci-Workbench-board > .palette-root {
+    padding: 10px;
+    background: cyan;
+}
+/* --------------------------------------------------------------------------- */
 
 .Luci-ValueGrid-cell.count {
   font-family: 'JetBrainsMono';
@@ -403,11 +474,6 @@ th {
 }
 .SplitPane > .Pane > div {
     overflow: inherit;
-}
-
-div.stack {
-  display: flex;
-  flex-direction: column;
 }
 
 span.google-drive {

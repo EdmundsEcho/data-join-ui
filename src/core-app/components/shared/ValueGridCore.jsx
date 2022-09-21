@@ -30,9 +30,10 @@ import ValueGridInner, {
   filterOperators,
   gridHeightFn,
 } from './ValueGridInner';
+import ErrorBoundary from './ErrorBoundary';
 
 // api interface
-import { usePagination } from '../../hooks/use-pagination';
+import { usePagination, STATUS } from '../../hooks/use-pagination';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { PURPOSE_TYPES } from '../../lib/sum-types';
 
@@ -42,8 +43,9 @@ import { removeProp } from '../../utils/common';
 // re-export
 export { filterOperators };
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /* eslint-disable no-console */
+
 //------------------------------------------------------------------------------
 const pureSelectionModel = {
   __ALL__: {
@@ -99,6 +101,9 @@ const ValueGridCore = ({
   // initialize the api edge -> grid row transformer
   const toGridFn = toGrid(edgeToIdFn, edgeToGridRowFn);
 
+  // derived fields (e.g., group-by-file, already have data
+  const dataPreloaded = typeof rows !== 'undefined';
+
   if (DEBUG && typeof rows !== 'undefined') {
     console.debug(`rows`);
     console.dir(rows);
@@ -107,7 +112,7 @@ const ValueGridCore = ({
   //----------------------------------------------------------------------------
   // PAGE SIZE (size of each api response)
   //----------------------------------------------------------------------------
-  const PAGE_SIZE = pageSize || 30;
+  const PAGE_SIZE = pageSize;
 
   // ---------------------------------------------------------------------------
   // 📖 Infinity window using the pagination hook
@@ -123,7 +128,7 @@ const ValueGridCore = ({
     filter: baseSelectAll,
     feature,
     pageSize: PAGE_SIZE,
-    turnOn: typeof rows === 'undefined',
+    turnOff: dataPreloaded, // turn off api fetch
   });
 
   if (typeof PAGE_SIZE === 'undefined') {
@@ -143,6 +148,7 @@ const ValueGridCore = ({
     selectionModel: storeSelectionModel = pureSelectionModel,
   } = selectionModel;
   const modelType = selectionModelType(storeSelectionModel);
+  const storeRowCount = Object.keys(storeSelectionModel).length;
 
   // ---------------------------------------------------------------------------
   // 🙂  Building a series or not
@@ -193,7 +199,7 @@ const ValueGridCore = ({
   //
   useEffect(() => {
     if (inSeriesBuildingState !== inSeriesBuildingStateStore) {
-      setInSeriesBuildingState(inSeriesBuildingStateStore);
+      setInSeriesBuildingState(() => inSeriesBuildingStateStore);
     }
   }, [inSeriesBuildingState, inSeriesBuildingStateStore]);
 
@@ -223,6 +229,7 @@ const ValueGridCore = ({
       inGridHasAllValuesState,
       inFromSelectAllState,
       inSeriesBuildingState,
+      dataPreloaded,
       cache: {
         status,
         totalCount: data.cache.totalCount,
@@ -253,7 +260,7 @@ const ValueGridCore = ({
         feature === 'SCROLL'
           ? fetchPage({ pageSize: nextPageSize, after: max })
           : fetchPage();
-      setReadyForMore(true);
+      setReadyForMore(() => true);
     }
   };
   // ---------------------------------------------------------------------------
@@ -263,14 +270,14 @@ const ValueGridCore = ({
   useEffect(() => {
     if (inSeriesBuildingState) {
       // catch the all selected state; only reset when length === 0
-      if (Object.keys(storeSelectionModel).length === MAX_ROWS) {
-        setInFromSelectAllState(true);
+      if (storeRowCount === MAX_ROWS) {
+        setInFromSelectAllState(() => true);
       }
-      if (Object.keys(storeSelectionModel).length === 0) {
-        setInFromSelectAllState(false);
+      if (storeRowCount === 0) {
+        setInFromSelectAllState(() => false);
       }
     }
-  }, [MAX_ROWS, inSeriesBuildingState, storeSelectionModel]);
+  }, [MAX_ROWS, inSeriesBuildingState, storeRowCount]);
   //
   // local routine that coordinates how to update the store
   // with that state of the grid.
@@ -454,7 +461,7 @@ const ValueGridCore = ({
         // create and set a new filter
         // use the values to create a new selection model
         setFetchFilter(newFilterFrom(baseSelectAll), MAX_ROWS);
-        setReadyForMore(true);
+        setReadyForMore(() => true);
       } else {
         // take the ui out of this state
         // ⬜ Provide the user with a message
@@ -532,7 +539,9 @@ const ValueGridCore = ({
   // Set the MAX_ROWS following fetch request (flag readyForMore)
   //
   useEffect(() => {
-    if (status === 'success') setMaxRows(data.cache.totalCount);
+    if (status === 'success') {
+      setMaxRows(() => data.cache.totalCount);
+    }
   }, [data.cache.totalCount, readyForMore, status]);
 
   // ---------------------------------------------------------------------------
@@ -552,11 +561,7 @@ const ValueGridCore = ({
   // ---------------------------------------------------------------------------
   useEffect(() => {
     switch (true) {
-      case status === 'pending':
-        /* do nothing */
-        break;
-
-      case status === 'error':
+      case status === STATUS.REJECTED:
         setError({ message: JSON.stringify(data.cache) });
         break;
 
@@ -566,7 +571,7 @@ const ValueGridCore = ({
       // When building a series of fields, the format of the selection model
       // changes to one that describes every level (i.e., does not use ALL)
       //
-      case status === 'success' &&
+      case status === STATUS.RESOLVED &&
         readyForMore &&
         inSeriesBuildingState &&
         !inFromSelectAllState:
@@ -589,14 +594,14 @@ const ValueGridCore = ({
             inFromSelectAllState,
           ),
         );
-        setReadyForMore(false);
-        setMaxRows(data.cache.totalCount);
+        setReadyForMore(() => false);
+        setMaxRows(() => data.cache.totalCount);
         break;
 
       //
       // otherwise...
       //
-      case status === 'success' && readyForMore: {
+      case status === STATUS.RESOLVED && readyForMore: {
         if (DEBUG) {
           console.debug(`%cEffect *not inSeriesMode*`, 'color:yellow');
         }
@@ -608,8 +613,8 @@ const ValueGridCore = ({
         apiRef.current.updateRows(newRows);
         apiRef.current.selectRows(newSelected);
 
-        setReadyForMore(false);
-        setMaxRows(data.cache.totalCount);
+        setReadyForMore(() => false);
+        setMaxRows(() => data.cache.totalCount);
 
         if (purpose === PURPOSE_TYPES.MSPAN) {
           /* update the store with [[value, count]] */
@@ -621,9 +626,9 @@ const ValueGridCore = ({
       /* do nothing */
     }
   }, [
+    data,
     DEBUG,
     apiRef,
-    data.cache,
     handleSetAllValues,
     identifier,
     inFromSelectAllState,
@@ -649,7 +654,9 @@ const ValueGridCore = ({
           : `\n⬜  inGridHasAllValuesState: ${inGridHasAllValuesState}`,
       );
     }
-    setInGridHasAllValuesState(hasAllRecords(apiRef, MAX_ROWS, inFilterState));
+    setInGridHasAllValuesState(() =>
+      hasAllRecords(apiRef, MAX_ROWS, inFilterState),
+    );
   }, [DEBUG, MAX_ROWS, apiRef, inFilterState, inGridHasAllValuesState]);
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -948,4 +955,9 @@ function makeStoreRequestSelectionModel(
 
 //------------------------------------------------------------------------------
 //
-export default ValueGridCore;
+const WithErrorBoundary = (valueGridProps) => (
+  <ErrorBoundary>
+    <ValueGridCore {...valueGridProps} />
+  </ErrorBoundary>
+);
+export default WithErrorBoundary;

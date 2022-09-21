@@ -1,7 +1,8 @@
 import { useEffect, useReducer, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
-import { Box, Button, IconButton, Paper, Typography } from '@mui/material';
+import { Box, Divider, IconButton, Paper, Typography } from '@mui/material';
 import { Google, GitHub, Twitter } from '@mui/icons-material';
 
 import clsx from 'clsx';
@@ -10,40 +11,14 @@ import { purgeStoredState } from 'redux-persist';
 
 import { persistConfig } from '../core-app/redux-persist-cfg';
 import { logout as logoutApi } from '../services/dashboard.api';
+import usePersistedState from '../core-app/hooks/use-persisted-state';
 
 import './LoginPage.css';
 
 //------------------------------------------------------------------------------
+const AUTH_PROVIDERS = process.env.REACT_APP_AUTH_PROVIDERS.split(',');
+//------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
-
-const LoginForm = ({ handleSubmit, isLoading }) => {
-  const [formInput] = useReducer(
-    (state, newState) => ({ ...state, ...newState }),
-    {
-      emailAddress: '',
-      password: '',
-    },
-  );
-
-  return (
-    <form
-      className={clsx('Luci-login')}
-      onSubmit={(event) => handleSubmit(event, formInput)}>
-      <Button
-        sx={{ width: '100%', mt: 3, mb: 1, height: '36px' }}
-        variant='contained'
-        color='primary'
-        type={isLoading ? 'button' : 'submit'}>
-        {isLoading ? <span className='spinner' /> : 'Sign In'}
-      </Button>
-    </form>
-  );
-};
-
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-};
 
 /* eslint-disable react/jsx-props-no-spreading */
 const AuthButton = (props) => {
@@ -52,14 +27,22 @@ const AuthButton = (props) => {
 /* eslint-enable react/jsx-props-no-spreading */
 
 export const LoginPage = ({ logout }) => {
-  const [isLoading, setLoading] = useState(false);
+  //
+  const [isLoading, setLoading] = useState(() => false);
+
+  // 1. persist the history stored in location to local storage
+  // (consumed by the RedirectPage, navigate(origin))
+  const location = useLocation();
+  const origin = location.state?.fromPathname || '/';
+  usePersistedState(`tncAuthRedirectOrigin`, origin);
+
+  // 2. proceed with the login routine
 
   // generic for supported authenticating services
-  const authProviders = ['google', 'azure', 'github', 'twitter', 'discord'];
   const errorMsg = 'this auth provider is not supported';
   const handleAuth = (provider) => (event) => {
     // 🚧 assert using supported auth provider
-    console.assert(authProviders.includes(provider), {
+    console.assert(AUTH_PROVIDERS.includes(provider), {
       provider,
       errorMsg,
     });
@@ -105,11 +88,18 @@ export const LoginPage = ({ logout }) => {
             ? theme.palette.grey[100]
             : theme.palette.grey[900],
       }}>
-      <Box sx={{ zIndex: 2 }}>
-        <Paper sx={{ p: 6, width: '300px' }}>
+      <Paper sx={{ zIndex: 2, p: 6, width: '300px' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexFlow: 'column nowrap',
+            gap: '12px',
+            zIndex: 2,
+          }}>
           <Typography variant='h5' component='h2'>
             Sign in
           </Typography>
+          <Divider />
           <Box
             sx={{
               mb: 1,
@@ -133,12 +123,8 @@ export const LoginPage = ({ logout }) => {
               <Twitter />
             </AuthButton>
           </Box>
-          <LoginForm
-            handleSubmit={handleAuth('google')}
-            isLoading={isLoading}
-          />
-        </Paper>
-      </Box>
+        </Box>
+      </Paper>
     </Box>
   );
 };

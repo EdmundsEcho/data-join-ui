@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 
 import PropTypes from 'prop-types';
 import { useDispatch, useStore } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import clsx from 'clsx';
 
@@ -17,8 +17,7 @@ import TableRow from '@mui/material/TableRow';
 import CheckIcon from '@mui/icons-material/Check';
 import Button from '@mui/material/Button';
 
-// debugging
-import { useClear } from '../hooks/use-persisted-state';
+import { deleteDb as clearUiState } from '../hooks/use-persisted-state';
 
 // public resources
 import logo from '../assets/images/Logo.png';
@@ -33,13 +32,15 @@ const SHOW_DEBUG_PANEL = false;
  */
 const Overview = (props) => {
   const dispatch = useDispatch();
-  const clearUiState = useClear();
+  const { projectId } = useParams();
 
   const clearReduxState = useCallback(() => {
     dispatch({ type: 'RESET' });
-    clearUiState();
-  }, [clearUiState, dispatch]);
+  }, [dispatch]);
 
+  const handleClear = async (...args) => {
+    await clearUiState(...args);
+  };
   return (
     <div style={{ margin: '30px' }}>
       <img src={logo} alt='Lucivia LLC' style={{ width: '140px' }} />
@@ -49,6 +50,7 @@ const Overview = (props) => {
       </p>
       <p />
       <Divider />
+      <Button onClick={() => handleClear(projectId)}>Clear UI</Button>
       <p />
 
       <CopyRight />

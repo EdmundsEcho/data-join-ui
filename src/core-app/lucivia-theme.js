@@ -14,6 +14,10 @@ import Check from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 
 import palette from './assets/scheme/palette.json';
+import LatoRegular from './assets/fonts/Lato/Lato-Regular.ttf';
+import LatoItalic from './assets/fonts/Lato/Lato-Italic.ttf';
+import LatoBold from './assets/fonts/Lato/Lato-Bold.ttf';
+
 // used to create a customer version starting with mui's default
 import { FIELD_TYPES, PURPOSE_TYPES } from './lib/sum-types';
 
@@ -48,10 +52,17 @@ import { FIELD_TYPES, PURPOSE_TYPES } from './lib/sum-types';
  */
 const muiBaseTheme = responsiveFontSizes(createTheme());
 // console.dir(muiBaseTheme);
-/*
- * provide ~global ref
+/**
+ * global ref
+ * @constant
  */
 const spacing = [0, 2, 4, 6, 10, 14, 20, 26, 32, 38, 48, 58, 64];
+/**
+ * Computes a size value with px appended.
+ * @function
+ * @param {Number} sizeIndex
+ * @return {String} size with px
+ */
 const spacingFn = (value) => `${spacing[value]}px`;
 
 // 🔖 Workbench
@@ -79,29 +90,35 @@ export default (mode) =>
         'sans-serif',
       ].join(','),
 
-      headline1: {
-        fontFamily: 'rubik',
+      h1: {
+        fontSize: '5rem',
+        fontFamily: 'Rubik',
       },
-      headline2: {
-        fontFamily: 'rubik',
+      h2: {
+        fontSize: '3.15rem',
+        fontFamily: 'Rubik',
       },
-      headline3: {
-        fontFamily: 'rubik',
+      h3: {
+        fontSize: '2.5rem',
+        fontFamily: 'Rubik',
       },
-      headline4: {
-        fontFamily: 'rubik',
+      h4: {
+        fontSize: '1.785rem',
+        fontFamily: 'Rubik',
       },
-      headline5: {
-        fontFamily: 'rubik',
+      h5: {
+        fontSize: '1.25rem',
+        fontFamily: 'Rubik',
       },
-      headline6: {
-        fontFamily: 'rubik',
+      h6: {
+        fontSize: '1.05rem',
+        fontFamily: 'Rubik',
       },
       subtitle1: {
-        fontFamily: 'lato',
+        fontFamily: 'Lato',
       },
       subtitle2: {
-        fontFamily: 'lato',
+        fontFamily: 'Lato',
       },
       body1: {
         fontFamily: 'Lato',
@@ -171,6 +188,98 @@ export default (mode) =>
           html: {
             -webkit-font-smoothing: 'auto',
           }
+          @font-face {
+            font-family: 'Rubik';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Rubik'), local('Rubik-Regular'),
+              url(./assets/fonts/Rubik/Rubik-Regular.ttf) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Lato Regular'), local('Lato-Regular'),
+              url(${LatoRegular}) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'Lato';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Lato Italic'), local('Lato-Italic'),
+              url(${LatoItalic}) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'Lato';
+            font-style: bold;
+            font-weight: 700;
+            src: local('Lato Bold'), local('Lato-Bold'),
+              url(${LatoBold}) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'Raleway';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Raleway Regular'), local('Raleway-Regular'),
+              url(./assets/fonts/Raleway/Raleway-Regular.ttf) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'Raleway';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Raleway Italic'), local('Raleway-Italic'),
+              url(./assets/fonts/Raleway/Raleway-Italic.ttf) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'Raleway';
+            font-style: bold;
+            font-weight: 700;
+            src: local('Raleway Bold'), local('Raleway-Bold'),
+              url(./assets/fonts/Raleway/Raleway-Bold.ttf) format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+              U+FEFF, U+FFFD;
+          }
+          @font-face {
+            font-family: 'JetBrainsMono';
+            font-style: thin;
+            font-weight: 100;
+            src: local('JetBrainsMono-Thin'),
+              url(./assets/fonts/JetBrains_Mono/static/JetBrainsMono-Thin.ttf) format('truetype');
+          }
+          @font-face {
+            font-family: 'JetBrainsMono';
+            font-style: normal;
+            font-weight: 400;
+            src: local('JetBrainsMono-Regular'),
+              url(./assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf)
+                format('truetype');
+          }
+          @font-face {
+            font-family: 'JetBrainsMono';
+            font-style: bold;
+            font-weight: 700;
+            src: local('JetBrainsMono-Bold'),
+              url(./assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf) format('truetype');
+          }
         `,
       },
 
@@ -184,6 +293,7 @@ export default (mode) =>
 
       //--------------------------------------------------------------------------
       /* Table */
+      /* Note: can also pass { theme, ownerState } */
       //--------------------------------------------------------------------------
       MuiTable: {
         styleOverrides: {
@@ -1257,6 +1367,10 @@ export default (mode) =>
               '& .Node-root': {
                 padding: 0,
               },
+              '& .palette.superGroup': {
+                backgroundColor: 'inherit',
+              },
+
               '& .Node-root.group': {
                 position: 'relative',
                 '& > .fab': {
@@ -1291,14 +1405,14 @@ export default (mode) =>
               '& .activeZone': {
                 backgroundColor: palette.primary.light,
               },
-              // --
+              // -- starting point for palette
               '& > .palette-root': {
-                // debug
-                // backgroundColor: 'yellow',
                 height: '100%',
                 minWidth: '160px',
                 maxWidth: '20%',
-                padding: theme.spacingFn(2),
+                padding: theme.spacingFn(5),
+                borderRadius: theme.spacingFn(5),
+                backgroundColor: palette.grey[100],
                 '& > .Node-root.superGroup': {
                   display: 'flex',
                   flexDirection: 'column',
@@ -1387,18 +1501,34 @@ export default (mode) =>
                 },
               },
             },
-            '&.Luci-Float.workbench': {
-              backgroundColor: theme.palette.secondary.light,
-              border: 'none',
-              borderRadius: 7,
-              position: 'fixed',
-              right: '3.5%',
-              top: '55%',
-              padding: 5,
-              width: 'min-content',
-              zIndex: 99,
-              '& .MuiButton-root': {
-                lineHeight: '1.2rem',
+            //---------------------------------------------------------------------
+            // ErrorBoundary
+            //---------------------------------------------------------------------
+            '&.Luci-error-boundary': {
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              border: `solid 0.5px ${theme.palette.grey[300]}`,
+              padding: spacingFn(6),
+              borderRadius: spacingFn(3),
+              gap: spacingFn(6),
+              '& > h1, h2, h3': {
+                color: theme.palette.error.main,
+              },
+              '& .error': {
+                marginTop: spacingFn(7),
+                marginBottom: spacingFn(7),
+              },
+              '& .componentStack': {
+                margin: spacingFn(0),
+                maxHeight: '60vh',
+                overflowY: 'scroll',
+              },
+              '& button': {
+                width: 'fit-content',
+                padding: `${spacingFn(3)} ${spacingFn(6)}`,
+                marginTop: spacingFn(7),
+                borderRadius: spacingFn(3),
               },
             },
           }),
@@ -2011,14 +2141,29 @@ export default (mode) =>
         },
       },
       //--------------------------------------------------------------------------
-      // Button
-      //--------------------------------------------------------------------------
+      /* Button */
       MuiButton: {
         styleOverrides: {
-          root: ({ theme }) => ({
+          root: ({ theme, ownerState }) => ({
             padding: '0',
+            margin: 'auto',
             minWidth: '10px',
             textTransform: 'none',
+            '&.MuiButton-contained': {
+              padding: `${spacingFn(3)} ${spacingFn(6)}`,
+              borderRadius: spacingFn(3),
+            },
+            '&.matrix.download.round': {
+              '& > .MuiButton-endIcon': {
+                padding: '8px',
+                borderRadius: '20px',
+                color: '#fff',
+                background: theme.palette.primary.main,
+              },
+              '&.disabled': {
+                visibility: 'hidden',
+              },
+            },
           }),
         },
       },

@@ -29,7 +29,7 @@ const timeStamp = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 // -----------------------------------------------------------------------------
 export const options = {
   name: `Tnc Redux - ${timeStamp}`,
-  traceLimit: 30,
+  traceLimit: 150,
   trace: true,
   autoPause: true, // record only when window is active
   shouldCatchErrors: true, // ... in reducers; stops execution

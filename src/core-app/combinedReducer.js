@@ -23,7 +23,7 @@ import { LOAD_PROJECT } from './ducks/actions/project-meta.actions';
 //
 const appReducer = combineReducers(reducers);
 //
-// 2️⃣  add a root reducer
+// 2️⃣  add a root reducer (enhancer)
 //
 const withLoadProjectReducer = (state, action) => {
   if (action.type === LOAD_PROJECT) {

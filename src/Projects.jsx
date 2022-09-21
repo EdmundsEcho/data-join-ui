@@ -20,9 +20,11 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Spinner } from './components/shared';
 
-// 📖
-import { useProjectsApiContext } from './contexts/ProjectsDataContext';
-import { useProjectsDataContext } from './contexts/ProjectsDataContext';
+// 📖 (each hook used in different components)
+import {
+  useProjectsApiContext,
+  useProjectsDataContext,
+} from './contexts/ProjectsDataContext';
 
 // -----------------------------------------------------------------------------
 const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
@@ -88,7 +90,7 @@ function Layout({ children }) {
       <div className='main-controller'>
         <div className='main-controller inner stack box'>
           <div className='box'>
-            <h3>Project list controller</h3>
+            <h4>Project list controller</h4>
             <p>Controls which project to show; defaults to new project form</p>
             <p>Eventually will have 4 states</p>
           </div>

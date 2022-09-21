@@ -1,0 +1,12 @@
+{
+  "arrows": {},
+  "limit": 90,
+  "page": 1,
+  "purpose": "quality",
+  "sources": [
+    {
+      "filename": "/shared/datafiles/e964dcca-99c2-4664-a802-4291c3db1272/dropbox/1db117/lE0WdposqDkAAAAAABpp0A/productA_Units_short.csv",
+      "header-index": 1
+    }
+  ]
+}

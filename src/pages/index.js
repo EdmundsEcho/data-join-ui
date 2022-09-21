@@ -6,3 +6,4 @@ export * from './RedirectPage';
 export * from './ErrorPage';
 export * from './Home';
 export * from './About';
+export * from './AuthRedirect';

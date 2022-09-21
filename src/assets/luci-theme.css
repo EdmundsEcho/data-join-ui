@@ -1,0 +1,280 @@
+/* Copied from Lucivia Mui custom theme
+ *
+ * Material design scheme:
+ * https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=00ACC1&secondary.color=ff9800
+ *
+ * Usage: @import “luci-theme.css”;
+ *
+ */
+:root {
+  --color-primary-main: #00acc1;
+  --color-primary-light: #b2e1ec;
+  --color-primary-dark: #33889c;
+  --color-primary-extra-dark: #19788e;
+  --color-secondary-main: #ff9800;
+  --color-secondary-light: #ffa868;
+  --color-secondary-dark: #f17417;
+  --color-secondary-extra-dark: #ba5408;
+
+  --color-error: #fa616c;
+  --color-red: #fa626c;
+  --color-grey: #646464;
+  --color-white: #ffffff;
+  --color-yellow: #fff700;
+
+  --color-primary-text: #757575;
+  --color-meta-text: var(--color-primary-main);
+
+  --color-test-line: #6ff;
+  --color-control-line: #f0f;
+}
+/*
+  "text": {
+    "primary": "rgba(0, 0, 0, 0.6)",
+    "secondary": "rgba(0, 0, 0, 0.8)",
+    "disabled": "rgba(0, 0, 0, 0.4)",
+    "hint": "rgba(0, 0, 0, 0.4)"
+  },
+  primary": {
+    "extraLight": "#B2E1EC",
+    "superLight": "rgba(178,225,236,0.4)",
+    "superLightHex": "#b2e1ec",
+    "extremeLight": "rgba(178,225,236,0.2)",
+    "contrastText": "#fff"
+  },
+  "secondary": {
+    "extraLight": "#FFC193",
+    "superLight": "rgba(255,168, 104, 0.3)",
+    "extremeLight": "rgba(255,168, 104, 0.1)",
+    "contrastText": "#fff"
+  },
+  */
+
+/* border-box that still allows for
+ * using content-box or padding-box
+ */
+.color-go-green {
+  color: rgb(0, 179, 0, 1);
+}
+.color-error {
+  color: var(--color-error);
+}
+.color-secondary-main {
+  color: var(--color-secondary-main);
+}
+.color-primary-main {
+  color: var(--color-primary-main);
+}
+.color-primary-text {
+  color: var(--color-primary-text);
+}
+body {
+  color: var(--color-primary-text);
+  font-size: 1rem;
+  font-family: Lato;
+  font-weight: 400;
+  line-height: 1.5;
+}
+i,
+em {
+  font-style: italic;
+}
+.body2 {
+  color: var(--color-primary-text);
+  font-size: 0.9rem;
+  font-family: Lato;
+  font-weight: 400;
+  line-height: 1.43;
+}
+caption {
+  font-size: 0.75rem;
+  font-family: lato;
+  font-weight: 400;
+  line-height: 1.66;
+}
+div h4:first-of-type {
+  margin-top: 0px;
+}
+div h4:not(:first-of-type) {
+  margin-top: 20px;
+}
+div h5:first-of-type {
+  margin-top: 0px;
+}
+div h5:not(:first-of-type) {
+  margin-top: 20px;
+}
+div h6:first-of-type {
+  margin-top: 0px;
+}
+div h6:not(:first-of-type) {
+  margin-top: 20px;
+}
+.center {
+  text-align: center;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.subtitle1,
+.subtitle2,
+.overline {
+  font-family: Rubik, Lato, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--color-primary-text);
+}
+h1 {
+  font-size: 5rem;
+  font-weight: 300;
+  line-height: 1.167;
+}
+h2 {
+  font-size: 3.15rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+h3 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.167;
+}
+h4 {
+  font-size: 1.785rem;
+  font-weight: 400;
+  line-height: 1.235;
+}
+h5 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.334;
+}
+h6 {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.subtitle1 {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.75;
+}
+.subtitle2 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.57;
+}
+.overline {
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 2.66;
+  text-transform: uppercase;
+}
+.noWrap {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.gutterBottom {
+  margin-bottom: 0.35em;
+}
+p {
+  margin-bottom: 16px;
+  text-shadow: 1px 1px 1px rgba(150, 150, 150, 0.3);
+}
+.colorInherit {
+  color: inherit;
+}
+.displayInline {
+  display: inline;
+}
+.displayBlock {
+  display: block;
+}
+.code-heading {
+  margin: 1em;
+}
+code {
+  font-family: JetBrainsMono, monospace;
+}
+
+blockquote {
+  box-shadow: none;
+}
+/* miscellaneous best practices */
+table {
+  border-collapse: collapse;
+}
+th td {
+  font-family: Rubik, sans-serif;
+}
+th {
+  font-weight: bold;
+}
+ol,
+ul,
+li {
+  color: var(--color-primary-text);
+}
+
+ol,
+dl,
+ul {
+  list-style-position: outside;
+  margin-left: 1em;
+  padding-left: 1em;
+}
+ul.id-function ul {
+  margin-left: -0.7ch;
+}
+ul.arrow {
+  margin-left: -0.7ch;
+}
+ul.id-function > li::marker {
+  content: url("./images/arrow_id_rounded.svg");
+  color: var(--color-secondary-main);
+}
+ul.id-function > li.sublist::marker {
+  content: none;
+  color: var(--color-secondary-main);
+}
+ul.top-more-space > li:first-child {
+  margin-top: 1.2em;
+}
+
+ul.arrow > li::marker {
+  content: url("./images/arrow_right_rounded.svg");
+  color: var(--color-secondary-main);
+}
+ul.arrow > li.sublist::marker {
+  content: none;
+  color: var(--color-secondary-main);
+}
+li {
+  padding-inline-start: 0.7ch;
+  margin-top: 0.7rem;
+  line-height: 1.2;
+}
+li li:first-of-type {
+  margin-top: 1rem;
+}
+li li {
+  font-size: 0.9em;
+}
+.big-text {
+  font-size: 3em;
+}
+
+.button {
+  display: block;
+  width: 160px;
+  padding: 9px 0;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  background-color: transparent;
+  font-family: "Rubik", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}

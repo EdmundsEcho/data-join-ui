@@ -35,7 +35,7 @@ import { setNotification } from '../../actions/notifications.actions';
 import {
   ServiceConfigs,
   getServiceType,
-  getFileLevels,
+  fetchFileLevels,
 } from '../../../services/api';
 
 import { SOURCE_TYPES, PURPOSE_TYPES } from '../../../lib/sum-types';
@@ -88,7 +88,8 @@ const middleware =
     const { projectId } = state.$_projectMeta;
     //
     if (DEBUG) {
-      console.info(`👉 loaded headerView.middleware: ${projectId}`);
+      const project = projectId === null ? 'empty' : `${projectId}`;
+      console.info(`👉 loaded headerView.middleware: ${project}`);
     }
     if (action.type === 'PING')
       console.log(
@@ -99,12 +100,6 @@ const middleware =
     // dispatch the current action in action.type with the closure that is
     // about to be returned.
     next(action);
-
-    if (!Object.keys(action).includes('type')) {
-      console.error(`headerView middleware skipped an action without a type`);
-      console.error(action);
-      return;
-    }
 
     switch (action.type) {
       // -------------------------------------------------------------------------
@@ -272,7 +267,6 @@ const middleware =
       // generate action with payload :: headerView with updated wtlf
       // 👉 schedules a fixes report
       case UPDATE_WIDE_TO_LONG_FIELDS: {
-        const state = getState();
         const { filename, ...userInput } = action.payload;
         const { wideToLongFields, ...readOnlyHv } = selectHeaderView(
           state,
@@ -359,12 +353,13 @@ const middleware =
                 feature: HEADER_VIEW,
               }),
             ]);
-            const response = await getFileLevels({
+            const response = await fetchFileLevels({
               projectId,
               sources: [{ filename, 'header-index': fieldIdx }],
               purpose: PURPOSE_TYPES.MSPAN,
               signal: undefined,
             });
+            // ⬜ integrate into system error and meta processing (use-api-fetch)
             if (response.status > 200 || response.data.status === 'Error') {
               next(
                 pollingEventError({
@@ -398,7 +393,6 @@ const middleware =
           // `[HeaderView] [FIX] fixSameAsOtherSubjects`:
 
           try {
-            const state = getState();
             // retrieve the string ref to a function from ⚙️  lazyFixes
             const { [action.lazyFix]: lazyFix = (x) => x } = lazyFixes;
             next(setFixedHeaderViews(lazyFix(state)));

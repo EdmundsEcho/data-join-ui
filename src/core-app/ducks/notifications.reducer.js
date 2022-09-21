@@ -1,10 +1,11 @@
 // src/ducks/notifications.reducer.js
 
 /**
- * @module ducks/notifications-reducer
+ * An FYI service.  Compliments a similar service in use-fetch-api.
  *
  * @category Reducers
  *
+ * @module ducks/notifications-reducer
  */
 
 import {

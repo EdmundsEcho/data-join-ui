@@ -46,6 +46,7 @@ import createSagaMiddleware from 'redux-saga';
 import rootSaga from './initSagas';
 
 // the appReducer (a combination of reducers)
+// uses an enhancer to load project state
 import appReducers from './combinedReducer';
 
 // core
@@ -173,7 +174,7 @@ const configureStoreDev2 = (preloadedState) => {
   );
 
   // add loging actions
-  store.dispatch = addActionLogging(store);
+  // store.dispatch = addActionLogging(store);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);

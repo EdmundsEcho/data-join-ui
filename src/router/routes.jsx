@@ -1,5 +1,5 @@
 import {
-  Assignment,
+  // Assignment,
   Layers,
   Dashboard,
   Chat,
@@ -8,8 +8,9 @@ import {
 } from '@mui/icons-material';
 
 import {
+  AuthRedirect,
   ErrorPage,
-  ProjectPage,
+  // ProjectPage,
   LoginPage,
   NotFoundPage,
   RedirectPage,
@@ -36,31 +37,12 @@ import HoldingArea from '../components/HoldingArea';
 */
 
 export const routesConfig = [
-  {
-    path: '*', // nomatch -> 404
-    element: <NotFoundPage />,
-    mainMenu: false,
-  },
-  {
-    path: '/', // index page
-    element: <RedirectPage />,
-    mainMenu: false,
-  },
-  {
-    path: '/error',
-    element: <ErrorPage />,
-    mainMenu: false,
-  },
-  {
-    path: '/login',
-    element: <LoginPage />,
-    mainMenu: false,
-  },
-  {
-    path: '/user-profile',
-    element: <UserProfilePage />,
-    mainMenu: true,
-  },
+  { path: '*', element: <NotFoundPage />, mainMenu: false }, // 404
+  { path: '/', element: <RedirectPage />, mainMenu: false }, // index
+  { path: '/login', element: <LoginPage />, mainMenu: false },
+  { path: '/error', element: <ErrorPage />, mainMenu: false },
+  { path: '/authorize', element: <AuthRedirect />, mainMenu: false },
+  { path: '/user-profile', element: <UserProfilePage />, mainMenu: true },
   {
     path: '/projects', // -> Outlet
     element: <Projects />,

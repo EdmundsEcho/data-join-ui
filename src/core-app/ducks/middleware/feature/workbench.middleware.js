@@ -68,8 +68,8 @@ import { ServiceConfigs, getServiceType } from '../../../services/api';
 
 // 📖 tree state
 import {
-  getTree,
   getProjectId,
+  getTree,
   selectNodeState,
   getEtlObject,
   resetCanvas,
@@ -103,11 +103,9 @@ const middleware =
   ({ dispatch, getState }) =>
   (next) =>
   (action) => {
-    const state = getState();
-    const { projectId } = state.$_projectMeta;
     //
     if (DEBUG) {
-      console.info(`👉 loaded workbench.middleware: ${projectId}`);
+      console.info('👉 loaded workbench.middleware');
     }
     if (action.type === 'PING')
       console.log(
@@ -154,7 +152,12 @@ const middleware =
         };
         next([setGroupSemantic(nodeState)]);
         // sagas -> SET_MATRIX_CACHE // document
-        dispatch(fetchMatrixCache({ projectId, ...nodeState }));
+        dispatch(
+          fetchMatrixCache({
+            projectId: getProjectId(getState()),
+            ...nodeState,
+          }),
+        );
 
         break;
       }
@@ -191,7 +194,6 @@ const middleware =
       case TOGGLE_REDUCED:
       case SET_COMP_REDUCED:
       case SET_MSPAN_REQUEST: {
-        // next(action);
         // check if the parent is a group that needs to be updated
         const state = getState();
         const { parent } = selectNodeState(state, action.id);
@@ -315,8 +317,7 @@ const middleware =
           source = undefined,
           draggableId,
         } = action.payload;
-        const state = getState(); // for debugging
-        const treeState = getTree(state); // flat tree
+        const treeState = getTree(getState()); // flat tree
 
         //------------------------------------------------------------------------
         // MOVE or COPY based on source === palette
@@ -412,6 +413,7 @@ const middleware =
           });
 
           if (DEBUG) {
+            const state = getState();
             console.debug('📖 before');
             console.debug(before);
 
@@ -467,14 +469,11 @@ const middleware =
       case FETCH_WAREHOUSE: {
         // the payload required to make the warehouse request is pulled directly
         // from the redux store (nothing in the action).
-        if (getProjectId(state) !== projectId) {
-          throw new InvalidStateError(`Mismatch project: redux and middleware`);
-        }
-
+        //
         // rebuild warehouse (changed etlObj) | use the current tree
         // 🔖 there is no reason (yet), to pull from graphql more than once, once the
         //    tree has been instantiated
-        if (!isHostedWarehouseStale(state)) {
+        if (!isHostedWarehouseStale(getState())) {
           next(
             setNotification({
               message: `${WORKBENCH}.middleware: Warehouse cache is valid; no need re-render the warehouse`,
@@ -483,6 +482,8 @@ const middleware =
           );
         } else {
           try {
+            const state = getState();
+            const projectId = getProjectId(state);
             next([
               setNotification({
                 message: `${WORKBENCH}.middleware: action::feature -> ::api (next: polling-api.sagas)`,
@@ -579,6 +580,7 @@ const middleware =
           );
         }
         try {
+          const projectId = getProjectId(getState());
           const { id, subject, measurements } = getData(action.event.request);
           const { etlFields, etlUnits } = getEtlObject(getState());
 
@@ -668,6 +670,7 @@ const middleware =
               'The API polling request failed',
             feature: WORKBENCH,
           }),
+          // 🦀 does not work b/c window is also waiting for data
           setUiLoadingState({
             toggle: false,
             feature: WORKBENCH,

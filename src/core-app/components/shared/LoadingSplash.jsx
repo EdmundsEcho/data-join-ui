@@ -1,63 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import makeStyles from '@mui/styles/makeStyles';
-import cogs from '../../assets/cogs.gif';
+import '../../assets/splash.css';
 
-const useStyles = makeStyles({
-  container: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    background: 'rgba(0,0,0, 0.2)',
-    zIndex: 1000,
-  },
-  center: {
-    background: '#FFF',
-    borderRadius: 10,
-    boxShadow: `
-      0px 1px 3px 0px rgba(0,0,0,0.2),
-      0px 1px 1px 0px rgba(0,0,0,0.14),
-      0px 2px 1px -1px rgba(0,0,0,0.12)`,
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    margin: 'auto',
-    height: 200,
-    width: 300,
-  },
-  cogs: {
-    background: `url(${cogs}) no-repeat`,
-    backgroundClip: 'padding-box',
-    backgroundPosition: '-175px -120px',
-    height: 70,
-    width: 60,
-    margin: '20px auto 5px',
-  },
-});
-
-const LoadingSplash = (props) => {
-  const classes = useStyles();
-  const {
-    title = 'Processing',
-    message = 'This may take several moments to complete',
-  } = props;
-
+const LoadingSplash = ({ title, message, cancel }) => {
   return (
-    <div className={classes.container}>
-      <div className={classes.center}>
-        <div className={classes.cogs} />
+    <div className='Luci-splash gears'>
+      <div className='center'>
+        <div className='cogs' />
         <div>
           <Typography variant='h5'>{title}</Typography>
         </div>
         <div>
           <Typography variant='body1'>{message}</Typography>
         </div>
+        {cancel && (
+          <Button variant='contained' type='button' onClick={cancel}>
+            Cancel
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -66,10 +28,12 @@ const LoadingSplash = (props) => {
 LoadingSplash.propTypes = {
   title: PropTypes.string,
   message: PropTypes.string,
+  cancel: PropTypes.func,
 };
 LoadingSplash.defaultProps = {
-  title: 'Missing splash title',
-  message: 'Missing splash message',
+  title: 'Processing',
+  message: 'This may take several moments to complete',
+  cancel: undefined,
 };
 
 export default LoadingSplash;

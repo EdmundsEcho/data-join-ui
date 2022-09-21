@@ -71,7 +71,12 @@ class LookupError extends LuciError {}
 class MachineError extends LuciError {}
 class MiddlewareError extends LuciError {}
 class MissingProjectIdError extends LuciError {}
-class ReadWriteError extends LuciError {}
+class ReadWriteError extends LuciError {
+  /*
+constructor(message, error) {
+    super(message, error);
+} */
+}
 class SagasError extends LuciError {}
 class TimeoutError extends LuciError {}
 class ValueError extends LuciError {}

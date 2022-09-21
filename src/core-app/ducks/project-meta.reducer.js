@@ -50,17 +50,12 @@ export const getInitializingActions = (stateFragment) =>
  * @param {Object} serverResponse
  * @return {Object}
  */
-export const loadStore = (projectId, serverResponse) => {
-  if (typeof projectId === 'undefined') {
-    throw new MissingProjectIdError(
-      'Cannot initialize redux: Missing project id',
-    );
-  }
+export const loadStore = (serverResponse) => {
   // process server response
   if (serverResponse === null) {
     return null;
   }
-  const { store } = serverResponse;
+  const { project_id: projectId, store } = serverResponse;
 
   // default for a new project
   const newStore = {

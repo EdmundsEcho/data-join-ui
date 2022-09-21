@@ -17,8 +17,9 @@ import {
 } from '../services/dashboard.api';
 
 import useAbortController from '../hooks/use-abort-controller';
-import { useErrorHandling } from '../hooks/use-error-handling';
-import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
+import { useResponseHandling } from '../hooks/use-response-handling';
+import { useFetchApi } from '../hooks/use-fetch-api';
+import { deleteDb as clearUiState } from '../core-app/hooks/use-persisted-state';
 
 import { colors } from '../core-app/constants/variables';
 
@@ -39,7 +40,7 @@ const Provider = ({ children }) => {
   // ---------------------------------------------------------------------------
   //
   if (DEBUG) {
-    console.debug(`%cprojects api context loading`, colors.orange);
+    console.debug(`%cprojects context loading`, colors.orange);
   }
 
   const abortController = useAbortController();
@@ -51,11 +52,12 @@ const Provider = ({ children }) => {
     status,
     cache: data,
     execute: fetch,
+    isReady,
   } = useFetchApi({
     asyncFn: fetchAllProjectsApi,
-    initialValue: [],
+    initialCacheValue: [],
     useSignal: true,
-    immediate: false, // only call when local latch is open
+    immediate: true,
     abortController,
     caller: 'ProjectsDataContext',
     equalityFnName: 'length',
@@ -65,7 +67,7 @@ const Provider = ({ children }) => {
   // ---------------------------------------------------------------------------
   // 🟢 Gateway to pulling new data
   // ---------------------------------------------------------------------------
-  const [latch, setLatch] = useState(() => ({ value: 'OPEN' }));
+  const [latch, setLatch] = useState(() => ({ value: 'CLOSED' }));
   if (DEBUG) {
     console.debug(
       `Project context latch: ${latch.value} api status: ${status}`,
@@ -80,7 +82,6 @@ const Provider = ({ children }) => {
   // ---------------------------------------------------------------------------
 
   // Public interface - Data
-  const isReady = [STATUS.RESOLVED, STATUS.REJECTED].includes(status);
   const state = useMemo(
     () => ({
       data,
@@ -89,7 +90,7 @@ const Provider = ({ children }) => {
     [data, isReady],
   );
 
-  const { run: errorProcessing } = useErrorHandling({
+  const { run: runMiddleware } = useResponseHandling({
     caller: 'ProjectApiContext',
     DEBUG,
   });
@@ -100,14 +101,14 @@ const Provider = ({ children }) => {
   const addNew = useCallback(
     async (newData, callback) => {
       const response = await addNewApi(newData, abortController.signal);
-      errorProcessing(response);
+      runMiddleware(response);
       setLatch(() => ({ value: 'OPEN' }));
       // fetch(); // retrieve the new list
       if (typeof callback === 'function') {
         callback(response.data);
       }
     },
-    [errorProcessing, abortController.signal],
+    [runMiddleware, abortController.signal],
   );
   // ---------------------------------------------------------------------------
   // 👉 Remove a project
@@ -115,14 +116,15 @@ const Provider = ({ children }) => {
   const remove = useCallback(
     async (projectId, callback) => {
       const response = await deleteApi(projectId, abortController.signal);
-      errorProcessing(response);
+      runMiddleware(response);
+      clearUiState(projectId);
       setLatch(() => ({ value: 'OPEN' }));
       // fetch(); // retrieve the new list
       if (typeof callback === 'function') {
         callback(response.data);
       }
     },
-    [errorProcessing, abortController.signal],
+    [runMiddleware, abortController.signal],
   );
 
   // Public interface - Api

@@ -9,6 +9,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
+import usePersistedState from '../core-app/hooks/use-persisted-state';
 import { fetchUserProfile } from '../services/dashboard.api';
 
 // -----------------------------------------------------------------------------
@@ -27,7 +28,13 @@ const OFF = false;
 export const RedirectPage = () => {
   const navigate = useNavigate();
 
-  const { cache: dataToGuideRedirect, status } = useFetchApi({
+  const [origin, setOrigin] = usePersistedState('tncAuthRedirectOrigin');
+
+  const {
+    cache: dataToGuideRedirect,
+    status,
+    cancel,
+  } = useFetchApi({
     asyncFn: fetchUserProfile,
     immediate: true,
     useSignal: true,
@@ -36,8 +43,21 @@ export const RedirectPage = () => {
     DEBUG,
   });
 
+  // First choice for redirect
+  // 💢 redirect when origin is defined
+  useEffect(() => {
+    if (typeof origin !== 'undefined') {
+      const tmp = origin;
+      setOrigin(undefined);
+      navigate(tmp);
+    }
+    return cancel;
+  }, [navigate, cancel, origin, setOrigin]);
+
   const isReady = status === STATUS.RESOLVED;
 
+  // Second, user-profile when incomplete
+  // 💢 fetch user profile
   useEffect(() => {
     if (isReady) {
       const {
@@ -51,7 +71,8 @@ export const RedirectPage = () => {
         navigate(DEFAULT_ENDPOINT);
       }
     }
-  }, [isReady, dataToGuideRedirect, navigate]);
+    return cancel;
+  }, [isReady, cancel, dataToGuideRedirect, navigate]);
 
   return (
     <Box

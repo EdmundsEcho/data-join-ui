@@ -54,7 +54,7 @@ export const dummyField = {
  * and fields derived from "group-by-file".
  *
  * Note: this is part of the journey to the back end data extraction
- * used to instantiate the obs-etl-wharehouse.
+ * used to instantiate the etl-warehouse.
  *
  * ✅ file field -> header field
  * ⬜ [header field] -> [source] for a etl-field

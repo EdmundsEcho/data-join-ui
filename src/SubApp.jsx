@@ -7,23 +7,21 @@
  * See init.middleware.js
  *
  */
-import React, { useEffect, useRef, useState } from 'react';
-import { Provider, useDispatch } from 'react-redux';
+import React, { useMemo, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import ErrorPage from './pages/ErrorPage';
 import { DesignError } from './core-app/lib/LuciErrors';
 
 import CoreApp from './core-app/Main';
 import { Spinner } from './components/shared';
 
 import { loadProject } from './core-app/ducks/actions/project-meta.actions';
-import { getProjectId } from './core-app/ducks/rootSelectors';
 import { useFetchApi, STATUS } from './hooks/use-fetch-api';
-import useMemoCompare from './hooks/use-memo-compare';
 
 import { fetchStore as fetchServerStore } from './core-app/services/api';
 import { loadStore as loadNewOrSavedStore } from './core-app/ducks/project-meta.reducer';
+import { getProjectId } from './core-app/ducks/rootSelectors';
 
 // -----------------------------------------------------------------------------
 const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
@@ -36,74 +34,96 @@ const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 
 const SubApp = () => {
   //
-  const previousProjectRef = useRef(undefined);
   const { projectId: requestedProject } = useParams();
-  const dispatch = useDispatch(); // load the fetched store
+  const projectInReduxIsNull = useSelector(
+    (state) => getProjectId(state) === null,
+  );
+  const previousProjectRef = useRef(undefined);
+  const dispatch = useDispatch(); // redux load the fetched store
+
+  validateState(requestedProject);
+  // const refetchProjectStore = requestedProject && projectInReduxIsNull;
 
   // ---------------------------------------------------------------------------
-  //
   // 💢 Side-effect
-  //    dispatch action required to load the redux store
-  //
+  //    consumeDataFn: dispatch action required to load the redux store
+  //    Note: memoization required b/c used in effect
+  const consumeDataFn = useMemo(
+    () => (respData) => {
+      const loadThisStore = loadNewOrSavedStore(respData);
+      dispatch(loadProject(loadThisStore));
+    },
+    [dispatch],
+  );
   // ---------------------------------------------------------------------------
   const {
     execute: fetch,
     status: fetchStatus,
-    reset,
-    error,
+    // reset,
   } = useFetchApi({
-    asyncFn: () => fetchServerStore(requestedProject),
-    consumeDataFn: (respData) => {
-      console.debug('SubApp respData:', respData);
-      const loadThisStore = loadNewOrSavedStore(requestedProject, respData);
-      dispatch(loadProject(loadThisStore));
-    },
+    asyncFn: fetchServerStore,
+    blockAsyncWithEmptyParams: true,
+    consumeDataFn,
     useSignal: true,
     immediate: false,
-    caller: 'SubApp - Loading core-app',
+    caller: `SubApp-${requestedProject.slice(-4)}`,
     DEBUG: true,
   });
 
   // ---------------------------------------------------------------------------
-  // 🟢 Gateway to pulling new data
+  // 💢 async api call
+  // 🟢 Pull new data when project id changes
   // ---------------------------------------------------------------------------
-  const [latch, setLatch] = useState(() => ({ value: 'OPEN' }));
-  if (DEBUG) {
-    console.debug(`SubApp latch: ${latch.value} api status: ${fetchStatus}`);
-  }
   useEffect(() => {
-    if (latch.value === 'OPEN') {
-      fetch();
-      previousProjectRef.current = requestedProject;
-      setLatch(() => ({ value: 'CLOSED' }));
-    }
-  }, [requestedProject, latch.value, fetch]);
-
-  // OPEN when projectId changes
-  const switchedProject = previousProjectRef.current !== requestedProject;
-  useEffect(() => {
-    if (switchedProject) {
-      reset();
-      setLatch(() => ({ value: 'OPEN' }));
-    }
-  }, [switchedProject, reset]);
-
-  Provider.displayName = 'TncReduxStore-Provider';
-
-  if (typeof requestedProject === 'undefined') {
-    throw new DesignError(`SubApp is being loaded without a project id`);
-  }
+    fetch(requestedProject);
+  }, [fetch, requestedProject]);
 
   // ---------------------------------------------------------------------------
   // report on state of the component
-  //
+  // 🔖 devtool search: /(useSharedFetchApi action|SubApp loaded|SubApp latch)/
+  // ---------------------------------------------------------------------------
   if (DEBUG) {
+    //
+    const sameProject =
+      (previousProjectRef.current &&
+        previousProjectRef.current === requestedProject) ||
+      false;
+    const statusResolved =
+      [STATUS.RESOLVED, STATUS.REJECTED].includes(fetchStatus) || false;
+    const stepOneV1 =
+      fetchStatus === STATUS.UNINITIALIZED &&
+      typeof previousProjectRef.current === 'undefined';
+    const stepOneV2 =
+      statusResolved && typeof previousProjectRef.current !== 'undefined';
+    const done =
+      [STATUS.RESOLVED, STATUS.REJECTED].includes(fetchStatus) && sameProject;
+    const switchFromNone =
+      STATUS.UNINITIALIZED && typeof previousProjectRef.current === 'undefined';
+    const switchFromOther =
+      statusResolved && typeof previousProjectRef.current !== 'undefined';
+    // extra render at the end
+    const steps = [
+      (switchFromOther || switchFromNone) && (stepOneV1 || stepOneV2) && !done,
+      fetchStatus === STATUS.PENDING && projectInReduxIsNull,
+      fetchStatus === STATUS.PENDING && !projectInReduxIsNull,
+      !sameProject && statusResolved && !(stepOneV1 || stepOneV2),
+      sameProject && statusResolved,
+    ];
+    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${
+      steps.length
+    }`;
     console.debug('%c----------------------------------------', 'color:orange');
     console.debug(`%c📋 SubApp loaded state summary:`, 'color:orange', {
-      requestedProject,
-      previousProjectCurrent: previousProjectRef.current,
+      requestedProject: requestedProject?.slice(-4),
+      previousProjectCurrent: previousProjectRef.current?.slice(-4),
+      switchedProject: !sameProject,
       fetchStatus,
-      latch: latch.value,
+      statusResolved,
+      projectInReduxIsNull,
+      done,
+      steps,
+      currentStep,
+      stepOne: stepOneV1 || stepOneV2,
     });
   }
 
@@ -116,20 +136,21 @@ const SubApp = () => {
       return <Spinner />;
 
     case STATUS.RESOLVED:
-      // use the initialStore function to return
-      // serverStore | newProjectStore
+      previousProjectRef.current = requestedProject; // debugging
       return <CoreApp />;
-
-    case STATUS.REJECTED:
-      return <ErrorPage message={JSON.stringify(error)} />;
 
     default:
       console.error(fetchStatus);
-      throw new Error('Unreachable SubApp fetch state');
+      throw new DesignError(`Unreachable SubApp fetch state: ${fetchStatus}`);
   }
 };
 
 SubApp.propTypes = {};
 SubApp.defaultProps = {};
 
+function validateState(projectId) {
+  if (typeof projectId === 'undefined') {
+    throw new DesignError(`SubApp is being loaded without a project id`);
+  }
+}
 export default SubApp;

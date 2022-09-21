@@ -29,6 +29,9 @@ import { PURPOSE_TYPES } from '../../../../lib/sum-types';
 
 //------------------------------------------------------------------------------
 const DEBUG = false;
+//-----------------------------------------------------------------------------
+const PAGE_SIZE =
+  parseInt(process.env.REACT_APP_DEFAULT_VALUE_GRID_PAGE_SIZE, 10) || 90;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -52,7 +55,7 @@ const columns = [
 //           thereby does not invoke middleware, nor reducers)
 //
 const fetchLevels = (projectId) => (request) => {
-  return fetchLevelsInner({ projectId, ...request });
+  return fetchLevelsInner({ projectId, request });
 };
 const parseResponse = (response) => response.data.levels;
 
@@ -104,8 +107,6 @@ function ValueGridWorkbench(props) {
   useTraceUpdate(props);
 
   const dispatch = useDispatch();
-
-  const PAGE_SIZE = 30;
 
   // baseline selectAll levels
   const [selectAll, isQuality] = useMemo(() => {

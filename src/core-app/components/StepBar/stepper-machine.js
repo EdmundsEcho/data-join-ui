@@ -6,7 +6,7 @@ import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
 import { fetchMatrix } from '../../ducks/actions/matrix.actions';
 import { bookmark } from '../../ducks/actions/stepper.actions';
 import {
-  getBookmark,
+  getBookmark as maybeBookmark,
   getHasHeaderViewsFixes,
   getHasSelectedFiles,
   getHasEtlViewErrors,
@@ -23,9 +23,122 @@ const DEBUG = false || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-export { getBookmark };
+// -----------------------------------------------------------------------------
+// Configuration
+// State machine (collection of pages keyed using route)
+//
+// ✅ pure (no-state)
+// ✅ string ref functions required to parse the reduxState
+// ✅ ref action creators
+//
+// Map key: route
+//
+// NEXT: Set the component values; have it read by the router
+//
+const pagesMachine = {
+  meta: {
+    key: 'meta',
+    route: 'meta',
+    stepNumber: 0,
+    hideStepper: false,
+    stepDisplay: 'Select project',
+    prevPage: undefined,
+    nextPage: 'files',
+    entry: {
+      actions: [bookmark('meta'), 'saveProject'],
+    },
+    exit: {
+      actions: [],
+    },
+    on: {
+      NEXT: { target: 'files' },
+    },
+  },
+  files: {
+    key: 'files',
+    route: 'files',
+    stepNumber: 1,
+    hideStepper: false,
+    stepDisplay: 'Take inventory',
+    prevPage: 'meta',
+    nextPage: 'fields',
+    entry: {
+      actions: [bookmark('files'), runFixReport(), 'saveProject'], // refresh the report
+    },
+    exit: {
+      actions: ['saveProject'],
+    },
+    on: {
+      NEXT: {
+        target: 'fields',
+        cond: 'forwardGuard',
+      },
+      PREV: { target: 'meta' },
+    },
+  },
+  fields: {
+    key: 'fields',
+    route: 'fields',
+    stepNumber: 2,
+    hideStepper: false,
+    stepDisplay: 'Configure the stack',
+    prevPage: 'files',
+    nextPage: 'workbench',
+    entry: {
+      actions: ['computeEtlView', bookmark('fields'), 'saveProject'],
+    },
+    exit: {
+      actions: ['saveProject'],
+    },
+    on: {
+      NEXT: {
+        target: 'workbench',
+        cond: 'forwardGuard',
+      },
+      PREV: { target: 'files' },
+    },
+  },
+  workbench: {
+    key: 'workbench',
+    route: 'workbench',
+    stepNumber: 3,
+    hideStepper: false,
+    stepDisplay: 'Create the universe',
+    prevPage: 'fields',
+    nextPage: 'matrix',
+    entry: {
+      actions: ['fetchWarehouse', bookmark('workbench'), 'saveProject'],
+    },
+    exit: {
+      actions: ['saveProject'],
+    },
+    on: {
+      NEXT: { target: 'matrix', cond: 'forwardGuard' },
+      PREV: { target: 'fields' },
+    },
+  },
+  matrix: {
+    key: 'matrix',
+    route: 'matrix',
+    stepNumber: 4,
+    hideStepper: false,
+    stepDisplay: 'Run the analysis',
+    prevPage: 'workbench',
+    nextPage: undefined,
+    entry: {
+      // 🦀 bookmark is being set before fetchMatrix has completed
+      actions: ['fetchMatrix', bookmark('matrix'), 'saveProject'],
+    },
+    on: {
+      PREV: { target: 'workbench' },
+    },
+  },
+};
+
 // -----------------------------------------------------------------------------
 /**
+ * configure the forward guards
+ *
  * Read-only state
  * Selectors
  * StepBar: useSelector to create local state
@@ -54,129 +167,21 @@ export const forwardGuards = {
   },
   matrix: () => false,
 };
-
-const backwardGuards = {
+/**
+ * configure the forward guards
+ */
+const defaultBackwardGuard = () => true;
+const customBackwardGuards = {
   meta: () => false,
 };
-
-/**
- * utility fn
- * pure: does not depend on context
- * @function
- * @return {function}
- */
-const getPredFn = (name, lookup) => {
-  if (name in lookup) {
-    return lookup[name];
+export const backwardGuards = Object.keys(pagesMachine).reduce((acc, key) => {
+  if (key in acc) {
+    return acc;
   }
-  return () => true;
-};
-
+  acc[key] = defaultBackwardGuard;
+  return acc;
+}, customBackwardGuards);
 // -----------------------------------------------------------------------------
-// Configuration
-// State machine (collection of pages keyed using route)
-//
-// ✅ pure (no-state)
-// ✅ string ref functions required to parse the reduxState
-// ✅ ref action creators
-//
-// Map key: route
-//
-// NEXT: Set the component values; have it read by the router
-//
-const pagesMachine = {
-  meta: {
-    key: 'meta',
-    route: 'meta',
-    stepNumber: 0,
-    hideStepper: false,
-    stepDisplay: 'Select project',
-    prevPage: undefined,
-    nextPage: 'files',
-    on: {
-      NEXT: { target: 'files' },
-    },
-  },
-  files: {
-    key: 'files',
-    route: 'files',
-    stepNumber: 1,
-    hideStepper: false,
-    stepDisplay: 'Take inventory',
-    prevPage: 'meta',
-    nextPage: 'fields',
-    entry: {
-      actions: [bookmark('files'), runFixReport()], // refresh the report
-    },
-    exit: {
-      actions: [],
-    },
-    on: {
-      NEXT: {
-        target: 'fields',
-        cond: 'forwardGuard',
-      },
-      PREV: { target: 'meta' },
-    },
-  },
-  fields: {
-    key: 'fields',
-    route: 'fields',
-    stepNumber: 2,
-    hideStepper: false,
-    stepDisplay: 'Configure the stack',
-    prevPage: 'files',
-    nextPage: 'workbench',
-    entry: {
-      actions: [bookmark('fields'), 'computeEtlView'],
-    },
-    exit: {
-      actions: [],
-    },
-    on: {
-      NEXT: {
-        target: 'workbench',
-        cond: 'forwardGuard',
-      },
-      PREV: { target: 'files' },
-    },
-  },
-  workbench: {
-    key: 'workbench',
-    route: 'workbench',
-    stepNumber: 3,
-    hideStepper: false,
-    stepDisplay: 'Create the universe',
-    prevPage: 'fields',
-    nextPage: 'matrix',
-    entry: {
-      actions: [bookmark('workbench'), 'fetchWarehouse'],
-    },
-    exit: {
-      actions: [],
-    },
-    on: {
-      NEXT: { target: 'matrix', cond: 'forwardGuard' },
-      PREV: { target: 'fields' },
-    },
-  },
-  matrix: {
-    key: 'matrix',
-    route: 'matrix',
-    stepNumber: 4,
-    hideStepper: false,
-    stepDisplay: 'Run the analysis',
-    prevPage: 'workbench',
-    nextPage: undefined,
-    entry: {
-      actions: ['fetchMatrix', bookmark('matrix')],
-    },
-    on: {
-      PREV: { target: 'workbench' },
-    },
-  },
-};
-
 /**
  *
  * Machine instance that returns functions required to inform
@@ -189,7 +194,7 @@ const pagesMachine = {
  *
  * @function Machine
  */
-export default ((machine) => (dispatch) => {
+export default ((machine) => (dispatch, projectId) => {
   /**
    * non-serializable
    * functions keyed by name
@@ -197,7 +202,7 @@ export default ((machine) => (dispatch) => {
   const fns = {
     computeEtlView: () => computeEtlView(new Date()),
     fetchWarehouse: () => fetchWarehouse(new Date()),
-    fetchMatrix: () => fetchMatrix(),
+    fetchMatrix: () => fetchMatrix(projectId),
     saveProject: () => saveProject(),
   };
   // depends on dispatch in context
@@ -248,9 +253,7 @@ export default ((machine) => (dispatch) => {
         // thus far, a mirror image of NEXT
         // abstraction = change state protocol
         case 'PREV': {
-          if (predFromRedux) {
-            goNewPage(route, event);
-          }
+          goNewPage(route, event);
           break;
         }
 
@@ -265,6 +268,7 @@ export default ((machine) => (dispatch) => {
 // ⚠️  Relies on insertion order to maintain page order
 const pages = Object.values(pagesMachine);
 
+const getBookmark = (state) => maybeBookmark(state) ?? pages[0].route;
 /**
  * Required export
  * The caller is responsible for deriving the current state
@@ -276,6 +280,7 @@ const tryNextEvent = { type: 'NEXT' };
 const tryPrevEvent = { type: 'PREV' };
 // -----------------------------------------------------------------------------
 export {
+  getBookmark,
   pages,
   lookupPageWithPathname,
   routeFromPathname,

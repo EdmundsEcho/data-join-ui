@@ -7,10 +7,12 @@
  *
  * ⬜ Likely change to middleware that leverages the API core
  *
+ * DEPRECATED - using useFetchApi hook instead
+ *
  * @module src/sagas/fileView.sagas
  *
  */
-import { call, put, takeLatest, takeLeading } from 'redux-saga/effects';
+import { call, put, takeLeading } from 'redux-saga/effects';
 
 import {
   READ_DIR_START,

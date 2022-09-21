@@ -50,3 +50,4 @@ const useAbortController = (abortControllerProp, shouldAutoRestart = false) => {
 };
 
 export default useAbortController;
+export { initAbortController };

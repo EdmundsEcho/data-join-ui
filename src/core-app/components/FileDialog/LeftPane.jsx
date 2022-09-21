@@ -42,12 +42,17 @@ import {
 // ☎️  Callbacks to update data
 import {
   fetchDirectoryStart,
+  fetchDirectorySuccess,
   pushFetchHistory,
   popFetchHistory,
   clearFetchHistory,
   setDirStatus,
   STATUS,
 } from '../../ducks/actions/fileView.actions';
+
+import { readDirectory } from '../../services/api';
+import { useFetchApi, argsDisplayString } from '../../../hooks/use-fetch-api';
+import useAbortController from '../../../hooks/use-abort-controller';
 
 //------------------------------------------------------------------------------
 const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
@@ -74,7 +79,6 @@ const DEBUG = true;
 function LeftPane({ projectId, toggleFile }) {
   //
   const dispatch = useDispatch(); // 📬
-
   // local state to update the view of the files
   // set the filter value for which files to view
   const [fileViewFilter, setFileViewFilter] = useState(() => '');
@@ -82,20 +86,46 @@ function LeftPane({ projectId, toggleFile }) {
   // retrieve state from redux
   const cache = useSelector((state) => getFiles(state), shallowEqual);
   const hasHistory = useSelector(hasRequestHistory);
-  const fetchStatus = useSelector(getFilesViewStatus);
-  // latch to have useEffect operate once when rendered twice by react
-  // OPEN -> CLOSED after the first render
-  const latchState = useRef('OPEN');
+  const abortController = useAbortController();
 
-  //
-  // 🟢 Initializing effect
-  // 🗄️ Project drives = default fetch
-  //
-  const parentRequest = useSelector((state) =>
-    peekParentRequestHistory(state, null),
+  // set the redux cache value state
+  // (memoize b/c used in an effect of useFetchApi)
+  const consumeDataFn = useMemo(
+    () => (respData, fetchArgs) => {
+      if (DEBUG) {
+        console.debug('LeftPane consuming response', respData);
+      }
+      dispatch(
+        fetchDirectorySuccess({
+          ...respData.results,
+          filteredFiles: respData.results.files,
+          request: fetchArgs,
+        }),
+      );
+    },
+    [dispatch],
   );
 
-  // child or "next" fetch
+  const {
+    execute: listDirectory,
+    status: fetchStatus,
+    fetchArgs,
+    cancel,
+  } = useFetchApi({
+    asyncFn: readDirectory,
+    abortController,
+    consumeDataFn,
+    blockAsyncWithEmptyParams: true,
+    immediate: false,
+    useSignal: true,
+    caller: 'Filedialog:LeftPane',
+    DEBUG: true,
+  });
+  //----------------------------------------------------------------------------
+  // Derive what the file request should be going down the directory tree
+  // 👉 no history: previous + initialRequest
+  // 👉 with history: previous
+  //----------------------------------------------------------------------------
   const previousRequest = useSelector((state) =>
     peekRequestHistory(state, {
       project_id: projectId,
@@ -104,7 +134,7 @@ function LeftPane({ projectId, toggleFile }) {
       display_name: undefined,
     }),
   );
-  const initialFetch = useMemo(
+  const initialRequest = useMemo(
     () => ({
       ...previousRequest,
       token_id: null,
@@ -113,45 +143,55 @@ function LeftPane({ projectId, toggleFile }) {
     }),
     [previousRequest],
   );
+  const initializingRequestReady = typeof previousRequest !== 'undefined';
+  //----------------------------------------------------------------------------
+  // Derive the request going up the directory tree
+  //----------------------------------------------------------------------------
+  const parentRequest = useSelector((state) =>
+    peekParentRequestHistory(state, null),
+  );
 
+  //----------------------------------------------------------------------------
   //
   // 💢 initializing effect
   //
-  // called when not yet initialized; subsequent data requests are user-driven.
+  // called when not yet initialized; subsequent data requests
+  // click-based, user-driven.
   //
   // initial state = [] -> post fetch state
   //
   useEffect(() => {
-    let ignore = false;
-    if (latchState.current === 'OPEN') {
-      latchState.current = 'CLOSED';
-
-      if (fetchStatus === STATUS.idle && !ignore) {
-        // fetchDirectoryStart changes the fetchStatus
-        switch (true) {
-          case !hasHistory: {
-            console.log(`HEADER_ fire with no history`);
-            dispatch(fetchDirectoryStart(initialFetch));
-            dispatch(pushFetchHistory(initialFetch));
-            break;
-          }
-          case hasHistory:
-            console.log(`HEADER_ fire using history`);
-            dispatch(fetchDirectoryStart(previousRequest));
-            break;
-          default:
+    if (fetchStatus === STATUS.UNINITIALIZED && initializingRequestReady) {
+      switch (true) {
+        case !hasHistory: {
+          console.log(`HEADER_ fire with no history`);
+          listDirectory(initialRequest);
+          dispatch(pushFetchHistory(initialRequest));
+          break;
         }
-      } // else: user-driven requests for data
-    }
-    return () => {
-      ignore = true;
-    };
-  }, [dispatch, fetchStatus, initialFetch, previousRequest, hasHistory]);
+        case hasHistory:
+          console.log(`HEADER_ fire using history`);
+          listDirectory(previousRequest);
+          break;
+        default:
+      }
+    } // else: user-driven requests for data
+    return cancel;
+  }, [
+    dispatch,
+    fetchStatus,
+    initialRequest,
+    previousRequest,
+    hasHistory,
+    cancel,
+    listDirectory,
+    initializingRequestReady,
+  ]);
 
   // the deconstructed result used to render the state of the component
   const { path_query: pathQuery, display_name: displayName } = hasHistory
     ? previousRequest
-    : initialFetch;
+    : initialRequest;
 
   // ---------------------------------------------------------------------------
   // User-driven fetch request
@@ -166,19 +206,19 @@ function LeftPane({ projectId, toggleFile }) {
           ...newRequest_,
         };
         dispatch(pushFetchHistory(newRequest));
-        dispatch(fetchDirectoryStart(newRequest));
+        listDirectory(newRequest);
       }
     },
-    [dispatch, previousRequest, fetchStatus],
+    [dispatch, previousRequest, fetchStatus, listDirectory],
   );
   // parent directory
   const handleFetchParentDirectory = useCallback(() => {
     if (fetchStatus !== STATUS.pending) {
       setFileViewFilter(''); // reset the local view filter
-      dispatch(fetchDirectoryStart(parentRequest));
+      listDirectory(parentRequest);
       dispatch(popFetchHistory());
     }
-  }, [dispatch, parentRequest, fetchStatus]);
+  }, [dispatch, parentRequest, fetchStatus, listDirectory]);
 
   // ---------------------------------------------------------------------------
   // local filtered view of files
@@ -194,22 +234,27 @@ function LeftPane({ projectId, toggleFile }) {
       console.debug(`__ handleDriveAuth: ${provider}`);
       dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
       dispatch(clearFetchHistory()); // display root when user-agent returns
-      latchState.current = 'OPEN';
       window.location.replace(makeAuthUrl(projectId, provider));
     },
     [dispatch, projectId],
   );
   // ---------------------------------------------------------------------------
+  // report on state of the component
+  // ---------------------------------------------------------------------------
   if (DEBUG) {
+    console.debug('%c----------------------------------------', 'color:cyan');
     console.debug(`%c📋 LeftPane state summary:`, 'color:cyan');
     console.dir({
       projectIdParam: projectId,
-      latchState: latchState.current,
       fetchStatus,
+      initializingRequestReady,
       hasHistory,
       previousRequest,
       parentRequest,
+      aborted: abortController.signal.aborted,
     });
+
+    console.log(argsDisplayString(fetchArgs, 'LeftPane', fetchStatus));
   }
 
   // must render even when initial state:  idle + no history

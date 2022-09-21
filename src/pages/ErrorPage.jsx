@@ -7,14 +7,21 @@
  *
  */
 import { PropTypes } from 'prop-types';
-import { Box, Button, Paper, Typography } from '@mui/material';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Box, Button, Paper, Typography, Container } from '@mui/material';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
-export const ErrorPage = ({ message: msgProp = 'Error' }) => {
-  const [search] = useSearchParams();
+export const ErrorPage = ({
+  message: msgProp = 'Error',
+  longMessage: longMsgProp = undefined,
+}) => {
   //
   const navigate = useNavigate();
+  const [search] = useSearchParams();
   const message = search.get('message') || msgProp;
+  const longMessage = search.get('longMessage') || longMsgProp;
+
+  const location = useLocation();
+  const origin = location.state?.fromPathname || '/';
 
   return (
     <Box
@@ -44,18 +51,21 @@ export const ErrorPage = ({ message: msgProp = 'Error' }) => {
             variant='contained'
             color='primary'
             type='submit'
-            onClick={() => navigate('/')}>
+            onClick={() => navigate(origin)}>
             Go back
           </Button>
         </Paper>
       </Box>
+      <Container>{longMessage}</Container>
     </Box>
   );
 };
 ErrorPage.propTypes = {
   message: PropTypes.string,
+  longMessage: PropTypes.string,
 };
 ErrorPage.defaultProps = {
   message: undefined,
+  longMessage: undefined,
 };
 export default ErrorPage;

@@ -26,10 +26,6 @@ export const stdApiResponse = ({
   status,
   statusText,
 }) => {
-  // if (response?.status === 401) {
-  // log out
-  // window.location.href = '/login';
-  // }
   // When we're unable to reach the API
   if (!response && request && parseInt(request.status, 10) === 0) {
     return {
@@ -61,4 +57,8 @@ export const stdApiResponse = ({
   };
 };
 
+export const gqlApiResponse = (response) => {
+  console.debug(`raw response`, response);
+  return response;
+};
 export default stdApiResponse;

@@ -18,8 +18,11 @@ import { ThemeContext } from './contexts/ThemeContext';
 
 import { storeWithoutState /* persistor */ } from './core-app/redux-store';
 
+//-----------------------------------------------------------------------------
+const DEBUG = true || process.env.REACT_APP_DEBUG_THEME === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
+
 //------------------------------------------------------------------------------
 const { store } = storeWithoutState();
 
@@ -35,7 +38,12 @@ const Root = () => {
     [themeMode, toggleThemeMode],
   );
 
-  Provider.displayName = 'CoreApp-Redux';
+  Provider.displayName = 'TncReduxStore-Provider';
+
+  if (DEBUG) {
+    console.debug('Theme');
+    console.dir(theme);
+  }
 
   return (
     <Provider store={store}>

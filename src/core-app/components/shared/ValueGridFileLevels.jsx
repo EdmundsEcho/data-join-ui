@@ -18,8 +18,7 @@ import WeightIcon from '@mui/icons-material/FitnessCenter';
 import SeriesIcon from '@mui/icons-material/LinearScale';
 
 // 📡 Note: does not use actions (levels is outside of redux scope)
-import { getFileLevels as fetchLevelsInner } from '../../services/api';
-import useAbortController from '../../../hooks/use-abort-controller';
+import { fetchFileLevels as fetchLevelsInner } from '../../services/api';
 
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 import { InvalidStateError } from '../../lib/LuciErrors';
@@ -33,6 +32,9 @@ import ValueGridCore, { filterOperators } from './ValueGridCore';
 
 //------------------------------------------------------------------------------
 const DEBUG = false;
+//-----------------------------------------------------------------------------
+const PAGE_SIZE =
+  parseInt(process.env.REACT_APP_DEFAULT_VALUE_GRID_PAGE_SIZE, 10) || 90;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -87,11 +89,11 @@ const edgeToGridRowFn = (edge) => ({
 //           thereby does not invoke middleware, nor reducers)
 //
 const fetchLevels =
-  (projectId, signal = undefined) =>
+  (projectId, signal) =>
   ({ filter, ...rest }) => {
     return fetchLevelsInner({ projectId, signal, ...filter, ...rest });
   };
-const parseResponse = (response) => response.data.levels;
+const parseRespData = (data) => data.levels;
 //-------------------------------------------------------------------------------
 // When data :: derivedField
 //
@@ -122,7 +124,6 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
   );
 
   const { projectId } = useParams();
-  const abortController = useAbortController();
 
   const selectionModel = useSelector((state) => {
     switch (fieldType) {
@@ -181,15 +182,15 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
         }
         purpose={getValue('purpose')}
         baseSelectAll={selectAll}
-        fetchFn={fetchLevels(projectId, abortController.signal)}
-        normalizer={parseResponse}
+        fetchFn={fetchLevels(projectId)}
+        normalizer={parseRespData}
         edgeToGridRowFn={edgeToGridRowFn}
         // required to determine the height of the grid
         selectionModel={selectionModel}
         // version of the grid
         feature='LIMIT'
         checkboxSelection={false}
-        pageSize={30}
+        pageSize={PAGE_SIZE}
         // when data is a derivedField 📖
         rows={
           isDerivedField

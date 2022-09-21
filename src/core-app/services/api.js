@@ -7,7 +7,7 @@
  */
 import axios from 'axios';
 
-import { stdApiResponse } from './helpers';
+import { stdApiResponse, gqlApiResponse } from './helpers';
 import {
   ApiCallError,
   // ExpiredSessionError,
@@ -69,6 +69,7 @@ export const gqlInstance = axios.create({
   },
   withCredentials: process.env.REACT_APP_ENV === 'production',
 });
+gqlInstance.interceptors.response.use(gqlApiResponse, gqlApiResponse);
 
 //------------------------------------------------------------------------------
 /**
@@ -266,12 +267,14 @@ export const initApiService = async (eventInterface) => {
   //
   const sendQueueRequest = async (featureInput) => {
     validateEventRequest(eventInterface, featureInput);
-    const { project_id: projectId } = eventInterface.request;
+    const { project_id: projectId, signal = undefined } =
+      eventInterface.request;
     const serviceType = getServiceType(eventInterface.meta.feature);
     const axiosOptions = {
       method: 'POST',
       url: ServiceConfigs[serviceType].endpoint(projectId),
       data: eventInterface.request,
+      signal,
     };
     const response = await apiInstance(axiosOptions);
 
@@ -421,6 +424,7 @@ export const cancelApiService = async (eventInterface) => {
  * 🪟 uses signal to abort; good for useEffect
  *
  * ⬜ Implement pagination support using 'Connection' pattern
+ *    (see also fetchLevels for graphql version)
  *
  * @function
  * @param {Object} input
@@ -430,7 +434,7 @@ export const cancelApiService = async (eventInterface) => {
  * @return {Object}
  *
  */
-export const getFileLevels = ({
+export const fetchFileLevels = ({
   projectId,
   sources,
   purpose,
@@ -439,22 +443,22 @@ export const getFileLevels = ({
   page = 1,
   limit = 10,
 }) => {
-  const body = {
-    arrows,
-    page,
+  const data = {
     purpose,
-    // If we're dealing with an mspan purpose we request all so we can display chips
-    limit: purpose === 'mspan' ? 99999999999 : limit,
     sources,
+    arrows,
+    limit: purpose === 'mspan' ? 99999999999 : limit,
+    page,
   };
-  const axiosOptions = {
+  return apiInstance({
     url: `/levels/${projectId}`,
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     signal,
-    body,
-  };
-  // ⬜ figure out why axiosOptions does not work
-  return apiInstance.post(`/levels/${projectId}`, body);
+    data,
+  });
 };
 
 //------------------------------------------------------------------------------
@@ -473,11 +477,13 @@ export const getFileLevels = ({
 export async function fetchRenderedMatrix(
   projectId,
   { page = 1, limit = 100 } = {},
+  signal = undefined,
 ) {
   const axiosOptions = {
     url: `/matrix/${projectId}/results`,
     method: 'POST',
     data: { page, limit },
+    signal,
   };
   if (DEBUG) {
     console.debug(`%cpulling matrix page: ${page}`, 'color:orange');
@@ -490,16 +496,15 @@ export async function fetchRenderedMatrix(
  * @return {Object}
  */
 export const fetchRenderedMatrixWithProjectId =
-  (projectId) =>
+  (projectId, signal) =>
   async (...args) =>
-    fetchRenderedMatrix(projectId, ...args);
+    fetchRenderedMatrix(projectId, ...args, signal);
 export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
-  const result = {
-    pageInfo: raw.data.payload.pageInfo,
-    edges: edgesFn(JSON.parse(raw.data.payload.data)),
-    totalCount: raw.data.payload.totalCount,
+  return {
+    pageInfo: raw.payload.pageInfo,
+    edges: edgesFn(JSON.parse(raw.payload.data)),
+    totalCount: raw.payload.totalCount,
   };
-  return result;
 };
 //------------------------------------------------------------------------------
 
@@ -512,21 +517,22 @@ export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
  * ✅ Utilized by workbench.sagas
  *
  * @function
- * @param {Object} request
+ * @param {Object}
  * @return {Promise}
  */
-export const fetchMatrixSpec = async (projectId, request) => {
-  const config = {
+export const fetchMatrixSpec = async ({ projectId, request, signal }) => {
+  console.debug(`Api params`, projectId, request, signal);
+  const axiosOptions = {
+    // single endpoint for all of the graphql requests
     url: `/warehouse/${projectId}`,
     data: GQL.requestMatrix(request),
+    signal,
   };
 
-  return gqlInstance(config).then((response) => {
-    return {
-      ...GQL.extractGql(response),
-      meta: {},
-    };
-  });
+  return gqlInstance(axiosOptions).then((response) => ({
+    ...GQL.extractGql(response),
+    meta: {},
+  }));
 };
 
 //------------------------------------------------------------------------------
@@ -539,13 +545,18 @@ export const fetchMatrixSpec = async (projectId, request) => {
  * @param {Object} request
  * @return {Promise}
  */
-export const fetchRequestFieldNames = async ({ projectId, ...request }) => {
+export const fetchRequestFieldNames = async ({
+  projectId,
+  request,
+  signal,
+}) => {
   const requestConfig = GQL.requestFieldNames(request);
-  const config = {
+  const axiosOptions = {
     url: `/warehouse/${projectId}`,
     data: requestConfig.gql,
+    signal,
   };
-  return gqlInstance(config).then((response) => {
+  return gqlInstance(axiosOptions).then((response) => {
     return {
       ...GQL.extractGql(response),
       meta: {
@@ -569,21 +580,15 @@ export const fetchRequestFieldNames = async ({ projectId, ...request }) => {
  * @param {Object} request
  * @return {Object}
  */
-export const fetchLevels = async ({ projectId, signal, ...request }) => {
-  console.log(GQL.requestLevels(request));
-  const config = {
+export const fetchLevels = async ({ projectId, signal, request }) => {
+  const axiosOptions = {
+    // single endpoint for all of the graphql requests
     url: `/warehouse/${projectId}`,
     data: GQL.requestLevels(request),
     signal,
   };
 
-  return gqlInstance(config).then((response) => {
-    if (typeof response.data?.errors !== 'undefined') {
-      console.error(response);
-      throw new GqlError(`The graphql request failed`);
-    }
-    return response.data;
-  });
+  return gqlInstance(axiosOptions);
 };
 /*-----------------------------------------------------------------------------*/
 // Local utilities
@@ -694,6 +699,7 @@ export const readDirectory = (request, signal) => {
       `%c testing POST @ "v1/filesystem/readdir" endpoint`,
       'color:orange',
     );
+    console.debug('readDirectory api axios options:', axiosOptions);
   }
 
   return apiInstance(axiosOptions);
