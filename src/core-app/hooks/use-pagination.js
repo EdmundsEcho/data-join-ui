@@ -73,6 +73,7 @@ LIMIT cursor {
 const usePagination = ({
   feature = 'LIMIT',
   fetchFn, // how retrieve the raw data
+  abortController: abortControllerProp,
   normalizer, // post-processing
   filter: filterProp,
   pageSize: pageSizeProp,
@@ -93,7 +94,7 @@ const usePagination = ({
           after: null,
         };
   });
-  const abortController = useAbortController();
+  const abortController = useAbortController(abortControllerProp);
 
   // ---------------------------------------------------------------------------
   // 💢 Side-effect
@@ -113,8 +114,8 @@ const usePagination = ({
     initialCacheValue: dummyPageInfo,
     blockAsyncWithEmptyParams: true,
     abortController,
+    useSignal: typeof abortControllerProp !== 'undefined',
     immedidate: false,
-    useSignal: true,
     caller: 'usePagination',
     turnOff,
     DEBUG,

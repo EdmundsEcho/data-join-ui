@@ -6,5 +6,9 @@
     "configPath": "react-scripts/config/webpack.config",
     "includeHashInOutputFilename": true
   },
-  "globalImports": ["src/assets/index.css"]
+  "globalImports": [
+    "src/assets/index.css",
+    "src/assets/dashboard.css",
+    "src/assets/fonts.css"
+  ]
 }

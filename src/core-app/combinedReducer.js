@@ -1,13 +1,9 @@
-// src/combinedReducer.js
+// src/core-app/combinedReducer.js
 
 /**
  *
  * Reads in all of the reducers found in the index file of
  * the `ducks` directory. Returns a single reducer.
- *
- * The ability to reset the store is not yet utilized.
- * See save-middleware for current approach.
- *
  *
  * @module reducers/combinedReducer
  */

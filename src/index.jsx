@@ -8,6 +8,7 @@ import * as serviceWorker from './serviceWorker';
 // css that works in addition to mui-theme
 import './assets/index.css';
 import './assets/dashboard.css';
+import './assets/core-app-sizing.css';
 import './assets/fonts.css';
 
 import Root from './Root';

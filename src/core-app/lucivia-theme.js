@@ -17,6 +17,10 @@ import palette from './assets/scheme/palette.json';
 import LatoRegular from './assets/fonts/Lato/Lato-Regular.ttf';
 import LatoItalic from './assets/fonts/Lato/Lato-Italic.ttf';
 import LatoBold from './assets/fonts/Lato/Lato-Bold.ttf';
+import RalewayRegular from './assets/fonts/Raleway/Raleway-Regular.ttf';
+import RalewayItalic from './assets/fonts/Raleway/Raleway-Italic.ttf';
+import RalewayBold from './assets/fonts/Raleway/Raleway-Bold.ttf';
+import JetBrainsMonoRegular from './assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf';
 
 // used to create a customer version starting with mui's default
 import { FIELD_TYPES, PURPOSE_TYPES } from './lib/sum-types';
@@ -233,7 +237,7 @@ export default (mode) =>
             font-style: normal;
             font-weight: 400;
             src: local('Raleway Regular'), local('Raleway-Regular'),
-              url(./assets/fonts/Raleway/Raleway-Regular.ttf) format('truetype');
+              url(${RalewayRegular}) format('truetype');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
               U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
               U+FEFF, U+FFFD;
@@ -243,7 +247,7 @@ export default (mode) =>
             font-style: italic;
             font-weight: 400;
             src: local('Raleway Italic'), local('Raleway-Italic'),
-              url(./assets/fonts/Raleway/Raleway-Italic.ttf) format('truetype');
+              url(${RalewayItalic}) format('truetype');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
               U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
               U+FEFF, U+FFFD;
@@ -253,7 +257,7 @@ export default (mode) =>
             font-style: bold;
             font-weight: 700;
             src: local('Raleway Bold'), local('Raleway-Bold'),
-              url(./assets/fonts/Raleway/Raleway-Bold.ttf) format('truetype');
+              url(${RalewayBold}) format('truetype');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
               U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
               U+FEFF, U+FFFD;
@@ -263,14 +267,14 @@ export default (mode) =>
             font-style: thin;
             font-weight: 100;
             src: local('JetBrainsMono-Thin'),
-              url(./assets/fonts/JetBrains_Mono/static/JetBrainsMono-Thin.ttf) format('truetype');
+              url(/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Thin.ttf) format('truetype');
           }
           @font-face {
             font-family: 'JetBrainsMono';
             font-style: normal;
             font-weight: 400;
             src: local('JetBrainsMono-Regular'),
-              url(./assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf)
+              url(${JetBrainsMonoRegular})
                 format('truetype');
           }
           @font-face {
@@ -278,7 +282,7 @@ export default (mode) =>
             font-style: bold;
             font-weight: 700;
             src: local('JetBrainsMono-Bold'),
-              url(./assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf) format('truetype');
+              url(/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf) format('truetype');
           }
         `,
       },
@@ -661,6 +665,9 @@ export default (mode) =>
               '&.derivedField': {
                 minWidth: '80px',
               },
+              '& > label': {
+                marginTop: spacingFn(3),
+              },
             },
             // 🚧 generic Luci-Texfield
             // has: InputLabel, FormHelperText & wrapped Input as TextInput
@@ -711,6 +718,50 @@ export default (mode) =>
       /* DataGrid */
       MuiDataGrid: {
         styleOverrides: {
+          columnHeaders: ({ theme }) => ({
+            backgroundColor: theme.palette.grey[200],
+            borderTopLeftRadius: spacingFn(5),
+            borderTopRightRadius: spacingFn(5),
+          }),
+          columnHeader: ({ theme }) => ({
+            padding: `0 ${spacingFn(4)}`,
+            paddingBottom: spacingFn(4),
+          }),
+          columnHeaderTitleContainer: ({ theme }) => ({
+            // a flex box
+            alignItems: 'flex-end',
+          }),
+          columnHeaderTitle: ({ theme }) => ({
+            height: 'max-content',
+            fontSize: '0.9em',
+            lineHeight: '1.1em',
+            whiteSpace: 'normal',
+            overflowWrap: 'break-word',
+            wordWrap: 'break-word',
+            wordBreak: 'break-word',
+            hyphens: 'auto',
+          }),
+          columnSeparator: ({ theme }) => ({
+            '& > svg': {
+              marginTop: 'auto',
+            },
+          }),
+          cell: ({ theme }) => ({
+            padding: `0 ${spacingFn(4)}`,
+          }),
+          row: ({ theme }) => ({
+            '&:hover': {
+              backgroundColor: theme.palette.primary.superLight,
+            },
+            '&.Mui-selected': {
+              opacity: 0.5,
+              backgroundColor: theme.palette.grey[100],
+              '&:hover': {
+                opacity: 1,
+                backgroundColor: theme.palette.primary.superLight,
+              },
+            },
+          }),
           root: ({ theme }) => ({
             fontSize: '0.8rem',
             lineHeight: '0.8rem',
@@ -719,35 +770,47 @@ export default (mode) =>
             border: `none`,
             padding: '0',
             margin: '0',
+            '&.Luci-ValueGrid-fileLevels': {
+              '& .MuiDataGrid-columnHeaders': {
+                borderTopLeftRadius: spacingFn(2),
+                borderTopRightRadius: spacingFn(2),
+              },
+            },
+            '&.EtlUnit-ValueGrid': {
+              '& .MuiDataGrid-columnHeaders': {
+                borderTopLeftRadius: spacingFn(2),
+                borderTopRightRadius: spacingFn(2),
+              },
+              '& .MuiDataGrid-columnHeader': {
+                paddingTop: 0,
+                paddingBottom: 0,
+              },
+              '& .MuiDataGrid-columnHeaderTitleContainer': {
+                padding: 0,
+                alignItems: 'center',
+              },
+              '& .MuiDataGrid-columnSeparator': {
+                visibility: 'hidden',
+              },
+              '& .MuiDataGrid-columnHeaderCheckbox svg': {
+                height: '0.9em',
+                width: '0.9em',
+              },
+            },
             '&.Luci-ValueGrid-matrix': {
               '& .fieldname': {
-                padding: 0,
                 '& .MuiDataGrid-iconButtonContainer': {
                   marginRight: '-7px',
                 },
-                '& .MuiDataGrid-columnHeaderTitle': {
-                  height: 'max-content',
-                  fontSize: '0.9em',
-                  lineHeight: '1.1em',
-                  whiteSpace: 'normal',
-                  overflowWrap: 'break-word',
-                  wordWrap: 'break-word',
-                  wordBreak: 'break-word',
-                  hyphens: 'auto',
-                },
               },
+            },
+            '&.EtlUnit-ValueGrid.MuiDataGrid-row.Mui-selected': {
+              opacity: '0.5',
+              backgroundColor: 'cyan',
             },
             // DataGrid className
             '&.EtlUnit-ValueGrid, &.Luci-ValueGrid-fileLevels, &.Luci-ValueGrid-matrix':
               {
-                // reverse how a selected/non-selected row renders
-                '& .EtlUnit-ValueGrid-Level': {
-                  opacity: '1.0',
-                  '&.Mui-selected': {
-                    opacity: '0.6',
-                    backgroundColor: 'inherit',
-                  },
-                },
                 '& .record-counts': {
                   marginRight: theme.spacingFn(3),
                 },
@@ -759,19 +822,13 @@ export default (mode) =>
                   },
                 },
                 // root and another class
-                '& .MuiDataGrid-main': {
-                  '& .MuiDataGrid-columnsContainer': {
-                    backgroundColor: theme.palette.grey[300],
-                  },
-                },
-                // root and another class
                 '& .MuiDataGrid-footer': {
                   minHeight: '20px',
                   maxHeight: '25px',
                   padding: `${spacingFn(0)}`,
-                  margin: `${spacingFn(2)} 0px`,
+                  margin: `${spacingFn(2)} 0`,
                   justifyContent: 'space-between',
-                  backgroundColor: theme.palette.grey[100],
+                  backgroundColor: theme.palette.grey[200],
                   display: 'flex',
                   alignItems: 'center',
                   '& .tools': {
@@ -1215,8 +1272,8 @@ export default (mode) =>
         styleOverrides: {
           root: ({ theme }) => ({
             '&.Luci-Stepper.root': {
-              paddingTop: theme.spacing(4),
-              paddingBottom: theme.spacing(4),
+              marginTop: theme.spacing(4),
+              marginBottom: theme.spacing(4),
             },
           }),
         },
@@ -1747,6 +1804,13 @@ export default (mode) =>
       MuiCard: {
         styleOverrides: {
           root: ({ theme }) => ({
+            //---------------------------------------------------------------------
+            // Luci-matrix
+            // Most of the formatting occurs in the MuiDataGrid
+            //---------------------------------------------------------------------
+            '&.Luci-matrix': {
+              borderRadius: 0,
+            },
             //---------------------------------------------------------------------
             // EtlFieldView
             // 🔖 copy/paste with '&.Luci-HeaderView'

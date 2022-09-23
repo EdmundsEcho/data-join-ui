@@ -32,10 +32,14 @@ import {
   SET_ETL_FIELD_CHANGES,
   UPDATE_ETL_FIELD,
 } from '../../actions/etlView.actions';
-import { SET_TREE } from '../../actions/workbench.actions';
+import {
+  SET_TREE,
+  TOGGLE_VALUE,
+  TOGGLE_REDUCED,
+} from '../../actions/workbench.actions';
 import { TAG_MATRIX_STATE, SET_MATRIX } from '../../actions/matrix.actions';
 import { setNotification } from '../../actions/notifications.actions';
-import { redirect } from '../../actions/ui.actions';
+// import { redirect } from '../../actions/ui.actions';
 import { DesignError } from '../../../lib/LuciErrors';
 
 import { saveStore as saveStoreApi } from '../../../../services/dashboard.api';
@@ -181,7 +185,9 @@ const WHITE_LIST = [
   DELETE_FIELD,
   DELETE_DERIVED_FIELD,
   SET_TREE,
-  // TAG_MATRIX_STATE,
+  // TOGGLE_VALUE, // building the request
+  // TOGGLE_REDUCED, // building the request
+  TAG_MATRIX_STATE,
   SET_MATRIX,
 ];
 const BLACK_LIST = [...Object.values(MetaActions), '@@INIT'];

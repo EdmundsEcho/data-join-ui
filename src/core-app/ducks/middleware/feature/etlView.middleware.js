@@ -208,6 +208,7 @@ const middleware =
               feature: ETL_VIEW,
               message: 'Updating etlView - removing field',
             }),
+            tagWarehouseState('STALE'),
           );
 
           const removeCfg = {

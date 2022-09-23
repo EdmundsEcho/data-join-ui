@@ -44,22 +44,23 @@ function fromMatrixApi(matrix) {
 
 //----------------------------------------------------------------------------
 // Data grid options
-// See the theme overrides for other formatting options
+//
 const gridOptions = {
   headerHeight: 85,
   rowHeight: 35,
   disableColumnMenu: true,
+  disableSelectionOnClick: true,
 };
 //----------------------------------------------------------------------------
 /**
  * @component
  */
-function MatrixGrid({ matrix /* first 100 used to seed */ }) {
+function MatrixGrid({ matrixPage, gridHeight, abortController }) {
   /* eslint-disable react/jsx-props-no-spreading */
 
   // read the first sample of the data to configure
   // the grid columns.
-  const { columns } = fromMatrixApi(matrix);
+  const { columns } = fromMatrixApi(matrixPage);
   const { projectId } = useParams();
 
   return (
@@ -68,13 +69,14 @@ function MatrixGrid({ matrix /* first 100 used to seed */ }) {
       columns={columns}
       identifier='matrix'
       purpose='matrix'
-      fetchFn={fetchLevels(projectId)}
+      fetchFn={fetchLevels(projectId, abortController.signal)}
+      abortController={abortController}
       normalizer={normalizer(rowsFn)}
       edgeToGridRowFn={identityFn}
       edgeToIdFn={({ subject }) => subject}
       baseSelectAll={{}}
+      limitGridHeight={gridHeight}
       feature='LIMIT'
-      limitRowCount={17}
       pageSize={100}
       DEBUG={false}
       {...gridOptions}
@@ -83,7 +85,11 @@ function MatrixGrid({ matrix /* first 100 used to seed */ }) {
 }
 
 MatrixGrid.propTypes = {
-  matrix: PropTypes.shape({}).isRequired,
+  matrixPage: PropTypes.shape({}).isRequired,
+  gridHeight: PropTypes.number.isRequired,
+  abortController: PropTypes.shape({
+    signal: PropTypes.shape({}),
+  }).isRequired,
 };
 
 MatrixGrid.defaultProps = {};

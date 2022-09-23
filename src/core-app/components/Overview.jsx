@@ -1,42 +1,41 @@
 import React, { useEffect, useCallback } from 'react';
 
-import PropTypes from 'prop-types';
-import { useDispatch, useStore } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import clsx from 'clsx';
 
-import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
-import CheckIcon from '@mui/icons-material/Check';
 import Button from '@mui/material/Button';
 
 import { deleteDb as clearUiState } from '../hooks/use-persisted-state';
+import { getProjectId } from '../ducks/rootSelectors';
 
 // public resources
 import logo from '../assets/images/Logo.png';
 // import logoL from '../assets/images/LogoL.png';
-//
-const SHOW_DEBUG_PANEL = false;
 
 /* eslint-disable no-console, react/jsx-props-no-spreading */
 
 /**
  * @component
  */
-const Overview = (props) => {
-  const dispatch = useDispatch();
+const Overview = () => {
   const { projectId } = useParams();
+  const projectInRedux = useSelector((state) => {
+    if (state === null) {
+      return null;
+    }
+    return getProjectId(state);
+  });
 
-  const clearReduxState = useCallback(() => {
-    dispatch({ type: 'RESET' });
-  }, [dispatch]);
+  useEffect(() => {
+    // when the projectId is Null, reload
+    if (projectInRedux === null) {
+      window.location.reload(true); // true = server
+    }
+  }, [projectInRedux]);
 
   const handleClear = async (...args) => {
     await clearUiState(...args);

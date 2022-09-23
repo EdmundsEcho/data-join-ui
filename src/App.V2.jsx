@@ -20,7 +20,7 @@ const App = () => {
   const routesElement = useRoutes(routes);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(clearProjectStore('App'));
+    dispatch(clearProjectStore('App Component'));
   }, [dispatch]);
   return (
     <ProjectsDataProvider>

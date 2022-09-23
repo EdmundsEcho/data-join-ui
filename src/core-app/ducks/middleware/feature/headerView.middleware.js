@@ -18,7 +18,8 @@ import {
   removeInspectionError, // document
   setFixedHeaderViews, // document
   setHvsFixes, // document
-  setHvFieldLevels, // document
+  setHvFieldLevels,
+  updateFileField, // document
 } from '../../actions/headerView.actions';
 import { tagWarehouseState } from '../../actions/workbench.actions';
 import {
@@ -47,6 +48,7 @@ import { updateWideToLongFields } from '../../../lib/filesToEtlUnits/transforms/
 // 📖 data
 import {
   getHeaderViewsFixes,
+  getHeaderViews,
   selectHeaderView,
   selectFieldInHeader,
 } from '../../rootSelectors';
@@ -61,6 +63,7 @@ import {
   InvalidStateError,
 } from '../../../lib/LuciErrors';
 import { colors } from '../../../constants/variables';
+import { getTimePropValueWithCompoundedKey } from '../../../lib/filesToEtlUnits/transforms/span/span-helper';
 
 //------------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
@@ -81,7 +84,7 @@ const { isValid, getData, getApiError } =
  * @middleware
  */
 const middleware =
-  ({ getState }) =>
+  ({ getState, dispatch }) =>
   (next) =>
   async (action) => {
     const state = getState();
@@ -329,13 +332,77 @@ const middleware =
       //
       //
       case UPDATE_FILEFIELD: {
-        const { filename, fieldIdx, key, value } = action;
-        // augment the state with async data; othewise, updates go to the
-        // reducer directly to be documented.
-        //
         // Any changes here render the hosted warehouse state = STALE
         // ⬜ We can get smarter about the volume of updates
         next(tagWarehouseState('STALE'));
+        //
+        const { filename, fieldIdx, key, value } = action;
+        //
+        // tasks:
+        // 1. if key === purpose, maybe augment reducer with async, levels data
+        // 2. if key === format, maybe generate an update action for other hv
+        // ... "guess forward"
+        //
+        // field: setTime(key)(field, value, DEBUG),
+        if (key === 'format') {
+          const readOnlyField = selectFieldInHeader(
+            getState(),
+            filename,
+            fieldIdx,
+          );
+          if (readOnlyField.purpose === PURPOSE_TYPES.MSPAN) {
+            // use the value to update other mspan field format if empty
+            const maybeNextHv = maybeNextHvInHvs(
+              getHeaderViews(state),
+              filename,
+            );
+            const maybeNextField = maybeNextHv
+              ? maybeFieldWithMissingValueInHv(
+                  maybeNextHv,
+                  readOnlyField.purpose,
+                  key,
+                )
+              : undefined;
+            if (maybeNextField) {
+              dispatch(
+                updateFileField(
+                  maybeNextHv.filename,
+                  maybeNextField['header-idx'],
+                  key,
+                  value,
+                ),
+              );
+            }
+          }
+        }
+        if (/^time\.+./.test(key)) {
+          const readOnlyField = selectFieldInHeader(
+            getState(),
+            filename,
+            fieldIdx,
+          );
+          const maybeNextHv = maybeNextHvInHvs(getHeaderViews(state), filename);
+          const maybeNextField = maybeNextHv
+            ? maybeFieldWithMissingValueInHv(
+                maybeNextHv,
+                readOnlyField.purpose,
+                key,
+              )
+            : undefined;
+          if (maybeNextField) {
+            dispatch(
+              updateFileField(
+                maybeNextHv.filename,
+                maybeNextField['header-idx'],
+                key,
+                value,
+              ),
+            );
+          }
+        }
+        //
+        // In the event the purpose === mspan, augment the state with async data.
+        //
         if (key === 'purpose') {
           //
           // track the current state of the levels to avoid multiple calls
@@ -413,4 +480,42 @@ const middleware =
     }
   };
 
+/**
+ * When updating a key value pair in "one hv", try and find
+ * opportunities to update the key value in "another hv".
+ *
+ */
+function maybeFieldWithMissingValueInHv(anotherHv, purpose, key) {
+  const maybeField = anotherHv.fields.find(
+    (field) => field.purpose === purpose,
+  );
+  let missingValue = null;
+  if (/^time\.+./.test(key)) {
+    missingValue =
+      getTimePropValueWithCompoundedKey(key, maybeField?.time) ?? undefined;
+  } else {
+    missingValue = maybeField?.[key] ?? undefined;
+  }
+  return missingValue == null || missingValue === '' ? maybeField : undefined;
+  // case /^format/.test(key):
+  // case /^time\.+./.test(key): {
+}
+
+/**
+ * Return the next index value. Returns undefined if a next
+ * cursor does not exist.
+ *
+ * The caller: move down & up from the currentFilename
+ * Next steps:
+ *   👉 call this function once
+ *   👉 have the function move up
+ *   👉 have the function move down
+ *
+ */
+function maybeNextHvInHvs(hvs, currentFilename) {
+  const hvsKeys = Object.keys(hvs);
+  const cursor = hvsKeys.findIndex((filename) => currentFilename === filename);
+  const nextKey = cursor + 1;
+  return nextKey < hvsKeys.length ? hvs[hvsKeys[nextKey]] : undefined;
+}
 export default middleware;

@@ -1,7 +1,7 @@
 // src/core-app/Main.jsx
 
-import React from 'react';
-import { Routes, Route, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import clsx from 'clsx';
 
 import Container from '@mui/material/Container';
@@ -13,6 +13,7 @@ import { ErrorBoundary, Fallback } from './components/shared/ErrorBoundary';
 import ModalRoot from './components/ModalRoot';
 
 import StepBar from './components/StepBar/StepBar';
+import AppSizeProvider from '../contexts/CoreAppSizeContext';
 
 LicenseInfo.setLicenseKey(
   'bfebe42cb36c320e53926d5c773b27e9Tz00OTgzOSxFPTE2OTMyMzE0NTQ3MDksUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
@@ -33,31 +34,61 @@ LicenseInfo.setLicenseKey(
  *
  */
 function Main() {
+  const [height, setHeight] = useState(() => undefined);
+  const [width, setWidth] = useState(() => undefined);
+
+  const calcHeight = (node) => {
+    if (node && !height) {
+      setHeight(() => node.offsetHeight);
+    }
+    if (node && !width) {
+      setWidth(() => node.offsetWidth);
+    }
+  };
   /*
+  useEffect(() => {
+    console.debug(`Outlet height: ${height}`);
+  }, [height]);
+  useEffect(() => {
+    console.debug(`Outlet width: ${width}`);
+  }, [width]);
+*/
+
+  Outlet.displayName = 'CoreApp-Outlet';
+
+  const value = getComputedStyle(document.documentElement).getPropertyValue(
+    '--unit',
+  );
+  console.debug(`Value from css: ${value}`);
+  console.debug(`Height from css: ${height}`);
+  //
+  return (
+    <AppInitializer>
+      <div className='box stack project-view'>
+        <Container className={clsx('Luci-CoreAppLayout', 'root')}>
+          <div className='app-paging-view'>
+            <ErrorBoundary FallbackComponent={Fallback}>
+              <div ref={(node) => calcHeight(node)}>
+                <AppSizeProvider height={height} width={width}>
+                  <Outlet />
+                  <div className='size'>size:</div>
+                </AppSizeProvider>
+              </div>
+            </ErrorBoundary>
+          </div>
+          <StepBar className='app-paging-controller'></StepBar>
+        </Container>
+      </div>
+    </AppInitializer>
+  );
+}
+
+export default Main;
+
+/*
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             {children}
           </PersistGate>
         </Provider>
 */
-
-  Outlet.displayName = 'CoreApp-Outlet';
-
-  return (
-    <AppInitializer>
-      <ErrorBoundary FallbackComponent={Fallback}>
-        <div className='box stack project-view'>
-          <Container className={clsx('Luci-CoreAppLayout', 'root')}>
-            <div className='app-paging-view'>
-              <Outlet />
-            </div>
-            <StepBar className='app-paging-controller'></StepBar>
-          </Container>
-          <ModalRoot />
-        </div>
-      </ErrorBoundary>
-    </AppInitializer>
-  );
-}
-
-export default Main;

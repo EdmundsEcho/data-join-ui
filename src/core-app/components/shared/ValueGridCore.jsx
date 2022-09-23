@@ -29,6 +29,7 @@ import { useGridApiRef } from '@mui/x-data-grid-pro';
 import ValueGridInner, {
   filterOperators,
   gridHeightFn,
+  ROW_HEIGHT,
 } from './ValueGridInner';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -41,7 +42,7 @@ import { PURPOSE_TYPES } from '../../lib/sum-types';
 import { removeProp } from '../../utils/common';
 
 // re-export
-export { filterOperators };
+export { filterOperators, ROW_HEIGHT };
 
 //-----------------------------------------------------------------------------
 /* eslint-disable no-console */
@@ -72,6 +73,7 @@ const ValueGridCore = ({
   purpose,
   baseSelectAll, // interface for using the key
   fetchFn, // api fetch
+  abortController,
   normalizer, // raw api -> fodder for edgeToGridRowFn
   edgeToGridRowFn,
   edgeToIdFn,
@@ -92,7 +94,9 @@ const ValueGridCore = ({
   feature,
   checkboxSelection,
   pageSize,
-  limitRowCount,
+  limitGridHeight,
+  rowHeight,
+  headerHeight,
   DEBUG,
   ...rest
 }) => {
@@ -124,6 +128,7 @@ const ValueGridCore = ({
     data,
   } = usePagination({
     fetchFn,
+    abortController,
     normalizer, // raw api -> fodder for the edge -> row
     filter: baseSelectAll,
     feature,
@@ -217,8 +222,8 @@ const ValueGridCore = ({
   }, [totalCount]);
 
   if (DEBUG) {
-    console.debug(`%c📖 The grid state`, 'color:purple');
-    console.dir({
+    console.debug('%c----------------------------------------', 'color:orange');
+    console.debug(`%c📋 ValueGridCore loaded state summary:`, 'color:orange', {
       identifier,
       purpose,
       MAX_ROWS: MAX_ROWS || totalCount,
@@ -256,10 +261,10 @@ const ValueGridCore = ({
         setInNewClearedState(false);
       }
 
-      const _ =
-        feature === 'SCROLL'
-          ? fetchPage({ pageSize: nextPageSize, after: max })
-          : fetchPage();
+      feature === 'SCROLL'
+        ? fetchPage({ pageSize: nextPageSize, after: max })
+        : fetchPage();
+
       setReadyForMore(() => true);
     }
   };
@@ -669,13 +674,21 @@ const ValueGridCore = ({
       columns={columns}
       rows={rows}
       MAX_ROWS={MAX_ROWS /* from api */ || totalCount /* from redux */}
-      gridHeightProp={gridHeightFn(rows?.length ?? MAX_ROWS, limitRowCount)}
+      gridHeightProp={gridHeightFn(
+        rows?.length ?? MAX_ROWS,
+        limitGridHeight,
+        rowHeight,
+        headerHeight,
+      )}
+      rowHeight={rowHeight}
+      headerHeight={headerHeight}
       error={error}
       onRowsScrollEnd={handleOnRowScrollEnd}
+      rowBuffer={15}
       loading={data.status === 'pending' ?? true}
       // user input
       checkboxSelection={checkboxSelection}
-      onRowSelected={handleToggleValue}
+      onRowClick={handleToggleValue}
       onToggleAll={handleToggleAll}
       tabindex='-1'
       // filtering
@@ -696,12 +709,15 @@ ValueGridCore.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   feature: PropTypes.oneOf(['SCROLL', 'LIMIT']).isRequired,
   fetchFn: PropTypes.func.isRequired,
+  abortController: PropTypes.shape({}),
   reduced: PropTypes.bool,
   identifier: PropTypes.string.isRequired,
   purpose: PropTypes.oneOf([...Object.values(PURPOSE_TYPES), 'matrix'])
     .isRequired,
   pageSize: PropTypes.number.isRequired,
-  limitRowCount: PropTypes.number,
+  limitGridHeight: PropTypes.number.isRequired,
+  headerHeight: PropTypes.number,
+  rowHeight: PropTypes.number,
   normalizer: PropTypes.func.isRequired,
   selectionModel: PropTypes.shape({
     totalCount: PropTypes.number,
@@ -727,9 +743,11 @@ ValueGridCore.defaultProps = {
     totalCount: undefined,
     selectionModel: { __ALL__: { value: '__ALL__', request: true } },
   },
+  abortController: undefined,
+  headerHeight: undefined,
+  rowHeight: undefined,
   // ⬜ move this to a required prop
   edgeToIdFn: (edge) => edge.node.level,
-  limitRowCount: undefined, // number of rows to display
   rows: undefined,
 };
 

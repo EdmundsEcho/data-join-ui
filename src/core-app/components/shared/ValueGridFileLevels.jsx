@@ -28,7 +28,8 @@ import {
   getSelectionModelFile,
   getSelectionModelEtl,
 } from '../../ducks/rootSelectors';
-import ValueGridCore, { filterOperators } from './ValueGridCore';
+import ValueGridCore, { filterOperators, ROW_HEIGHT } from './ValueGridCore';
+import useAbortController from '../../../hooks/use-abort-controller';
 
 //------------------------------------------------------------------------------
 const DEBUG = false;
@@ -41,6 +42,11 @@ const PAGE_SIZE =
 //
 // ⚙️  for the value grid
 //
+const limitGridHeight = 9 * ROW_HEIGHT;
+//
+const gridOptions = {
+  disableSelectionOnClick: true,
+};
 const columns = [
   { field: 'id', headerName: 'ID', hide: true },
   {
@@ -124,6 +130,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
   );
 
   const { projectId } = useParams();
+  const abortController = useAbortController();
 
   const selectionModel = useSelector((state) => {
     switch (fieldType) {
@@ -182,7 +189,9 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
         }
         purpose={getValue('purpose')}
         baseSelectAll={selectAll}
-        fetchFn={fetchLevels(projectId)}
+        fetchFn={fetchLevels(projectId, abortController.signal)}
+        abortController={abortController}
+        limitGridHeight={limitGridHeight}
         normalizer={parseRespData}
         edgeToGridRowFn={edgeToGridRowFn}
         // required to determine the height of the grid
@@ -198,6 +207,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
             : undefined
         }
         DEBUG={DEBUG}
+        {...gridOptions}
       />
       <Tools purpose={getValue('purpose')} fieldType={fieldType} />
     </div>

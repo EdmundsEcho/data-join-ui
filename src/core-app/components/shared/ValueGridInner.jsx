@@ -43,13 +43,19 @@ import Check from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
+//------------------------------------------------------------------------------
+const DEBUG = false;
+//------------------------------------------------------------------------------
+/* eslint-disable no-console */
+
 //----------------------------------------------------------------------------
 // Display settings
 //----------------------------------------------------------------------------
 const HEADER_HEIGHT = 33;
 const ROW_HEIGHT = 35;
 const FOOTER_HEIGHT = 24;
-const ADJUST_HEIGHT = 10;
+const ADJUST_HEIGHT = 0;
+export { ROW_HEIGHT };
 
 /**
  *
@@ -63,6 +69,10 @@ export const filterOperators = getGridStringOperators().filter(({ value }) =>
   ['contains', 'endsWith', 'startsWith'].includes(value),
 );
 
+//------------------------------------------------------------------------------
+// grid selection model -> is row selected
+const isRowSelectedWithReverseLogic = (rowId, model) =>
+  model.findIndex((id) => id === rowId) === -1;
 //------------------------------------------------------------------------------
 // Custom components for the grid
 // ⬜ reverse the css highlighting
@@ -136,15 +146,41 @@ const CustomLoadingOverlay = () => {
 };
 
 /**
- * Set the grid height using this function once the maxRecords is a known
- * value returned from the api.
+ * User is the parent, import to set the gridHeight prop
+ *
+ * Set the grid height using this function once the maxRecords
+ * has been returned from the api.
+ *
+ * Schema:
+ *      👉 MaxRecords is small: gridBody size based on maxRecords
+ *      👉 MaxRecords is big: gridBody size using limitSize
  *
  * @function
  * @return {number}
  */
-export const gridHeightFn = (maxRecords, limitSize = 9) => {
-  const gridBody = Math.min(limitSize, Math.max(2, maxRecords)) * ROW_HEIGHT;
-  return gridBody + HEADER_HEIGHT + FOOTER_HEIGHT + ADJUST_HEIGHT;
+export const gridHeightFn = (
+  maxRecords,
+  limitGridHeight,
+  rowHeightProp = undefined,
+  headerHeightProp = undefined,
+) => {
+  if (DEBUG) {
+    console.debug('gridHeightFn parameters:', {
+      maxRecords,
+      limitGridHeight,
+      rowHeightProp,
+      headerHeightProp,
+    });
+  }
+  const headerHeight = headerHeightProp || HEADER_HEIGHT;
+  const rowHeight = rowHeightProp || ROW_HEIGHT;
+  const nonBody = headerHeight + FOOTER_HEIGHT + ADJUST_HEIGHT;
+  const limitBodyHeight = limitGridHeight - nonBody;
+  const gridBody = Math.min(
+    limitBodyHeight,
+    Math.max(2, maxRecords) * rowHeight,
+  );
+  return gridBody + headerHeight + FOOTER_HEIGHT + ADJUST_HEIGHT;
 };
 
 //------------------------------------------------------------------------------
@@ -187,6 +223,9 @@ const ValueGridInner = ({
   apiRef,
   columns,
   rows,
+  // optional
+  headerHeight,
+  rowHeight,
   // grid height related
   MAX_ROWS,
   gridHeightProp, // use the exported gridHeight fn
@@ -194,7 +233,6 @@ const ValueGridInner = ({
   onFilterModelChange,
   handleClearFilter,
   onRowsScrollEnd,
-  onRowSelected,
   onToggleAll,
   onRowClick,
   resetFn,
@@ -244,22 +282,20 @@ const ValueGridInner = ({
           event, // MuiEvent<React.ChangeEvent<HTMLElement>>
           details, // GridCallbackDetails
         ) => { }}
+        onSelectionModelChange={({ data: rowModel, isSelected }) => {
         */
         getRowClassName={() => rowClassName || 'EtlUnit-ValueGrid-Level'}
         // other options
-        rowHeight={ROW_HEIGHT}
-        headerHeight={HEADER_HEIGHT}
+        rowHeight={rowHeight || ROW_HEIGHT}
+        headerHeight={headerHeight || HEADER_HEIGHT}
         disableColumnSelector
-        onRowClick={({ row }) => {
-          onRowClick(row);
-        }}
-        onRowSelected={({ data: rowModel, isSelected }) => {
+        onRowClick={({ row: rowModel }) => {
           // applies the callback passing it a synthetic event
-          // that reverses the isSelected value
-          return onRowSelected({
+          // that reverses the isRowSelected value
+          return onRowClick({
             id: rowModel.id,
             level: rowModel.level,
-            isSelected: !isSelected, // ⚠️  reverse the interpretation
+            isSelected: !apiRef.current.isRowSelected(rowModel.id), // ⚠️  reverse the interpretation
           });
         }}
         onColumnHeaderClick={onToggleAll}
@@ -278,12 +314,15 @@ const ValueGridInner = ({
 
 ValueGridInner.whyDidYouRender = true;
 ValueGridInner.propTypes = {
-  apiRef: PropTypes.shape({}).isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({ isRowSelected: PropTypes.func }),
+  }).isRequired,
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   rows: PropTypes.arrayOf(PropTypes.shape({})),
+  headerHeight: PropTypes.number,
+  rowHeight: PropTypes.number,
   MAX_ROWS: PropTypes.number,
   onRowsScrollEnd: PropTypes.func.isRequired,
-  onRowClick: PropTypes.func,
   // status-related
   gridHeightProp: PropTypes.number.isRequired, // limiting factor
   resetFn: PropTypes.func.isRequired,
@@ -298,17 +337,18 @@ ValueGridInner.propTypes = {
   rowClassName: PropTypes.string,
   // checkbox related
   checkboxSelection: PropTypes.bool,
-  onRowSelected: PropTypes.func,
+  onRowClick: PropTypes.func,
   onToggleAll: PropTypes.func,
 };
 
 ValueGridInner.defaultProps = {
   className: undefined,
   rowClassName: undefined,
+  headerHeight: undefined,
+  rowHeight: undefined,
   checkboxSelection: false,
   onToggleAll: undefined,
   error: undefined,
-  onRowSelected: () => {},
   onRowClick: () => {},
   MAX_ROWS: undefined,
   rows: undefined,

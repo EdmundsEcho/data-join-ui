@@ -22,9 +22,13 @@ import {
   getSelectionModel,
 } from '../../../../ducks/rootSelectors';
 import { InputTypeError } from '../../../../lib/LuciErrors';
+import useAbortController from '../../../../../hooks/use-abort-controller';
 
 // import { ToolContext } from './ToolContext';
-import ValueGridCore, { filterOperators } from '../../../shared/ValueGridCore';
+import ValueGridCore, {
+  filterOperators,
+  ROW_HEIGHT,
+} from '../../../shared/ValueGridCore';
 import { PURPOSE_TYPES } from '../../../../lib/sum-types';
 
 //------------------------------------------------------------------------------
@@ -34,6 +38,8 @@ const PAGE_SIZE =
   parseInt(process.env.REACT_APP_DEFAULT_VALUE_GRID_PAGE_SIZE, 10) || 90;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
+
+const limitGridHeight = 9 * ROW_HEIGHT;
 
 const columns = [
   { field: 'id', headerName: 'ID', hide: true },
@@ -54,8 +60,8 @@ const columns = [
 //    (i.e., without generating a redux action
 //           thereby does not invoke middleware, nor reducers)
 //
-const fetchLevels = (projectId) => (request) => {
-  return fetchLevelsInner({ projectId, request });
+const fetchLevels = (projectId, signal) => (request) => {
+  return fetchLevelsInner({ projectId, signal, request });
 };
 const parseResponse = (response) => response.data.levels;
 
@@ -107,6 +113,7 @@ function ValueGridWorkbench(props) {
   useTraceUpdate(props);
 
   const dispatch = useDispatch();
+  const abortController = useAbortController();
 
   // baseline selectAll levels
   const [selectAll, isQuality] = useMemo(() => {
@@ -131,24 +138,28 @@ function ValueGridWorkbench(props) {
       identifier={identifier}
       purpose={isQuality ? PURPOSE_TYPES.QUALITY : PURPOSE_TYPES.MCOMP}
       baseSelectAll={selectAll}
-      fetchFn={fetchLevels(projectId)}
+      fetchFn={fetchLevels(projectId, abortController.signal)}
+      abortController={abortController}
       normalizer={parseResponse}
       edgeToGridRowFn={edgeToGridRowFn}
       selectionModel={selectionModel}
       reduced={reduced}
+      limitGridHeight={limitGridHeight}
       // handlers
       // will recieve column values for the toggled record
-      handleToggleValue={({ level, isSelected }) =>
-        dispatch(toggleValue(nodeId, level, identifier, isSelected))
-      }
-      handleSetAllValues={(values) =>
-        dispatch(setCompValues(nodeId, identifier, values))
-      }
+      handleToggleValue={({ level, isSelected }) => {
+        console.debug('handle event', level, isSelected);
+        dispatch(toggleValue(nodeId, level, identifier, isSelected));
+      }}
+      handleSetAllValues={(values) => {
+        console.debug('handle event all', values);
+        dispatch(setCompValues(nodeId, identifier, values));
+      }}
       // version of the grid
       feature='SCROLL'
       checkboxSelection
       pageSize={PAGE_SIZE}
-      DEBUG={DEBUG}
+      DEBUG
     />
   );
 }

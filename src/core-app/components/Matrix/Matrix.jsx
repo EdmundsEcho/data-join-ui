@@ -9,7 +9,6 @@
  */
 import React, { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 
 import { Card, CardContent, CardHeader } from '@mui/material';
 
@@ -26,27 +25,38 @@ import {
 // cancel action
 import { bookmark } from '../../ducks/actions/stepper.actions';
 import useAbortController from '../../../hooks/use-abort-controller';
+// app size
+import { useAppSizeDataContext } from '../../../contexts/CoreAppSizeContext';
 
 // -----------------------------------------------------------------------------
 const DEBUG = true || process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
+const GRID_HEIGHT_ADJ = 0;
 
-const withDataPred = (matrix) =>
-  matrix !== null && Object.keys(matrix).length > 0;
+const withDataAndSizePred = (matrixPage, height) =>
+  typeof height !== 'undefined' &&
+  matrixPage !== null &&
+  Object.keys(matrixPage).length > 0;
 
 const Matrix = () => {
   // initial state => without data
   const { isLoading, message: messageWhileLoading } = useSelector(isUiLoading);
-  const matrix = useSelector(getMatrix); // a page of data
-  const [withData, setWithData] = useState(() => withDataPred(matrix));
+  const matrixPage = useSelector(getMatrix); // a page of data
   const isWarehouseStale = useSelector(getIsWarehouseStale);
   const isMatrixStale = useSelector(getIsMatrixStale);
+  // input to set the grid height
+  const { height: coreAppHeight } = useAppSizeDataContext();
+  const [withDataAndSize, setWithDataAndSize] = useState(() =>
+    withDataAndSizePred(matrixPage, coreAppHeight),
+  );
   const showMatrix = !(
-    isLoading ||
-    !withData ||
-    isWarehouseStale ||
-    isMatrixStale
+    (
+      isLoading || // update with useSelector
+      !withDataAndSize || // update with useEffect
+      isWarehouseStale || // update with useSelector
+      isMatrixStale
+    ) // update with useSelector
   );
   // cancel-related hooks
   const dispatch = useDispatch();
@@ -57,10 +67,10 @@ const Matrix = () => {
   // of the data status by way of redux isLoading and getMatrix. Paging therein
   // is handled by the DataGrid.
   useEffect(() => {
-    if (!withData || isWarehouseStale || isMatrixStale) {
-      setWithData(withDataPred(matrix));
+    if (!withDataAndSize) {
+      setWithDataAndSize(withDataAndSizePred(matrixPage, coreAppHeight));
     }
-  }, [withData, isWarehouseStale, isMatrixStale, matrix]);
+  }, [withDataAndSize, coreAppHeight, matrixPage]);
 
   const handleCancel = useCallback(() => {
     abortController.abort();
@@ -70,10 +80,11 @@ const Matrix = () => {
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:orange');
     console.debug(`%c📋 Matrix loaded state summary:`, 'color:orange', {
-      withData,
+      withDataAndSize,
       isLoading,
       isWarehouseStale,
       isMatrixStale,
+      coreAppHeight,
       'should render': showMatrix,
     });
   }
@@ -89,10 +100,11 @@ const Matrix = () => {
 
   return (
     <Card className='Luci-matrix'>
-      <CardHeader>Matrix</CardHeader>
-      <CardContent className='Luci-matrix'>
-        <MatrixGrid matrix={matrix} />
-      </CardContent>
+      <MatrixGrid
+        matrixPage={matrixPage}
+        abortController={abortController}
+        gridHeight={coreAppHeight + GRID_HEIGHT_ADJ}
+      />
     </Card>
   );
 };

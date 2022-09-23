@@ -14,7 +14,6 @@
  *    indivual tests.  The package also provides a purpose-specific delegate.
  *
  */
-// import isequal from 'lodash.isequal';
 import {
   predictEtlUnitsFromHeaderViews as etlUnitsFromHvs,
   predictEtlUnitsFromHeaderView as etlUnitsFromHv,

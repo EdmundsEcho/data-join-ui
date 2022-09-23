@@ -3,6 +3,7 @@
 import { useCallback, useReducer, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { CanceledError } from 'axios';
 
 import {
   STATUS,
@@ -330,13 +331,20 @@ function middleware(dispatch, state) {
       );
       console.dir(response);
     }
+
+    // augment the response if canceled
+    if (response instanceof CanceledError) {
+      response.status = 204;
+      response.data = null;
+    }
+
     console.assert(
       'status' in response,
       `Unexpected response: Missing status\n${Object.keys(response)}`,
     );
     console.assert(
       'data' in response,
-      `Unexpected response: Missing status\n${Object.keys(response)}`,
+      `Unexpected response: Missing data\n${Object.keys(response)}`,
     );
 
     // Encapsulate all error handling
@@ -487,8 +495,15 @@ function changedArgs(
  * @return {Object | bool}
  */
 export function is200ResponseError(response) {
-  const { error = false, status } = response.data;
-  return error && status !== 'Error' && response.status === 200 ? error : false;
+  try {
+    const { error = false, status } = response.data;
+    return error && status !== 'Error' && response.status === 200
+      ? error
+      : false;
+  } catch (e) {
+    console.warn(e);
+    return true;
+  }
 }
 /**
  * Predicate

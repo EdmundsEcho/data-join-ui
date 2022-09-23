@@ -122,7 +122,7 @@ const useFetchApi = ({
   const cancel = useCallback(() => {
     return () => {
       abortController.abort();
-      dispatch({ type: RESET });
+      dispatch({ type: RESET }); // is this required?
     };
   }, [dispatch, abortController]);
 
@@ -164,8 +164,6 @@ const useFetchApi = ({
           // ---------------------------------------------------------------------
           // ⌛
           const response = await asyncFn(...augmentedArgs);
-
-          const isEqual = compare(previousCacheRef, response, equalityFnName);
 
           if (
             // 👍 avoid changing the cache when possible

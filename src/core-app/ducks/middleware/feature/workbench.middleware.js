@@ -44,8 +44,9 @@ import {
   // setCompValues, // document
 } from '../../actions/workbench.actions';
 import {
-  fetchMatrixCache,
   SET_MATRIX_CACHE, // command
+  fetchMatrixCache,
+  tagMatrixState,
 } from '../../actions/matrix.actions';
 import {
   POLLING_RESOLVED,
@@ -163,7 +164,7 @@ const middleware =
       }
       case SET_MATRIX_CACHE: {
         // forward/pass-through the action proper
-        next(action);
+        // next(action); 🦀 ??
         // cascade the action to listeners
         const source = action.meta.id;
         const { listeners } = getState().workbench.tree[source];
@@ -179,6 +180,7 @@ const middleware =
             }),
           ),
         );
+        next(tagMatrixState('STALE'));
         break;
       }
       //
@@ -211,6 +213,7 @@ const middleware =
             },
           });
         }
+        next(tagMatrixState('STALE'));
         break;
       }
 
@@ -264,11 +267,13 @@ const middleware =
               ),
             }),
           );
+          next(tagMatrixState('STALE'));
           break;
         }
 
         // else, update the tree
         dispatch(moveTree(action.payload));
+        next(tagMatrixState('STALE'));
 
         break;
       }
@@ -300,6 +305,7 @@ const middleware =
             throw e;
           }
         }
+        next(tagMatrixState('STALE'));
         break;
       }
 
@@ -450,11 +456,13 @@ const middleware =
           }
         }
 
+        next(tagMatrixState('STALE'));
         break;
       }
 
       case RESET_CANVAS: {
         next(setTree(resetCanvas(getState())));
+        next(tagMatrixState('STALE'));
         break;
       }
       // -------------------------------------------------------------------------
@@ -619,7 +627,7 @@ const middleware =
           next([
             setTree(Tree.toFlatNodes(tree)),
             tagWarehouseState('CURRENT'),
-            saveProject(), // required until stop resetting redux between pages
+            tagMatrixState('STALE'),
           ]);
         } catch (e) {
           if (e instanceof ApiCallError) {

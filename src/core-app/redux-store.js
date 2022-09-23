@@ -27,12 +27,12 @@
 import {
   persistStore,
   persistReducer,
-  FLUSH,
+  /* FLUSH,
   REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
-  REGISTER,
+  REGISTER, */
 } from 'redux-persist';
 import { configureStore } from '@reduxjs/toolkit'; // dev only
 import { composeWithDevTools } from '@redux-devtools/extension'; // dev only

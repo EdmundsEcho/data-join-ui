@@ -1,3 +1,5 @@
+// src/core-app/utils/createReducer.js
+
 /**
  * @module ducks/createReducer
  * @function

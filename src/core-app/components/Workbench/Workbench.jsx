@@ -64,8 +64,7 @@ const Workbench = () => {
 
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:orange');
-    console.debug(`%c📋 Workbench loaded state summary:`, 'color:orange');
-    console.dir({
+    console.debug(`%c📋 Workbench loaded state summary:`, 'color:orange', {
       withData,
       isLoading,
       isStale,
