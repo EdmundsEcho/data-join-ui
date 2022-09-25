@@ -14,8 +14,8 @@ export const AuthRedirect = () => {
   // 1. persist the history stored in location to local storage
   // (consumed by the RedirectPage, navigate(origin))
   const location = useLocation();
-  const origin = location.state?.fromPathname || '/';
-  usePersistedState(`tncAuthRedirectOrigin`, origin);
+  const origin = location.state?.origin || '/';
+  usePersistedState(`origin`, origin);
 
   // 2. redirect to the authorization url
   const [search] = useSearchParams();

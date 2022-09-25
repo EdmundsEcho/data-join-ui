@@ -1,45 +1,45 @@
-import { useEffect, useReducer, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
 import { Box, Divider, IconButton, Paper, Typography } from '@mui/material';
 import { Google, GitHub, Twitter } from '@mui/icons-material';
 
-import clsx from 'clsx';
-
-import { purgeStoredState } from 'redux-persist';
-
-import { persistConfig } from '../core-app/redux-persist-cfg';
+// import { persistConfig } from '../core-app/redux-persist-cfg';
 import { logout as logoutApi } from '../services/dashboard.api';
-import usePersistedState from '../core-app/hooks/use-persisted-state';
+import { usePersistedState, useAbortController, useFetchApi } from '../hooks';
+import { colors } from '../core-app/constants/variables';
 
 import './LoginPage.css';
 
-//------------------------------------------------------------------------------
-const AUTH_PROVIDERS = process.env.REACT_APP_AUTH_PROVIDERS.split(',');
-//------------------------------------------------------------------------------
-/* eslint-disable camelcase, no-console */
+//-----------------------------------------------------------------------------
+const DEBUG = true || process.env.REACT_APP_DEBUG_LOGIN === 'true';
+//-----------------------------------------------------------------------------
+const AUTH_PROVIDERS = process.env.REACT_APP_USER_AUTH_PROVIDERS.split(',');
+const AUTH_URL = process.env.REACT_APP_USER_AUTH_URL;
+const COLOR = colors.blue;
+//-----------------------------------------------------------------------------
+/* eslint-disable no-console, react/jsx-props-no-spreading */
 
-/* eslint-disable react/jsx-props-no-spreading */
 const AuthButton = (props) => {
   return <IconButton {...props} className='auth-button' />;
 };
-/* eslint-enable react/jsx-props-no-spreading */
 
-export const LoginPage = ({ logout }) => {
+export const LoginPage = ({ logout: logoutProp }) => {
   //
   const [isLoading, setLoading] = useState(() => false);
+  const [search] = useSearchParams();
+  const logoutRequest = search.get('logout') ?? logoutProp ?? false;
 
-  // 1. persist the history stored in location to local storage
+  // 1. Persist the history stored in location to local storage
   // (consumed by the RedirectPage, navigate(origin))
   const location = useLocation();
-  const origin = location.state?.fromPathname || '/';
-  usePersistedState(`tncAuthRedirectOrigin`, origin);
-
+  const origin = location.state?.origin || '/';
+  usePersistedState('origin', origin);
   // 2. proceed with the login routine
-
   // generic for supported authenticating services
   const errorMsg = 'this auth provider is not supported';
+
   const handleAuth = (provider) => (event) => {
     // 🚧 assert using supported auth provider
     console.assert(AUTH_PROVIDERS.includes(provider), {
@@ -52,16 +52,30 @@ export const LoginPage = ({ logout }) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      const authURL = `http://localhost:3099/auth/${provider}`;
+      const authURL = `${AUTH_URL}/${provider}`;
       window.location.replace(authURL);
     }, 1000);
   };
 
+  // ---------------------------------------------------------------------------
+  // 💢 fetch projects
+  // 🔖 summary views only (detail view is part of the core-app)
+  // ---------------------------------------------------------------------------
+  const abortController = useAbortController();
+  const { execute: logout } = useFetchApi({
+    asyncFn: logoutApi,
+    useSignal: true,
+    immediate: false,
+    abortController,
+    caller: 'LoginPage:logout',
+    DEBUG,
+  });
   useEffect(() => {
-    if (logout) {
-      logoutApi();
+    if (logoutRequest) {
+      logout();
     }
     // clear the user-agent's persisted state
+    /*
     (async () => {
       try {
         await purgeStoredState(persistConfig);
@@ -70,8 +84,18 @@ export const LoginPage = ({ logout }) => {
         console.error(`Failed to purge local state`);
         console.dir(e);
       }
-    })();
-  }, [logout]);
+    })(); */
+  }, [logoutRequest, logout]);
+
+  if (DEBUG) {
+    console.debug('%c----------------------------------------', COLOR);
+    console.debug(`%c📋 LoginPage loaded state summary:`, COLOR, {
+      isLoading,
+      search,
+      logoutRequest,
+      origin,
+    });
+  }
 
   return (
     <Box

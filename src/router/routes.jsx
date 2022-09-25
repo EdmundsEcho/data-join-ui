@@ -1,3 +1,5 @@
+import { matchPath } from 'react-router-dom';
+
 import {
   // Assignment,
   Layers,
@@ -116,6 +118,18 @@ export const routesConfig = [
 */
 ];
 
+/**
+ * Predicate
+ *
+ * @function
+ * @param {string} pathname
+ * @return {boolean}
+ */
+export const showAppBar = (path) => {
+  return routesConfig.findIndex(
+    (route) => matchPath(path, route.path) && route.mainMenu,
+  );
+};
 export const mainListItems = [
   {
     icon: <Dashboard />,

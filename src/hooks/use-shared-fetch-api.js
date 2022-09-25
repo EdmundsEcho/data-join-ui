@@ -116,6 +116,7 @@ const useSharedFetchApi = ({
       enqueueSnackbar(state.notice.message, {
         variant: state.notice.variant,
       });
+      // clear the notice register
       dispatch({ type: SET_NOTICE, payload: null });
     }
   }, [enqueueSnackbar, state.notice]);
@@ -127,8 +128,9 @@ const useSharedFetchApi = ({
     if (state.redirectUrl) {
       navigate(state.redirectUrl, {
         replace: true,
-        state: { fromPathname: location.pathname }, // retrieve using useLocation
+        state: { origin: location.pathname },
       });
+      // clear the redirect url register
       dispatch({ type: SET_REDIRECT_URL, payload: null });
     }
   }, [navigate, location.pathname, state.redirectUrl]);
@@ -139,12 +141,15 @@ const useSharedFetchApi = ({
   useEffect(() => {
     if (state.error) {
       dispatch({ type: RESET_ERROR });
-      navigate({
-        pathname: ERROR_PATHNAME,
-        search: `?${searchParamsFromError(state.error)}`,
-      });
+      navigate(
+        {
+          pathname: ERROR_PATHNAME,
+          search: `?${searchParamsFromError(state.error)}`,
+        },
+        { replace: true, state: { origin: location.pathname } },
+      );
     }
-  }, [navigate, state.error]);
+  }, [navigate, state.error, location.pathname]);
   // complete the state-cycle with a fresh cache
   // -> UNINITIALIZED
   const reset = useCallback(() => {
@@ -332,10 +337,15 @@ function middleware(dispatch, state) {
       console.dir(response);
     }
 
-    // augment the response if canceled
+    //
+    // augment the response as needed
+    //
     if (response instanceof CanceledError) {
       response.status = 204;
-      response.data = null;
+    }
+    if (typeof response?.status === 'undefined') {
+      console.warn(response);
+      response.status = 205;
     }
 
     console.assert(
@@ -384,6 +394,17 @@ function middleware(dispatch, state) {
           payload: {
             message: `Success`,
             variant: 'success',
+          },
+        });
+        dispatch({ type: SUCCESS_NOCHANGE });
+        break;
+
+      case 205:
+        dispatch({
+          type: SET_NOTICE,
+          payload: {
+            message: `Undefined response`,
+            variant: 'warning',
           },
         });
         dispatch({ type: SUCCESS_NOCHANGE });

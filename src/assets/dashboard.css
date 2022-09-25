@@ -1,10 +1,11 @@
 /* Dashboard layout */
+@import "luci-theme.css";
 
 :root {
-  /* visually confirm here
-   * To size the main-view, use to mark to top and bottom
+  /* visually confirmation
+   * To size the main-view, use top and bottom
    * of the main-view.inner div (should be sum of margins) */
-  --main-view-top: 50px;
+  --main-view-top: 64px;
   --main-view-bottom: 10px;
   --main-view-min-width: 400px;
 
@@ -77,6 +78,18 @@
   flex-direction: row;
   gap: 10px;
 }
+.space-between {
+  justify-content: space-between;
+}
+.align-items-center {
+    align-items: center;
+}
+/* app-specific classes */
+.core-app-main {
+  max-width: unset;
+  padding: 0;
+  margin: 0;
+}
 .main.wrapper {
   margin: var(--main-wrapper-margin);
 }
@@ -94,7 +107,6 @@
   margin-right: auto;
   max-width: 240px;
 }
-
 .main-controller-root {
   gap: 0;
 }
@@ -129,9 +141,46 @@
   margin-top: auto;
 }
 
-button.delete-project {
-  width: 30%;
-  width: 30%;
+/* ---------------------------------------- */
+/* Side nav */
+.dark-toolbar {
+  background-color: #52a5b8;
+}
+
+.light-toolbar {
+  background-color: #52a5b8;
+}
+
+.appbar a,
+.luci-toolbar a,
+.links a {
+    text-decoration: none;
+    color: unset;
+}
+.side-nav {
+    height: inherit;
+}
+.project-mini-card > .short-id {
+    font-size: 0.8em;
+}
+.project-mini-card {
+    flex: 1;
+}
+.list.projects > .item:hover {
+    background-color: var(--color-primary-light);
+    opacity: 1;
+}
+.list.projects > .item {
+    opacity: 0.5;
+}
+.list.projects > .item.enable {
+    opacity: 1;
+}
+.list.projects > .item.Mui-selected {
+    opacity: 1;
+}
+.list.heading {
+    margin: 0;
 }
 /* ---------------------------------------- */
 /*
@@ -141,8 +190,7 @@ button.delete-project {
   position: absolute;
   width: 50px;
   height: 2px;
-  /* border-radius: 50%; */
-  z-index: 99;
+  z-index: 1099;
 }
 .marker.top {
   right: 4px;
@@ -191,13 +239,12 @@ ul[title]::before {
   font-size: 30px;
 }
 /* Style the navbar */
-.topbar {
-  overflow: hidden;
+.appbar {
   height: var(--top-bar-height);
 }
 
 /* Navbar links */
-.topbar a {
+.appbar a {
   float: left;
   display: block;
   text-align: center;

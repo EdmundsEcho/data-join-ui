@@ -168,6 +168,6 @@ function resolveDbName(maybeDbOrProjectId) {
     : dbNameFromProjectId(maybeDbOrProjectId);
 }
 
-export { dbNameFromProjectId, deleteDb, clearValues };
+export { dbNameFromProjectId, deleteDb, clearValues, usePersistedState };
 
 export default usePersistedState;

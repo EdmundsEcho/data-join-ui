@@ -1,7 +1,7 @@
 /**
  * Sample code not part of the app
  */
-import * as React from 'react'
+import * as React from 'react';
 import {
   Routes,
   Route,
@@ -9,61 +9,57 @@ import {
   Navigate,
   useNavigate,
   useLocation,
-} from 'react-router-dom'
+} from 'react-router-dom';
 
 const fakeAuth = () =>
   new Promise((resolve) => {
-    setTimeout(() => resolve('2342f2f1d131rf12'), 250)
-  })
+    setTimeout(() => resolve('2342f2f1d131rf12'), 250);
+  });
 
-const AuthContext = React.createContext(null)
+const AuthContext = React.createContext(null);
 
-const AuthProvider = ({children}) => {
-  const navigate = useNavigate()
-  const location = useLocation()
+const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [token, setToken] = React.useState(null)
+  const [token, setToken] = React.useState(null);
 
   const handleLogin = async () => {
-    const token = await fakeAuth()
+    const token = await fakeAuth();
 
-    setToken(token)
+    setToken(token);
 
-    const origin = location.state?.from?.pathname || '/dashboard'
-    navigate(origin)
-  }
+    const origin = location.state?.origin || '/';
+    navigate(origin);
+  };
 
   const handleLogout = () => {
-    setToken(null)
-  }
+    setToken(null);
+  };
 
   const value = {
     token,
     onLogin: handleLogin,
     onLogout: handleLogout,
-  }
+  };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
 const useAuth = () => {
-  return React.useContext(AuthContext)
-}
+  return React.useContext(AuthContext);
+};
 
-const ProtectedRoute = ({children}) => {
-  const {token} = useAuth()
-  const location = useLocation()
+const ProtectedRoute = ({ children }) => {
+  const { token } = useAuth();
+  const location = useLocation();
 
   if (!token) {
-    return <Navigate to="/home" replace state={{from: location}} />
+    return <Navigate to='/home' replace state={{ from: location }} />;
   }
 
-  return children
-}
+  return children;
+};
 
 const App = () => {
   return (
@@ -74,9 +70,9 @@ const App = () => {
 
       <Routes>
         <Route index element={<Home />} />
-        <Route path="home" element={<Home />} />
+        <Route path='home' element={<Home />} />
         <Route
-          path="dashboard"
+          path='dashboard'
           element={
             <ProtectedRoute>
               <Dashboard />
@@ -84,7 +80,7 @@ const App = () => {
           }
         />
         <Route
-          path="admin"
+          path='admin'
           element={
             <ProtectedRoute>
               <Admin />
@@ -92,46 +88,46 @@ const App = () => {
           }
         />
 
-        <Route path="*" element={<NoMatch />} />
+        <Route path='*' element={<NoMatch />} />
       </Routes>
     </AuthProvider>
-  )
-}
+  );
+};
 
 const Navigation = () => {
-  const {token, onLogout} = useAuth()
+  const { token, onLogout } = useAuth();
 
   return (
     <nav>
-      <NavLink to="/home">Home</NavLink>
-      <NavLink to="/dashboard">Dashboard</NavLink>
-      <NavLink to="/admin">Admin</NavLink>
+      <NavLink to='/home'>Home</NavLink>
+      <NavLink to='/dashboard'>Dashboard</NavLink>
+      <NavLink to='/admin'>Admin</NavLink>
 
       {token && (
-        <button type="button" onClick={onLogout}>
+        <button type='button' onClick={onLogout}>
           Sign Out
         </button>
       )}
     </nav>
-  )
-}
+  );
+};
 
 const Home = () => {
-  const {onLogin} = useAuth()
+  const { onLogin } = useAuth();
 
   return (
     <>
       <h2>Home (Public)</h2>
 
-      <button type="button" onClick={onLogin}>
+      <button type='button' onClick={onLogin}>
         Sign In
       </button>
     </>
-  )
-}
+  );
+};
 
 const Dashboard = () => {
-  const {token} = useAuth()
+  const { token } = useAuth();
 
   return (
     <>
@@ -139,19 +135,19 @@ const Dashboard = () => {
 
       <div>Authenticated as {token}</div>
     </>
-  )
-}
+  );
+};
 
 const Admin = () => {
   return (
     <>
       <h2>Admin (Protected)</h2>
     </>
-  )
-}
+  );
+};
 
 const NoMatch = () => {
-  return <p>There's nothing here: 404!</p>
-}
+  return <p>There's nothing here: 404!</p>;
+};
 
-export default App
+export default App;

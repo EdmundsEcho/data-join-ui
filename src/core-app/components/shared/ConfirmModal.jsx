@@ -14,7 +14,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function ConfirmModal({ open, onCancel, onConfirm, message }) {
+function ConfirmModal({ open, onCancel, onConfirm, message }) {
   return (
     <Dialog className='Luci-Dialog root' key='ConfirmModalRoot' open={open}>
       <DialogTitle id='alert-dialog-title'>Please confirm.</DialogTitle>
@@ -46,3 +46,6 @@ ConfirmModal.defaultProps = {
   message: 'Please confirm or cancel.',
   open: false,
 };
+
+export { ConfirmModal };
+export default ConfirmModal;

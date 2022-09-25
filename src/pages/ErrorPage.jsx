@@ -21,7 +21,7 @@ export const ErrorPage = ({
   const longMessage = search.get('longMessage') || longMsgProp;
 
   const location = useLocation();
-  const origin = location.state?.fromPathname || '/';
+  const origin = location.state?.origin || '/';
 
   return (
     <Box

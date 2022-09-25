@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { withSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -17,62 +16,57 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-import Copyright from '../components/shared/Copyright';
-import { useLocationChange, usePageWidth } from '../hooks';
-import isValidRoute from '../router/isValidRoute';
-import './HorizontalLayout.scss';
+import AppBar from '../components/AppBar';
+import { useLocationChange, usePageWidth, usePersistedState } from '../hooks';
+import { showAppBar as showAppBarCfg } from '../router/routes';
+import { colors } from '../core-app/constants/variables';
 
-const drawerWidth = 240;
+//-----------------------------------------------------------------------------
+const DEBUG = true || process.env.REACT_APP_DEBUG_LAYOUT === 'true';
+const COLOR = colors.blue;
+//-----------------------------------------------------------------------------
+/* eslint-disable no-console */
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-  // @ts-ignore
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Layout = ({
+const HorizontalLayout = ({
   children,
   open,
   toggleDrawer,
-  enqueueSnackbar,
-  secondaryElement = null,
+  secondaryElement,
 }) => {
   const theme = useTheme();
   const pageWidth = usePageWidth();
   const navigate = useNavigate();
+  const enqueueSnackbar = useSnackbar();
   const isMobile = pageWidth < 770;
-  const [showAppBar, setShowAppBar] = useState(false);
+  const [showAppBar, setShowAppBar] = useState(() => false);
+  const [origin] = usePersistedState('origin'); // debugging read-only
 
-  const setAppbarState = useCallback((location) => {
+  const setAppBarState = useCallback((location) => {
     const { pathname } = location;
-    const show = isValidRoute(pathname) && !['/login', '/'].includes(pathname);
+    const show = showAppBarCfg(pathname);
     setShowAppBar(show);
   }, []);
 
-  useLocationChange(setAppbarState);
+  useLocationChange(setAppBarState);
 
   const handleLogOut = (event) => {
     event.preventDefault();
-    navigate('/login');
+    navigate('/login?logout=true');
     enqueueSnackbar('Succesfully logged out', {
       variant: 'info',
     });
   };
 
   const notificationsCount = 0;
+  if (DEBUG) {
+    console.debug('%c----------------------------------------', COLOR);
+    console.debug(`%c📋 HorizontalLayout loaded state summary:`, COLOR, {
+      showAppBar: showAppBarCfg(location.pathname),
+      isMobile,
+      pathname: location.pathname,
+      origin,
+    });
+  }
 
   return (
     <>
@@ -80,7 +74,6 @@ const Layout = ({
         <AppBar
           position='absolute'
           className={`luci-toolbar ${theme.palette.mode}-toolbar`}
-          // @ts-ignore
           open={open}>
           <Toolbar
             sx={{
@@ -105,7 +98,6 @@ const Layout = ({
               noWrap
               sx={{ flexGrow: 1 }}></Typography>
             {(!isMobile || !open) && (
-              // @KM: handle logout by removing the cookie as well!
               <Link href='/login' onClick={handleLogOut} sx={{ mr: 2 }}>
                 Log out
               </Link>
@@ -130,7 +122,7 @@ const Layout = ({
           overflow: 'auto',
         }}>
         {showAppBar && <Toolbar />}
-        <Container sx={{ mt: 4, mb: 4 }} maxWidth='xl'>
+        <Container className='core-app-main' sx={{ mt: 4, mb: 4 }}>
           <Grid container>
             {secondaryElement && (
               <Grid item xs={12} md={4}>
@@ -156,17 +148,20 @@ const Layout = ({
               </Paper>
             </Grid>
           </Grid>
-          <Copyright />
         </Container>
       </Box>
     </>
   );
 };
 
-const mapStateToProps = (state) => ({
-  themeMode: state.uiConfig.theme,
-});
-
-const HorizontalLayout = withSnackbar(connect(mapStateToProps)(Layout));
+HorizontalLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+  open: PropTypes.bool.isRequired,
+  toggleDrawer: PropTypes.func.isRequired,
+  secondaryElement: PropTypes.element,
+};
+HorizontalLayout.defaultProps = {
+  secondaryElement: null,
+};
 
 export default HorizontalLayout;

@@ -28,7 +28,7 @@ const OFF = false;
 export const RedirectPage = () => {
   const navigate = useNavigate();
 
-  const [origin, setOrigin] = usePersistedState('tncAuthRedirectOrigin');
+  const [origin, setOrigin] = usePersistedState('origin');
 
   const {
     cache: dataToGuideRedirect,

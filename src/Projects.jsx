@@ -13,12 +13,23 @@
  *
  * @component
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import clsx from 'clsx';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useParams, useNavigate } from 'react-router-dom';
 
-import { Spinner } from './components/shared';
+import { useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import IconButton from '@mui/material/IconButton';
+// icons
+import DeleteIcon from '@mui/icons-material/Delete';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+
+import { ConfirmModal, Spinner } from './components/shared';
 
 // 📖 (each hook used in different components)
 import {
@@ -41,24 +52,10 @@ const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 }]
 */
 
-/**
- *
- * @component
- */
 const Projects = () => {
-  //
-
   return (
     <Layout>
-      {/* New project link */}
-      <NavLink to='new-project' key='summaryLink|new-project-key'>
-        <SummaryView addNewPlaceholder />
-      </NavLink>
-
-      {/* User projects */}
       <ListOfProjects />
-
-      {/* ⬜ use a custom summary component from props (should accept isActive) */}
     </Layout>
   );
 };
@@ -87,16 +84,7 @@ function Layout({ children }) {
   //
   return (
     <div className='main-controller-root nostack'>
-      <div className='main-controller'>
-        <div className='main-controller inner stack box'>
-          <div className='box'>
-            <h4>Project list controller</h4>
-            <p>Controls which project to show; defaults to new project form</p>
-            <p>Eventually will have 4 states</p>
-          </div>
-          {children}
-        </div>
-      </div>
+      {children}
       <div className='main-view inner'>
         <div className='main-view sizing-frame stack'>
           <Outlet />
@@ -117,30 +105,86 @@ Layout.defaultProps = {};
  */
 function ListOfProjects() {
   const { data: projects, isReady } = useProjectsDataContext();
+  const [openProjectList, setOpenProjectList] = useState(() => true);
+  const { projectId: selectedProject = null } = useParams();
+  const theme = useTheme();
+
+  const haveSelectedProject = selectedProject !== null;
+
+  const toggleProjectsList = () => setOpenProjectList((open) => !open);
 
   const lookupBy = 'project_id';
   if (!isReady && projects.length === 0) {
     return <Spinner />;
   }
-  return projects.map(({ [lookupBy]: projectId, ...restSummaryProps }) => (
-    /* ------------------ Summary list item --------------------------- */
-    <div key={`fragment|projectSummaryView|${projectId}`}>
-      <NavLink to={linkTo(projectId)} key={`summaryLink|${projectId}`}>
-        {({ isActive }) => (
-          <SummaryView
-            isActive={isActive}
-            projectId={projectId}
-            {...restSummaryProps}
-          />
+  const renderOverlay = () => (
+    <Box
+      sx={{
+        position: 'absolute',
+        background: 'linear-gradient(to right, transparent 60%, white 90%)',
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 1,
+      }}
+    />
+  );
+
+  return (
+    <Box
+      className='main-controller'
+      sx={{
+        p: '30px 0',
+        borderRight: '1px solid rgba(0,0,0,0.2)',
+        overflow: 'hidden',
+        position: 'relative',
+      }}>
+      {!openProjectList && renderOverlay()}
+      <Box
+        sx={{
+          m: theme.spacingFn(4),
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          whiteSpace: 'nowrap',
+        }}>
+        {openProjectList && <h6 className='list heading'>Select a project</h6>}
+        {toggleProjectsList && (
+          <IconButton
+            color='inherit'
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleProjectsList();
+            }}>
+            {openProjectList ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
         )}
-      </NavLink>
-      <DeleteButton projectId={projectId} />
-    </div>
-    /* ---------------------------------------------------------------- */
-  ));
+      </Box>
+      <List className='list projects' component='nav'>
+        {projects.map(({ [lookupBy]: projectId, ...restSummaryProps }) => (
+          /* ------------------ Summary list item --------------------------- */
+          <ListItem
+            className={clsx('item', { enable: !haveSelectedProject })}
+            key={`fragment|projectSummaryView|${projectId}`}
+            disablePadding
+            selected={projectId === selectedProject}>
+            <SummaryView projectId={projectId} {...restSummaryProps} />
+          </ListItem>
+          /* ---------------------------------------------------------------- */
+        ))}
+      </List>
+
+      {selectedProject && <NewProjectButton />}
+    </Box>
+  );
 }
-ListOfProjects.propTypes = {};
-ListOfProjects.defaultProps = {};
+ListOfProjects.propTypes = {
+  openProjectList: PropTypes.bool,
+  toggleProjectsList: PropTypes.func.isRequired,
+};
+ListOfProjects.defaultProps = {
+  openProjectList: false,
+};
 
 /**
  *
@@ -158,16 +202,27 @@ function SummaryView({
   const shortId = projectId.slice(projectId.length - 4);
   return (
     <div
-      className={clsx({
-        active: isActive,
-        'project-mini-card box nostack': true,
-      })}>
+      className={clsx(
+        'project-mini-card',
+        'nostack',
+        'links',
+        'space-between align-items-center',
+        {
+          active: isActive,
+        },
+      )}>
       {addNewPlaceholder ? (
         <div>New project</div>
       ) : (
         <>
-          <div>{`${name} -- ${shortId}`}</div>
-          <div className='right-align'>{permission}</div>
+          <NavLink to={linkTo(projectId)} key={`summaryLink|${projectId}`}>
+            <div className='name'>{`${name}`}</div>
+          </NavLink>
+          <div className='short-id'>{`short-id: ${shortId}`}</div>
+          <div className='permission'>{permission}</div>
+          <div className='right-align'>
+            <DeleteButton projectId={projectId} />
+          </div>
         </>
       )}
     </div>
@@ -190,9 +245,39 @@ SummaryView.defaultProps = {
 
 function DeleteButton({ projectId }) {
   const navigate = useNavigate();
-  const location = useLocation();
   const { remove: deleteProject } = useProjectsApiContext();
 
+  const [openedModal, setOpenedModal] = useState(false);
+
+  const handleDeleteProject = () => {
+    deleteProject(projectId, () => navigate('/projects'));
+  };
+
+  return (
+    <>
+      <IconButton
+        color='inherit'
+        onClick={(event) => {
+          event.stopPropagation();
+          setOpenedModal(projectId);
+        }}>
+        <DeleteIcon />
+      </IconButton>
+
+      <ConfirmModal
+        message={`Are you sure you want to delete ${
+          openedModal.name ? `"${openedModal.name}"` : 'this'
+        } project?`}
+        onCancel={() => setOpenedModal(false)}
+        onConfirm={(event) => {
+          handleDeleteProject(event, openedModal);
+          setOpenedModal(false);
+        }}
+        open={!!openedModal}
+      />
+    </>
+  );
+  /*
   return (
     <div className='box no-border' key={`project-delete|${projectId}`}>
       <button
@@ -206,10 +291,34 @@ function DeleteButton({ projectId }) {
         Delete
       </button>
     </div>
-  );
+  ); */
 }
 DeleteButton.propTypes = {
   projectId: PropTypes.string.isRequired,
 };
 
+function NewProjectButton({ openProjectList }) {
+  const navigate = useNavigate();
+
+  return (
+    <Box sx={{ ml: '30px' }}>
+      <Button
+        sx={{ mt: 3, mb: 1, p: 2, pl: 5, pr: 5 }}
+        variant='contained'
+        size='small'
+        color='primary'
+        onClick={() => {
+          navigate('/projects');
+        }}>
+        {openProjectList ? 'New project' : '+'}
+      </Button>
+    </Box>
+  );
+}
+NewProjectButton.propTypes = {
+  openProjectList: PropTypes.bool,
+};
+NewProjectButton.defaultProps = {
+  openProjectList: true,
+};
 export default Projects;

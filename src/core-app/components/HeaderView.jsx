@@ -30,7 +30,7 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import clsx from 'clsx';
 
@@ -71,7 +71,7 @@ import { SOURCE_TYPES } from '../lib/sum-types';
 // import { withConfirmation } from '../ducks/actions/modal.actions';
 // import { filesConfirmRemovingFileText } from '../constants/strings';
 
-import { prettyNumber, getParentPath } from '../utils/common';
+import { prettyNumber } from '../utils/common';
 import { memoize } from '../lib/filesToEtlUnits/headerview-helpers';
 import { colors, useTraceUpdate } from '../constants/variables';
 
@@ -168,6 +168,7 @@ function HeaderView(props) {
   );
 }
 HeaderView.propTypes = {
+  displayName: PropTypes.string.isRequired,
   filename: PropTypes.string.isRequired,
   removeFile: PropTypes.func.isRequired,
 };

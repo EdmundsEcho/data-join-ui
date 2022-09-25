@@ -104,7 +104,7 @@ import { fieldConfirmDelete } from '../constants/strings';
 import { colors, useTraceUpdate } from '../constants/variables';
 
 //-----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_ETL_FIELD_VIEW === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_ETL_FIELD_VIEW === 'true';
 const COLOR = colors.blue;
 //-----------------------------------------------------------------------------
 /* eslint-disable no-console */

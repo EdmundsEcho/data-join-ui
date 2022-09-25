@@ -3,8 +3,11 @@ import { useRoutes } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import { useDispatch } from 'react-redux';
 
+import Box from '@mui/material/Box';
+
 import SideNav from './layouts/SideNav';
 import SideNav2 from './layouts/SideNav2';
+import AppBar from './components/AppBar';
 import HorizontalLayout from './layouts/HorizontalLayout';
 
 import { routesConfig as routes } from './router';
@@ -22,60 +25,33 @@ import usePageWidth from './hooks/use-page-width';
  */
 const App = () => {
   const routesElement = useRoutes(routes);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(clearProjectStore('App Component'));
-  }, [dispatch]);
 
   const pageWidth = usePageWidth();
   const isMobile = pageWidth < 770;
 
   const [openDrawer, setOpenDrawer] = useState(!isMobile);
-  const [openProjectList, setOpenProjectList] = useState(!isMobile);
 
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
 
-  const toggleProjectsList = () => {
-    setOpenProjectList(!openProjectList);
-  };
-
   return (
-    <div className='stack'>
-      <SideNav open={openDrawer} toggleDrawer={toggleDrawer} />
-      <ProjectsDataProvider>
-        <div className='root box stack'>
-          <div className='root inner'>
-            <TopBar className='Luci-topbar' />
-            <div className='main wrapper nostack'>
-              {/* Main menu - controls what is displayed in main-viewport */}
-              <div className='main box nostack'>
-                <div className='main-menu box'>
-                  <div className='main-menu inner stack'>
-                    <div className='box'>
-                      <SideNav2 />
-                    </div>
-                  </div>
-                </div>
-                {/* Main viewport */}
-                <div className='main-view box'>{routesElement}</div>
-              </div>
-            </div>
-          </div>
-          {/* layout markers */}
-          <div className='marker top' />
-          <div className='marker bottom' />
-          <div className='marker top computed' />
-        </div>
-      </ProjectsDataProvider>
-    </div>
+    <ProjectsDataProvider>
+      <div className='nostack nowrap'>
+        <SideNav2 open={openDrawer} toggleDrawer={toggleDrawer} />
+        {/* Main menu - controls what is displayed in main-viewport */}
+        <HorizontalLayout toggleDrawer={toggleDrawer} open={openDrawer}>
+          {/* Main viewport */}
+          <div className='main-view box'>{routesElement}</div>
+        </HorizontalLayout>
+      </div>
+      {/* layout markers */}
+      <div className='marker top' />
+      <div className='marker bottom' />
+      <div className='marker top computed' />
+    </ProjectsDataProvider>
   );
 };
-
-function TopBar() {
-  return <div className='topbar'>topbar</div>;
-}
 
 function NoMatch({ message }) {
   return (
