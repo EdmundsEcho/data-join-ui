@@ -6,6 +6,15 @@
  * @module enumerations
  *
  */
+
+export const DISPLAY_VERSIONS = ['LARGE', 'BASELINE', 'MINI'].reduce(
+  (acc, key) => {
+    acc[key] = key;
+    return acc;
+  },
+  {},
+);
+
 export const FIELD_TYPES = {
   FILE: 'file-field',
   WIDE: 'wide-to-long',

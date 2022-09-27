@@ -7,48 +7,72 @@
  *
  */
 :root {
-  --color-primary-main: #00acc1;
-  --color-primary-light: #b2e1ec;
-  --color-primary-dark: #33889c;
-  --color-primary-extra-dark: #19788e;
-  --color-secondary-main: #ff9800;
-  --color-secondary-light: #ffa868;
-  --color-secondary-dark: #f17417;
-  --color-secondary-extra-dark: #ba5408;
 
-  --color-error: #fa616c;
-  --color-red: #fa626c;
-  --color-grey: #646464;
-  --color-white: #ffffff;
-  --color-yellow: #fff700;
-
-  --color-primary-text: #757575;
-  --color-meta-text: var(--color-primary-main);
+/*
+const parse = jsonString => {
+  const jsonValue = JSON.parse(jsonString);
+  return Object.entries(jsonValue).reduce((acc, [key, obj]) => {
+    return Object.entries(obj).reduce((acc2, [key2, value]) => {
+      acc += `--color-${key}-${key2}:${value};\n`;
+      return acc;
+    }, '');
+  }, '');
+}; */
 
   --color-test-line: #6ff;
   --color-control-line: #f0f;
+
+  --color-primary-main:#52A5B8;
+  --color-primary-light:#B2E1EC;
+  --color-primary-dark:#33889C;
+  --color-primary-extraLight:#B2E1EC;
+  --color-primary-extraDark:#19788E;
+  --color-primary-superLight:rgba(178,225,236,0.4);
+  --color-primary-superLightHex:#b2e1ec;
+  --color-primary-extremeLight:rgba(178,225,236,0.2);
+  --color-primary-contrastText:#fff;
+  --color-primary-text: #757575;
+
+  --color-secondary-main:#FF9445;
+  --color-secondary-light:#FFA868;
+  --color-secondary-dark:#F17417;
+  --color-secondary-extraLight:#FFC193;
+  --color-secondary-extraDark:#BA5408;
+  --color-secondary-superLight:rgba(255,168, 104, 0.3);
+  --color-secondary-extremeLight:rgba(255,168, 104, 0.1);
+  --color-secondary-contrastText:#fff;
+
+  --color-warning-main:#914f50;
+  --color-warning-contrastText:#fff;
+  --color-error-main:#FA616C;
+  --color-error-contrastText:#fff;
+  --color-error: #fa616c;
+
+  --color-success-main:#FA616C;
+  --color-success-contrastText:#fff;
+  --color-info-main:#7F7E7E;
+  --color-info-contrastText:#fff;
+  --color-meta-main:#52A5B8;
+  --color-meta-contrastText:#fff;
+  --color-meta-text: var(--color-primary-main);
+
+  --color-text-primary:rgba(0, 0, 0, 0.6);
+  --color-text-secondary:rgba(0, 0, 0, 0.8);
+  --color-text-disabled:rgba(0, 0, 0, 0.4);
+  --color-text-hint:rgba(0, 0, 0, 0.4);
+
+  --color-custom-red:#dc143c;
+  --color-custom-yellow:#f0db4f;
+  --color-custom-green:#339966;
+  --color-custom-blue:#007fff;
+  --color-custom-orange:#ffa500;
+  --color-custom-purple:#9600cd;
+
+  --color-red: #dc143c;
+  --color-grey: #646464;
+  --color-white: #ffffff;
+  --color-yellow: #f0db4f;
 }
-/*
-  "text": {
-    "primary": "rgba(0, 0, 0, 0.6)",
-    "secondary": "rgba(0, 0, 0, 0.8)",
-    "disabled": "rgba(0, 0, 0, 0.4)",
-    "hint": "rgba(0, 0, 0, 0.4)"
-  },
-  primary": {
-    "extraLight": "#B2E1EC",
-    "superLight": "rgba(178,225,236,0.4)",
-    "superLightHex": "#b2e1ec",
-    "extremeLight": "rgba(178,225,236,0.2)",
-    "contrastText": "#fff"
-  },
-  "secondary": {
-    "extraLight": "#FFC193",
-    "superLight": "rgba(255,168, 104, 0.3)",
-    "extremeLight": "rgba(255,168, 104, 0.1)",
-    "contrastText": "#fff"
-  },
-  */
 
 /* border-box that still allows for
  * using content-box or padding-box
@@ -267,10 +291,6 @@ li li {
 }
 
 .button {
-  display: block;
-  width: 160px;
-  padding: 9px 0;
-  border: 1px solid #fff;
   border-radius: 20px;
   background-color: transparent;
   font-family: "Rubik", sans-serif;

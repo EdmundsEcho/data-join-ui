@@ -13,10 +13,11 @@
  *
  * @component
  */
-import React, { useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import clsx from 'clsx';
 import { NavLink, Outlet, useParams, useNavigate } from 'react-router-dom';
+import { withSize } from 'react-sizeme';
 
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -28,6 +29,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import AddIcon from '@mui/icons-material/Add';
 
 import { ConfirmModal, Spinner } from './components/shared';
 
@@ -36,11 +38,13 @@ import {
   useProjectsApiContext,
   useProjectsDataContext,
 } from './contexts/ProjectsDataContext';
+import { DISPLAY_VERSIONS } from './core-app/lib/sum-types';
+import { getDisplayVersion as initDisplayVersion } from './dashboard.lib';
 
 // -----------------------------------------------------------------------------
 const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-console, react/jsx-props-no-spreading */
 
 /*
 [{
@@ -52,10 +56,15 @@ const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 }]
 */
 
+const getDisplayVersion = initDisplayVersion([270, 170, 100]);
+
+const ListOfProjectsWithSize = withSize({ monitorWidth: true })(ListOfProjects);
+
 const Projects = () => {
+  // <SizeMe>{({size})}</SizeMe>
   return (
     <Layout>
-      <ListOfProjects />
+      <ListOfProjectsWithSize />
     </Layout>
   );
 };
@@ -85,7 +94,7 @@ function Layout({ children }) {
   return (
     <div className='main-controller-root nostack'>
       {children}
-      <div className='main-view inner'>
+      <div className='main-view outlet frame'>
         <div className='main-view sizing-frame stack'>
           <Outlet />
         </div>
@@ -103,15 +112,56 @@ Layout.defaultProps = {};
  * Renders a list (map)
  * 🔖 only use spinner when there is no data (not when updating)
  */
-function ListOfProjects() {
+function ListOfProjects({ size }) {
   const { data: projects, isReady } = useProjectsDataContext();
-  const [openProjectList, setOpenProjectList] = useState(() => true);
   const { projectId: selectedProject = null } = useParams();
+  const displayVersionProp = getDisplayVersion(size.width);
   const theme = useTheme();
 
   const haveSelectedProject = selectedProject !== null;
 
-  const toggleProjectsList = () => setOpenProjectList((open) => !open);
+  const [sizeEffectOn, setSizeEffectOn] = useState(() => true);
+  const [displayVersion, setDisplayVersion] = useState(
+    () => displayVersionProp,
+  );
+  const minimizeView = displayVersion === DISPLAY_VERSIONS.MINI;
+
+  const toggleMiniView = useCallback(() => {
+    // when mini => toggle to displayVersionProp (dynamic)
+    // when !mini => toggle to mini
+    setDisplayVersion((version) => {
+      // use previous state to drive updates in local state
+      const changeToMini = version !== DISPLAY_VERSIONS.MINI;
+      setSizeEffectOn(() => !changeToMini);
+      // update local state
+      return changeToMini ? DISPLAY_VERSIONS.MINI : displayVersionProp;
+    });
+  }, [displayVersionProp]);
+
+  /**
+   * 💢 toggleMiniView when the prop that reports on width
+   *    hits the threshold for mini display.
+   */
+  useEffect(() => {
+    if (sizeEffectOn) {
+      if (displayVersionProp === DISPLAY_VERSIONS.MINI) {
+        toggleMiniView();
+      } else {
+        setDisplayVersion(() => displayVersionProp);
+      }
+    }
+  }, [toggleMiniView, sizeEffectOn, displayVersionProp]);
+
+  if (DEBUG) {
+    //
+    console.debug('%c----------------------------------------', 'color:orange');
+    console.debug(`%c📋 Projects loaded state summary:`, 'color:orange', {
+      width: size.width,
+      displayVersion,
+      displayVersionProp,
+      sizeEffectOn,
+    });
+  }
 
   const lookupBy = 'project_id';
   if (!isReady && projects.length === 0) {
@@ -132,15 +182,18 @@ function ListOfProjects() {
 
   return (
     <Box
-      className='main-controller'
+      className={clsx('main-controller projects frame', {
+        [displayVersion.toLowerCase()]: true,
+      })}
       sx={{
         p: '30px 0',
         borderRight: '1px solid rgba(0,0,0,0.2)',
         overflow: 'hidden',
         position: 'relative',
       }}>
-      {!openProjectList && renderOverlay()}
+      {minimizeView && renderOverlay()}
       <Box
+        className='header'
         sx={{
           m: theme.spacingFn(4),
           display: 'flex',
@@ -148,16 +201,18 @@ function ListOfProjects() {
           alignItems: 'center',
           whiteSpace: 'nowrap',
         }}>
-        {openProjectList && <h6 className='list heading'>Select a project</h6>}
-        {toggleProjectsList && (
-          <IconButton
-            color='inherit'
-            onClick={(event) => {
-              event.stopPropagation();
-              toggleProjectsList();
-            }}>
-            {openProjectList ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
+        {!minimizeView && <h6 className='list heading'>Select a project</h6>}
+        {toggleMiniView && (
+          <div className='list toggle'>
+            <IconButton
+              color='inherit'
+              onClick={(event) => {
+                event.stopPropagation();
+                toggleMiniView();
+              }}>
+              {!minimizeView ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </div>
         )}
       </Box>
       <List className='list projects' component='nav'>
@@ -168,23 +223,24 @@ function ListOfProjects() {
             key={`fragment|projectSummaryView|${projectId}`}
             disablePadding
             selected={projectId === selectedProject}>
-            <SummaryView projectId={projectId} {...restSummaryProps} />
+            <SummaryView
+              projectId={projectId}
+              displayVersion={displayVersion}
+              {...restSummaryProps}
+            />
           </ListItem>
           /* ---------------------------------------------------------------- */
         ))}
       </List>
 
-      {selectedProject && <NewProjectButton />}
+      {selectedProject && <NewProjectButton displayVersion={displayVersion} />}
     </Box>
   );
 }
 ListOfProjects.propTypes = {
-  openProjectList: PropTypes.bool,
-  toggleProjectsList: PropTypes.func.isRequired,
+  size: PropTypes.shape({ width: PropTypes.number.isRequired }).isRequired,
 };
-ListOfProjects.defaultProps = {
-  openProjectList: false,
-};
+ListOfProjects.defaultProps = {};
 
 /**
  *
@@ -194,53 +250,50 @@ ListOfProjects.defaultProps = {
  */
 function SummaryView({
   isActive,
-  projectId = '0000',
+  displayVersion,
+  projectId = '000000',
   name,
   permission,
-  addNewPlaceholder,
 }) {
   const shortId = projectId.slice(projectId.length - 4);
   return (
     <div
       className={clsx(
-        'project-mini-card',
+        'project-summary-view',
         'nostack',
         'links',
         'space-between align-items-center',
         {
+          [displayVersion.toLowerCase()]: true,
           active: isActive,
         },
       )}>
-      {addNewPlaceholder ? (
-        <div>New project</div>
-      ) : (
-        <>
-          <NavLink to={linkTo(projectId)} key={`summaryLink|${projectId}`}>
-            <div className='name'>{`${name}`}</div>
-          </NavLink>
-          <div className='short-id'>{`short-id: ${shortId}`}</div>
-          <div className='permission'>{permission}</div>
-          <div className='right-align'>
-            <DeleteButton projectId={projectId} />
-          </div>
-        </>
-      )}
+      <NavLink to={linkTo(projectId)} key={`summaryLink|${projectId}`}>
+        <div className='name'>{`${name}`}</div>
+        <div className='short-id'>
+          <span className='label'>short-id:</span>
+          {shortId}
+        </div>
+        <div className='permission'>{permission}</div>
+      </NavLink>
+      <div className='delete-button right-align'>
+        <DeleteButton projectId={projectId} />
+      </div>
     </div>
   );
 }
 SummaryView.propTypes = {
   isActive: PropTypes.bool,
+  displayVersion: PropTypes.oneOf(Object.keys(DISPLAY_VERSIONS)).isRequired,
   projectId: PropTypes.string,
   name: PropTypes.string,
   permission: PropTypes.string,
-  addNewPlaceholder: PropTypes.bool,
 };
 SummaryView.defaultProps = {
   isActive: false,
-  projectId: '00000',
+  projectId: '000000',
   name: undefined,
   permission: undefined,
-  addNewPlaceholder: false,
 };
 
 function DeleteButton({ projectId }) {
@@ -297,28 +350,38 @@ DeleteButton.propTypes = {
   projectId: PropTypes.string.isRequired,
 };
 
-function NewProjectButton({ openProjectList }) {
+function NewProjectButton({ displayVersion }) {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ ml: '30px' }}>
-      <Button
-        sx={{ mt: 3, mb: 1, p: 2, pl: 5, pr: 5 }}
-        variant='contained'
-        size='small'
-        color='primary'
-        onClick={() => {
-          navigate('/projects');
-        }}>
-        {openProjectList ? 'New project' : '+'}
-      </Button>
-    </Box>
+    <div className='new-project center'>
+      {displayVersion !== DISPLAY_VERSIONS.MINI && (
+        <Button
+          variant='contained'
+          size='small'
+          color='primary'
+          onClick={() => {
+            navigate('/projects');
+          }}>
+          New project
+        </Button>
+      )}
+      {displayVersion === DISPLAY_VERSIONS.MINI && (
+        <IconButton
+          className='new-project button mini'
+          variant='contained'
+          size='small'
+          onClick={() => {
+            navigate('/projects');
+          }}>
+          <AddIcon />
+        </IconButton>
+      )}
+    </div>
   );
 }
 NewProjectButton.propTypes = {
-  openProjectList: PropTypes.bool,
+  displayVersion: PropTypes.oneOf(Object.keys(DISPLAY_VERSIONS)).isRequired,
 };
-NewProjectButton.defaultProps = {
-  openProjectList: true,
-};
+NewProjectButton.defaultProps = {};
 export default Projects;

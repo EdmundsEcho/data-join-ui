@@ -112,8 +112,9 @@ const HorizontalLayout = ({
       )}
       <Box
         component='main'
+        className='main'
         sx={{
-          backgroundColor: (theme) =>
+          backgroundColor:
             theme.palette.mode === 'light'
               ? theme.palette.grey[100]
               : theme.palette.grey[900],
@@ -122,7 +123,7 @@ const HorizontalLayout = ({
           overflow: 'auto',
         }}>
         {showAppBar && <Toolbar />}
-        <Container className='core-app-main' sx={{ mt: 4, mb: 4 }}>
+        <div className='core-app-main noradius'>
           <Grid container>
             {secondaryElement && (
               <Grid item xs={12} md={4}>
@@ -136,19 +137,21 @@ const HorizontalLayout = ({
                 </Paper>
               </Grid>
             )}
-            <Grid item xs={12} md={secondaryElement ? 8 : 12}>
-              <Paper
+            <Grid
+              item
+              xs={12}
+              md={secondaryElement ? 8 : 12}
+              className='horizontal-layout-grid'>
+              <Box
+                className='horizontal-layout-main nostack nogap'
                 sx={{
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
                   ...(!showAppBar && { backgroundColor: 'transparent' }),
                 }}>
                 {children}
-              </Paper>
+              </Box>
             </Grid>
           </Grid>
-        </Container>
+        </div>
       </Box>
     </>
   );

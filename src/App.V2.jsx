@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
-import { useDispatch } from 'react-redux';
 
-import Box from '@mui/material/Box';
-
-import SideNav from './layouts/SideNav';
 import SideNav2 from './layouts/SideNav2';
-import AppBar from './components/AppBar';
 import HorizontalLayout from './layouts/HorizontalLayout';
 
 import { routesConfig as routes } from './router';
-import { reset as clearProjectStore } from './core-app/ducks/actions/project-meta.actions';
 import ProjectsDataProvider from './contexts/ProjectsDataContext';
 import usePageWidth from './hooks/use-page-width';
 
+//-----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+//-----------------------------------------------------------------------------
 /* eslint-disable no-console */
+
 /**
  * @component
  *
@@ -37,12 +35,12 @@ const App = () => {
 
   return (
     <ProjectsDataProvider>
-      <div className='nostack nowrap'>
+      <div className='nostack nowrap nogap noradius'>
         <SideNav2 open={openDrawer} toggleDrawer={toggleDrawer} />
         {/* Main menu - controls what is displayed in main-viewport */}
         <HorizontalLayout toggleDrawer={toggleDrawer} open={openDrawer}>
-          {/* Main viewport */}
-          <div className='main-view box'>{routesElement}</div>
+          {/* Main viewport - visual frame */}
+          <div className='main-view sizing frame off'>{routesElement}</div>
         </HorizontalLayout>
       </div>
       {/* layout markers */}
