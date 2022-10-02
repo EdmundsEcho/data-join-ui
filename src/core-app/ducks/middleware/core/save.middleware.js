@@ -3,14 +3,18 @@
  * Single purpose middleware: Save the redux store state to the server
  * anytime the actions::document are called.
  *
+ * 🔖 Calls the services/api directory. Does not utilize the more universal
+ *    use-fetch-api hook that processes errors and meta.
+ *
+ * 🚧 Utilizes an the redux state to host a redirect and bookmark url. This
+ *    is an untested feature.
+ *
+ * ✅ Will redirect to login when response is 401.  Otherwise, sends the error
+ *    to the console (no error raising).
+ *
  * @category middleware
  *
  */
-import { FLUSH } from 'redux-persist';
-
-import { saveStore as saveStoreApi } from '../../../../services/dashboard.api';
-import debounce from '../../../utils/debounce';
-
 import {
   META,
   SAVE_PROJECT, // flush the save machine
@@ -19,10 +23,7 @@ import {
   saveProject,
   resetMeta,
 } from '../../actions/project-meta.actions';
-import {
-  SET_HVS_FIXES,
-  UPDATE_FILEFIELD,
-} from '../../actions/headerView.actions';
+import { UPDATE_FILEFIELD } from '../../actions/headerView.actions';
 import {
   ADD_DERIVED_FIELD,
   DELETE_FIELD,
@@ -31,11 +32,18 @@ import {
   SET_ETL_FIELD_CHANGES,
   UPDATE_ETL_FIELD,
 } from '../../actions/etlView.actions';
+import {
+  SET_TREE,
+  TOGGLE_VALUE,
+  TOGGLE_REDUCED,
+} from '../../actions/workbench.actions';
+import { TAG_MATRIX_STATE, SET_MATRIX } from '../../actions/matrix.actions';
 import { setNotification } from '../../actions/notifications.actions';
-import { redirect } from '../../actions/ui.actions';
-
+// import { redirect } from '../../actions/ui.actions';
 import { DesignError } from '../../../lib/LuciErrors';
 
+import { saveStore as saveStoreApi } from '../../../../services/dashboard.api';
+import debounce from '../../../utils/debounce';
 import { colors } from '../../../constants/variables';
 
 // -----------------------------------------------------------------------------
@@ -44,8 +52,7 @@ const DEBUG =
   process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
-const SAVE_PROJECT_ON =
-  true && process.env.REACT_APP_TURN_SAVE_FEATURE_ON === 'true';
+const SAVE_PROJECT_ON = process.env.REACT_APP_TURN_SAVE_FEATURE_ON === 'true';
 
 // -----------------------------------------------------------------------------
 // The parts of the store that we save to the server
@@ -64,42 +71,38 @@ export const saveThisState = ({
 let lastAction;
 // -----------------------------------------------------------------------------
 //
-// ✅ Initialized with projectId to ensure data integrity
 // ✅ Avoid mutating redux state when saving (e.g., no notifications)
 // ✅ When fail to save, redirects to login with next action: save
 // ✅ Middleware is the last middleware in the middleware cycle
 //
-const middleware = (projectId) => {
+const middleware =
   // ------------------------------
   // singleton for a given project
-  let saveManager;
   // ------------------------------
 
-  return ({ getState, dispatch }) =>
-    (next) =>
-    async (action) => {
+  ({ getState, dispatch }) => {
+    let saveManager;
+    return (next) => async (action) => {
       //
       if (DEBUG) {
-        console.info(`loaded save.middleware: ${projectId}`);
+        console.info(`loaded save.middleware`);
         console.info(`%c🏁 END of middleware cycle`, colors.orange);
       }
       // --------------------------
       next(action);
       // --------------------------
-
-      // The rest of the middleware requires project_id
-      if (typeof projectId !== 'undefined' && SAVE_PROJECT_ON) {
-        //
+      if (SAVE_PROJECT_ON) {
         switch (true) {
           //
           case typeof saveManager !== 'undefined' &&
             action.type !== SAVE_PROJECT:
-            await saveManager(action);
+            saveManager(action);
             break;
 
           // dispatched by the saveManager (and StepBar)
           case typeof saveManager !== 'undefined' &&
-            action.type === SAVE_PROJECT:
+            action.type === SAVE_PROJECT: {
+            const state = getState();
             try {
               if (DEBUG) {
                 console.debug(
@@ -107,15 +110,14 @@ const middleware = (projectId) => {
                   colors.yellow,
                 );
               }
-              const state = getState();
               const response = await saveStoreApi({
-                projectId,
+                projectId: state.$_projectMeta.projectId,
                 store: saveThisState(state),
               });
-
               if (response.status === 401) {
-                next(setInitializingActions([saveProject()]));
-                next(redirect('/login'));
+                window.location.replace('/login');
+                // next(setInitializingActions([saveProject()])); // only useful if using local persist
+                // next(redirect('/login'));
               }
             } catch (e) {
               console.error(e);
@@ -127,13 +129,14 @@ const middleware = (projectId) => {
               );
             }
             break;
+          }
 
-          //
+          // initialize the saveManager instance
           case typeof saveManager === 'undefined': {
             saveManager = saveReduxManager(() => {
               dispatch(saveProject());
             }, 1000);
-            await saveManager(action);
+            saveManager(action);
             break;
           }
           default:
@@ -141,14 +144,28 @@ const middleware = (projectId) => {
         }
       }
     };
-};
-
-function saveReduxManager(saveFn, delay = 7000) {
+  };
+/**
+ * Debounbed save project
+ *
+ * saves right-away when action type = SAVE_PROJECT.
+ * Otherwise, triggered by "saveActions"
+ *
+ * @function
+ * @param {Function} saveFn
+ * @param {number} delay ms
+ * @return {Function}
+ */
+function saveReduxManager(saveFn, delay = 1500) {
   const save = debounce(saveFn, delay);
+  const saveNow = debounce(saveFn, 500, true /* immediate */);
 
   const closure = {
     trySave: (action) => {
-      if (saveAction(action?.type)) {
+      if (action?.type === SAVE_PROJECT) {
+        lastAction = action.type;
+        saveNow();
+      } else if (saveAction(action?.type)) {
         lastAction = action.type;
         save();
       }
@@ -158,7 +175,7 @@ function saveReduxManager(saveFn, delay = 7000) {
   return closure.trySave;
 }
 
-// prefixes that capture the actions::document
+// selected actions::document
 const WHITE_LIST = [
   UPDATE_FILEFIELD,
   UPDATE_ETL_FIELD,
@@ -167,12 +184,16 @@ const WHITE_LIST = [
   SET_ETL_FIELD_CHANGES,
   DELETE_FIELD,
   DELETE_DERIVED_FIELD,
-  // `${ETL_VIEW} ${SET_LOADER} done`,
+  SET_TREE,
+  // TOGGLE_VALUE, // building the request
+  // TOGGLE_REDUCED, // building the request
+  TAG_MATRIX_STATE,
+  SET_MATRIX,
 ];
 const BLACK_LIST = [...Object.values(MetaActions), '@@INIT'];
-// const PREFIX = ['ADD', 'REMOVE'];
 const PREFIX = [];
 
+// predicate to filter actions
 function saveAction(actionType) {
   if (typeof actionType === 'undefined') {
     return false;
@@ -195,32 +216,5 @@ function saveAction(actionType) {
 
   return guard;
 }
-
-/*
-
-// async functions
-export function clearAgentCache(persistor) {
-  return async (dispatch) => {
-    try {
-      await persistor.purge();
-      dispatch({ type: 'PURGED_AGENT_CACHE' });
-    } catch (e) {
-      dispatch({ type: 'PURGE_ERROR', error: e });
-    }
-  };
-}
-
-  'SET_DIR_STATUS',
-  'persist/REHYDRATE',
-  ...Object.values(apiActions),
-
-  'ADD',
-  'DELETE',
-  'REMOVE',
-  'RESET',
-  'SET',
-  'UPDATE',
-  'TAG_WAREHOUSE_STATE',
-*/
 
 export default middleware;

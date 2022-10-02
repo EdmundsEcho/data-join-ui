@@ -52,7 +52,6 @@ const Provider = ({
     setHideInactive(!hideInactive);
   }, [hideInactive, setHideInactive]);
 
-  // ⬜ figure out memo
   const state = useMemo(
     () => ({
       stateId,

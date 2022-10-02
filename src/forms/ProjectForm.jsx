@@ -1,104 +1,167 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 // Formik-related
 import { useFormik } from 'formik';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import LuciInput from '../components/shared/LuciInput';
-import WithLabel from '../components/shared/WithLabel';
+import { LuciInput } from '../components/shared';
 
 // 📖 new project
-import { Context as ProjectsContext } from '../contexts/ProjectsContext';
-import { ApiCallError } from '../core-app/lib/LuciErrors';
+import { useProjectsApiContext } from '../contexts/ProjectsDataContext';
 
-//
-// @KM: @TODO: make new config later
-// import F, {formConfig} from '../forms/user-profile.config.js'
-//
-import F from './user-profile.config.js';
+// Formik-related
+import Form from './new-project.config.js';
+import { colors } from '../core-app/constants/variables';
 
-//
-// ✅ requires ProjectContext
-//
-// ⬜ Programatic navigation: Once add new, navigate to the new project
-//    ... this requires that we wait for the backend to provide us a new
-//    project_id.
-//
-const ProjectForm = () => {
-  const { add: addNewProject } = useContext(ProjectsContext);
+//-----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+const COLOR = colors.blue;
+//-----------------------------------------------------------------------------
+/* eslint-disable no-console */
+
+/**
+ * Update or add new project
+ *
+ * WIP Parent usage:
+ *  option 1: formRef.current.submitForm()
+ *  option 2: parentSubmit(formik.submitForm)
+ *  option 3: useDispatch with action picked-up by middleware ?
+ *
+ */
+const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
+  const { addNew, update } = useProjectsApiContext();
   const navigate = useNavigate();
+  const apiAction = dataFromProp ? 'UPDATE' : 'ADD_NEW';
 
   const formik = useFormik({
-    initialValues: F.initialValues,
-    // validationSchema: F.validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      const validValues = {};
-      Object.keys(values).forEach((key) => {
-        const value = values[key];
-        if (value) validValues[key] = value;
-      });
-
-      try {
-        const data = {
-          ...validValues,
-        };
-        //
-        // add and redirect
-        //
-        await addNewProject(data, ({ project_id: pid }) =>
-          navigate(`/projects/${pid}/files`),
-        );
-      } catch (e) {
-        alert(JSON.stringify(e, null, 2));
-        console.error('error', e);
-        throw new ApiCallError(e);
+    initialValues: Form.initialValues,
+    innerRef: formRef,
+    // validationSchema: Form.validationSchema, 🦀 broken
+    onSubmit: Form.onSubmit(async (validEntries) => {
+      switch (apiAction) {
+        case 'UPDATE':
+          await update(dataFromProp.project_id, validEntries);
+          break;
+        case 'ADD_NEW':
+          // add, retrieve project_id and redirect
+          await addNew(validEntries, ({ project_id: pid }) =>
+            navigate(`/projects/${pid}/files`),
+          );
+          break;
+        default:
       }
-
-      // await new Promise((r) => setTimeout(r, 500));
-      setSubmitting(false);
-    },
+    }),
   });
 
+  /**
+   * 💢 initialize formik with prop data
+   */
+  useEffect(() => {
+    if (typeof dataFromProp !== 'undefined') {
+      Object.keys(dataFromProp).forEach((field) => {
+        formik.setFieldValue(field, dataFromProp[field]);
+      });
+    }
+  }, [dataFromProp]);
+
+  // -------------------------------------------
+  // Optional WIP functionality
+  // enable calling submit by the parent
+  if (typeof parentSubmitForm === 'function') {
+    parentSubmit(formik.submitForm);
+  }
+
+  if (DEBUG) {
+    console.debug('%c----------------------------------------', COLOR);
+    console.debug(`%c📋 ProjectForm loaded state summary:`, COLOR, {
+      dataFromProp,
+      apiAction,
+    });
+  }
+
   return (
-    <div className='box'>
+    <div className='project-form root'>
       <form onSubmit={formik.handleSubmit}>
-        <WithLabel label='Project Name'>
+        <div className='input-row-group project-name'>
           <LuciInput
-            placeholder='e.g., Analyse this'
+            {...Form.propsFromField('name')}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
             onChange={formik.handleChange}
             value={formik.values.name || ''}
-            type='text'
-            name='name'
-            id='name'
           />
-        </WithLabel>
+        </div>
 
-        <WithLabel
-          label='Project Description'
-          // description='This is how others will learn about the project, so make it good!'
-        >
+        <div className='input-row-group description'>
           <LuciInput
-            placeholder='e.g., Best project ever!'
+            {...Form.propsFromField('description')}
+            multiline
+            rows={3}
+            error={
+              formik.touched.description && Boolean(formik.errors.description)
+            }
+            helperText={formik.touched.description && formik.errors.description}
             onChange={formik.handleChange}
             value={formik.values.description || ''}
-            type='text'
-            name='description'
-            id='description'
           />
-        </WithLabel>
+        </div>
 
-        <Button
-          sx={{ pl: 6, pr: 6, mb: 1, height: '36px', mt: '10px' }}
-          variant='contained'
-          size='small'
-          color='primary'
-          type='submit'>
-          Create new project
-        </Button>
+        {apiAction === 'UPDATE' && (
+          <div className='input-row-group description'>
+            <Typography>Permissions: {formik.values.permission}</Typography>
+          </div>
+        )}
+
+        {apiAction === 'ADD_NEW' && (
+          <Button
+            className='add-new-project button'
+            sx={{ pl: 6, pr: 6, mb: 1, height: '36px', mt: '10px' }}
+            variant='contained'
+            size='small'
+            color='primary'
+            type={formik.isSubmitting ? 'button' : 'submit'}>
+            {formik.isSubmitting ? (
+              <span className='spinner' />
+            ) : (
+              'Create project'
+            )}
+          </Button>
+        )}
+        {apiAction === 'UPDATE' && (
+          <Button
+            className='add-new-project button'
+            sx={{ pl: 6, pr: 6, mb: 1, height: '36px', mt: '10px' }}
+            variant='contained'
+            size='small'
+            color='primary'
+            type={formik.isSubmitting ? 'button' : 'submit'}>
+            {formik.isSubmitting ? <span className='spinner' /> : 'Save'}
+          </Button>
+        )}
       </form>
     </div>
   );
+};
+
+ProjectForm.propTypes = {
+  data: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    project_id: PropTypes.string,
+    permission: PropTypes.string,
+  }),
+  parentSubmit: PropTypes.func,
+  formRef: PropTypes.shape({
+    current: PropTypes.oneOf([PropTypes.func, PropTypes.shape({})]),
+  }),
+};
+ProjectForm.defaultProps = {
+  data: undefined,
+  parentSubmit: undefined,
+  formRef: undefined,
 };
 
 export default ProjectForm;

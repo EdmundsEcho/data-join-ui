@@ -7,10 +7,10 @@ if (
   process.env.REACT_APP_DEBUG_WHY_DID_YOU_RENDER === 'true'
 ) {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
-  const ReactRedux = require('../node_modules/react-redux/lib/index.js');
+  // const ReactRedux = require('../node_modules/react-redux/lib/index.js');
   whyDidYouRender(React, {
     trackAllPureComponents: true,
-    trackExtraHooks: [[ReactRedux, 'useSelector']],
+    // trackExtraHooks: [[ReactRedux, 'useSelector']],
   });
 }
 

@@ -20,6 +20,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 
+import useThemeMode from '../../../hooks/use-theme-mode';
+
 const DialogWrapper = (props) => {
   const {
     open,
@@ -31,24 +33,34 @@ const DialogWrapper = (props) => {
     handleCancel,
   } = props;
 
-  return (
-    <Dialog className='Luci-Dialog root' open={open} fullWidth maxWidth='sm'>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{instructions}</DialogContentText>
-        {children}
-      </DialogContent>
+  const [themeMode] = useThemeMode();
 
-      <DialogActions className={clsx('actions save')}>
-        <Button onClick={handleCancel}>Cancel</Button>
-        <Button
-          disabled={!activeSaveFeature}
-          color='secondary'
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </DialogActions>
+  return (
+    <Dialog
+      className={`Luci-Dialog root ${themeMode}-theme-context`}
+      open={open}
+      fullWidth
+      maxWidth='sm'>
+      <div className='frame'>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{instructions}</DialogContentText>
+          {children}
+        </DialogContent>
+
+        <DialogActions className={clsx('actions save')}>
+          <Button className='cancel button' onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button
+            className='save button'
+            disabled={!activeSaveFeature}
+            color='secondary'
+            onClick={handleSave}>
+            Save
+          </Button>
+        </DialogActions>
+      </div>
     </Dialog>
   );
 };

@@ -2,12 +2,24 @@
 /**
  * @module hooks/use-persisted-state
  */
-import { useMemo, useState, useEffect, useCallback } from 'react';
-import { createStore, clear as idbClear, set, get } from 'idb-keyval';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  createStore,
+  clear as idbClear,
+  set,
+  get,
+  promisifyRequest,
+} from 'idb-keyval';
 import { ReadWriteError } from '../lib/LuciErrors';
 
-const DB = 'ui-state-db';
+// -----------------------------------------------------------------------------
+// Will create a db using projectId when possible, otherwise
+//
+const PREFIX = 'db-';
+const DEFAULT_DB = `${PREFIX}tncui`;
 const TBL = 'stateId-val';
+// -----------------------------------------------------------------------------
 /**
  * Persistent useState hook.
  *
@@ -56,13 +68,19 @@ const TBL = 'stateId-val';
  *
  */
 const usePersistedState = (
-  keyToPersistWith, // : string,
-  defaultValue, // : any
+  keyToPersistWith, // string,
+  defaultValue, // any
+  db = undefined,
 ) => {
-  // new Store will first try and find previous db
-  // before creating new.  The useMemo is to prevent repeating the
-  // instantiation with each render.
-  const idbStore = useMemo(() => createStore(DB, TBL), []);
+  // new Store will first try to find previous db with matching name.
+  // db name using projectId, else default
+  const params = useParams();
+  const DB =
+    db || 'projectId' in params
+      ? dbNameFromProjectId(params.projectId)
+      : DEFAULT_DB;
+
+  const idbStore = createStore(DB, TBL);
 
   const [cache, setCache] = useState(() => undefined);
 
@@ -82,10 +100,9 @@ const usePersistedState = (
       setCache(value);
       try {
         set(keyToPersistWith, value, idbStore).catch((err) => {
-          /* eslint-disable-next-line */
-          console.error(err);
           throw new ReadWriteError(
             `The use-persisted-state hook failed to write: ${keyToPersistWith}\nvalue: ${value} `,
+            err,
           );
         });
       } catch (e) {
@@ -103,12 +120,58 @@ const usePersistedState = (
 };
 
 /**
- * Hook to clear the ui-state
+ * clear the ui-state
  * @function
  */
-export const useClear = () => {
-  const idbStore = useMemo(() => createStore(DB, TBL), []);
-  return useCallback(() => idbClear(idbStore), [idbStore]);
+const clearValues = (maybeDbOrProjectId) => {
+  const db = resolveDbName(maybeDbOrProjectId);
+  const idbStore = createStore(db, TBL);
+
+  return idbClear(idbStore).catch((err) => {
+    throw new ReadWriteError(`Failed to clear the indexedDb: ${db}`, err);
+  });
 };
+
+/**
+ * Delete the custom db
+ * @function
+ */
+const deleteDb = (maybeDbOrProjectId) => {
+  // extend the idb interface to include delete db
+  const idbDelete = (db_) => {
+    const request = indexedDB.deleteDatabase(db_);
+    return promisifyRequest(request);
+  };
+
+  const db = resolveDbName(maybeDbOrProjectId);
+
+  return idbDelete(db).catch((err) => {
+    throw new ReadWriteError(`Failed to delete the indexedDb: ${db}`, err);
+  });
+};
+
+/**
+ * Use this to create and reference a db for a given project.
+ *
+ * @function
+ * @param {string} projectId
+ * @return {string} db name
+ */
+function dbNameFromProjectId(projectId) {
+  try {
+    return `db-${projectId.slice(-6)}`;
+  } catch (e) {
+    return DEFAULT_DB;
+  }
+}
+
+function resolveDbName(maybeDbOrProjectId) {
+  const DB = maybeDbOrProjectId || DEFAULT_DB;
+  return DB.slice(0, PREFIX.length) === PREFIX
+    ? DB
+    : dbNameFromProjectId(maybeDbOrProjectId);
+}
+
+export { dbNameFromProjectId, deleteDb, clearValues, usePersistedState };
 
 export default usePersistedState;

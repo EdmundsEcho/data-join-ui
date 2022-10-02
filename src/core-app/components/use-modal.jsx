@@ -21,6 +21,7 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
+import { useThemeMode } from '../../hooks/use-theme-mode';
 
 /* eslint-disable no-console */
 
@@ -53,6 +54,7 @@ function ModalServiceProvider({ ModalComponent, children }) {
   // 📖 show/hide modal and user-specified modal props
   const [showModal, setShowModal] = useState(() => false);
   const [modalProps, setModalProps] = useState();
+  const [themeMode] = useThemeMode();
 
   // 🗑️  clear state
   const cleanup = () => {
@@ -96,6 +98,8 @@ function ModalServiceProvider({ ModalComponent, children }) {
       </ModalServiceContext.Provider>
 
       <ModalComponent
+        className='Luci-Dialog use-modal'
+        themeMode={themeMode}
         open={showModal}
         onConfirm={handleConfirm}
         onCancel={handleCancel}

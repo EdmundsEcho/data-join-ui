@@ -58,8 +58,7 @@ const CardHeaderWithToggle = (props) => {
                 className={clsx('expandIcon', { expandOpen: showDetail })}
                 onClick={handleShowDetail}
                 tabIndex={-1}
-                size='large'
-              >
+                size='large'>
                 <ExpandMoreIcon />
               </IconButton>
             </Grid>
@@ -67,8 +66,7 @@ const CardHeaderWithToggle = (props) => {
               <IconButton
                 className={clsx('closeIcon')}
                 onClick={handleRemove}
-                size='large'
-              >
+                size='large'>
                 <CloseIcon />
               </IconButton>
             </Grid>
@@ -77,10 +75,10 @@ const CardHeaderWithToggle = (props) => {
             <Grid
               item
               className={clsx('Luci-HeaderView', 'switch')}
-              style={{ marginLeft: 'auto', marginRight: '14px' }}
-            >
+              style={{ marginLeft: 'auto', marginRight: '14px' }}>
               {showDetail && status !== 'loading' ? (
                 <Switch
+                  className='show-hide'
                   labelOne='show all'
                   labelTwo='hide disabled'
                   checked={hideInactive}

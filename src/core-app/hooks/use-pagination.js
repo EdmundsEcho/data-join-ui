@@ -2,14 +2,17 @@
 /**
  * @module hooks/use-pagination
  */
-import { useState, useEffect, useCallback } from 'react';
-import { InputError, InvalidStateError } from '../lib/LuciErrors';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { InputError } from '../lib/LuciErrors';
+import { colors } from '../constants/variables';
+import { useFetchApi, STATUS } from '../../hooks/use-fetch-api';
+import useAbortController from '../../hooks/use-abort-controller';
 
+//-----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
+//------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-//------------------------------------------------------------------------------
-const DEBUG = false;
-//------------------------------------------------------------------------------
 /**
  * @constant
  */
@@ -22,6 +25,36 @@ const dummyPageInfo = {
   },
 };
 
+/*
+The concept of cursor comes up in both the request and response.
+Filter is a separate concept. Cursor in the response is a base64 uid
+for a specific value; so is a string.  There are two cursor object types
+used in the request:
+
+PAGING cursor {
+    first: page size,
+    after: cursor value,
+ }
+LIMIT cursor {
+    page: page number,
+    limit: page size
+ }
+
+ friends(first: 10, after: "opaqueCursor") {
+      edges {
+        cursor
+        node {
+          id
+          name
+        }
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+*/
+
+//------------------------------------------------------------------------------
 /**
  *
  *  📌  Relies on the Connection interface
@@ -40,19 +73,18 @@ const dummyPageInfo = {
 const usePagination = ({
   feature = 'LIMIT',
   fetchFn, // how retrieve the raw data
+  abortController: abortControllerProp,
   normalizer, // post-processing
   filter: filterProp,
   pageSize: pageSizeProp,
-  turnOn: isOn = true,
+  turnOff = false, // support for derived data
   DEBUG: debugProp,
 }) => {
   //
   // initialize the local state
-  //
   const [pageSize, setPageSize] = useState(() => pageSizeProp);
-  const [status, setStatus] = useState(() => (isOn ? 'pending' : 'off'));
   const [filter, setFilter] = useState(() => filterProp);
-  const [cache, setCache] = useState(() => dummyPageInfo);
+  // fragments of the fetch request
   const [currentPageIdx1, setCurrentPageIdx1] = useState(() => 1);
   const [cursor, setCursor] = useState(() => {
     return feature === 'LIMIT'
@@ -62,6 +94,33 @@ const usePagination = ({
           after: null,
         };
   });
+  const abortController = useAbortController(abortControllerProp);
+
+  // ---------------------------------------------------------------------------
+  // 💢 Side-effect
+  //    setCacheFn: pre-process cache value
+  //    Note: memoization required b/c used in effect
+  const setCacheFn = useMemo(
+    () => (respData, cache) => ({
+      ...cache,
+      ...normalizer(respData), // e.g., data -> data.levels
+      page: currentPageIdx1, // user-agent consumption
+    }),
+    [currentPageIdx1, normalizer],
+  );
+  const { execute, status, cache, cancel } = useFetchApi({
+    asyncFn: fetchFn,
+    setCacheFn, // (response.data, cache)
+    initialCacheValue: dummyPageInfo,
+    blockAsyncWithEmptyParams: true,
+    abortController,
+    useSignal: typeof abortControllerProp !== 'undefined',
+    immedidate: false,
+    caller: 'usePagination',
+    turnOff,
+    DEBUG,
+  });
+  // ---------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------
   // Initial state to call when hit reset
@@ -74,37 +133,17 @@ const usePagination = ({
       first: pageSize,
       after: null,
     });
-    setCurrentPage(1);
+    setCurrentPageIdx1(1);
   }, [filterProp, pageSize, pageSizeProp]);
 */
 
-  if (DEBUG || debugProp) {
-    console.debug(`%c📖 The usePagination state`, 'color:blue');
-    console.dir({
-      pageSize: pageSize || pageSizeProp,
-      status,
-      filter,
-      currentPageIdx1,
-      cursor,
-    });
-  }
-
   const reset = useCallback(() => {
-    if (
-      isOn &&
-      typeof pageSize === 'undefined' &&
-      typeof pageSizeProp === 'undefined'
-    ) {
-      throw new InvalidStateError(
-        `The usePagination hook must maintain a valid page size prop`,
-      );
-    }
-    setCursor({
+    setCursor(() => ({
       first: pageSize || pageSizeProp,
       after: null,
-    });
-    setCurrentPageIdx1(1);
-  }, [isOn, pageSize, pageSizeProp]);
+    }));
+    setCurrentPageIdx1(() => 1);
+  }, [pageSize, pageSizeProp]);
 
   //------------------------------------------------------------------------------
   // feature: 'SCROLL'
@@ -121,12 +160,8 @@ const usePagination = ({
         reset();
         return;
       }
-      const {
-        hasNextPage: defaultHasNext,
-        endCursor: defaultEndCursor,
-        // hasPreviousPage,
-        // startCursor,
-      } = cache.pageInfo;
+      const defaultHasNext = cache.pageInfo?.hasNextPage ?? false;
+      const defaultEndCursor = cache.pageInfo?.endCursor ?? null;
 
       // btoa - base64 encoded ascii
       const overrideCursor = typeof after !== 'undefined';
@@ -136,13 +171,13 @@ const usePagination = ({
       // for now, only scroll forward; the consumer can cache "along the way"
       // to avoid an api call going backwards
       if (hasNextPage) {
-        setCursor({
-          after: `"${endCursor}"`,
+        setCursor(() => ({
           first: fetchPageSize,
-        });
+          after: `"${endCursor}"`,
+        }));
       }
     },
-    [cache.pageInfo, pageSize, reset],
+    [cache.pageInfo?.hasNextPage, cache.pageInfo?.endCursor, pageSize, reset],
   );
 
   //------------------------------------------------------------------------------
@@ -151,59 +186,58 @@ const usePagination = ({
   // side-effect: sets the local state
   //------------------------------------------------------------------------------
   const onPageChange = useCallback(
-    (pageNumber, isZeroIdx) => {
+    (pageNumber, isZeroIdx = true) => {
       const newPage = isZeroIdx ? pageNumber + 1 : pageNumber;
-      if (DEBUG) {
-        console.debug(`Adjusting for index: ${newPage}`);
-      }
-      const {
-        hasNextPage,
-        hasPreviousPage,
-        // endCursor,
-        // startCursor,
-      } = cache.pageInfo;
-
       switch (true) {
         //
         // move forward
         //
         case newPage > currentPageIdx1: // ~ moving forward
           try {
-            if (hasNextPage) {
-              setCurrentPageIdx1(newPage);
-              setCursor({
+            if (cache.pageInfo.hasNextPage) {
+              setCurrentPageIdx1(() => newPage);
+              setCursor(() => ({
                 page: newPage,
                 limit: pageSize,
-              });
+              }));
             } else {
               throw new InputError(
                 `Trying to move past the data boundary: ${currentPageIdx1} ${newPage}`,
               );
             }
-          } catch (x) {}
+          } catch (x) {
+            /* do nothing */
+          }
           break;
         //
         // move backwards
         //
         case newPage < currentPageIdx1: // ~ moving backwards
           try {
-            if (hasPreviousPage) {
-              setCurrentPageIdx1(newPage);
-              setCursor({
+            if (cache.pageInfo.hasPreviousPage) {
+              setCurrentPageIdx1(() => newPage);
+              setCursor(() => ({
                 page: newPage,
                 limit: pageSize,
-              });
+              }));
             } else {
               throw new InputError(
                 `Trying to move before the data boundary: ${currentPageIdx1} ${newPage}`,
               );
             }
-          } catch (x) {}
+          } catch (x) {
+            /* do nothing */
+          }
           break;
         default:
       }
     },
-    [cache.pageInfo, currentPageIdx1, pageSize],
+    [
+      cache.pageInfo.hasPreviousPage,
+      cache.pageInfo.hasNextPage,
+      currentPageIdx1,
+      pageSize,
+    ],
   );
   const fetchNextPage = () => {
     onPageChange(currentPageIdx1 + 1, false /* isZeroIdx */);
@@ -212,15 +246,16 @@ const usePagination = ({
     onPageChange(currentPageIdx1 - 1, false /* isZeroIdx */);
   };
 
+  // when change page size, restart the list
   const onPageSizeChange = useCallback((newPageSize) => {
-    setPageSize(newPageSize);
-    setCurrentPageIdx1(1);
+    setPageSize(() => newPageSize);
+    setCurrentPageIdx1(() => 1);
   }, []);
 
   const onSetFilter = useCallback(
     (newFilter, optionalPageSize) => {
       reset();
-      setFilter(newFilter);
+      setFilter(() => newFilter);
       if (optionalPageSize !== 'undefined') {
         onPageSizeChange(optionalPageSize);
       }
@@ -228,12 +263,9 @@ const usePagination = ({
     [onPageSizeChange, reset],
   );
 
-  // const parseFnH = (response) => response.data.levels;
   // ---------------------------------------------------------------------------
-  // 📌
-  // the fetch-routine
   //
-  // 💫 anytime local state is updated; accomplished using
+  // 💫 renders anytime local state is updated; accomplished using
   //    callbacks provided to the user of the hook
   //
   //      👉 setPageSize first/last and page number cursor -> new cursor
@@ -241,42 +273,48 @@ const usePagination = ({
   //      👉 setPageNumber page -> new page
   //      👉 filter
   //
-  // 🔗 side-effect: setCache (triggers the user state to change)
+  // ---------------------------------------------------------------------------
+  // 🟢 Pull new data when the request changes
+  //    create the request by reading the cursor from the current state
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    let ignore = false; // react 18
-
-    if (!isOn) {
-      return () => {
-        ignore = true;
-      };
+    if (!turnOff) {
+      execute({
+        filter,
+        ...cursor,
+      });
     }
+    return cancel;
+  }, [turnOff, cancel, execute, filter, cursor]);
 
-    setStatus('pending');
+  // ---------------------------------------------------------------------------
+  // report on state of the component
+  // 🔖 devtool search: /(useSharedFetchApi action|SubApp loaded|SubApp latch)/
+  // ---------------------------------------------------------------------------
+  if (DEBUG || debugProp) {
     //
-    // create the request by reading the cursor from the current state
-    // and filter prop (fixed for a given hook)
-    //
-    // Returns a promise that updates local state
-    //
-    fetchFn({ filter, ...cursor }).then(
-      (response) => {
-        if (!ignore) {
-          setCache({ ...normalizer(response), page: currentPageIdx1 });
-          setStatus('success');
-        }
-      },
-      (error) => {
-        setCache(error);
-        setStatus('error');
-      },
-    );
-    // Only the last request is not ignored
-    return () => {
-      ignore = true;
-    };
-  }, [currentPageIdx1, cursor, fetchFn, filter, isOn, normalizer]);
+    const steps = [
+      status === STATUS.UNINITIALIZED,
+      status === STATUS.PENDING,
+      status === STATUS.RESOLVED,
+    ];
+    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${
+      steps.length
+    }`;
+    console.debug('%c----------------------------------------', colors.blue);
+    console.debug(`%c📋 usePagination loaded state summary:`, colors.blue, {
+      pageSize: pageSize || pageSizeProp,
+      status,
+      filter,
+      currentPageIdx1,
+      cursor,
+      cache,
+      steps,
+      currentStep,
+    });
+  }
 
+  // ---------------------------------------------------------------------------
   // Array.from(map)[map.size - 1];
   return feature === 'LIMIT'
     ? {
@@ -301,4 +339,4 @@ const usePagination = ({
       };
 };
 
-export { usePagination };
+export { usePagination, STATUS };

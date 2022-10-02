@@ -34,16 +34,17 @@
  *
  */
 import React, { useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import clsx from 'clsx';
 
 import { DragDropContext } from '@hello-pangea/dnd';
 
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import ResetIcon from '@mui/icons-material/Replay';
 
 import Palette from './Palette.presentation';
 import Canvas from './Canvas.presentation';
@@ -54,7 +55,6 @@ import {
   onDndDragEnd,
   resetCanvas,
 } from '../../../ducks/actions/workbench.actions';
-import { fetchMatrix } from '../../../ducks/actions/matrix.actions';
 
 // 📖 data
 import { isCanvasDirty as getIsCanvasDirty } from '../../../ducks/rootSelectors';
@@ -104,11 +104,9 @@ const Main = () => {
   );
 };
 
-// ⬜ move to step bar; include a save icon
 function WorkbenchButtons() {
   // 📬
   const dispatch = useDispatch();
-  const { projectId } = useParams();
 
   // 📖 Only requires the Canvas Node count to set reset/matrix toggles
   const isCanvasDirty = useSelector(getIsCanvasDirty, shallowEqual);
@@ -118,19 +116,16 @@ function WorkbenchButtons() {
     dispatch(resetCanvas());
   }, [dispatch]);
 
-  const handleBuildMatrix = useCallback(() => {
-    dispatch(fetchMatrix(projectId));
-  }, [dispatch, projectId]);
-
   return (
-    <Container className={clsx('Luci-Float', 'workbench')}>
-      <Button disabled={!isCanvasDirty} onClick={handleResetCanvas}>
-        Reset Canvas
-      </Button>
-      <Button disabled={!isCanvasDirty} onClick={handleBuildMatrix}>
-        View Matrix
-      </Button>
-    </Container>
+    <div className='workbench button-group float stack'>
+      <IconButton
+        color='secondary'
+        disabled={!isCanvasDirty}
+        onClick={handleResetCanvas}>
+        <ResetIcon />
+      </IconButton>
+      <Typography align='center'>Reset Canvas</Typography>
+    </div>
   );
 }
 

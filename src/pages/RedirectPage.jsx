@@ -1,71 +1,78 @@
+// src/pages/RedirectPage.jsx
+
 /**
  * First page after the person logs-in
  * Routes root element
  */
 import { useEffect } from 'react';
-import { PropTypes } from 'prop-types';
 import { Box, Paper, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { withSnackbar } from 'notistack';
 
+import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
+import usePersistedState from '../core-app/hooks/use-persisted-state';
 import { fetchUserProfile } from '../services/dashboard.api';
 
+// -----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+// -----------------------------------------------------------------------------
+const USER_PROFILE_ENDPOINT = '/user-profile';
+const DEFAULT_ENDPOINT = '/projects';
+const OFF = false;
+// -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const RedirectPage = (props) => {
-  const { enqueueSnackbar } = props;
+/**
+ * Dashboard entry point
+ * redirects user to default when the user-profile is sufficiently complete.
+ */
+export const RedirectPage = () => {
   const navigate = useNavigate();
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetchUserProfile();
-      console.assert(
-        response?.data ?? false,
-        `fetchUserProfile response with no data: ${Object.keys(
-          response || {},
-        )}`,
-      );
-      console.log('fetchUser response');
-      console.dir(response);
-      const { error, status } = response.data;
+  const [origin, setOrigin] = usePersistedState('origin');
 
-      if (!error && status !== 'Error' && response?.status === 200) {
-        // 🚧 temp skip user-profile
-        /*
-        const { data } = response
-        const { email, last_name, first_name } = data[0]
-        if (!email || !last_name || !first_name) {
-          navigate('/user-profile')
-          enqueueSnackbar('Welcome! Please fill your basic user information.', {
-            variant: 'info',
-          })
-        } else {
-*/
-        // localhost:5005/v1/projects
-        navigate('/projects');
-        enqueueSnackbar('Welcome!', {
-          variant: 'success',
-        });
-        //        }
-      } else {
-        navigate('/login');
-        enqueueSnackbar(`Error: ${error || response?.data?.message}`, {
-          variant: 'error',
-        });
-      }
-    } catch (e) {
-      // false && error
-      console.log('catching error in redirect');
-      console.log(e);
-      navigate('/projects');
-    }
-  };
+  const {
+    cache: dataToGuideRedirect,
+    status,
+    cancel,
+  } = useFetchApi({
+    asyncFn: fetchUserProfile,
+    immediate: true,
+    useSignal: true,
+    equalityFnName: 'similarObjects',
+    caller: 'RedirectPage',
+    DEBUG,
+  });
 
-  /* eslint-disable react-hooks/exhaustive-deps */
+  // First choice for redirect
+  // 💢 redirect when origin is defined
   useEffect(() => {
-    fetchUser();
-  }, []);
-  /* eslint-enable react-hooks/exhaustive-deps */
+    if (typeof origin !== 'undefined') {
+      const tmp = origin;
+      setOrigin(undefined);
+      navigate(tmp);
+    }
+    return cancel;
+  }, [navigate, cancel, origin, setOrigin]);
+
+  const isReady = status === STATUS.RESOLVED;
+
+  // Second, user-profile when incomplete
+  // 💢 fetch user profile
+  useEffect(() => {
+    if (isReady) {
+      const {
+        email,
+        last_name: lastName,
+        first_name: firstName,
+      } = dataToGuideRedirect;
+      if (OFF || !email || !lastName || !firstName) {
+        navigate(USER_PROFILE_ENDPOINT);
+      } else {
+        navigate(DEFAULT_ENDPOINT);
+      }
+    }
+    return cancel;
+  }, [isReady, cancel, dataToGuideRedirect, navigate]);
 
   return (
     <Box
@@ -81,8 +88,7 @@ const RedirectPage = (props) => {
           theme.palette.mode === 'light'
             ? theme.palette.grey[100]
             : theme.palette.grey[900],
-      }}
-    >
+      }}>
       <Box sx={{ zIndex: 2 }}>
         <Paper sx={{ p: '20px', width: '300px' }}>
           <Typography variant='h5' component='h5'>
@@ -96,8 +102,7 @@ const RedirectPage = (props) => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <span className='spinner spinner-lucivia spinner-lg' />
           </Box>
         </Paper>
@@ -106,10 +111,6 @@ const RedirectPage = (props) => {
   );
 };
 
-RedirectPage.propTypes = {
-  enqueueSnackbar: PropTypes.func,
-};
-RedirectPage.defaultProps = {
-  enqueueSnackbar: undefined,
-};
-export default withSnackbar(RedirectPage);
+RedirectPage.propTypes = {};
+RedirectPage.defaultProps = {};
+export default RedirectPage;

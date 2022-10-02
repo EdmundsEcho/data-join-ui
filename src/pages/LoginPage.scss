@@ -1,0 +1,11 @@
+.login-background {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #52a5b8;
+    height: calc(50vh - 50px);
+    width: 100%;
+  }
+}

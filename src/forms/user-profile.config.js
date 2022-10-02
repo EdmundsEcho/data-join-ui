@@ -1,8 +1,9 @@
 import {
+  onSubmit,
   initialValues,
   propsFromField,
   validationSchema,
-} from './formik-helpers'
+} from './formik-helpers';
 
 /**
  * User form
@@ -10,18 +11,21 @@ import {
  *
  */
 
-const propList = ['id', 'name', 'label', 'placeholder']
+const propList = ['id', 'name', 'label', 'placeholder', 'type'];
 
+/*
+          error={formik.touched.company && Boolean(formik.errors.company)}
+          helperText={formik.touched.company && formik.errors.company}
+          type='text'
+          id='company'
+          name='company'
+          onChange={formik.handleChange}
+          value={formik.values.company || ''}
+*/
 //
-// ⚙️  user-profile-related fields
+// ⚙️  user-profile-related fields keyed by name
 //
-// 🔖 the fields key = name
-//
-// 🚧 Low priority: have the postgres generate this
-//    configuration.
-//
-//
-export const formConfig = {
+const config = {
   formId: 'new-user-form',
   fields: {
     first_name: {
@@ -73,13 +77,15 @@ export const formConfig = {
       required: true,
     },
   },
-}
+};
 
 // Formik props
-const defaultExport = {
-  initialValues: initialValues(formConfig.fields),
-  validationSchema: validationSchema(formConfig.fields),
-  propsFromField: propsFromField(propList, formConfig.fields),
-}
+const configApi = {
+  config,
+  initialValues: initialValues(config.fields),
+  validationSchema: validationSchema(config.fields),
+  propsFromField: propsFromField(propList, config.fields),
+  onSubmit,
+};
 
-export default defaultExport
+export default configApi;

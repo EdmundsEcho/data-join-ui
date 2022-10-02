@@ -1,13 +1,15 @@
 /**
- * @module src/ducks/ui.reducer
  *
- * @description
  * Tracks the state of loading data for the app.
  * This might take on a branch for each of the components we track...
  *
  * 🚧 Set based on the status of the pendingRequests slice.
+ * 🚧 May require a review given the error and  meta consuming capacity
+ *    of the use-fetch-api (hook).
  *
  * see Programming with Actions
+ *
+ * @module src/ducks/ui.reducer
  *
  */
 import {
@@ -35,7 +37,7 @@ const reducer = (state = initState, action) => {
   switch (true) {
     case action.type === RESET:
     case action.type === 'RESET UI':
-      return { ...initState };
+      return initState;
 
     // type: `${feature} ${SET_LOADER} ${toggle ? '... loading' : 'done'}`,
     // payload: { toggle, message, feature },

@@ -8,7 +8,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import IconButton from '@mui/material/IconButton';
 import MoreVert from '@mui/icons-material/MoreVert';
 
-import Box from '@mui/material/Box';
 import Switch from '../../../shared/Switch';
 import ShowDetail from './ShowDetail';
 
@@ -55,7 +54,7 @@ function Tools({ onClickMenu, tag, etlUnitType }) {
   } = useContext(ToolContext);
 
   return (
-    <Box className={clsx(classes.root, 'EtlUnit-CardHeader-Tools')}>
+    <div className={clsx(classes.root, 'EtlUnit-CardHeader-Tools')}>
       <Rollup
         showSwitch={showSwitch}
         etlUnitType={etlUnitType}
@@ -71,7 +70,7 @@ function Tools({ onClickMenu, tag, etlUnitType }) {
         </IconButton>
       ) : null}
       <ShowDetail onChange={toggleShowDetail} showDetail={showDetail} />
-    </Box>
+    </div>
   );
 }
 Tools.propTypes = {
@@ -101,6 +100,7 @@ function Rollup({
     etlUnitType === 'quality' ||
     tag === 'measurement' ? null : (
     <Switch
+      className={tag}
       labelOne='series'
       labelTwo='rollup'
       checked={switchOn}

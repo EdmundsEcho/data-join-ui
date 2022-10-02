@@ -2,29 +2,47 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
 
 import { ErrorBoundary as Inner } from 'react-error-boundary';
 
-const ErrorBoundary = ({ children, ...props }) => {
-  return <Inner {...props}>{children}</Inner>;
+const ErrorBoundary = ({ children, FallbackComponent, ...props }) => {
+  return (
+    <Inner FallbackComponent={FallbackComponent} {...props}>
+      {children}
+    </Inner>
+  );
 };
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
+  FallbackComponent: PropTypes.func,
+};
+ErrorBoundary.defaultProps = {
+  FallbackComponent: Fallback,
 };
 
-const Fallback = ({ error, resetErrorBoundary /* componentStack */ }) => {
+function Fallback({ error, componentStack, resetErrorBoundary }) {
   return (
-    <div>
-      <h1>An error occurred: {error.message}</h1>
-      <Button type='button' onClick={resetErrorBoundary}>
+    <Container className='Luci-error-boundary'>
+      <h2>An error occurred</h2>
+      {error.message}
+      <Divider />
+      <details style={{ whiteSpace: 'pre-wrap' }}>
+        <div className='error'>{error && error.toString()}</div>
+        <Divider />
+        <div className='componentStack'>{componentStack}</div>
+      </details>
+      <Divider />
+      <Button variant='contained' type='button' onClick={resetErrorBoundary}>
         Try again
       </Button>
-    </div>
+    </Container>
   );
-};
+}
 Fallback.propTypes = {
   error: PropTypes.shape({ message: PropTypes.string }).isRequired,
-  componentStack: PropTypes.shape({}),
+  componentStack: PropTypes.string,
   resetErrorBoundary: PropTypes.func,
 };
 Fallback.defaultProps = {

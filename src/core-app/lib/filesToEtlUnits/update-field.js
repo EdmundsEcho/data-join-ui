@@ -74,7 +74,7 @@ export function updateField({ readOnlyField: field, key, value, DEBUG }) {
           };
 
         // 🚧 derivative changes to derived field configurations rely on
-        //    scanning the updated headerView.  Is it robbust in a
+        //    scanning the updated headerView.  Is it robust in a
         //    backtracking context?
         case /^field-alias/.test(key):
           return {

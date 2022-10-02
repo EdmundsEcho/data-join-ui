@@ -1,24 +1,19 @@
 // src/core-app/Main.jsx
 
-import React from 'react';
-import { Routes, Route, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import clsx from 'clsx';
 
 import Container from '@mui/material/Container';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 // core-app related
-import SubApp from '../SubApp'; // with Provider
-import ReduxInitializer from './ReduxInitializer';
+import AppInitializer from './AppInitializer';
 import { ErrorBoundary, Fallback } from './components/shared/ErrorBoundary';
 import ModalRoot from './components/ModalRoot';
 
-import Overview from './components/Overview';
-import FileDialog from './components/FileDialog/FileDialog';
-import EtlFieldView from './components/EtlFieldView';
-import Workbench from './components/Workbench/Workbench';
-import Matrix from './components/Matrix/Matrix';
 import StepBar from './components/StepBar/StepBar';
+import AppSizeProvider from '../contexts/CoreAppSizeContext';
 
 LicenseInfo.setLicenseKey(
   'bfebe42cb36c320e53926d5c773b27e9Tz00OTgzOSxFPTE2OTMyMzE0NTQ3MDksUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
@@ -39,38 +34,56 @@ LicenseInfo.setLicenseKey(
  *
  */
 function Main() {
+  const [height, setHeight] = useState(() => undefined);
+  const [width, setWidth] = useState(() => undefined);
+
+  const calcHeight = (node) => {
+    if (node && !height) {
+      setHeight(() => node.offsetHeight);
+    }
+    if (node && !width) {
+      setWidth(() => node.offsetWidth);
+    }
+  };
   /*
+  useEffect(() => {
+    console.debug(`Outlet height: ${height}`);
+  }, [height]);
+  useEffect(() => {
+    console.debug(`Outlet width: ${width}`);
+  }, [width]);
+  const value = getComputedStyle(document.documentElement).getPropertyValue(
+    '--unit',
+  );
+*/
+
+  Outlet.displayName = 'CoreApp-Outlet';
+
+  return (
+    <AppInitializer>
+      <div className='project-view root stack nowrap'>
+        <div className='app-paging-view'>
+          <ErrorBoundary FallbackComponent={Fallback}>
+            <div ref={(node) => calcHeight(node)}>
+              <AppSizeProvider height={height} width={width}>
+                <Outlet />
+                <div className='size'>size:</div>
+              </AppSizeProvider>
+            </div>
+          </ErrorBoundary>
+        </div>
+        <StepBar className='controller step-bar'></StepBar>
+      </div>
+    </AppInitializer>
+  );
+}
+
+export default Main;
+
+/*
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             {children}
           </PersistGate>
         </Provider>
 */
-
-  return (
-    <SubApp>
-      <ReduxInitializer>
-        <ErrorBoundary FallbackComponent={Fallback}>
-          <div className='box stack project-view'>
-            <Container className={clsx('Luci-CoreAppLayout', 'root')}>
-              <div className='app-paging-view'>
-                <Outlet />
-                <Routes>
-                  <Route path='introduction' element={<Overview />} />
-                  <Route path='files' element={<FileDialog />} />
-                  <Route path='fields' element={<EtlFieldView />} />
-                  <Route path='workbench' element={<Workbench />} />
-                  <Route path='matrix' element={<Matrix />} />
-                </Routes>
-              </div>
-              <StepBar className='app-paging-controller'></StepBar>
-            </Container>
-            <ModalRoot />
-          </div>
-        </ErrorBoundary>
-      </ReduxInitializer>
-    </SubApp>
-  );
-}
-
-export default Main;

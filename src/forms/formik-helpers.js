@@ -64,4 +64,28 @@ const validationSchema = (fields) => {
     }, {});
 };
 
-export { validationSchema, initialValues, propsFromField };
+/**
+ * Temporary fix until the validation schema routine is operational.
+ * Returns the onSumbit entry value.
+ *
+ * @function
+ * @param {Function} apiRoutine side-effect fn that consumes validEntries
+ * @return {Function}
+ */
+const onSubmit = (apiRoutine) => {
+  return async (values, { setSubmitting }) => {
+    // WIP - only looks for empty values
+    const validEntries = Object.entries(values).reduce((acc, [key, entry]) => {
+      if (entry) {
+        acc[key] = entry;
+      }
+      return acc;
+    }, {});
+    // side-effect that consumes the valid entries
+    // (returns void)
+    apiRoutine(validEntries);
+
+    setSubmitting(false);
+  };
+};
+export { onSubmit, validationSchema, initialValues, propsFromField };

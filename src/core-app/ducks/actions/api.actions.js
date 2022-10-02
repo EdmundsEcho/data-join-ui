@@ -49,11 +49,11 @@ export const Actions = {
 // :: command
 // receiver: polling-api.sagas
 // the machine event:: request, meta
-const createT = (type, event) => ({
+const create = (type, event) => ({
   type: `${event?.meta?.feature} ${type}`,
   event,
 });
-const create = (type, event) => {
+const createT = (type, event) => {
   const result = {
     type: `${event?.meta?.feature} ${type}`,
     event,

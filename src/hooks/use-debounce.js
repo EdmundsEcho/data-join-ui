@@ -1,7 +1,7 @@
 import React from 'react';
 import debounce from '../core-app/utils/debounce';
 
-function useDebounce(callback, wait, immediate) {
+export function useDebounce(callback, wait, immediate) {
   const callbackRef = React.useRef(callback);
   React.useLayoutEffect(() => {
     callbackRef.current = callback;

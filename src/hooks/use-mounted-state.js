@@ -1,6 +1,8 @@
 import React from 'react';
 /**
  *
+ * DEPRECATE - instead use: use-abort-signal
+ *
  * Problem: How provide an effect access to the future state of a component.
  *
  *   👉  useEffect captures the state and prop values at the time it was invoked

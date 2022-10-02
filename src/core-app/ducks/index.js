@@ -21,4 +21,3 @@ export { default as notifications } from './notifications.reducer';
 export { default as modal } from './modal.reducer';
 export { default as ui } from './ui.reducer';
 export { default as stepper } from './stepper.reducer';
-// export { default as stepperXstate } from './stepper-xstate.reducer';

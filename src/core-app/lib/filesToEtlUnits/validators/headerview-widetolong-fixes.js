@@ -48,7 +48,7 @@ const COLOR = colors.green;
 export const reportHvWideToLongFixes = ({
   wideToLongFields,
   hvFields,
-  priorHvsFixes = {},
+  // priorHvsFixes = {},
   DEBUG = false,
 }) => {
   let fixes = [];
@@ -185,8 +185,9 @@ function validateStructure(wideToLongFields, allFields, DEBUG) {
   const { config } = wideToLongFields;
 
   const countNamePred = (input) => input !== '';
-  const fieldCount = Object.keys(wideToLongFields.fields).filter(countNamePred)
-    .length;
+  const fieldCount = Object.keys(wideToLongFields.fields).filter(
+    countNamePred,
+  ).length;
   const isInitState = fieldCount === 0;
 
   // validate relation between factors and fields
@@ -217,10 +218,12 @@ function validateStructure(wideToLongFields, allFields, DEBUG) {
   /* validate the entries */
   // relevant counts
   const wtlfFactorCount = config.factors.length; // both mspan or mcomp
-  const wtlfMspanCount = config.factors.filter((f) => f.purpose === TYPES.MSPAN)
-    .length;
-  const headerMspanCount = allFields.filter((f) => f.purpose === TYPES.MSPAN)
-    .length;
+  const wtlfMspanCount = config.factors.filter(
+    (f) => f.purpose === TYPES.MSPAN,
+  ).length;
+  const headerMspanCount = allFields.filter(
+    (f) => f.purpose === TYPES.MSPAN,
+  ).length;
 
   // mcomp in the wtlf (only ever an issue in this context)
   if (headerMspanCount > 0 && wtlfFactorCount === 0)

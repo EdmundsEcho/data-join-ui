@@ -1,0 +1,461 @@
+{
+  "status": 200,
+  "statusText": "OK",
+  "data": {
+    "levels": {
+      "edges": [
+        {
+          "cursor": "c3BlY2lhbHR5IDc=",
+          "node": {
+            "count": 34021,
+            "level": "specialty 7"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDM=",
+          "node": {
+            "count": 26707,
+            "level": "Specialty 3"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDQ=",
+          "node": {
+            "count": 22212,
+            "level": "Specialty 4"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDU=",
+          "node": {
+            "count": 21759,
+            "level": "Specialty 5"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDMx",
+          "node": {
+            "count": 5605,
+            "level": "specialty 31"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDIz",
+          "node": {
+            "count": 4896,
+            "level": "specialty 23"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDMw",
+          "node": {
+            "count": 2863,
+            "level": "specialty 30"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDk=",
+          "node": {
+            "count": 2467,
+            "level": "Specialty 9"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDQx",
+          "node": {
+            "count": 2222,
+            "level": "Specialty 41"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDg=",
+          "node": {
+            "count": 1601,
+            "level": "Specialty 8"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDc=",
+          "node": {
+            "count": 1261,
+            "level": "Specialty 7"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDU1",
+          "node": {
+            "count": 971,
+            "level": "specialty 55"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDEx",
+          "node": {
+            "count": 898,
+            "level": "Specialty 11"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDM5",
+          "node": {
+            "count": 874,
+            "level": "specialty 39"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDE5",
+          "node": {
+            "count": 530,
+            "level": "specialty 19"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDEy",
+          "node": {
+            "count": 452,
+            "level": "Specialty 12"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDEz",
+          "node": {
+            "count": 420,
+            "level": "Specialty 13"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDEw",
+          "node": {
+            "count": 200,
+            "level": "Specialty 10"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDQw",
+          "node": {
+            "count": 176,
+            "level": "Specialty 40"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDE3",
+          "node": {
+            "count": 135,
+            "level": "specialty 17"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDE1",
+          "node": {
+            "count": 124,
+            "level": "Specialty 15"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDU5",
+          "node": {
+            "count": 123,
+            "level": "specialty 59"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDE2",
+          "node": {
+            "count": 116,
+            "level": "Specialty 16"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDE1",
+          "node": {
+            "count": 92,
+            "level": "specialty 15"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDE3",
+          "node": {
+            "count": 90,
+            "level": "Specialty 17"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDIx",
+          "node": {
+            "count": 89,
+            "level": "specialty 21"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDUy",
+          "node": {
+            "count": 89,
+            "level": "specialty 52"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDE4",
+          "node": {
+            "count": 81,
+            "level": "Specialty 18"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDY0",
+          "node": {
+            "count": 81,
+            "level": "specialty 64"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDE5",
+          "node": {
+            "count": 74,
+            "level": "Specialty 19"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDUz",
+          "node": {
+            "count": 63,
+            "level": "specialty 53"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDIw",
+          "node": {
+            "count": 62,
+            "level": "Specialty 20"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDEx",
+          "node": {
+            "count": 58,
+            "level": "specialty 11"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDIw",
+          "node": {
+            "count": 53,
+            "level": "specialty 20"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDIx",
+          "node": {
+            "count": 50,
+            "level": "Specialty 21"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDIy",
+          "node": {
+            "count": 48,
+            "level": "Specialty 22"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDY2",
+          "node": {
+            "count": 46,
+            "level": "specialty 66"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDI4",
+          "node": {
+            "count": 45,
+            "level": "specialty 28"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDM4",
+          "node": {
+            "count": 42,
+            "level": "specialty 38"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDIz",
+          "node": {
+            "count": 38,
+            "level": "Specialty 23"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDI0",
+          "node": {
+            "count": 36,
+            "level": "Specialty 24"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDI1",
+          "node": {
+            "count": 32,
+            "level": "Specialty 25"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDI2",
+          "node": {
+            "count": 29,
+            "level": "Specialty 26"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDM0",
+          "node": {
+            "count": 29,
+            "level": "Specialty 34"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDI3",
+          "node": {
+            "count": 27,
+            "level": "Specialty 27"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDI4",
+          "node": {
+            "count": 27,
+            "level": "Specialty 28"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDM2",
+          "node": {
+            "count": 25,
+            "level": "Specialty 36"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDM1",
+          "node": {
+            "count": 22,
+            "level": "Specialty 35"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDU0",
+          "node": {
+            "count": 21,
+            "level": "specialty 54"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDYx",
+          "node": {
+            "count": 20,
+            "level": "specialty 61"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDIy",
+          "node": {
+            "count": 17,
+            "level": "specialty 22"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDI5",
+          "node": {
+            "count": 16,
+            "level": "specialty 29"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDMy",
+          "node": {
+            "count": 14,
+            "level": "Specialty 32"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDU4",
+          "node": {
+            "count": 13,
+            "level": "specialty 58"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDQx",
+          "node": {
+            "count": 11,
+            "level": "specialty 41"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDYz",
+          "node": {
+            "count": 6,
+            "level": "specialty 63"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDE2",
+          "node": {
+            "count": 3,
+            "level": "specialty 16"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDM0",
+          "node": {
+            "count": 3,
+            "level": "specialty 34"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDUw",
+          "node": {
+            "count": 3,
+            "level": "specialty 50"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDc2",
+          "node": {
+            "count": 3,
+            "level": "specialty 76"
+          }
+        },
+        {
+          "cursor": "U3BlY2lhbHR5IDI5",
+          "node": {
+            "count": 2,
+            "level": "Specialty 29"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDQ0",
+          "node": {
+            "count": 2,
+            "level": "specialty 44"
+          }
+        },
+        {
+          "cursor": "c3BlY2lhbHR5IDc3",
+          "node": {
+            "count": 2,
+            "level": "specialty 77"
+          }
+        }
+      ],
+      "pageInfo": {
+        "endCursor": "c3BlY2lhbHR5IDc3",
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "pageSize": 63,
+        "startCursor": "c3BlY2lhbHR5IDc="
+      },
+      "totalCount": 63
+    },
+    "status": "Successful",
+    "type": "values"
+  }
+}

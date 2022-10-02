@@ -18,7 +18,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import TableCell from '@mui/material/TableCell';
 import Sort from '@mui/icons-material/SortRounded';
 import SearchIcon from '@mui/icons-material/SearchRounded';
-import Box from '@mui/material/Box';
 
 // custom components
 import TextField from '../../../shared/TextField';
@@ -36,7 +35,7 @@ const useStyles = makeStyles(styles);
 const ValueSearchToolbar = ({ toggleAll }) => {
   const classes = useStyles();
   return (
-    <Box m={0} className={clsx(classes.root, 'AppBarSearchInput')}>
+    <div className={clsx(classes.root, 'AppBarSearchInput')}>
       <TableCell padding='checkbox' variant='head' bottomBorder={false}>
         <Button
           id='All|enabled'
@@ -44,26 +43,24 @@ const ValueSearchToolbar = ({ toggleAll }) => {
           disableElevation
           style={{
             cursor: 'pointer',
-          }}
-        >
+          }}>
           <ToggleIncludeField color='primary' checked={toggleAll} />
         </Button>
         <Typography
           className={clsx('MuiFieldLevel--01')}
           component='span'
-          color='primary'
-        >
+          color='primary'>
           All
         </Typography>
       </TableCell>
 
-      <Box m={0} className={clsx(classes.root, 'input')}>
+      <div className='input'>
         <Text classes={classes} />
-      </Box>
-      <IconButton className='sortIcon' size="large">
+      </div>
+      <IconButton className='sortIcon' size='large'>
         <Sort />
       </IconButton>
-    </Box>
+    </div>
   );
 };
 ValueSearchToolbar.propTypes = {
@@ -74,15 +71,16 @@ ValueSearchToolbar.defaultProps = {
 };
 
 export function SearchField() {
-  const classes = useStyles();
-  return <>
-    <Box m={0} className={clsx(classes.root, 'input')}>
-      <Text classes={classes} />
-    </Box>
-    <IconButton className='sortIcon' size="large">
-      <Sort />
-    </IconButton>
-  </>;
+  return (
+    <>
+      <div className='input'>
+        <Text />
+      </div>
+      <IconButton className='sortIcon' size='large'>
+        <Sort />
+      </IconButton>
+    </>
+  );
 }
 
 export function Paging({
@@ -105,7 +103,8 @@ export function Paging({
   );
 }
 
-function Text({ classes }) {
+function Text() {
+  const classes = useStyles();
   return (
     <TextField
       stateId='stateId'
@@ -117,19 +116,16 @@ function Text({ classes }) {
         startAdornment: (
           <InputAdornment position='start'>
             <Icon className='searchIcon'>
-              <SearchIcon className={clsx('EtlUnit-Search-SvgIcon')} />
+              <SearchIcon className='EtlUnit-Search-SvgIcon' />
             </Icon>
           </InputAdornment>
         ),
-        // classes: { root: classes.componentsInputText },
       }}
       saveChange={() => {}}
       name='name'
     />
   );
 }
-Text.propTypes = {
-  classes: PropTypes.shape({ root: PropTypes.string }).isRequired,
-};
+Text.propTypes = {};
 
 export default ValueSearchToolbar;

@@ -17,8 +17,9 @@ import LabelIcon from '@mui/icons-material/Label';
 import WeightIcon from '@mui/icons-material/FitnessCenter';
 import SeriesIcon from '@mui/icons-material/LinearScale';
 
-// api (note: no use of action creators)
-import { getFileLevels as fetchLevelsInner } from '../../services/api';
+// 📡 Note: does not use actions (levels is outside of redux scope)
+import { fetchFileLevels as fetchLevelsInner } from '../../services/api';
+
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { FIELD_TYPES, PURPOSE_TYPES } from '../../lib/sum-types';
@@ -27,13 +28,25 @@ import {
   getSelectionModelFile,
   getSelectionModelEtl,
 } from '../../ducks/rootSelectors';
-import ValueGridCore, { filterOperators } from './ValueGridCore';
+import ValueGridCore, { filterOperators, ROW_HEIGHT } from './ValueGridCore';
+import useAbortController from '../../../hooks/use-abort-controller';
 
 //------------------------------------------------------------------------------
 const DEBUG = false;
+//-----------------------------------------------------------------------------
+const PAGE_SIZE =
+  parseInt(process.env.REACT_APP_DEFAULT_VALUE_GRID_PAGE_SIZE, 10) || 90;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
+//
+// ⚙️  for the value grid
+//
+const limitGridHeight = 9 * ROW_HEIGHT;
+//
+const gridOptions = {
+  disableSelectionOnClick: true,
+};
 const columns = [
   { field: 'id', headerName: 'ID', hide: true },
   {
@@ -82,11 +95,11 @@ const edgeToGridRowFn = (edge) => ({
 //           thereby does not invoke middleware, nor reducers)
 //
 const fetchLevels =
-  (projectId) =>
+  (projectId, signal) =>
   ({ filter, ...rest }) => {
-    return fetchLevelsInner({ projectId, ...filter, ...rest });
+    return fetchLevelsInner({ projectId, signal, ...filter, ...rest });
   };
-const parseResponse = (response) => response.data.levels;
+const parseRespData = (data) => data.levels;
 //-------------------------------------------------------------------------------
 // When data :: derivedField
 //
@@ -117,6 +130,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
   );
 
   const { projectId } = useParams();
+  const abortController = useAbortController();
 
   const selectionModel = useSelector((state) => {
     switch (fieldType) {
@@ -175,15 +189,17 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
         }
         purpose={getValue('purpose')}
         baseSelectAll={selectAll}
-        fetchFn={fetchLevels(projectId)}
-        normalizer={parseResponse}
+        fetchFn={fetchLevels(projectId, abortController.signal)}
+        abortController={abortController}
+        limitGridHeight={limitGridHeight}
+        normalizer={parseRespData}
         edgeToGridRowFn={edgeToGridRowFn}
         // required to determine the height of the grid
         selectionModel={selectionModel}
         // version of the grid
         feature='LIMIT'
         checkboxSelection={false}
-        pageSize={30}
+        pageSize={PAGE_SIZE}
         // when data is a derivedField 📖
         rows={
           isDerivedField
@@ -191,6 +207,7 @@ const ValueGridFileLevels = ({ getValue, fieldType }) => {
             : undefined
         }
         DEBUG={DEBUG}
+        {...gridOptions}
       />
       <Tools purpose={getValue('purpose')} fieldType={fieldType} />
     </div>

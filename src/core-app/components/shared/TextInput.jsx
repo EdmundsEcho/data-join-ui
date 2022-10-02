@@ -104,21 +104,19 @@ function WrappedInput(props) {
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <>
-      <Input
-        key={`${stateId}`}
-        id={`${stateId}`}
-        name={name}
-        inputRef={register}
-        value={buffer}
-        onChange={handleOnChange}
-        onBlur={handleOnBlur}
-        // onKeyDown={handleOnKeyDown}
-        onKeyUp={handleOnKeyUp}
-        label={label}
-        {...inputProps}
-      />
-    </>
+    <Input
+      key={`${stateId}`}
+      id={`${stateId}`}
+      name={name}
+      inputRef={register}
+      value={buffer}
+      onChange={handleOnChange}
+      onBlur={handleOnBlur}
+      // onKeyDown={handleOnKeyDown}
+      onKeyUp={handleOnKeyUp}
+      label={label}
+      {...inputProps}
+    />
   );
 }
 

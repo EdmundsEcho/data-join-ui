@@ -6,6 +6,15 @@
  * @module enumerations
  *
  */
+
+export const DISPLAY_VERSIONS = ['LARGE', 'BASELINE', 'MINI'].reduce(
+  (acc, key) => {
+    acc[key] = key;
+    return acc;
+  },
+  {},
+);
+
 export const FIELD_TYPES = {
   FILE: 'file-field',
   WIDE: 'wide-to-long',
@@ -52,15 +61,25 @@ export const NODE_TYPES = {
 // consumer interface
 export const STATUS = {
   INACTIVE: 'inactive',
+  UNINITIALIZED: 'uninitialized',
   IDLE: 'idle',
   PENDING: 'pending',
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
+  EMPTY: 'empty',
   inactive: 'inactive',
   idle: 'idle',
   pending: 'pending',
   resolved: 'resolved',
   rejected: 'rejected',
+};
+
+export const ROUTES = {
+  meta: 'meta',
+  files: 'files',
+  fields: 'fields',
+  workbench: 'workbench',
+  matrix: 'matrix',
 };
 
 // -----------------------------------------------------------------------------

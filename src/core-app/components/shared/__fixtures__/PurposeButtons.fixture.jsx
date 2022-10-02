@@ -10,7 +10,7 @@ import PurposeButtons from '../PurposeButtons';
 import ConsoleLog from '../ConsoleLog';
 import { PURPOSE_TYPES } from '../../../lib/sum-types';
 // api
-import { getLevels as getLevelsInternal } from '../../../services/api';
+import { getFileLevels as getLevelsInternal } from '../../../services/api';
 
 import data from '../../../datasets/store-headerviews_v2.json';
 

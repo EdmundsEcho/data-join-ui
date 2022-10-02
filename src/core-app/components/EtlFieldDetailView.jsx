@@ -39,9 +39,10 @@ import { FIELD_TYPES } from '../constants/field-input-config';
 import { debug, useTraceUpdate } from '../constants/variables';
 import FieldDetailView from './FieldDetailView';
 
-/* eslint-disable no-console, react/prop-types */
-
+// -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
+// -----------------------------------------------------------------------------
+/* eslint-disable no-console, react/prop-types */
 
 /**
  *

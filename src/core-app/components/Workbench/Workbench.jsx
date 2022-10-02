@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Main from './components/Main';
@@ -10,14 +10,20 @@ import {
   isWorkbenchInitialized as getIsWorkbenchInitialized,
   isHostedWarehouseStale as getIsStale,
 } from '../../ducks/rootSelectors';
-import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
+
+// cancel action
+import { bookmark } from '../../ducks/actions/stepper.actions';
+// import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
 /**
+ *
+ * Core-App page
+ *
  * Workbench:
  * 👉 diplay splash until ready
  * 👉 initialize the raw data -> tree
@@ -40,20 +46,25 @@ const Workbench = () => {
   const etlFieldCount = useSelector(getEtlFieldCount);
   const dispatch = useDispatch();
 
+  const handleCancel = useCallback(() => {
+    dispatch(bookmark('fields'));
+  }, [dispatch]);
+
   // coordinate component with data using status
   // re-render when stopped loading
+  /*
   useEffect(() => {
     if (!withData || isStale) {
       dispatch(fetchWarehouse()); // uses tree if CURRENT
     }
   }, [withData, isStale, dispatch]);
+*/
 
   /* get data to feed to the workbench */
 
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:orange');
-    console.debug(`%c📋 Workbench loaded state summary:`, 'color:orange');
-    console.dir({
+    console.debug(`%c📋 Workbench loaded state summary:`, 'color:orange', {
       withData,
       isLoading,
       isStale,
@@ -65,6 +76,7 @@ const Workbench = () => {
       <LoadingSplash
         title='Building the data warehouse'
         message={`Processing ${etlFieldCount} Fields`}
+        cancel={handleCancel}
       />
     );
   }

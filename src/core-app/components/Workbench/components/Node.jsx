@@ -8,6 +8,9 @@ import clsx from 'clsx';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 import {
   selectMaybeNodeSeed,
   getAmIDropDisabled,
@@ -21,17 +24,12 @@ import EtlUnitGroup from './EtlUnit/EtlUnitGroup';
 import { InvalidStateError } from '../../../lib/LuciErrors';
 
 import { NODE_TYPES } from '../../../lib/sum-types';
-// import { useTraceUpdate } from '../../../constants/variables';
-// import { colors } from '../../../constants/variables';
+import markdownFile from '../../../../assets/markdown/workbench-instructions.md';
+import useMarkdown from '../../../../hooks/use-markdown';
 
 function parentIndex(paletteOrCanvas, height) {
   return paletteOrCanvas === 'palette' && height === 4;
 }
-const instructions = `
-        Use the drag and drop facility to select the data required for the
-        analysis. Note how the organization of the fields depends on the type
-        of information.
-        `;
 /**
  * Children of a droppable memoized to prevent re-render
  * when a dragged component collides with it.
@@ -218,9 +216,7 @@ function Node(props) {
             isCombineEnabled>
             {/* Draggable children */}
             {childIds?.length === 0
-              ? index === 2 && (
-                  <Typography align='center'>{instructions}</Typography>
-                )
+              ? index === 2 && <Instructions />
               : renderChildren}
           </DropZone>
         </Card>
@@ -228,6 +224,15 @@ function Node(props) {
     default:
       throw new InvalidStateError(`Unreachable state in the Node module.`);
   }
+}
+
+function Instructions() {
+  const markdown = useMarkdown({ markdownFile });
+  return (
+    <div className='workbench markdown instructions'>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+    </div>
+  );
 }
 
 Node.propTypes = {

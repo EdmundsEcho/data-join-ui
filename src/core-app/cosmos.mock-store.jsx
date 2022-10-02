@@ -2,7 +2,6 @@ import React from 'react';
 import { ReduxMock as ReduxMockInternal } from 'react-cosmos-redux';
 import { createStore } from 'redux';
 import PropTypes from 'prop-types';
-import ThemeProvider from './cosmos.theme-provider';
 
 import combinedReducer from './combinedReducer';
 import defaultStore from './datasets/store_v4.json';
@@ -14,9 +13,8 @@ import defaultStore from './datasets/store_v4.json';
 const ReduxMock = ({ children, initialState }) => (
   <ReduxMockInternal
     configureStore={(state) => createStore(combinedReducer, state)}
-    initialState={initialState}
-  >
-    <ThemeProvider>{children}</ThemeProvider>
+    initialState={initialState}>
+    {children}
   </ReduxMockInternal>
 );
 

@@ -1,5 +1,7 @@
 /**
  * @description
+ *
+ * DEPRECATE (use Main)
  * General application layout used to wrap all components to
  * accomplish a uniform UX
  *

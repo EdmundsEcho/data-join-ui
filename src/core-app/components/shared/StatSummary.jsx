@@ -5,7 +5,7 @@
  * View of the levels::summary from the api
  *
  */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -17,7 +17,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 // api
-import { getFileLevels as getLevelsInternal } from '../../services/api';
+import { fetchFileLevels } from '../../services/api';
+import useAbortController from '../../../hooks/use-abort-controller';
+import { useFetchApi, STATUS } from '../../../hooks/use-fetch-api';
 import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 
 import { FIELD_TYPES, SOURCE_TYPES } from '../../lib/sum-types';
@@ -25,8 +27,6 @@ import { InvalidStateError } from '../../lib/LuciErrors';
 import { range } from '../../utils/common';
 
 /**
- *
- * 🚧 WIP
  *
  * 1️⃣  Extract the summary data
  * 2️⃣  Format the data (a sub-routine)
@@ -57,7 +57,7 @@ const displayData = (prop, withZero, data) => {
       [value, 1],
     );
     return {
-      value: Math.round(result[0]) / Math.pow(10, result[1]),
+      value: Math.round(result[0]) / 10 ** result[1], // 🦀 ? changed from Math.power
       magnitude: result[1],
     };
   };
@@ -123,84 +123,66 @@ const displayData = (prop, withZero, data) => {
  */
 function StatSummary({ getValue, fieldType }) {
   //
-  // local state
-  //
   const [localStore, setLocalStore] = useState(() => undefined);
-  const [status, setStatus] = useState(() => 'idle');
   const { projectId } = useParams();
-  // error | success | idle | pending
-
-  //
-  // identify when impliedMvalue to avoid the api call for now
-  //
+  const abortController = useAbortController();
   const hasImpliedMvalue =
     fieldType === FIELD_TYPES.FILE
       ? typeof getValue('implied-mvalue') !== 'undefined'
       : getValue('sources')[0]['source-type'] === SOURCE_TYPES.IMPLIED;
 
-  //
-  // ⌛ async call to the api
-  //
-  const getFileLevels = useCallback(
-    async (isMounted, callback) => {
-      //
-      // short-circuit the effect when...
-      //
-      if (hasImpliedMvalue) {
-        setLocalStore({ message: 'Implied measurement' });
-        setStatus('error');
-        return;
-      }
-      const response = await getLevelsInternal({
-        projectId,
-        ...fileLevelsRequest(getValue, fieldType),
-      });
-      if (!isMounted) {
-        return;
-      }
-      if (response.status > 200) {
-        setStatus('error');
-        return;
-      }
-      callback(response);
-      setStatus('success');
-    },
-    [projectId, fieldType, getValue, hasImpliedMvalue],
-  );
-
+  // ---------------------------------------------------------------------------
+  // 💢 Side-effect
+  //    consumeDataFn: dispatch action required to load the redux store
+  //    Note: memoization often required b/c used in effect
+  const consumeDataFn = (respData) => setLocalStore(() => respData.payload);
+  const { execute, status, cancel } = useFetchApi({
+    asyncFn: fetchFileLevels,
+    consumeDataFn,
+    caller: 'StatSummary',
+    equalityFnName: 'equal',
+    abortController,
+    immediate: false,
+    useSignal: true,
+  });
+  // ---------------------------------------------------------------------------
+  // 💢 async api call
+  // 🟢 Pull new data when project id changes
+  // ---------------------------------------------------------------------------
   useEffect(() => {
-    let isMounted = true;
-    if (typeof localStore === 'undefined') {
-      setStatus('pending');
-      getFileLevels(isMounted, (response) => {
-        setLocalStore(response.data.payload);
-      });
+    // short-circuit the effect when...
+    if (hasImpliedMvalue) {
+      setLocalStore(() => ({
+        message: 'Implied measurement',
+      }));
+      return cancel;
     }
-    return () => {
-      isMounted = false;
-    };
-  }, [getFileLevels, localStore]);
+    execute({
+      projectId,
+      ...fileLevelsRequest(getValue, fieldType),
+    });
+    return cancel;
+  }, [projectId, cancel, execute, fieldType, getValue, hasImpliedMvalue]);
 
   //
   // Individual chunks of information
   //
-  const title = (leftOrRight) => (
-    <Typography align={leftOrRight} variant='h6'>
-      Stats per interval
-    </Typography>
-  );
-
   let view = null;
   let displayVersion = 'one';
-  switch (true) {
-    case ['pending', 'idle'].includes(status):
+  //
+  console.debug(`localstore`, localStore);
+
+  switch (status) {
+    case STATUS.UNINITIALIZED:
+    case STATUS.PENDING:
       view = (
         <Grid item xs={12}>
           <Typography>...fetching</Typography>
         </Grid>
       );
       break;
-    case status === 'error':
+
+    case STATUS.REJECTED:
       view = (
         <Grid item xs={12}>
           <Typography>
@@ -209,7 +191,8 @@ function StatSummary({ getValue, fieldType }) {
         </Grid>
       );
       break;
-    case status === 'success': {
+
+    case STATUS.RESOLVED: {
       displayVersion = displayData('show', false, localStore) ? 'two' : 'one';
 
       view = (
@@ -229,7 +212,7 @@ function StatSummary({ getValue, fieldType }) {
     }
 
     default:
-      throw new InvalidStateError(`Unreachable`);
+      throw new InvalidStateError(`StatSummary - Unreachable status:${status}`);
   }
   /* eslint-disable no-nested-ternary */
 
@@ -247,6 +230,14 @@ StatSummary.propTypes = {
   getValue: PropTypes.func.isRequired,
   fieldType: PropTypes.oneOf(Object.values(FIELD_TYPES)).isRequired,
 };
+
+function title(leftOrRight) {
+  return (
+    <Typography align={leftOrRight} variant='h6'>
+      Stats per interval
+    </Typography>
+  );
+}
 
 function summaryView(withZero, data) {
   return (

@@ -102,8 +102,8 @@ const middleware =
       //      4. Where should the state be hosted?
       //      -> workbench
       //
+      // 🦀  State mutation error when derived
       // -------------------------------------------------------------------------
-      /* 🦀  State mutation error when derived */
       case COMPUTE_ETL_VIEW: {
         //
         // side effect: () -> hvs in state -> etlView
@@ -208,6 +208,7 @@ const middleware =
               feature: ETL_VIEW,
               message: 'Updating etlView - removing field',
             }),
+            tagWarehouseState('STALE'),
           );
 
           const removeCfg = {

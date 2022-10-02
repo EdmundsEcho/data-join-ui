@@ -81,6 +81,12 @@ export const addDerivedField = ({ payload, normalizer, startTime }) => {
 //     👉 set_hvs
 //     👉 async pivot (see middleware)
 //
+/**
+ * @function
+ * @param {string} fieldName
+ * @param {string} purpose
+ * @return {Object} action
+ */
 export const removeEtlField = makeActionCreator(
   REMOVE_ETL_FIELD,
   'fieldName',

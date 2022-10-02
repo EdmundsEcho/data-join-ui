@@ -46,12 +46,14 @@ const Component = () => {
 
   // from Quality: (valueIdx)
   // from Component: (valueIdx, componentName)
-  const handleToggleValue = (valueIdx = 0, componentName = 'time') => () => {
-    console.log(`dispatch toggleValue:`);
-    console.log(`${id} ${componentName} ${valueIdx}`);
-    console.dir(valueIdx);
-    // dispatch(toggleValue(id, valueIdx, componentName));
-  };
+  const handleToggleValue =
+    (valueIdx = 0, componentName = 'time') =>
+    () => {
+      console.log(`dispatch toggleValue:`);
+      console.log(`${id} ${componentName} ${valueIdx}`);
+      console.dir(valueIdx);
+      // dispatch(toggleValue(id, valueIdx, componentName));
+    };
   const timeProp = useSelector(
     (state) =>
       Object.values(getEtlFields(state)).find(
@@ -92,8 +94,7 @@ const Component = () => {
         flexDirection='column'
         alignItems='stretch'
         component='div'
-        width={200}
-      >
+        width={200}>
         <SpanInput
           span={span}
           timeProp={timeProp}

@@ -7,8 +7,10 @@ import { ApiCallError } from '../lib/LuciErrors';
 //
 // use 'graphql-tag' to build graphql using AST
 //
-// ⬜ implement env debug for graphql
-const DEBUG = false;
+//------------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_GQL === 'true';
+//------------------------------------------------------------------------------
+/* eslint-disable no-console */
 
 /**
  * Extracts the raw gql response. Returns an object

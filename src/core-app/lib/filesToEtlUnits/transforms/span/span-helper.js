@@ -113,6 +113,16 @@ export const setTimeProp = (key, newValue, timeProp = initialTimeProp) => {
   return result;
 };
 
+export const getTimePropValueWithCompoundedKey = (compoundedKey, timeProp) => {
+  const map = {
+    'time.reference.value': timeProp.reference.value,
+    'time.reference.isoFormat': timeProp.reference.isoFormat,
+    'time.interval.unit': timeProp.interval.unit,
+    'time.interval.count': timeProp.interval.count,
+  };
+  return map[compoundedKey];
+};
+
 /** higher-order fn isAny
  * (x -> x -> Bool) -> x -> [x] -> Bool
  */

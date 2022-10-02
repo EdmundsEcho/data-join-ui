@@ -142,6 +142,7 @@ module.exports = {
    */
   rules: {
     // eslint
+    'no-ternary': 'off',
     // get to compile
     'arrow-body-style': 'off',
     'consistent-return': 'warn',

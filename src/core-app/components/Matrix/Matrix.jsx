@@ -1,15 +1,16 @@
 // src/core-app/components/Matrix.jsx
 
 /**
+ *
+ * Core-App page
+ *
  * @module components/Matrix
  *
  */
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Card, CardContent, CardHeader, CardActions } from '@mui/material';
-import Button from '@mui/material/Button';
+import { Card, CardContent, CardHeader } from '@mui/material';
 
 import MatrixGrid from './MatrixGrid';
 import LoadingSplash from '../shared/LoadingSplash';
@@ -21,48 +22,69 @@ import {
   isHostedWarehouseStale as getIsWarehouseStale,
   isHostedMatrixStale as getIsMatrixStale,
 } from '../../ducks/rootSelectors';
+// cancel action
+import { bookmark } from '../../ducks/actions/stepper.actions';
+import useAbortController from '../../../hooks/use-abort-controller';
+// app size
+import { useAppSizeDataContext } from '../../../contexts/CoreAppSizeContext';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
-const SAVE_MATRIX_ENDPOINT = process.env.REACT_APP_SAVE_MATRIX_ENDPOINT;
+const DEBUG = process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
+const GRID_HEIGHT_ADJ = 0; // Download button position
 
-const withData_ = (matrix) => matrix !== null && Object.keys(matrix).length > 0;
+const withDataAndSizePred = (matrixPage, height) =>
+  typeof height !== 'undefined' &&
+  matrixPage !== null &&
+  Object.keys(matrixPage).length > 0;
 
 const Matrix = () => {
-  // initializing state = without data
-  // 📖 status of raw data -> tree
+  // initial state => without data
   const { isLoading, message: messageWhileLoading } = useSelector(isUiLoading);
-  const matrix = useSelector(getMatrix);
-  const [withData, setWithData] = useState(() => withData_(matrix));
+  const matrixPage = useSelector(getMatrix); // a page of data
   const isWarehouseStale = useSelector(getIsWarehouseStale);
   const isMatrixStale = useSelector(getIsMatrixStale);
-  const showMatrix = !(
-    isLoading ||
-    !withData ||
-    isWarehouseStale ||
-    isMatrixStale
+  // input to set the grid height
+  const { height: coreAppHeight } = useAppSizeDataContext();
+  const [withDataAndSize, setWithDataAndSize] = useState(() =>
+    withDataAndSizePred(matrixPage, coreAppHeight),
   );
+  const showMatrix = !(
+    (
+      isLoading || // update with useSelector
+      !withDataAndSize || // update with useEffect
+      isWarehouseStale || // update with useSelector
+      isMatrixStale
+    ) // update with useSelector
+  );
+  // cancel-related hooks
+  const dispatch = useDispatch();
+  const abortController = useAbortController();
 
-  // coordinate component with data using status
-  // re-render when stopped loading
+  // 💢 coordinate component with data using status
+  // Note: The stepbar machine makes the api call. This component becomes aware
+  // of the data status by way of redux isLoading and getMatrix. Paging therein
+  // is handled by the DataGrid.
   useEffect(() => {
-    if (!withData || isWarehouseStale || isMatrixStale) {
-      setWithData(withData_(matrix));
+    if (!withDataAndSize) {
+      setWithDataAndSize(withDataAndSizePred(matrixPage, coreAppHeight));
     }
-  }, [withData, isWarehouseStale, isMatrixStale, matrix]);
+  }, [withDataAndSize, coreAppHeight, matrixPage]);
 
-  /* get data to feed to the workbench */
+  const handleCancel = useCallback(() => {
+    abortController.abort();
+    dispatch(bookmark('workbench'));
+  }, [dispatch, abortController]);
 
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:orange');
-    console.debug(`%c📋 Matrix loaded state summary:`, 'color:orange');
-    console.dir({
-      withData,
+    console.debug(`%c📋 Matrix loaded state summary:`, 'color:orange', {
+      withDataAndSize,
       isLoading,
       isWarehouseStale,
       isMatrixStale,
+      coreAppHeight,
       'should render': showMatrix,
     });
   }
@@ -71,20 +93,18 @@ const Matrix = () => {
       <LoadingSplash
         title='Processing'
         message={messageWhileLoading || 'Pulling the requested data'}
+        cancel={handleCancel}
       />
     );
   }
 
   return (
     <Card className='Luci-matrix'>
-      <CardHeader>Matrix</CardHeader>
-
-      <CardContent className='Luci-matrix'>
-        <MatrixGrid matrix={matrix} />
-      </CardContent>
-      <CardActions>
-        <Button href={SAVE_MATRIX_ENDPOINT}>Export File</Button>
-      </CardActions>
+      <MatrixGrid
+        matrixPage={matrixPage}
+        abortController={abortController}
+        gridHeight={coreAppHeight + GRID_HEIGHT_ADJ}
+      />
     </Card>
   );
 };

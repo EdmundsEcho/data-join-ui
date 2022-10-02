@@ -5,12 +5,15 @@
  * Over-all status of the ui
  *
  */
-export const SET_LOADER = 'SET_LOADER'; // document
-export const REDIRECT = 'REDIRECT'; // document (state read by REDUX INIT)
-export const CLEAR_REDIRECT = 'CLEAR_REDIRECT'; // document (state read by REDUX INIT)
-export const CLEAR_BOOKMARK = 'CLEAR_BOOKMARK'; // document (state read by REDUX INIT)
 
+// any feature can set loader
+export const SET_LOADER = `SET_LOADER`; // document
+
+// service delivered by UI META
 const feature = '[UI META]';
+export const REDIRECT = `${feature} REDIRECT`; // document (state read by REDUX INIT)
+export const CLEAR_REDIRECT = `${feature} CLEAR_REDIRECT`; // document (state read by REDUX INIT)
+export const CLEAR_BOOKMARK = `${feature} CLEAR_BOOKMARK`; // document (state read by REDUX INIT)
 
 // These impact the reducers
 // loader = true means loading
@@ -26,14 +29,14 @@ export const setUiLoadingState = ({ toggle, feature, message }) => ({
  * will listen for changes in this reducer's state.
  */
 export const redirect = (url, bookmarkUrl) => ({
-  type: `${feature} ${REDIRECT} ${url}`,
+  type: `${REDIRECT} ${url}`,
   url,
   bookmarkUrl,
 });
 
 export const clearRedirect = () => ({
-  type: `${feature} ${CLEAR_REDIRECT}`,
+  type: CLEAR_REDIRECT,
 });
 export const clearBookmark = () => ({
-  type: `${feature} ${CLEAR_BOOKMARK}`,
+  type: CLEAR_BOOKMARK,
 });

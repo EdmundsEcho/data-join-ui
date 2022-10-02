@@ -3,6 +3,15 @@
 /* Document
    ========================================================================== */
 
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 /**
  * 1. Correct the line height in all browsers.
  * 2. Prevent adjustments of font size after orientation changes in iOS.
@@ -24,6 +33,10 @@ html {
 body {
   margin: 0;
 }
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /**
  * Render the `main` element consistently in IE.
@@ -39,7 +52,6 @@ main {
  */
 
 h1 {
-  font-size: 2em;
   margin: 0.67em 0;
 }
 
@@ -350,163 +362,5 @@ template {
   display: none;
 }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-/* END CSS standard
-   ========================================================================== */
-
-html,
-body,
-* {
-  scrollbar-width: thin;
-}
-code {
-  font-family: Lato, Rubik, source-code-pro, Menlo, Monaco, Consolas,
-    'Courier New', monospace;
-}
-
-/* miscellaneous best practices
-   ========================================================================== */
-
-p {
-  text-shadow: 1px 1px 1px rgba(150, 150, 150, 0.3);
-}
-table {
-  border-collapse: collapse;
-}
-th {
-  font-weight: bold;
-  font-family: Rubik, sans-serif;
-}
-
-
-/* miscellaneous custom
-   ========================================================================== */
-
-.Luci-ValueGrid-cell.count {
-  font-family: 'JetBrainsMono';
-  font-weight: 'normal';
-}
-
-/* FileDialog, EtlFieldView, Workbench */
-.SplitPane {
-    position: relative;
-}
-
-.SplitPane > .Pane {
-    overflow: inherit;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-}
-.SplitPane > .Pane > div {
-    overflow: inherit;
-}
-
-div.stack {
-  display: flex;
-  flex-direction: column;
-}
-
-span.google-drive {
-    display: block;
-    text-align: center;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-.input-row-group {
-  display: flex;
-  gap: 20px;
-}
-
-.input-row-group > div {
-  flex-grow: 1;
-}
-
-.spinner {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
-}
-.spinner.spinner-lucivia {
-  border-color: rgba(82, 165, 184, 0.4);
-  border-top-color: #52a5b8;
-}
-.spinner.spinner-lg {
-  width: 55px;
-  height: 55px;
-  border-width: 5px;
-}
-
-@keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
-}
-
-/* SplitPane related */
-
-.Resizer {
-  background: #000;
-  opacity: 0.2;
-  z-index: 1;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding;
-  background-clip: padding-box;
-}
-
-.Resizer:hover {
-  -webkit-transition: all 2s ease;
-  transition: all 2s ease;
-}
-
-.Resizer.horizontal {
-  height: 11px;
-  margin: -5px 0;
-  border-top: 5px solid rgba(255, 255, 255, 0);
-  border-bottom: 5px solid rgba(255, 255, 255, 0);
-  cursor: row-resize;
-  width: 100%;
-}
-
-.Resizer.horizontal:hover {
-  border-top: 5px solid rgba(0, 0, 0, 0.5);
-  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-}
-
-.Resizer.vertical {
-  width: 11px;
-  margin: 0 -5px;
-  border-left: 5px solid rgba(255, 255, 255, 0);
-  border-right: 5px solid rgba(255, 255, 255, 0);
-  cursor: col-resize;
-}
-
-.Resizer.vertical:hover {
-  border-left: 5px solid rgba(0, 0, 0, 0.5);
-  border-right: 5px solid rgba(0, 0, 0, 0.5);
-}
-.Resizer.disabled {
-  cursor: not-allowed;
-}
-.Resizer.disabled:hover {
-  border-color: transparent;
-}
 
 /* END */

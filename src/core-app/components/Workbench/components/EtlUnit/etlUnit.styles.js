@@ -37,7 +37,7 @@ const styles = (theme) => ({
     //----------------------------------------------------------------------------
     // EtlUnitCardHeader
     // force specialization
-    '&.EtlUnit-CardHeader-root': {
+    '&.header-root': {
       alignItems: 'center',
       padding: '5px 8px 7px 8px',
       '&.component-detailView, &.spanValues-detailView': {
@@ -49,7 +49,7 @@ const styles = (theme) => ({
     '& .EtlUnit-CardHeader-IconWrap': {
       display: 'flex',
       alignItems: 'center',
-      padding: '0px 12px 0px 0px',
+      padding: '0px 3px 0px 0px',
       '& .component': {
         padding: '0px',
       },

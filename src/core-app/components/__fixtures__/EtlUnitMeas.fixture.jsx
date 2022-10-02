@@ -18,6 +18,16 @@ import { PURPOSE_TYPES } from '../../lib/sum-types';
 
 /* eslint-disable no-console */
 
+const trash = (fieldName, purpose) => (
+  <TableCellTrash
+    fieldName={fieldName}
+    purpose={purpose}
+    handleDelete={() => {
+      console.log(`Delete field: ${fieldName}`);
+    }}
+  />
+);
+
 const CompWithStyles = () => {
   // 📖 ... at some point, render each independently.
   const fieldsKeyedOnPurpose = useSelector(
@@ -70,15 +80,7 @@ function EtlUnits({
         onOpenNewCompDialog={() => {}}
         enableAddNewField={() => {}}
         selectedFieldName='NPI'
-        tableCellTrash={(fieldName, purpose) => (
-          <TableCellTrash
-            fieldName={fieldName}
-            purpose={purpose}
-            handleDelete={() => {
-              console.log(`Delete field: ${fieldName}`);
-            }}
-          />
-        )}
+        tableCellTrash={trash}
       />
       <p />
       <ConsoleLog value={meaRelatedEtlFields} advancedView />

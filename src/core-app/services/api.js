@@ -7,7 +7,7 @@
  */
 import axios from 'axios';
 
-import { stdApiResponse } from './helpers';
+import { stdApiResponse, gqlApiResponse } from './helpers';
 import {
   ApiCallError,
   // ExpiredSessionError,
@@ -25,7 +25,7 @@ import { colors } from '../constants/variables';
 //------------------------------------------------------------------------------
 // Read the .env
 //------------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_API === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
 
@@ -69,6 +69,42 @@ export const gqlInstance = axios.create({
   },
   withCredentials: process.env.REACT_APP_ENV === 'production',
 });
+gqlInstance.interceptors.response.use(gqlApiResponse, gqlApiResponse);
+
+//------------------------------------------------------------------------------
+/**
+ * fetch the redux store
+ * (core-app state)
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ *
+ * TnC-py (GET)
+ * @projects_blueprint.route("/v1/project-store/<project_id>",
+ *   methods=['GET', 'POST'])
+ */
+export function fetchStore(projectId, signal) {
+  //
+  if (DEBUG) {
+    console.debug(`Loading project store: ${projectId}`);
+  }
+  if (typeof projectId === 'undefined') {
+    throw new ApiCallError('Missing projectId');
+  }
+  const axiosOptions = {
+    url: `/project-store/${projectId}`,
+    method: 'GET',
+    signal,
+  };
+  //
+  if (DEBUG) {
+    console.debug(
+      `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
+      'color:orange',
+    );
+  }
+  return apiInstance(axiosOptions);
+}
+//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 /**
@@ -232,12 +268,14 @@ export const initApiService = async (eventInterface) => {
   //
   const sendQueueRequest = async (featureInput) => {
     validateEventRequest(eventInterface, featureInput);
-    const { project_id: projectId } = eventInterface.request;
+    const { project_id: projectId, signal = undefined } =
+      eventInterface.request;
     const serviceType = getServiceType(eventInterface.meta.feature);
     const axiosOptions = {
       method: 'POST',
       url: ServiceConfigs[serviceType].endpoint(projectId),
       data: eventInterface.request,
+      signal,
     };
     const response = await apiInstance(axiosOptions);
 
@@ -384,7 +422,10 @@ export const cancelApiService = async (eventInterface) => {
  * tnc-py
  * Retrieve levels from the  file inspection results
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * ⬜ Implement pagination support using 'Connection' pattern
+ *    (see also fetchLevels for graphql version)
  *
  * @function
  * @param {Object} input
@@ -394,23 +435,31 @@ export const cancelApiService = async (eventInterface) => {
  * @return {Object}
  *
  */
-export const getFileLevels = ({
+export const fetchFileLevels = ({
   projectId,
   sources,
   purpose,
+  signal,
   arrows = {},
   page = 1,
   limit = 10,
 }) => {
-  const body = {
-    arrows,
-    page,
+  const data = {
     purpose,
-    // If we're dealing with an mspan purpose we request all so we can display chips
-    limit: purpose === 'mspan' ? 99999999999 : limit,
     sources,
+    arrows,
+    limit: purpose === 'mspan' ? 99999999999 : limit,
+    page,
   };
-  return apiInstance.post(`/levels/${projectId}`, body);
+  return apiInstance({
+    url: `/levels/${projectId}`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    signal,
+    data,
+  });
 };
 
 //------------------------------------------------------------------------------
@@ -429,11 +478,13 @@ export const getFileLevels = ({
 export async function fetchRenderedMatrix(
   projectId,
   { page = 1, limit = 100 } = {},
+  signal = undefined,
 ) {
   const axiosOptions = {
     url: `/matrix/${projectId}/results`,
     method: 'POST',
     data: { page, limit },
+    signal,
   };
   if (DEBUG) {
     console.debug(`%cpulling matrix page: ${page}`, 'color:orange');
@@ -446,16 +497,15 @@ export async function fetchRenderedMatrix(
  * @return {Object}
  */
 export const fetchRenderedMatrixWithProjectId =
-  (projectId) =>
+  (projectId, signal) =>
   async (...args) =>
-    fetchRenderedMatrix(projectId, ...args);
+    fetchRenderedMatrix(projectId, ...args, signal);
 export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
-  const result = {
-    pageInfo: raw.data.payload.pageInfo,
-    edges: edgesFn(JSON.parse(raw.data.payload.data)),
-    totalCount: raw.data.payload.totalCount,
+  return {
+    pageInfo: raw.payload.pageInfo,
+    edges: edgesFn(JSON.parse(raw.payload.data)),
+    totalCount: raw.payload.totalCount,
   };
-  return result;
 };
 //------------------------------------------------------------------------------
 
@@ -468,21 +518,24 @@ export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
  * ✅ Utilized by workbench.sagas
  *
  * @function
- * @param {Object} request
+ * @param {Object}
  * @return {Promise}
  */
-export const fetchMatrixSpec = async (projectId, request) => {
-  const config = {
+export const fetchMatrixSpec = async ({ projectId, request, signal }) => {
+  if (DEBUG) {
+    console.debug(`fetchMatrixSpec api params`, projectId, request, signal);
+  }
+  const axiosOptions = {
+    // single endpoint for all of the graphql requests
     url: `/warehouse/${projectId}`,
     data: GQL.requestMatrix(request),
+    signal,
   };
 
-  return gqlInstance(config).then((response) => {
-    return {
-      ...GQL.extractGql(response),
-      meta: {},
-    };
-  });
+  return gqlInstance(axiosOptions).then((response) => ({
+    ...GQL.extractGql(response),
+    meta: {},
+  }));
 };
 
 //------------------------------------------------------------------------------
@@ -495,13 +548,18 @@ export const fetchMatrixSpec = async (projectId, request) => {
  * @param {Object} request
  * @return {Promise}
  */
-export const fetchRequestFieldNames = async ({ projectId, ...request }) => {
+export const fetchRequestFieldNames = async ({
+  projectId,
+  request,
+  signal,
+}) => {
   const requestConfig = GQL.requestFieldNames(request);
-  const config = {
+  const axiosOptions = {
     url: `/warehouse/${projectId}`,
     data: requestConfig.gql,
+    signal,
   };
-  return gqlInstance(config).then((response) => {
+  return gqlInstance(axiosOptions).then((response) => {
     return {
       ...GQL.extractGql(response),
       meta: {
@@ -517,26 +575,23 @@ export const fetchRequestFieldNames = async ({ projectId, ...request }) => {
  *
  * Relay compliant graphql request for levels
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * ✅ Pulled directly to the ui (not hosted in Redux)
  *
  * @function
  * @param {Object} request
  * @return {Object}
  */
-export const fetchLevels = async ({ projectId, ...request }) => {
-  console.log(GQL.requestLevels(request));
-  const config = {
+export const fetchLevels = async ({ projectId, signal, request }) => {
+  const axiosOptions = {
+    // single endpoint for all of the graphql requests
     url: `/warehouse/${projectId}`,
     data: GQL.requestLevels(request),
+    signal,
   };
 
-  return gqlInstance(config).then(({ data }) => {
-    if (typeof data?.errors !== 'undefined') {
-      throw new GqlError(`The graphql request failed`);
-      // throw new GqlError(JSON.stringify(data.errors));
-    }
-    return data;
-  });
+  return gqlInstance(axiosOptions);
 };
 /*-----------------------------------------------------------------------------*/
 // Local utilities
@@ -591,13 +646,16 @@ function validateEventRequest(event, requestKey) {
 /**
  * Get the project drives
  *
+ * 🪟 uses signal to abort; good for useEffect
+ *
  * @function
  * @return {Promise} response
  */
-export async function fetchProjectDrives(projectId) {
+export async function fetchProjectDrives(projectId, signal) {
   const axiosOptions = {
     url: `/project-drives/${projectId}`,
     method: 'GET',
+    signal,
   };
   if (DEBUG) {
     console.debug(
@@ -609,6 +667,8 @@ export async function fetchProjectDrives(projectId) {
 }
 /**
  * List files | drives
+ *
+ * 🪟 uses signal to abort; good for useEffect
  *
  *  request = {
  *      project_id, # required
@@ -630,17 +690,19 @@ export async function fetchProjectDrives(projectId) {
  * @function
  * @return {Promise} response
  */
-export const readDirectory = (request) => {
+export const readDirectory = (request, signal) => {
   const axiosOptions = {
     url: `/filesystem/readdir`,
     method: 'POST',
     data: request,
+    signal,
   };
   if (DEBUG) {
     console.debug(
       `%c testing POST @ "v1/filesystem/readdir" endpoint`,
       'color:orange',
     );
+    console.debug('readDirectory api axios options:', axiosOptions);
   }
 
   return apiInstance(axiosOptions);

@@ -25,6 +25,7 @@ function Switch({
   disabled,
   fontSize,
   color,
+  className,
 }) {
   const [checked, setChecked] = useState(() => checkedProp);
 
@@ -49,6 +50,7 @@ function Switch({
         'Luci-Switch',
         `${fontSize}Font`,
         `${labelPlacement}Placement`,
+        className,
       )}
       control={switchInner}
       label={checked ? labelOne : labelTwo}
@@ -58,6 +60,7 @@ function Switch({
 }
 
 Switch.propTypes = {
+  className: PropTypes.string.isRequired,
   labelOne: PropTypes.string.isRequired,
   labelTwo: PropTypes.string.isRequired,
   labelPlacement: PropTypes.oneOf(['start', 'end', 'top', 'bottom']),

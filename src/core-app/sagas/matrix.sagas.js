@@ -8,15 +8,12 @@
  * 👉 matrix: use the apiFetch to initialize polling (pull data from warehouse)
  * 👉 build the spec using the graphql server (multiple calls)
  *
+ * ⚠️  The process for building the matrix request spec before retrieving the
+ *    data, is a unusual process.  For instance, includes a series of automated
+ *    graphql request.
+ *
  */
-import {
-  all,
-  call,
-  put,
-  getContext,
-  select,
-  takeLatest,
-} from 'redux-saga/effects';
+import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import {
   MATRIX,
   FETCH_MATRIX,
@@ -24,6 +21,8 @@ import {
   setMatrixCache,
 } from '../ducks/actions/matrix.actions';
 import { setNotification } from '../ducks/actions/notifications.actions';
+import { getProjectId } from '../ducks/rootSelectors';
+import { initAbortController } from '../../hooks/use-abort-controller';
 
 // -----------------------------------------------------------------------------
 // 📡
@@ -46,7 +45,12 @@ import {
   dedupMeaExpressions,
 } from '../lib/obsEtlToMatrix/matrix-request';
 
-import { SagasError, InvalidStateError } from '../lib/LuciErrors';
+import {
+  SagasError,
+  InvalidStateError,
+  GqlError,
+  ApiCallError,
+} from '../lib/LuciErrors';
 import { range } from '../utils/common';
 import { colors } from '../constants/variables';
 
@@ -58,23 +62,18 @@ const COLOR = colors.light.blue;
 
 const MAX_TRIES = 20;
 
-// ⬜ is it project_id or projectId???
-const fetchRequestFieldNames =
-  (projectId) =>
-  (...args) =>
-    fetchFieldNamesInner(projectId, ...args);
+const fetchRequestFieldNames = (projectId, request, signal) =>
+  fetchFieldNamesInner({ projectId, request, signal });
 
-// ⬜ is it project_id or projectId???
-const fetchMatrixSpec =
-  (projectId) =>
-  (...args) =>
-    fetchMatrixSpecInner(projectId, ...args);
+const fetchMatrixSpec = (projectId, request, signal) =>
+  fetchMatrixSpecInner({ projectId, request, signal });
 
 if (DEBUG) {
   console.info(`%c👉 matrix.sagas`, COLOR);
 }
 // get a request from a single node
 function* _queueMatrixCache({ payload }) {
+  const abortController = initAbortController();
   try {
     yield put(
       setNotification({
@@ -83,7 +82,6 @@ function* _queueMatrixCache({ payload }) {
       }),
     );
     const flatTree = yield select((state) => state.workbench.tree);
-    const { projectId } = yield getContext('projectId');
     const { id, displayType } = payload;
 
     // requestFromNode depends on id and displayType hosted in payload
@@ -92,7 +90,9 @@ function* _queueMatrixCache({ payload }) {
     // ⌛ request for gql obs service
     const requestFragments = yield fetchFragmentedRequest(
       request,
-      fetchRequestFieldNames(projectId),
+      fetchRequestFieldNames, // apiFn
+      abortController,
+      'fetchRequestFieldNames',
     );
 
     //
@@ -112,11 +112,13 @@ function* _queueMatrixCache({ payload }) {
       }),
     );
   } catch (e) {
-    throw new SagasError(e);
+    if (e instanceof GqlError) throw e;
+    throw new SagasError('Queue matrix cache request failed', e);
   }
 }
 
 /**
+ *
  * Pull the configuration made using the workbench to generate the request.
  * Requires using graphql to complete the build. Forward the request to the
  * spec to the tnc-py backend: the data (warehouse -> matrix).
@@ -125,6 +127,10 @@ function* _queueMatrixCache({ payload }) {
  *
  */
 function* _queueMatrixRequest(action) {
+  //
+  const abortController = action?.abortController ?? initAbortController();
+  const requestedProject = action?.projectId;
+
   try {
     yield put(
       setUiLoadingState({
@@ -133,31 +139,51 @@ function* _queueMatrixRequest(action) {
         message: 'Queued the matrix request',
       }),
     );
-    //
-    const projectId = yield getContext('projectId');
-    if (projectId !== action.projectId) {
-      throw new InvalidStateError(`matrix saggas: project missmatch`);
-    }
 
-    const request = yield buildMatrixSpec();
-    // NEW - engage the polling api
-    // 📬 send to polling-api.sagas (requires event { meta, request })
-    yield put(
-      apiFetch(
-        {
-          // ::event
-          meta: { uiKey: 'matrix', feature: MATRIX },
-          request: {
-            project_id: projectId,
-            spec: request,
-            maxTries: MAX_TRIES,
-          },
-        }, // map + translation
-      ),
-    );
+    // 1. build the request using a series of automated graphql calls
+    const request = yield buildMatrixSpec(abortController);
+
+    // 2. engage the tnc-py polling api with the now completed request
+    const projectInRedux = yield select(getProjectId);
+    if (projectInRedux !== requestedProject) {
+      throw new InvalidStateError(
+        `Matrix request failed: invalid project state ${JSON.stringify(
+          action,
+          null,
+          2,
+        )}`,
+        new Error().stack,
+      );
+    }
+    try {
+      //
+      yield put(
+        apiFetch(
+          {
+            // ::event
+            meta: { uiKey: 'matrix', feature: MATRIX },
+            request: {
+              project_id: requestedProject,
+              spec: request,
+              maxTries: MAX_TRIES,
+              signal: abortController.signal,
+            },
+          }, // map + translation
+        ),
+      );
+    } catch (e) {
+      throw new ApiCallError(`Queuing the matrix request failed`, e);
+    }
   } catch (e) {
-    console.error(e);
-    throw new SagasError('Something went wrong with the matrix request');
+    abortController.abort();
+    if (e instanceof InvalidStateError) throw e;
+    if (e instanceof ApiCallError) throw e;
+    if (e instanceof GqlError) throw e;
+    if (e instanceof SagasError) throw e;
+    throw new SagasError(
+      `Unknown error with the matrix request: -${requestedProject.slice(-4)}`,
+      e,
+    );
   }
 }
 
@@ -165,16 +191,16 @@ function* _queueMatrixRequest(action) {
 // Local functions
 /*-----------------------------------------------------------------------------*/
 /**
+ * Makes a series of api calls using the graphql service to build the request.
  * @function
  * @return {MatrixRequestSpec}
  */
-function* buildMatrixSpec() {
+function* buildMatrixSpec(abortController) {
   try {
     //
     // 👉 Pull the tree from state
     //
     const flatTree = yield select((state) => state.workbench.tree);
-    const projectId = yield getContext('projectId');
     //
     // 👉 transform: tree -> request for gql obs service
     //
@@ -194,7 +220,9 @@ function* buildMatrixSpec() {
     // ⬜ This final processing could be done by tnc-py
     let requestFragments = yield fetchFragmentedRequest(
       request,
-      fetchMatrixSpec(projectId),
+      fetchMatrixSpec, // apiFn
+      abortController,
+      'fetchMatrixSpec',
     );
 
     // 🦀 Check if the field count is correct
@@ -241,7 +269,9 @@ function* buildMatrixSpec() {
 
     return finalRequest;
   } catch (e) {
-    throw new SagasError(e);
+    abortController.abort();
+    if (e instanceof GqlError) throw e;
+    throw new SagasError(`Matrix failed to build the request`, e);
   }
 }
 
@@ -249,12 +279,16 @@ function* buildMatrixSpec() {
  * Utility
  * Request -> Expressions
  *
+ * Encapsulate use of projectId here.
+ *
  * @function
  * @param {Object} request subReq and meaReqs keys
  * @return {Object} gql expressions
  */
-function* fetchFragmentedRequest(request, apiFn) {
+function* fetchFragmentedRequest(request, apiFn, abortController, apiFnName) {
   try {
+    //
+    const projectId = yield select(getProjectId);
     //
     // For each etlUnit::measurement generate an mms/obs request
     // Note: the request format = subRed, meaReqs
@@ -262,21 +296,35 @@ function* fetchFragmentedRequest(request, apiFn) {
     // input: optional subReq, meaReqs[]
     // output: [{subExp, meaExpressions}]
     //
+    // A. The first iteration consumes **both** subReq and the first
+    // of the meaReqs.
+    const req = {
+      subReq: request?.subReq ?? { subjectType: null, qualityMix: [] },
+      meaReqs: [request.meaReqs[0]],
+    };
+    const args = [projectId, req, abortController.signal];
+
+    // B. In the event there are more than one meaReqs, now process 2,3 etc..
+    // So, the meaReqsIter length = 0 when there is only one request.
+    const meaReqsIter = range(1, request.meaReqs.length);
     const requestFragments = yield all([
-      call(apiFn, {
-        subReq: request?.subReq ?? { subjectType: null, qualityMix: [] },
-        meaReqs: [request.meaReqs[0]],
-      }),
-      // append to the array of effects
-      ...(range(1, request.meaReqs.length).map((idx) => {
+      call(apiFn, ...args),
+      // append the array of meaReqs
+      ...(meaReqsIter.map((idx) => {
         // do not use fork in order to maintain sequence
-        return call(fetchMatrixSpec, { meaReqs: [request.meaReqs[idx]] });
+        const req = { meaReqs: [request.meaReqs[idx]] };
+        const args = [projectId, req, abortController.signal];
+        return call(apiFn, ...args); // only ever used with fetchSpec
       }) || []),
     ]);
 
     return requestFragments;
   } catch (e) {
-    throw new SagasError(e);
+    abortController.abort();
+    throw new GqlError(
+      `fetchFragment call to ${apiFnName} failed: ${e?.message}`,
+      e,
+    );
   }
 }
 

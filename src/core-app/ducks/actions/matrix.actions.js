@@ -22,9 +22,13 @@ export const TAG_MATRIX_STATE = `${MATRIX} TAG MATRIX STATE`;
 
 // command
 // 🔖 projectId used to assert with matrix.saga context
-export const fetchMatrix = (projectId /* rest from state */) => ({
+export const fetchMatrix = (
+  projectId,
+  abortController /* rest from state */,
+) => ({
   type: FETCH_MATRIX,
   projectId,
+  abortController,
 });
 
 // command

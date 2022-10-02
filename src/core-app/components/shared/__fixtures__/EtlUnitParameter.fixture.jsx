@@ -5,7 +5,6 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 
 import { useSelect } from 'react-cosmos/fixture';
-import ReduxMock from '../../../cosmos.mock-store';
 
 import TableCellTrash from '../TableCellTrash';
 import EtlUnitParameter from '../EtlUnitParameter';
@@ -48,6 +47,15 @@ const CompWithStyles = () => {
     return data;
   }, {});
 
+  const trash = (fieldName, purpose) => (
+    <TableCellTrash
+      fieldName={fieldName}
+      purpose={purpose}
+      handleDelete={() => {
+        console.log(`Delete field: ${fieldName}`);
+      }}
+    />
+  );
   return (
     <>
       <Table>
@@ -58,15 +66,7 @@ const CompWithStyles = () => {
             handleClick={() => {
               console.log(`Update parent's active field: ${selectedFieldName}`);
             }}
-            tableCellTrash={(fieldName, purpose) => (
-              <TableCellTrash
-                fieldName={fieldName}
-                purpose={purpose}
-                handleDelete={() => {
-                  console.log(`Delete field: ${fieldName}`);
-                }}
-              />
-            )}
+            tableCellTrash={trash}
           />
         </TableBody>
       </Table>
@@ -77,8 +77,4 @@ const CompWithStyles = () => {
 };
 
 /* eslint-disable */
-export default (
-  <ReduxMock>
-    <CompWithStyles />
-  </ReduxMock>
-);
+export default <CompWithStyles />;

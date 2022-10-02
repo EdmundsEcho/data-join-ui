@@ -44,8 +44,9 @@ import {
   // setCompValues, // document
 } from '../../actions/workbench.actions';
 import {
-  fetchMatrixCache,
   SET_MATRIX_CACHE, // command
+  fetchMatrixCache,
+  tagMatrixState,
 } from '../../actions/matrix.actions';
 import {
   POLLING_RESOLVED,
@@ -68,8 +69,8 @@ import { ServiceConfigs, getServiceType } from '../../../services/api';
 
 // 📖 tree state
 import {
-  getTree,
   getProjectId,
+  getTree,
   selectNodeState,
   getEtlObject,
   resetCanvas,
@@ -100,13 +101,12 @@ const { isValid, getData, isValidError, getError } =
 
 /* --------------------------------------------------------------------------- */
 const middleware =
-  (projectId) =>
   ({ dispatch, getState }) =>
   (next) =>
   (action) => {
     //
     if (DEBUG) {
-      console.info(`👉 loaded workbench.middleware: ${projectId}`);
+      console.info('👉 loaded workbench.middleware');
     }
     if (action.type === 'PING')
       console.log(
@@ -153,13 +153,18 @@ const middleware =
         };
         next([setGroupSemantic(nodeState)]);
         // sagas -> SET_MATRIX_CACHE // document
-        dispatch(fetchMatrixCache({ projectId, ...nodeState }));
+        dispatch(
+          fetchMatrixCache({
+            projectId: getProjectId(getState()),
+            ...nodeState,
+          }),
+        );
 
         break;
       }
       case SET_MATRIX_CACHE: {
         // forward/pass-through the action proper
-        next(action);
+        // next(action); 🦀 ??
         // cascade the action to listeners
         const source = action.meta.id;
         const { listeners } = getState().workbench.tree[source];
@@ -175,6 +180,7 @@ const middleware =
             }),
           ),
         );
+        next(tagMatrixState('STALE'));
         break;
       }
       //
@@ -190,7 +196,6 @@ const middleware =
       case TOGGLE_REDUCED:
       case SET_COMP_REDUCED:
       case SET_MSPAN_REQUEST: {
-        // next(action);
         // check if the parent is a group that needs to be updated
         const state = getState();
         const { parent } = selectNodeState(state, action.id);
@@ -208,6 +213,7 @@ const middleware =
             },
           });
         }
+        next(tagMatrixState('STALE'));
         break;
       }
 
@@ -261,11 +267,13 @@ const middleware =
               ),
             }),
           );
+          next(tagMatrixState('STALE'));
           break;
         }
 
         // else, update the tree
         dispatch(moveTree(action.payload));
+        next(tagMatrixState('STALE'));
 
         break;
       }
@@ -297,6 +305,7 @@ const middleware =
             throw e;
           }
         }
+        next(tagMatrixState('STALE'));
         break;
       }
 
@@ -314,8 +323,7 @@ const middleware =
           source = undefined,
           draggableId,
         } = action.payload;
-        const state = getState(); // for debugging
-        const treeState = getTree(state); // flat tree
+        const treeState = getTree(getState()); // flat tree
 
         //------------------------------------------------------------------------
         // MOVE or COPY based on source === palette
@@ -411,6 +419,7 @@ const middleware =
           });
 
           if (DEBUG) {
+            const state = getState();
             console.debug('📖 before');
             console.debug(before);
 
@@ -447,11 +456,13 @@ const middleware =
           }
         }
 
+        next(tagMatrixState('STALE'));
         break;
       }
 
       case RESET_CANVAS: {
         next(setTree(resetCanvas(getState())));
+        next(tagMatrixState('STALE'));
         break;
       }
       // -------------------------------------------------------------------------
@@ -466,16 +477,11 @@ const middleware =
       case FETCH_WAREHOUSE: {
         // the payload required to make the warehouse request is pulled directly
         // from the redux store (nothing in the action).
-        const state = getState();
-
-        if (getProjectId(state) !== projectId) {
-          throw new InvalidStateError(`Mismatch project: redux and middleware`);
-        }
-
+        //
         // rebuild warehouse (changed etlObj) | use the current tree
         // 🔖 there is no reason (yet), to pull from graphql more than once, once the
         //    tree has been instantiated
-        if (!isHostedWarehouseStale(state)) {
+        if (!isHostedWarehouseStale(getState())) {
           next(
             setNotification({
               message: `${WORKBENCH}.middleware: Warehouse cache is valid; no need re-render the warehouse`,
@@ -484,6 +490,8 @@ const middleware =
           );
         } else {
           try {
+            const state = getState();
+            const projectId = getProjectId(state);
             next([
               setNotification({
                 message: `${WORKBENCH}.middleware: action::feature -> ::api (next: polling-api.sagas)`,
@@ -580,6 +588,7 @@ const middleware =
           );
         }
         try {
+          const projectId = getProjectId(getState());
           const { id, subject, measurements } = getData(action.event.request);
           const { etlFields, etlUnits } = getEtlObject(getState());
 
@@ -618,7 +627,7 @@ const middleware =
           next([
             setTree(Tree.toFlatNodes(tree)),
             tagWarehouseState('CURRENT'),
-            saveProject(), // required until stop resetting redux between pages
+            tagMatrixState('STALE'),
           ]);
         } catch (e) {
           if (e instanceof ApiCallError) {
@@ -669,6 +678,7 @@ const middleware =
               'The API polling request failed',
             feature: WORKBENCH,
           }),
+          // 🦀 does not work b/c window is also waiting for data
           setUiLoadingState({
             toggle: false,
             feature: WORKBENCH,

@@ -1,18 +1,15 @@
-// src/combinedReducer.js
+// src/core-app/combinedReducer.js
 
 /**
  *
  * Reads in all of the reducers found in the index file of
  * the `ducks` directory. Returns a single reducer.
  *
- * The ability to reset the store is not yet utilized.
- * See save-middleware for current approach.
- *
- *
  * @module reducers/combinedReducer
  */
 import { combineReducers } from 'redux';
 import * as reducers from './ducks';
+import { LOAD_PROJECT } from './ducks/actions/project-meta.actions';
 // import { purgePersistedState } from './redux-persist-cfg';
 
 // Add a root reducer to enable a full reset
@@ -22,16 +19,13 @@ import * as reducers from './ducks';
 //
 const appReducer = combineReducers(reducers);
 //
-// 2️⃣  add a root reducer
+// 2️⃣  add a root reducer (enhancer)
 //
-/*
-const rootReducer = (state, action) => {
-  if (action.type === 'CLOSE_PROJECT') {
-    purgePersistedState();
-    return appReducer(undefined, action);
+const withLoadProjectReducer = (state, action) => {
+  if (action.type === LOAD_PROJECT) {
+    return appReducer(action.payload, action);
   }
   return appReducer(state, action);
 };
-*/
 
-export default appReducer;
+export default withLoadProjectReducer;

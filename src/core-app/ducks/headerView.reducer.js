@@ -533,14 +533,6 @@ const reducer = createReducer(initialState, {
     return state;
   },
 
-  /* Utility that prints the first hv with levels removed */
-  PRINT: (state) => {
-    const { filename } = Object.values(state.headerViews)[0];
-    console.log('PRINT: ', filename);
-    console.log(JSON.stringify(selectHeaderExLevels(state, filename)));
-    return state;
-  },
-
   // command that we document
   // 🔖 TOGGLE_SELECT_FILE may involve the backend and
   //    is handled by headerView.middleware
