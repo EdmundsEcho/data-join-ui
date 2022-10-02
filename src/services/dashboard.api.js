@@ -12,7 +12,7 @@ import { ApiCallError } from '../errors';
 //------------------------------------------------------------------------------
 // Read the .env
 //------------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_API === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -88,7 +88,9 @@ export async function saveStore({ projectId, store, signal }) {
  * @return {Promise} response
  */
 export async function fetchProjects(signal) {
-  console.debug(`API signal:`, signal);
+  if (DEBUG) {
+    console.debug(`fetchProjects API signal:`, signal);
+  }
   const axiosOptions = {
     url: '/projects',
     method: 'GET',
@@ -147,7 +149,8 @@ export async function updateProject(projectId, data, signal) {
 }
 
 /**
- * @KM: test endpoints
+ *
+ * Delete a project (meta and store)
  *
  * 🪟 uses signal to abort; good for useEffect
  *

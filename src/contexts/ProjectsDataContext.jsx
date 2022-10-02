@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import {
   fetchProjects as fetchAllProjectsApi,
   addNewProject as addNewApi,
+  updateProject as updateApi,
   deleteProject as deleteApi,
 } from '../services/dashboard.api';
 
@@ -30,6 +31,8 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 
 export const ProjectsDataContext = createContext({});
 ProjectsDataContext.displayName = 'Context - ProjectsData';
+export const ProjectsSelectorContext = createContext({});
+ProjectsSelectorContext.displayName = 'Context - ProjectsSelector';
 export const ProjectsApiContext = createContext({});
 ProjectsApiContext.displayName = 'Context - ProjectsApi';
 
@@ -60,12 +63,12 @@ const Provider = ({ children }) => {
     immediate: true,
     abortController,
     caller: 'ProjectsDataContext',
-    equalityFnName: 'length',
+    equalityFnName: 'equal',
     DEBUG,
   });
-
   // ---------------------------------------------------------------------------
   // 🟢 Gateway to pulling new data
+  //    The latch controls otherwise tonic (always on) data fetching
   // ---------------------------------------------------------------------------
   const [latch, setLatch] = useState(() => ({ value: 'CLOSED' }));
   if (DEBUG) {
@@ -80,7 +83,6 @@ const Provider = ({ children }) => {
     setLatch(() => ({ value: 'CLOSED' }));
   }, [latch.value, fetch]);
   // ---------------------------------------------------------------------------
-
   // Public interface - Data
   const state = useMemo(
     () => ({
@@ -90,6 +92,21 @@ const Provider = ({ children }) => {
     [data, isReady],
   );
 
+  // ---------------------------------------------------------------------------
+  // Public interface - Selector
+  const select = useCallback(
+    (projectId) => data.find((entry) => entry.project_id === projectId),
+    [data],
+  );
+  const selector = useMemo(
+    () => ({
+      select,
+    }),
+    [select],
+  );
+
+  // ---------------------------------------------------------------------------
+  // api shared function
   const { run: runMiddleware } = useResponseHandling({
     caller: 'ProjectApiContext',
     DEBUG,
@@ -102,13 +119,32 @@ const Provider = ({ children }) => {
     async (newData, callback) => {
       const response = await addNewApi(newData, abortController.signal);
       runMiddleware(response);
-      setLatch(() => ({ value: 'OPEN' }));
       // fetch(); // retrieve the new list
+      setLatch(() => ({ value: 'OPEN' }));
       if (typeof callback === 'function') {
         callback(response.data);
       }
     },
     [runMiddleware, abortController.signal],
+  );
+  // ---------------------------------------------------------------------------
+  // 👉 Update a project (meta only)
+  // ---------------------------------------------------------------------------
+  const update = useCallback(
+    async (projectId, newData, callback) => {
+      const response = await updateApi(
+        projectId,
+        newData,
+        abortController.signal,
+      );
+      runMiddleware(response);
+      // fetch(); // retrieve the new list
+      setLatch(() => ({ value: 'OPEN' }));
+      if (typeof callback === 'function') {
+        callback(response.data);
+      }
+    },
+    [fetch, runMiddleware, abortController.signal],
   );
   // ---------------------------------------------------------------------------
   // 👉 Remove a project
@@ -118,8 +154,8 @@ const Provider = ({ children }) => {
       const response = await deleteApi(projectId, abortController.signal);
       runMiddleware(response);
       clearUiState(projectId);
-      setLatch(() => ({ value: 'OPEN' }));
       // fetch(); // retrieve the new list
+      setLatch(() => ({ value: 'OPEN' }));
       if (typeof callback === 'function') {
         callback(response.data);
       }
@@ -132,15 +168,18 @@ const Provider = ({ children }) => {
     () => ({
       fetch,
       addNew,
+      update,
       remove,
     }),
-    [addNew, fetch, remove],
+    [addNew, fetch, update, remove],
   );
   return (
     <ProjectsApiContext.Provider value={api}>
-      <ProjectsDataContext.Provider value={state}>
-        {children}
-      </ProjectsDataContext.Provider>
+      <ProjectsSelectorContext.Provider value={selector}>
+        <ProjectsDataContext.Provider value={state}>
+          {children}
+        </ProjectsDataContext.Provider>
+      </ProjectsSelectorContext.Provider>
     </ProjectsApiContext.Provider>
   );
 };
@@ -148,5 +187,7 @@ Provider.displayName = 'Provider-ProjectsContext';
 Provider.propTypes = { children: PropTypes.node.isRequired };
 //
 export const useProjectsDataContext = () => useContext(ProjectsDataContext);
+export const useProjectsSelectorContext = () =>
+  useContext(ProjectsSelectorContext);
 export const useProjectsApiContext = () => useContext(ProjectsApiContext);
 export default Provider;

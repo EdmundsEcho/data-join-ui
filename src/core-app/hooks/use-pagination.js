@@ -2,17 +2,17 @@
 /**
  * @module hooks/use-pagination
  */
-import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { InputError } from '../lib/LuciErrors';
-import { equal, colors } from '../constants/variables';
+import { colors } from '../constants/variables';
 import { useFetchApi, STATUS } from '../../hooks/use-fetch-api';
 import useAbortController from '../../hooks/use-abort-controller';
 
+//-----------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
+//------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-//------------------------------------------------------------------------------
-const DEBUG = true;
-//------------------------------------------------------------------------------
 /**
  * @constant
  */

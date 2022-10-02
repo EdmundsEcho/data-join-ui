@@ -50,8 +50,7 @@ const SelectMenu = (props) => {
       className={clsx('LuciSelectMenu', {
         [classNameProp]: classNameProp !== '',
       })}
-      error={value === '' || value === null || typeof value === 'undefined'}
-    >
+      error={value === '' || value === null || typeof value === 'undefined'}>
       <InputLabel id={`${name}-label`}>{label}</InputLabel>
       <Select
         labelId={`${name}-label`}
@@ -63,14 +62,12 @@ const SelectMenu = (props) => {
           id: name,
         }}
         autoWidth
-        {...restSelectProps}
-      >
+        {...restSelectProps}>
         {options.map((option) => (
           <MenuItem
             key={`${name}-option-${option.value}`}
             value={`${option.value}`}
-            dense
-          >
+            dense>
             {option.option}
           </MenuItem>
         ))}

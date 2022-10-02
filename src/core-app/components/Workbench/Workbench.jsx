@@ -16,7 +16,7 @@ import { bookmark } from '../../ducks/actions/stepper.actions';
 // import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 

@@ -29,10 +29,10 @@ import useAbortController from '../../../hooks/use-abort-controller';
 import { useAppSizeDataContext } from '../../../contexts/CoreAppSizeContext';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
-const GRID_HEIGHT_ADJ = 0;
+const GRID_HEIGHT_ADJ = 0; // Download button position
 
 const withDataAndSizePred = (matrixPage, height) =>
   typeof height !== 'undefined' &&

@@ -55,7 +55,7 @@ import { range } from '../utils/common';
 import { colors } from '../constants/variables';
 
 //------------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 const COLOR = colors.light.blue;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */

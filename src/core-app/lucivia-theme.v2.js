@@ -8,58 +8,27 @@
  *
  */
 import React from 'react';
-import { alpha, createTheme, responsiveFontSizes } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 
 import Check from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 
-import palette from './assets/scheme/palette.json';
-import LatoRegular from './assets/fonts/Lato/Lato-Regular.ttf';
-import LatoItalic from './assets/fonts/Lato/Lato-Italic.ttf';
-import LatoBold from './assets/fonts/Lato/Lato-Bold.ttf';
-import RalewayRegular from './assets/fonts/Raleway/Raleway-Regular.ttf';
-import RalewayItalic from './assets/fonts/Raleway/Raleway-Italic.ttf';
-import RalewayBold from './assets/fonts/Raleway/Raleway-Bold.ttf';
-import JetBrainsMonoRegular from './assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf';
+import paletteLight from './assets/scheme/palette.v2.json';
+import paletteDarkOverrides from './assets/scheme/palette-dark.json';
 
 // used to create a customer version starting with mui's default
 import { FIELD_TYPES, PURPOSE_TYPES } from './lib/sum-types';
-
-// const LuciviaOrange = '#FF9445'; // eslint-disable-line
-/* eslint-disable */
 
 /**
  * Custom theme that is supposed to overwrite the default theme
  * where the props overlap.
  *
- * Residual specs in:
- *
- *      👉 headerview and etlview.styles.js
- *      👉 index.css
- *
- * Resources:
- *
- *     🔗 Flexbox: https://tympanus.net/codrops/css_reference/flexbox/
- *     🔗 Flexbox: https://the-echoplex.net/flexyboxes/
- *     👉 kindle Mui custom formatting
- *
- * Mui base theme:
- *
- *     👉 console.dir(muiBaseTheme);
- *     👉 mui-default.json
- *
- *
+ * 🔖 theme and owner state are part of the context. Example:
+ *    const { absolute, children, classes,
+ *            flexItem, light, orientation, textAlign, variant
+ *    } = ownerState;
  */
 
-/**
- * Use the base theme as a starting point
- */
-const muiBaseTheme = responsiveFontSizes(createTheme());
-// console.dir(muiBaseTheme);
-/**
- * global ref
- * @constant
- */
 const spacing = [0, 2, 4, 6, 10, 14, 20, 26, 32, 38, 48, 58, 64];
 /**
  * Computes a size value with px appended.
@@ -74,8 +43,15 @@ const spacingFn = (value) => `${spacing[value]}px`;
 const SUPER_GROUP_MIN_WIDTH = '257px';
 const GROUP_BORDER_RADIUS = spacingFn(3);
 
-export default (mode) =>
-  createTheme({
+const paletteDark = {
+  ...paletteLight,
+  ...paletteDarkOverrides,
+};
+
+export default (mode) => {
+  const isLightMode = mode === 'light';
+  const palette = isLightMode ? paletteLight : paletteDark;
+  return createTheme({
     spacingFn,
 
     palette: {
@@ -84,11 +60,13 @@ export default (mode) =>
       mode,
     },
     typography: {
+      htmlFontSize: 14,
+      fontSize: 14,
       // rem font-size set in index.css
       fontFamily: [
         'Rubik',
         'Lato',
-        'Roboto',
+        'Raleway',
         'Helvetica',
         'Arial',
         'sans-serif',
@@ -128,13 +106,15 @@ export default (mode) =>
         fontFamily: 'Lato',
         fontSize: '1rem',
         fontWeight: '400',
-        color: palette.grey[600],
+        lineHeight: 1.5,
+        color: isLightMode ? palette.grey[700] : palette.text.secondary,
       },
       body2: {
         fontFamily: 'Lato',
         fontSize: '0.9rem',
         fontWeight: '400',
-        color: palette.grey[600],
+        lineHeight: 1.43,
+        color: isLightMode ? palette.grey[800] : palette.text.secondary,
       },
       // ⬜ integrate with other etlUnit overrides
       etlUnit: {
@@ -187,105 +167,7 @@ export default (mode) =>
 
     components: {
       //--------------------------------------------------------------------------
-      MuiCssBaseline: {
-        styleOverrides: `
-          html: {
-            -webkit-font-smoothing: 'auto',
-          }
-          @font-face {
-            font-family: 'Rubik';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Rubik'), local('Rubik-Regular'),
-              url(./assets/fonts/Rubik/Rubik-Regular.ttf) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Lato Regular'), local('Lato-Regular'),
-              url(${LatoRegular}) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'Lato';
-            font-style: italic;
-            font-weight: 400;
-            src: local('Lato Italic'), local('Lato-Italic'),
-              url(${LatoItalic}) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'Lato';
-            font-style: bold;
-            font-weight: 700;
-            src: local('Lato Bold'), local('Lato-Bold'),
-              url(${LatoBold}) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'Raleway';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Raleway Regular'), local('Raleway-Regular'),
-              url(${RalewayRegular}) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'Raleway';
-            font-style: italic;
-            font-weight: 400;
-            src: local('Raleway Italic'), local('Raleway-Italic'),
-              url(${RalewayItalic}) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'Raleway';
-            font-style: bold;
-            font-weight: 700;
-            src: local('Raleway Bold'), local('Raleway-Bold'),
-              url(${RalewayBold}) format('truetype');
-            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-              U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-              U+FEFF, U+FFFD;
-          }
-          @font-face {
-            font-family: 'JetBrainsMono';
-            font-style: thin;
-            font-weight: 100;
-            src: local('JetBrainsMono-Thin'),
-              url(/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Thin.ttf) format('truetype');
-          }
-          @font-face {
-            font-family: 'JetBrainsMono';
-            font-style: normal;
-            font-weight: 400;
-            src: local('JetBrainsMono-Regular'),
-              url(${JetBrainsMonoRegular})
-                format('truetype');
-          }
-          @font-face {
-            font-family: 'JetBrainsMono';
-            font-style: bold;
-            font-weight: 700;
-            src: local('JetBrainsMono-Bold'),
-              url(/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf) format('truetype');
-          }
-        `,
-      },
+      MuiCssBaseline: {},
 
       MuiCheckbox: {
         defaultProps: {
@@ -313,22 +195,29 @@ export default (mode) =>
               cursor: 'pointer',
             },
             '& thead tr th': {
-              paddingTop: spacingFn(5),
-              paddingBottom: spacingFn(3),
-              backgroundColor: theme.palette.grey[200],
+              paddingTop: theme.spacingFn(8),
+              paddingBottom: theme.spacingFn(3),
+              backgroundColor: isLightMode
+                ? theme.palette.grey[200]
+                : theme.palette.grey[800],
             },
             '& thead tr th:first-of-type svg': {
               marginBottom: '-4px',
             },
             // last cell: more space on the right
             '& thead tr th:last-child': {
-              paddingRight: spacingFn(5),
+              paddingRight: theme.spacingFn(5),
+              borderTopRightRadius: '0.5rem',
             },
             '& tbody tr td:last-child': {
-              paddingRight: spacingFn(5),
+              paddingRight: theme.spacingFn(5),
             },
             '& tbody tr:last-child td': {
               border: 'none',
+            },
+            // header rounding
+            '& thead tr th:first-of-type': {
+              borderTopLeftRadius: '0.5rem',
             },
             '& .Luci-Toggle': {
               width: '40px',
@@ -370,9 +259,7 @@ export default (mode) =>
                 fontSize: '0.9vw',
               },
               '&.headerView, &.factorNames': {
-                '& .MuiTableCell-head': {
-                  backgroundColor: theme.palette.secondary.superLight,
-                },
+                '& .MuiTableCell-head': {},
               },
               //--------------------------------------------------------------------
               // wide-to-long configuration
@@ -380,9 +267,7 @@ export default (mode) =>
               '&.factorNames': {
                 width: '100%',
                 tableLayout: 'fixed',
-                '& .MuiTableCell-head': {
-                  backgroundColor: theme.palette.secondary.superLight,
-                },
+                '& .MuiTableCell-head': {},
                 '& thead tr th:first-of-type': {
                   width: '170px',
                 },
@@ -424,7 +309,6 @@ export default (mode) =>
               //--------------------------------------------------------------------
               '&.etlFields, &.etlUnitMeas': {
                 '& .MuiTableCell-head': {
-                  backgroundColor: theme.palette.grey[200],
                   position: 'relative',
                   height: '56px',
                   '&.MuiTableCell-alignCenter': {
@@ -439,7 +323,10 @@ export default (mode) =>
                   height: '43px',
                 },
                 '& .selected': {
-                  backgroundColor: theme.palette.primary.superLight,
+                  backgroundColor: isLightMode
+                    ? theme.palette.primary.superLight
+                    : theme.palette.primary.dark,
+                  filter: isLightMode ? 'none' : 'brightness(0.8)',
                 },
                 '& .trashCell': {
                   width: '70px',
@@ -629,9 +516,7 @@ export default (mode) =>
           // cell variant head
           head: {
             paddingTop: '16px',
-            backgroundColor: palette.grey[100],
           },
-
           // table cell padding='checkbox'
           paddingCheckbox: {
             padding: '2px',
@@ -719,13 +604,15 @@ export default (mode) =>
       MuiDataGrid: {
         styleOverrides: {
           columnHeaders: ({ theme }) => ({
-            backgroundColor: theme.palette.grey[200],
+            backgroundColor: isLightMode
+              ? theme.palette.grey[200]
+              : theme.palette.grey[800],
             borderTopLeftRadius: spacingFn(5),
             borderTopRightRadius: spacingFn(5),
           }),
           columnHeader: ({ theme }) => ({
-            padding: `0 ${spacingFn(4)}`,
-            paddingBottom: spacingFn(4),
+            padding: `0 ${theme.spacingFn(4)}`,
+            paddingBottom: theme.spacingFn(4),
           }),
           columnHeaderTitleContainer: ({ theme }) => ({
             // a flex box
@@ -748,17 +635,41 @@ export default (mode) =>
           }),
           cell: ({ theme }) => ({
             padding: `0 ${spacingFn(4)}`,
+            border: 'none',
+            '&:focus': {
+              outline: 'none',
+            },
+          }),
+          columnHeaderCheckbox: ({ theme }) => ({
+            '& .MuiDataGrid-columnHeaderTitleContainerContent > svg': {
+              height: '1.2rem',
+              width: '1.2rem',
+              fontSize: '1.2rem',
+            },
+          }),
+          cellCheckbox: ({ theme }) => ({
+            '& > svg': {
+              height: '1.2rem',
+              width: '1.2rem',
+              fontSize: '1.2rem',
+            },
           }),
           row: ({ theme }) => ({
             '&:hover': {
-              backgroundColor: theme.palette.primary.superLight,
+              backgroundColor: isLightMode
+                ? theme.palette.primary.superLight
+                : theme.palette.grey[800],
             },
             '&.Mui-selected': {
               opacity: 0.5,
-              backgroundColor: theme.palette.grey[100],
+              backgroundColor: isLightMode
+                ? theme.palette.grey[100]
+                : theme.palette.grey[800],
               '&:hover': {
                 opacity: 1,
-                backgroundColor: theme.palette.primary.superLight,
+                backgroundColor: isLightMode
+                  ? theme.palette.primary.superLight
+                  : theme.palette.grey[800],
               },
             },
           }),
@@ -806,7 +717,6 @@ export default (mode) =>
             },
             '&.EtlUnit-ValueGrid.MuiDataGrid-row.Mui-selected': {
               opacity: '0.5',
-              backgroundColor: 'cyan',
             },
             // DataGrid className
             '&.EtlUnit-ValueGrid, &.Luci-ValueGrid-fileLevels, &.Luci-ValueGrid-matrix':
@@ -828,7 +738,9 @@ export default (mode) =>
                   padding: `${spacingFn(0)}`,
                   margin: `${spacingFn(2)} 0`,
                   justifyContent: 'space-between',
-                  backgroundColor: theme.palette.grey[200],
+                  backgroundColor: isLightMode
+                    ? theme.palette.grey[200]
+                    : 'rgb(56, 56, 56)',
                   display: 'flex',
                   alignItems: 'center',
                   '& .tools': {
@@ -1270,12 +1182,7 @@ export default (mode) =>
       //--------------------------------------------------------------------------
       MuiStepper: {
         styleOverrides: {
-          root: ({ theme }) => ({
-            '&.Luci-Stepper.root': {
-              marginTop: theme.spacing(4),
-              marginBottom: theme.spacing(4),
-            },
-          }),
+          root: ({ theme }) => ({}),
         },
       },
       //--------------------------------------------------------------------------
@@ -1358,29 +1265,6 @@ export default (mode) =>
           root: ({ theme }) => ({
             backgroundColor: 'inherit',
             //---------------------------------------------------------------------
-            // CoreAppLayout
-            //---------------------------------------------------------------------
-            '&.Luci-CoreAppLayout.root': {
-              maxWidth: '1440px',
-              padding: '0px',
-              margin: '0px',
-              boxSizing: 'border-box',
-              display: 'flex',
-              flexDirection: 'column',
-              flexGrow: 1,
-              overflow: 'hidden',
-              '& .app-paging-view': {
-                overflow: 'hidden',
-                display: 'flex',
-                flexGrow: 1,
-              },
-              '& .app-paging-view > div': {
-                flexGrow: 1,
-              },
-              '& .app-paging-controller': {},
-              '& .Luci-App-Footer': {},
-            },
-            //---------------------------------------------------------------------
             // HeaderViews
             //---------------------------------------------------------------------
             '&.Luci-HeaderViews.root': {
@@ -1411,8 +1295,6 @@ export default (mode) =>
             //---------------------------------------------------------------------
 
             '&.Luci-Workbench-board': {
-              // debug
-              // backgroundColor: 'blue',
               position: 'relative', // 🦀 ?
               height: '100%',
               overflow: 'hidden',
@@ -1424,7 +1306,7 @@ export default (mode) =>
               '& .Node-root': {
                 padding: 0,
               },
-              '& .palette.superGroup': {
+              '& .canvas.superGroup, .palette.superGroup': {
                 backgroundColor: 'inherit',
               },
 
@@ -1434,6 +1316,14 @@ export default (mode) =>
                   bottom: `${spacing[3] / 2 - 3}px`,
                   right: '10px',
                   position: 'absolute',
+                  '&:hover': isLightMode
+                    ? {
+                        backgroundColor: theme.palette.secondary.light,
+                        color: theme.palette.primary.dark,
+                      }
+                    : {
+                        backgroundColor: theme.palette.primary.main,
+                      },
                 },
                 '& > .spacer': {
                   position: 'relative',
@@ -1460,7 +1350,7 @@ export default (mode) =>
               },
               // dnd - only when dragging over a dropzone
               '& .activeZone': {
-                backgroundColor: palette.primary.light,
+                backgroundColor: theme.palette.primary.light,
               },
               // -- starting point for palette
               '& > .palette-root': {
@@ -1469,7 +1359,9 @@ export default (mode) =>
                 maxWidth: '20%',
                 padding: theme.spacingFn(5),
                 borderRadius: theme.spacingFn(5),
-                backgroundColor: palette.grey[100],
+                backgroundColor: isLightMode
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
                 '& > .Node-root.superGroup': {
                   display: 'flex',
                   flexDirection: 'column',
@@ -1530,7 +1422,7 @@ export default (mode) =>
                     // margin helps with dnd
                     margin: `${theme.spacingFn(4)} auto`,
                     height: '2px',
-                    backgroundColor: palette.primary.light,
+                    backgroundColor: theme.palette.primary.light,
                     borderRadius: '3px',
                     border: 'none',
                   },
@@ -1597,20 +1489,27 @@ export default (mode) =>
         styleOverrides: {
           root: ({ theme }) => ({
             boxShadow: 'none',
+            backgroundImage: isLightMode
+              ? `linear-gradient(
+                    rgba(255, 255, 255, 0.05),
+                    rgba(255, 255, 255, 0.05)
+                )`
+              : 'none',
             '&.Luci-Search-Bar': {
               '&.root': {
                 height: spacingFn(6),
                 display: 'flex',
                 justifyContent: 'space-between',
                 marginLeft: spacingFn(3),
+                backgroundColor: 'inherit',
+                borderRadius: '0.75rem',
               },
               // where the text renders
               '& .searchContainer': {
-                margin: `auto`,
-                marginLeft: spacingFn(4),
-                marginRight: spacingFn(2),
+                margin: `0 auto`,
+                marginLeft: spacingFn(2),
                 width: `calc(100% - ${theme.spacing(4)})`, // 6 button + 4 margin
-                backgroundColor: alpha(theme.palette.common.white, 0.15),
+                backgroundColor: 'inherit',
                 '&:hover': {
                   backgroundColor: alpha(theme.palette.common.white, 0.25),
                 },
@@ -1660,6 +1559,17 @@ export default (mode) =>
                   fontSize: '1.0rem',
                 },
               },
+            },
+          }),
+        },
+      },
+      // Popover-paper
+      MuiMenu: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            '& .MuiMenu-paper': {
+              borderRadius: '0.5rem',
+              filter: isLightMode ? 'brightness(0.93)' : 'brightness(1.7)',
             },
           }),
         },
@@ -1780,7 +1690,7 @@ export default (mode) =>
           root: ({ theme }) => ({
             margin: 'inherit',
             padding: 'inherit',
-            '&.EtlUnit-Parameter': {
+            '&.EtlUnit-parameter, &.EtlUnit-measurement': {
               padding: '0px',
               margin: `${theme.spacingFn(2)} 0px`,
               border: `0.5px ridge ${theme.palette.grey[200]}`,
@@ -1810,6 +1720,7 @@ export default (mode) =>
             //---------------------------------------------------------------------
             '&.Luci-matrix': {
               borderRadius: 0,
+              backgroundColor: 'inherit',
             },
             //---------------------------------------------------------------------
             // EtlFieldView
@@ -1833,9 +1744,12 @@ export default (mode) =>
                 fontSize: '1.3rem',
                 borderTopLeftRadius: '6px',
                 borderTopRightRadius: '6px',
-                backgroundColor: theme.palette.primary.superLight,
                 paddingLeft: theme.spacing(5),
                 paddingTop: theme.spacing(3),
+                backgroundColor: isLightMode
+                  ? theme.palette.primary.superLight
+                  : theme.palette.primary.dark,
+                filter: isLightMode ? 'none' : 'brightness(0.9)',
               },
             },
             //---------------------------------------------------------------------
@@ -1978,7 +1892,6 @@ export default (mode) =>
                   padding: theme.spacingFn(3),
                   textAlign: 'center',
                   color: theme.palette.text.secondary,
-                  backgroundColor: theme.palette.primary.superLight,
                   display: 'flex',
                   justifyContent: 'space-between',
                   paddingTop: theme.spacingFn(1),
@@ -1998,7 +1911,9 @@ export default (mode) =>
                     '& > .text': {
                       fontSize: '0.8rem',
                       lineHeight: '0.9rem',
-                      color: theme.palette.grey[800],
+                      color: isLightMode
+                        ? theme.palette.grey[100]
+                        : theme.palette.grey[200],
                     },
                   },
                 },
@@ -2012,7 +1927,9 @@ export default (mode) =>
                   justifyContent: 'flex-end',
                 },
                 '& .tool': {
-                  color: theme.palette.primary.main,
+                  color: isLightMode
+                    ? theme.palette.primary.contrastText
+                    : theme.palette.primary.main,
                   padding: 0,
                 },
                 '& .icon': {
@@ -2120,7 +2037,7 @@ export default (mode) =>
       //--------------------------------------------------------------------------
       MuiTypography: {
         styleOverrides: {
-          root: {
+          root: ({ theme }) => ({
             '&.MuiSmallTag--01': {
               fontSize: '0.8em',
               marginTop: '-6px',
@@ -2131,28 +2048,28 @@ export default (mode) =>
             },
             '&.MuiSmallTag--03': {
               fontSize: '0.9em',
-              margin: `${muiBaseTheme.spacing(1)}`,
+              margin: theme.spacing(1),
             },
             '&.MuiFieldLevel--01': {
               fontSize: '0.95em',
-              margin: `${muiBaseTheme.spacing(0)}`,
+              margin: theme.spacing(0),
             },
             // etlUnit search bar ?? WIP
             '&.AppBarSearchInput': {
               fontSize: '0.9rem',
-              color: palette.primary.contrastText,
+              color: theme.palette.primary.contrastText,
             },
             '&.Luci-error': {
-              color: palette.error.main,
+              color: theme.palette.error.main,
               fontFamily: 'Lato',
             },
             '&.Luci-warning': {
-              color: palette.warning.main,
+              color: theme.palette.warning.main,
               fontFamily: 'Lato',
               fontStyle: 'Italic',
               fontSize: '0.95rem',
             },
-          },
+          }),
         },
       },
       //--------------------------------------------------------------------------
@@ -2208,14 +2125,24 @@ export default (mode) =>
       /* Button */
       MuiButton: {
         styleOverrides: {
-          root: ({ theme, ownerState }) => ({
+          root: ({ theme }) => ({
             padding: '0',
             margin: 'auto',
             minWidth: '10px',
+            whiteSpace: 'nowrap',
             textTransform: 'none',
             '&.MuiButton-contained': {
               padding: `${spacingFn(3)} ${spacingFn(6)}`,
-              borderRadius: spacingFn(3),
+              borderRadius: '2rem',
+              '&:hover, &.Mui-focusVisible': isLightMode
+                ? {
+                    backgroundColor: theme.palette.primary.superLight,
+                    color: theme.palette.primary.dark,
+                  }
+                : {
+                    backgroundColor: theme.palette.primary.dark,
+                    color: theme.palette.primary.light,
+                  },
             },
             '&.matrix.download.round': {
               '& > .MuiButton-endIcon': {
@@ -2225,7 +2152,7 @@ export default (mode) =>
                 background: theme.palette.primary.main,
               },
               '&.disabled': {
-                visibility: 'hidden',
+                display: 'none',
               },
             },
           }),
@@ -2238,6 +2165,7 @@ export default (mode) =>
         },
         styleOverrides: {
           root: ({ theme }) => ({
+            '&.MuiFab-root': {},
             '&.Luci-button.error-flag': {
               marginTop: theme.spacing(5),
               marginBottom: theme.spacing(0),
@@ -2329,3 +2257,4 @@ export default (mode) =>
       /* eslint-disable react/jsx-filename-extension */
     },
   });
+};

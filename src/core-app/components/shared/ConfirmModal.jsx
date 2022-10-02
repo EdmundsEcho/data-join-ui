@@ -14,9 +14,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-function ConfirmModal({ open, onCancel, onConfirm, message }) {
+function ConfirmModal({ themeMode, open, onCancel, onConfirm, message }) {
   return (
-    <Dialog className='Luci-Dialog root' key='ConfirmModalRoot' open={open}>
+    <Dialog className={`Luci-Dialog root ${themeMode}-theme-mode`} open={open}>
       <DialogTitle id='alert-dialog-title'>Please confirm.</DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
@@ -37,6 +37,7 @@ function ConfirmModal({ open, onCancel, onConfirm, message }) {
 }
 
 ConfirmModal.propTypes = {
+  themeMode: PropTypes.oneOf(['light', 'dark']).isRequired,
   message: PropTypes.string,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

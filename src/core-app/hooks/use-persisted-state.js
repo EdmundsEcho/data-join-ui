@@ -158,7 +158,11 @@ const deleteDb = (maybeDbOrProjectId) => {
  * @return {string} db name
  */
 function dbNameFromProjectId(projectId) {
-  return `db-${projectId.slice(-6)}`;
+  try {
+    return `db-${projectId.slice(-6)}`;
+  } catch (e) {
+    return DEFAULT_DB;
+  }
 }
 
 function resolveDbName(maybeDbOrProjectId) {

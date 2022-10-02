@@ -1,7 +1,6 @@
 /*
- *
-* @import url("./lucivia.theme.css");
-*
+* Debugging and scaling
+* Not required
 */
 
 /* global variables */
@@ -18,27 +17,24 @@
   height: calc(var(--unit) * 20);
 }
 html.reveal-full-page {
-	width: 100%;
-	height: 100%;
-	height: 100vh;
-	height: calc( var(--vh, 1vh) * 100 );
-	overflow: hidden;
+    width: 100%;
+    height: 100%;
+    height: 100vh;
+    height: calc( var(--vh, 1vh) * 100 );
+    overflow: hidden;
 }
-
 .reveal-viewport {
-	height: 100%;
-	overflow: hidden;
-	position: relative;
-	line-height: 1;
-	margin: 0;
-
-	background-color: #fff;
-	color: #000;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    line-height: 1;
+    margin: 0;
+    background-color: #fff;
+    color: #000;
 }
 
-/* debugging
+/*
    media sizing feedback
-
    Usage: Include a <div className='size'></div> to show the screen value.
 */
 body {

@@ -148,18 +148,22 @@ function ValueGridWorkbench(props) {
       // handlers
       // will recieve column values for the toggled record
       handleToggleValue={({ level, isSelected }) => {
-        console.debug('handle event', level, isSelected);
+        if (DEBUG) {
+          console.debug('handle event', level, isSelected);
+        }
         dispatch(toggleValue(nodeId, level, identifier, isSelected));
       }}
       handleSetAllValues={(values) => {
-        console.debug('handle event all', values);
+        if (DEBUG) {
+          console.debug('handle event all', values);
+        }
         dispatch(setCompValues(nodeId, identifier, values));
       }}
       // version of the grid
       feature='SCROLL'
       checkboxSelection
       pageSize={PAGE_SIZE}
-      DEBUG
+      DEBUG={DEBUG}
     />
   );
 }

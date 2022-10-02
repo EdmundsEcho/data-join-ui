@@ -8,7 +8,7 @@ import { ApiCallError } from '../lib/LuciErrors';
 // use 'graphql-tag' to build graphql using AST
 //
 //------------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_GQL === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_GQL === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 

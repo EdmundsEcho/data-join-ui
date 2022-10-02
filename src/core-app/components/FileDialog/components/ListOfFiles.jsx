@@ -12,7 +12,7 @@
  * @module components/FileDialog/ListOfFiles
  *
  */
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -76,7 +76,7 @@ function ListOfFiles(props) {
                 position: 'absolute',
               }}>
               <td>
-                <i className='spinner spinner-lucivia spinner-lg' />
+                <i className='spinner spinner-lucivia' />
               </td>
             </TableRow>
           )}

@@ -40,9 +40,10 @@ import {
 } from './contexts/ProjectsDataContext';
 import { DISPLAY_VERSIONS } from './core-app/lib/sum-types';
 import { getDisplayVersion as initDisplayVersion } from './dashboard.lib';
+import { useThemeMode } from './hooks/use-theme-mode';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console, react/jsx-props-no-spreading */
 
@@ -56,12 +57,11 @@ const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 }]
 */
 
-const getDisplayVersion = initDisplayVersion([270, 170, 100]);
+const getDisplayVersion = initDisplayVersion([270, 200, 100]);
 
 const ListOfProjectsWithSize = withSize({ monitorWidth: true })(ListOfProjects);
 
 const Projects = () => {
-  // <SizeMe>{({size})}</SizeMe>
   return (
     <Layout>
       <ListOfProjectsWithSize />
@@ -92,10 +92,10 @@ function Layout({ children }) {
   Outlet.displayName = 'Projects-Outlet';
   //
   return (
-    <div className='main-controller-root nostack'>
+    <div className='controller root nostack'>
       {children}
-      <div className='main-view outlet frame'>
-        <div className='main-view sizing-frame stack'>
+      <div className='controller outlet flex-handle'>
+        <div className='controller sizing-frame stack'>
           <Outlet />
         </div>
       </div>
@@ -112,9 +112,10 @@ Layout.defaultProps = {};
  * Renders a list (map)
  * 🔖 only use spinner when there is no data (not when updating)
  */
-function ListOfProjects({ size }) {
+function ListOfProjects({ size: sizeProp }) {
   const { data: projects, isReady } = useProjectsDataContext();
   const { projectId: selectedProject = null } = useParams();
+  const [size, setSize] = useState(() => sizeProp);
   const displayVersionProp = getDisplayVersion(size.width);
   const theme = useTheme();
 
@@ -152,6 +153,12 @@ function ListOfProjects({ size }) {
     }
   }, [toggleMiniView, sizeEffectOn, displayVersionProp]);
 
+  useEffect(() => {
+    if (sizeEffectOn) {
+      setSize(() => sizeProp);
+    }
+  }, [sizeEffectOn, sizeProp]);
+
   if (DEBUG) {
     //
     console.debug('%c----------------------------------------', 'color:orange');
@@ -167,27 +174,15 @@ function ListOfProjects({ size }) {
   if (!isReady && projects.length === 0) {
     return <Spinner />;
   }
-  const renderOverlay = () => (
-    <Box
-      sx={{
-        position: 'absolute',
-        background: 'linear-gradient(to right, transparent 60%, white 90%)',
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 1,
-      }}
-    />
-  );
+  const renderOverlay = () => <div className='controller-mini-overlay' />;
 
   return (
     <Box
-      className={clsx('main-controller projects frame', {
+      className={clsx('controller main projects flex-handle', {
         [displayVersion.toLowerCase()]: true,
       })}
       sx={{
         p: '30px 0',
-        borderRight: '1px solid rgba(0,0,0,0.2)',
         overflow: 'hidden',
         position: 'relative',
       }}>
@@ -298,6 +293,7 @@ SummaryView.defaultProps = {
 
 function DeleteButton({ projectId }) {
   const navigate = useNavigate();
+  const [themeMode] = useThemeMode();
   const { remove: deleteProject } = useProjectsApiContext();
 
   const [openedModal, setOpenedModal] = useState(false);
@@ -318,6 +314,8 @@ function DeleteButton({ projectId }) {
       </IconButton>
 
       <ConfirmModal
+        className='Luci-Dialog delete-project'
+        themeMode={themeMode}
         message={`Are you sure you want to delete ${
           openedModal.name ? `"${openedModal.name}"` : 'this'
         } project?`}

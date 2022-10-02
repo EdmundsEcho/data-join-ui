@@ -259,15 +259,16 @@ const SpanInput = (props) => {
   //
   return (
     <Card
-      className={clsx('MuiSpanInput--01', { list: displayType !== 'icon' })}
-    >
+      className={clsx('MuiSpanInput--01', { list: displayType !== 'icon' })}>
       <DisplayType
+        className='displayType'
         displayType={displayType}
         disabled={disabled}
         handleToggleValue={handleToggleValue}
         request={request}
       />
       <SelectMenu
+        className='selectMenu-spanStart'
         key='selectMenu-spanStart'
         options={availableValueOptions}
         name='spanStart'
@@ -277,17 +278,19 @@ const SpanInput = (props) => {
         disabled={disabled}
       />
       <SelectMenu
+        className='selectMenu-spanLength'
         key='selectMenu-spanLength'
         options={availableSpanLengthOptions}
         name='spanLength'
         value={requestedSpanLength}
-        label={`${timeIntervalUnitOptions[timeProp.interval.unit]}${
-          requestedSpanLength > 1 ? 's' : ''
-        }`}
+        label={`${timeIntervalUnitOptions[
+          timeProp.interval.unit
+        ].toLowerCase()}${requestedSpanLength > 1 ? 's' : ''}`}
         onChange={handleChangeSpanLength}
         disabled={disabled}
       />
       <Switch
+        className='switch'
         checked={requestedSpanSeries}
         onChange={handleReducedToggle}
         labelOne='series'
@@ -341,18 +344,20 @@ function DisplayType({ displayType, disabled, handleToggleValue, request }) {
       color='secondary'
     />
   ) : (
-    <Button
-      size='small'
-      disableElevation
-      onClick={() => handleToggleValue()}
-      style={{
-        cursor: 'pointer',
-      }}
-    >
+    <Button size='small' disableElevation onClick={() => handleToggleValue()}>
       <ToggleIncludeField color='primary' checked={request} />
     </Button>
   );
 }
+DisplayType.propTypes = {
+  displayType: PropTypes.oneOf(['toggle', 'icon']).isRequired,
+  disabled: PropTypes.bool,
+  handleToggleValue: PropTypes.func.isRequired,
+  request: PropTypes.bool.isRequired,
+};
+DisplayType.defaultProps = {
+  disabled: false,
+};
 export default SpanInput;
 
 /*

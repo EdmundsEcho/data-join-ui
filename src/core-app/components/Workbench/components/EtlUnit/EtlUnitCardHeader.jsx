@@ -7,7 +7,6 @@ import clsx from 'clsx';
 import makeStyles from '@mui/styles/makeStyles';
 import Icon from '@mui/material/Icon';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
 import InsertChart from '@mui/icons-material/InsertChart';
 import PersonPin from '@mui/icons-material/PersonPinCircleRounded';
@@ -15,7 +14,6 @@ import PieChart from '@mui/icons-material/PieChart';
 import DateRange from '@mui/icons-material/DateRange';
 import Functions from '@mui/icons-material/Functions';
 
-// custom components
 import TextField from '../../../shared/TextField';
 import Tools from './Tools';
 
@@ -90,17 +88,18 @@ function EtlUnitCardHeader({
 
   // const { showDetail } = useContext(ToolContext);
 
+  // 🔖 Parent is EtlUnit-measurement | -parameter
   return (
-    <Box className={clsx(classes.root, 'EtlUnit-CardHeader-root')}>
-      <Box className={clsx(classes.root, 'EtlUnit-CardHeader-IconWrap')}>
+    <div className={clsx(classes.root, 'header-root')}>
+      <div className={clsx('EtlUnit-CardHeader-IconWrap')}>
         <Icon className={clsx('EtlUnit-CardHeader-Icon')}>
           <IconImg
             className={clsx('EtlUnit-CardHeader-SvgIcon', format)}
             color='secondary'
           />
         </Icon>
-      </Box>
-      <Box className={clsx(classes.root, 'EtlUnit-CardHeader-Name')}>
+      </div>
+      <div className={clsx('EtlUnit-CardHeader-Name')}>
         <TextWrap
           handleNameChange={handleNameChange}
           etlUnitType={etlUnitType}
@@ -109,16 +108,16 @@ function EtlUnitCardHeader({
           palette={palette}
           classes={classes}
         />
-      </Box>
-      <Box className={clsx(classes.root, 'EtlUnit-CardHeader-Tools')}>
+      </div>
+      <div className={clsx('EtlUnit-CardHeader-Tools')}>
         <MaybeTools
           handleMenu={handleMenu}
           palette={palette}
           tag={tag}
           etlUnitType={etlUnitType}
         />
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }
 
@@ -169,7 +168,7 @@ function TextWrap({
   ) : (
     <TextField
       stateId={title}
-      className={clsx(classes.root, 'EtlUnit-CardHeader-TextField')}
+      className={clsx('EtlUnit-CardHeader-TextField')}
       InputLabelProps={{
         classes: { root: classes.componentsInputLabel },
       }}

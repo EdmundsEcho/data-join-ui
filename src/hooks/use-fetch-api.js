@@ -1,6 +1,6 @@
 // src/hooks/use-fetch-api.js
 
-import { useCallback, useRef, useEffect, useState } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 
 import {

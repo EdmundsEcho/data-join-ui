@@ -343,6 +343,9 @@ function middleware(dispatch, state) {
     if (response instanceof CanceledError) {
       response.status = 204;
     }
+    if (response?.status === 0) {
+      response.status = 204;
+    }
     if (typeof response?.status === 'undefined') {
       console.warn(response);
       response.status = 205;
@@ -436,6 +439,13 @@ function middleware(dispatch, state) {
 
       case 500:
         actionsFrom500Error(response, state.fetchArgs).forEach(dispatch);
+        dispatch({
+          type: SUCCESS_NOCHANGE,
+        });
+        break;
+
+      case 503:
+        actionsFrom503Error(response, state.fetchArgs).forEach(dispatch);
         dispatch({
           type: SUCCESS_NOCHANGE,
         });
@@ -590,12 +600,20 @@ function isObject(value) {
 }
 
 /**
+ * local utility
+ */
+const searchFromResponse = (response, message) => {
+  const msg = message || (response.data?.message ?? '');
+  const { status, statusText } = response;
+  return `?status=${status}&statusText=${statusText}&message=Internal Error&longMessage=${msg}`;
+};
+/**
  * 500 error response -> [actions]
  * Consumer = useEffect state.redirect
  */
 function actionsFrom500Error(response /* fetchArgs */) {
   try {
-    const { message, status } = response.data;
+    const { status } = response.data;
     console.assert(status.includes('Error'), 'Unexpected 500 response format');
     // FYI: fetchArgs has everything required to try again
     return [
@@ -610,7 +628,7 @@ function actionsFrom500Error(response /* fetchArgs */) {
         type: SET_REDIRECT_URL,
         payload: {
           pathname: ERROR_PATHNAME,
-          search: `?message=Internal Error&longMessage=${message}`,
+          search: searchFromResponse(response),
         },
       },
     ];
@@ -620,7 +638,40 @@ function actionsFrom500Error(response /* fetchArgs */) {
         type: SET_REDIRECT_URL,
         payload: {
           pathname: ERROR_PATHNAME,
-          search: `?message=Unexpected error`,
+          search: `?message=Unexpected 500 error`,
+        },
+      },
+    ];
+  }
+}
+function actionsFrom503Error(response /* fetchArgs */) {
+  try {
+    const { status } = response.data;
+    console.assert(status.includes('Error'), 'Unexpected 503 response format');
+    // FYI: fetchArgs has everything required to try again
+    return [
+      {
+        type: SET_NOTICE,
+        payload: {
+          message: `Error:  ${response.statusText}`,
+          variant: 'error',
+        },
+      },
+      {
+        type: SET_REDIRECT_URL,
+        payload: {
+          pathname: ERROR_PATHNAME,
+          search: searchFromResponse(response),
+        },
+      },
+    ];
+  } catch (e) {
+    return [
+      {
+        type: SET_REDIRECT_URL,
+        payload: {
+          pathname: ERROR_PATHNAME,
+          search: `?message=Unexpected 503 error`,
         },
       },
     ];

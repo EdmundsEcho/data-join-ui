@@ -52,32 +52,27 @@ function Main() {
   useEffect(() => {
     console.debug(`Outlet width: ${width}`);
   }, [width]);
+  const value = getComputedStyle(document.documentElement).getPropertyValue(
+    '--unit',
+  );
 */
 
   Outlet.displayName = 'CoreApp-Outlet';
 
-  const value = getComputedStyle(document.documentElement).getPropertyValue(
-    '--unit',
-  );
-  console.debug(`Value from css: ${value}`);
-  console.debug(`Height from css: ${height}`);
-  //
   return (
     <AppInitializer>
-      <div className='box stack project-view'>
-        <Container className={clsx('Luci-CoreAppLayout', 'root')}>
-          <div className='app-paging-view'>
-            <ErrorBoundary FallbackComponent={Fallback}>
-              <div ref={(node) => calcHeight(node)}>
-                <AppSizeProvider height={height} width={width}>
-                  <Outlet />
-                  <div className='size'>size:</div>
-                </AppSizeProvider>
-              </div>
-            </ErrorBoundary>
-          </div>
-          <StepBar className='app-paging-controller'></StepBar>
-        </Container>
+      <div className='project-view root stack nowrap'>
+        <div className='app-paging-view'>
+          <ErrorBoundary FallbackComponent={Fallback}>
+            <div ref={(node) => calcHeight(node)}>
+              <AppSizeProvider height={height} width={width}>
+                <Outlet />
+                <div className='size'>size:</div>
+              </AppSizeProvider>
+            </div>
+          </ErrorBoundary>
+        </div>
+        <StepBar className='controller step-bar'></StepBar>
       </div>
     </AppInitializer>
   );

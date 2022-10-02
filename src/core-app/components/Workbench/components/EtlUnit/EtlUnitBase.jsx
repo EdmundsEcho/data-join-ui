@@ -178,17 +178,20 @@ export function EtlUnitParameter({
         switchOn={!isCompReduced?.[config.identifier] ?? false}
         showSwitch={showSwitch(config.tag)}
         stateId={`EtlUnitBase-${nodeId}-${config.identifier}`}
-        key={`ValueGrid-${nodeId}-${config.identifier}`}
-      >
+        key={`ValueGrid-${nodeId}-${config.identifier}`}>
         <ToolContext.Consumer>
           {({ showDetail }) => {
             return (
               <CardContent
-                className={clsx('EtlUnit-Parameter', {
+                className={clsx({
+                  'EtlUnit-parameter':
+                    config.etlUnitType === 'quality' ||
+                    config.tag !== 'measurement',
+                  'EtlUnit-measurement': config.tag === 'measurement',
                   quality: config.etlUnitType === 'quality',
+                  measurement: config.etlUnitType !== 'quality',
                   'no-border': config.tag === 'measurement',
-                })}
-              >
+                })}>
                 <EtlUnitCardHeader
                   className='EtlUnit-CardHeader'
                   title={config.title}
@@ -205,8 +208,7 @@ export function EtlUnitParameter({
                   in={showDetail}
                   className={clsx('EtlUnit-ValueGrid-Collapse', config.tag)}
                   timeout='auto'
-                  unmountOnExit
-                >
+                  unmountOnExit>
                   {displayType !== 'alias' ? (
                     <DetailView
                       nodeId={nodeId}

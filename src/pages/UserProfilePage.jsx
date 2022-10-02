@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { useFormik } from 'formik';
-import { Box, Button, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 import { LuciInput, Spinner } from '../components/shared';
 // 📖
@@ -43,111 +44,84 @@ export const UserProfilePage = () => {
   }
 
   return (
-    <Box sx={{ m: '30px' }}>
+    <div className='user-profile form-card root'>
       <Typography variant='h5' component='h2'>
         About me
       </Typography>
       Requested information
       <UserProfileForm data={data} update={update} />
-    </Box>
+    </div>
   );
 };
 
-function UserProfileForm({ data, update }) {
+function UserProfileForm({ data: dataFromProp, update }) {
   const formik = useFormik({
     initialValues: Form.initialValues,
     // validationSchema: Form.validationSchema, 🦀 broken
-    onSubmit: async (values, { setSubmitting }) => {
-      const validEntries = Object.entries(values).reduce(
-        (acc, [key, entry]) => {
-          if (entry) {
-            acc[key] = entry;
-          }
-          return acc;
-        },
-        {},
-      );
-      await update(validEntries);
-      setSubmitting(false);
-    },
+    onSubmit: Form.onSubmit(update),
   });
   /**
    * 💢 initialize formik with prop data
    */
   useEffect(() => {
-    Object.keys(data).forEach((field) => {
-      formik.setFieldValue(field, data[field]);
-    });
-  }, []);
-
-  const { touched, values, isSubmitting, errors, handleSubmit, handleChange } =
-    formik;
+    if (dataFromProp) {
+      Object.keys(dataFromProp).forEach((field) => {
+        formik.setFieldValue(field, dataFromProp[field]);
+      });
+    }
+  }, [dataFromProp]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Box className='input-row-group'>
+    <form onSubmit={formik.handleSubmit}>
+      <div className='input-row-group'>
         <LuciInput
           {...Form.propsFromField('first_name')}
-          error={touched.lastName && Boolean(errors.lastName)}
-          helperText={touched.lastName && errors.lastName}
-          type='text'
-          id='first_name'
-          name='first_name'
-          onChange={handleChange}
-          value={values.first_name || ''}
+          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+          helperText={formik.touched.firstName && formik.errors.firstName}
+          onChange={formik.handleChange}
+          value={formik.values.first_name || ''}
         />
         <LuciInput
           {...Form.propsFromField('last_name')}
-          error={touched.lastName && Boolean(errors.lastName)}
-          helperText={touched.lastName && errors.lastName}
-          type='text'
-          id='last_name'
-          name='last_name'
-          onChange={handleChange}
-          value={values.last_name || ''}
+          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+          helperText={formik.touched.lastName && formik.errors.lastName}
+          onChange={formik.handleChange}
+          value={formik.values.last_name || ''}
         />
-      </Box>
-      <Box className='input-row-group'>
+      </div>
+      <div className='input-row-group'>
         <LuciInput
           {...Form.propsFromField('email')}
-          error={touched.email && Boolean(errors.email)}
-          helperText={touched.email && errors.email}
-          type='email'
-          id='email'
-          name='email'
-          onChange={handleChange}
-          value={values.email || ''}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+          onChange={formik.handleChange}
+          value={formik.values.email || ''}
         />
         <LuciInput
           {...Form.propsFromField('username')}
-          error={touched.username && Boolean(errors.username)}
-          helperText={touched.username && errors.username}
-          type='text'
-          id='username'
-          name='username'
-          onChange={handleChange}
-          value={values.username || ''}
+          error={formik.touched.username && Boolean(formik.errors.username)}
+          helperText={formik.touched.username && formik.errors.username}
+          onChange={formik.handleChange}
+          value={formik.values.username || ''}
         />
-      </Box>
-      <Box className='input-row-group'>
+      </div>
+      <div className='input-row-group'>
         <LuciInput
           {...Form.propsFromField('company')}
-          error={touched.company && Boolean(errors.company)}
-          helperText={touched.company && errors.company}
-          type='text'
-          id='company'
-          name='company'
-          onChange={handleChange}
-          value={values.company || ''}
+          error={formik.touched.company && Boolean(formik.errors.company)}
+          helperText={formik.touched.company && formik.errors.company}
+          onChange={formik.handleChange}
+          value={formik.values.company || ''}
         />
-      </Box>
+      </div>
       <Button
+        className='update-profile button'
+        sx={{ width: '75px', mb: 1, height: '36px', mt: '10px' }}
         variant='contained'
         size='small'
         color='primary'
-        sx={{ width: '75px', mb: 1, height: '36px', mt: '10px' }}
-        type={isSubmitting ? 'button' : 'submit'}>
-        {isSubmitting ? <span className='spinner' /> : 'Save'}
+        type={formik.isSubmitting ? 'button' : 'submit'}>
+        {formik.isSubmitting ? <span className='spinner' /> : 'Save'}
       </Button>
     </form>
   );

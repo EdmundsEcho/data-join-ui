@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
-import SideNav2 from './layouts/SideNav2';
-import HorizontalLayout from './layouts/HorizontalLayout';
+import HorizontalLayoutWithSideBar from './layouts/HorizontalLayout';
 
 import { routesConfig as routes } from './router';
 import ProjectsDataProvider from './contexts/ProjectsDataContext';
-import usePageWidth from './hooks/use-page-width';
 
 //-----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
@@ -23,30 +21,16 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
  */
 const App = () => {
   const routesElement = useRoutes(routes);
-
-  const pageWidth = usePageWidth();
-  const isMobile = pageWidth < 770;
-
-  const [openDrawer, setOpenDrawer] = useState(!isMobile);
-
-  const toggleDrawer = () => {
-    setOpenDrawer(!openDrawer);
-  };
-
   return (
     <ProjectsDataProvider>
-      <div className='nostack nowrap nogap noradius'>
-        <SideNav2 open={openDrawer} toggleDrawer={toggleDrawer} />
-        {/* Main menu - controls what is displayed in main-viewport */}
-        <HorizontalLayout toggleDrawer={toggleDrawer} open={openDrawer}>
-          {/* Main viewport - visual frame */}
-          <div className='main-view sizing frame off'>{routesElement}</div>
-        </HorizontalLayout>
-      </div>
+      <HorizontalLayoutWithSideBar>
+        {/* Main viewport */}
+        {routesElement}
+      </HorizontalLayoutWithSideBar>
       {/* layout markers */}
-      <div className='marker top' />
-      <div className='marker bottom' />
-      <div className='marker top computed' />
+      <div className='marker top hidden-n' />
+      <div className='marker bottom hidden-n' />
+      <div className='marker top computed hidden-n' />
     </ProjectsDataProvider>
   );
 };

@@ -20,6 +20,7 @@
  *
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getModalState } from '../ducks/rootSelectors';
@@ -51,7 +52,7 @@ const MODAL_COMPONENTS = {
  * 2. augment action handlers with access to dispatch
  * 3. render whatever is on the non-null modal stateFragment
  */
-const ModalRoot = () => {
+const ModalRoot = ({ themeMode }) => {
   // 📖 data
   const { modalType, modalProps, modalActions } = useSelector(getModalState);
 
@@ -62,11 +63,11 @@ const ModalRoot = () => {
     return null;
   }
   if (DEBUG) {
-    console.debug(`${modalType}`);
-    console.debug(`ModalRoot props`);
-    console.dir(modalProps);
-    console.debug(`ModalRoot actions`);
-    console.dir(modalActions);
+    console.debug('Modal loaded state', {
+      modalType,
+      modalProps,
+      modalActions,
+    });
   }
 
   // ☎️  callbacks
@@ -94,7 +95,7 @@ const ModalRoot = () => {
   /* eslint-disable react/jsx-props-no-spreading */
   const modal = (
     <ActiveModal
-      className='Luci-Modal-node active'
+      className={`Luci-Modal-node active ${themeMode}`}
       open
       {...modalProps}
       {...actionsWithDispatch}
@@ -103,6 +104,9 @@ const ModalRoot = () => {
 
   // render on the DOM
   return ReactDOM.createPortal(modal, document.getElementById('modal-root'));
+};
+ModalRoot.propTypes = {
+  themeMode: PropTypes.oneOf(['light', 'dark']).isRequired,
 };
 
 export default ModalRoot;

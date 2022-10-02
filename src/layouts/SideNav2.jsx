@@ -1,6 +1,8 @@
-import React, { useCallback, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
+
+import clsx from 'clsx';
 
 import { styled, useTheme } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -16,10 +18,10 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { useLocationChange, usePageWidth } from '../hooks';
+import { usePageWidth } from '../hooks';
 import { ThemeContext } from '../contexts/ThemeContext';
 import { mainListItems } from '../router';
-import { showAppBar as showNavBarCfg } from '../router/routes';
+import Copyright from '../components/shared/Copyright';
 
 const drawerWidth = 240;
 
@@ -47,27 +49,14 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
   },
 }));
 
-export const SideNav = ({ open, toggleDrawer }) => {
+export const SideNav = ({ open, toggleDrawer, className }) => {
   const pageWidth = usePageWidth();
   const isMobile = pageWidth < 770;
-  const [showSideNav, setShowSideNav] = useState(false);
-
-  const setSidenavState = useCallback((location) => {
-    const { pathname } = location;
-    const show = showNavBarCfg(pathname);
-    setShowSideNav(show);
-  }, []);
-
-  useLocationChange(setSidenavState);
-
-  if (!showSideNav) {
-    return null;
-  }
 
   return (
     <Drawer
+      className={clsx('luci-drawer', className)}
       anchor='left'
-      className='luci-drawer'
       variant={isMobile ? 'temporary' : 'permanent'}
       open={open}>
       <Toolbar
@@ -86,7 +75,7 @@ export const SideNav = ({ open, toggleDrawer }) => {
         {mainListItems.map((menuItem) => (
           <Link
             key={menuItem.text}
-            to={menuItem.path}
+            to={menuItem.disabled ? '/coming-soon' : menuItem.path}
             onClick={() => {
               if (isMobile) toggleDrawer();
             }}>
@@ -98,6 +87,7 @@ export const SideNav = ({ open, toggleDrawer }) => {
         ))}
         <ThemeToggle />
       </List>
+      <Copyright className='copyright' />
     </Drawer>
   );
 };
@@ -105,6 +95,7 @@ export const SideNav = ({ open, toggleDrawer }) => {
 SideNav.propTypes = {
   open: PropTypes.bool,
   toggleDrawer: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
 };
 SideNav.defaultProps = {
   open: true,

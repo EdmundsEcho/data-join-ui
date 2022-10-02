@@ -25,7 +25,7 @@ import { colors } from '../constants/variables';
 //------------------------------------------------------------------------------
 // Read the .env
 //------------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_API === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
 
@@ -84,8 +84,9 @@ gqlInstance.interceptors.response.use(gqlApiResponse, gqlApiResponse);
  */
 export function fetchStore(projectId, signal) {
   //
-  console.debug(`Load project store: ${projectId}`);
-  //
+  if (DEBUG) {
+    console.debug(`Loading project store: ${projectId}`);
+  }
   if (typeof projectId === 'undefined') {
     throw new ApiCallError('Missing projectId');
   }
@@ -521,7 +522,9 @@ export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
  * @return {Promise}
  */
 export const fetchMatrixSpec = async ({ projectId, request, signal }) => {
-  console.debug(`Api params`, projectId, request, signal);
+  if (DEBUG) {
+    console.debug(`fetchMatrixSpec api params`, projectId, request, signal);
+  }
   const axiosOptions = {
     // single endpoint for all of the graphql requests
     url: `/warehouse/${projectId}`,

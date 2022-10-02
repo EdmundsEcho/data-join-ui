@@ -6,7 +6,7 @@ import {
 } from './formik-helpers';
 
 /**
- * User form
+ * New project form
  * Exports the props required to configure Formik
  *
  */
@@ -26,55 +26,25 @@ const propList = ['id', 'name', 'label', 'placeholder', 'type'];
 // ⚙️  user-profile-related fields keyed by name
 //
 const config = {
-  formId: 'new-user-form',
+  formId: 'new-project-form',
   fields: {
-    first_name: {
-      id: 'first_name',
-      name: 'first_name',
-      label: 'first name',
+    name: {
+      id: 'name',
+      name: 'name',
+      label: 'name',
       type: 'text',
       max: '20',
       placeholder: '',
-      required: false,
-    },
-    last_name: {
-      id: 'last_name',
-      name: 'last_name',
-      label: 'last name',
-      type: 'text',
-      max: '20',
-      placeholder: '',
-      required: false,
-    },
-    company: {
-      id: 'company',
-      name: 'company',
-      label: 'company',
-      type: 'text',
-      max: '30',
-      placeholder: '',
-      required: false,
-    },
-    email: {
-      id: 'email',
-      name: 'email',
-      label: 'email address',
-      type: 'email',
-      max: '100',
-      placeholder: '',
-      errorMsg: 'Email address is required.',
-      invalidMsg: 'Your email address is invalid',
       required: true,
     },
-    username: {
-      id: 'username',
-      name: 'username',
-      label: 'username',
+    description: {
+      id: 'description',
+      name: 'description',
+      label: 'project description',
       type: 'text',
-      max: '40',
+      max: '200',
       placeholder: '',
-      errorMsg: 'Please select a username',
-      required: true,
+      required: false,
     },
   },
 };

@@ -58,7 +58,6 @@ export const stdApiResponse = ({
 };
 
 export const gqlApiResponse = (response) => {
-  console.debug(`raw response`, response);
   return response;
 };
 export default stdApiResponse;

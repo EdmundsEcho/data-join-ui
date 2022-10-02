@@ -1,8 +1,25 @@
 {
-  "text": "rgb(181, 171, 155)",
-  "contrast": "rgb(39, 40, 40)",
-  "secondary": "rgb(255, 175, 98)",
-  "primary": "rgb(126, 193, 205)",
-  "background-color": "#175db2",
-  "color": "#fffff6"
+  "text": {
+    "primary": "rgba(250, 250, 250, 0.6)",
+    "secondary": "rgba(250, 250, 250, 0.7)",
+    "disabled": "rgba(250, 250, 250, 0.5)",
+    "icon": "rgba(250, 250, 250, 0.5)",
+    "hint": "rgba(250, 250, 250, 0.7)"
+  },
+  "background": {
+    "paper": "#121212",
+    "default": "#121212"
+  },
+  "divider": "rgba(255, 255, 255, 0.12)",
+  "primary": {
+    "main": "#8edceb",
+    "dark": "#42808b",
+    "contrastText": "#375d60"
+  },
+  "secondary": {
+    "main": "#f4cd8b",
+    "dark": "#a5480070",
+    "superLight": "rgba(255,168, 104, 0.3)",
+    "contrastText": "#a54800"
+  }
 }

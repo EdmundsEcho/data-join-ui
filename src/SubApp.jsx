@@ -24,7 +24,7 @@ import { loadStore as loadNewOrSavedStore } from './core-app/ducks/project-meta.
 import { getProjectId } from './core-app/ducks/rootSelectors';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -67,7 +67,7 @@ const SubApp = () => {
     useSignal: true,
     immediate: false,
     caller: `SubApp-${requestedProject.slice(-4)}`,
-    DEBUG: true,
+    DEBUG,
   });
 
   // ---------------------------------------------------------------------------

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
 import '../../assets/splash.css';
 
 const LoadingSplash = ({ title, message, cancel }) => {
@@ -16,7 +17,11 @@ const LoadingSplash = ({ title, message, cancel }) => {
           <Typography variant='body1'>{message}</Typography>
         </div>
         {cancel && (
-          <Button variant='contained' type='button' onClick={cancel}>
+          <Button
+            className='cancel button'
+            variant='contained'
+            type='button'
+            onClick={cancel}>
             Cancel
           </Button>
         )}

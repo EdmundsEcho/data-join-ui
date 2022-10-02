@@ -20,7 +20,6 @@
  *
  */
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 
 // part of the transition away from container for this component
@@ -32,7 +31,6 @@ import clsx from 'clsx';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import Container from '@mui/material/Container';
 import PreviousArrow from '@mui/icons-material/ArrowBackIos';
 import NextArrow from '@mui/icons-material/ArrowForwardIos';
 import Button from '@mui/material/Button';
@@ -51,10 +49,20 @@ import Machine, {
 } from './stepper-machine';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
+// -----------------------------------------------------------------------------
+// Matrix data saving
 const SAVE_MATRIX_ENDPOINT = process.env.REACT_APP_SAVE_MATRIX_ENDPOINT;
 const mkSaveEndpoint = (projectId) =>
   SAVE_MATRIX_ENDPOINT.replace('{projectId}', projectId);
+
+const handleSaveMatrix = (projectId) => {
+  fetch(mkSaveEndpoint(projectId), { responseType: 'blob' }).then(
+    (response) => {
+      response.blob();
+    },
+  );
+};
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -88,6 +96,7 @@ const StepBarComponent = () => {
   const currentPage = lookupPageWithPathname(pathname);
   // immutable reference recorded in local state
 
+  // "next page" determined by prev or next event
   const nextPage = (event) =>
     Machine(dispatch, projectId).transition(
       isNextStepEnabled[currentPage.route],
@@ -116,66 +125,62 @@ const StepBarComponent = () => {
 
   return currentPage.hideStepper ? null : (
     /* Stepper */
-    <Container
-      className={clsx('Luci-Stepper wrapper')}
-      maxWidth='xl'
-      sx={{ gridColumn: '1/3' }}>
-      <Stepper
-        className={clsx('Luci-Stepper root')}
-        activeStep={currentPage.stepNumber}>
-        {pages.map(({ stepDisplay: label }) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-
+    <div className='stepbar root stack nowrap nogap'>
+      <div className='stepbar stepper-root frame'>
+        <Stepper
+          className={clsx('Luci-Stepper root')}
+          activeStep={currentPage.stepNumber}>
+          {pages.map(({ stepDisplay: label }) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </div>
       {/* Navigation */}
       <div className='stepbar nav-root nostack nowrap'>
         <div className='nostack nowrap flex-1'>
-          <div className='nostack nowrap flex-1'>
-            <div className='nostack nowrap button-group flex-1'>
-              {/* Previous */}
-              <Button
-                className={clsx({
-                  'stepbar nav disabled':
-                    !isPreviousStepEnabled[currentPage.route],
-                })}
-                startIcon={<PreviousArrow fontSize='small' />}
-                onClick={handlePrevStep}>
-                Previous
-              </Button>
-              {/* Next */}
-              <Button
-                className={clsx('stepbar nav', {
-                  disabled: !isNextStepEnabled[currentPage.route],
-                })}
-                disabled={!isNextStepEnabled[currentPage.route]}
-                endIcon={<NextArrow fontSize='small' />}
-                onClick={handleNextStep}>
-                Next
-              </Button>
-            </div>
-            <div className='nostack nowrap button-group flex-1'>
-              <Button
-                className={clsx('matrix', 'download', 'round', {
-                  disabled: currentPage.route !== 'matrix',
-                })}
-                disabled={currentPage.route !== 'matrix'}
-                href={mkSaveEndpoint(projectId)}
-                endIcon={<DownloadIcon />}>
-                Download
-              </Button>
-            </div>
+          <div className='nostack nowrap button-group flex-1'>
+            {/* Previous */}
+            <Button
+              className={clsx('stepbar nav previous', {
+                disabled: !isPreviousStepEnabled[currentPage.route],
+              })}
+              startIcon={<PreviousArrow fontSize='small' />}
+              onClick={handlePrevStep}>
+              Previous
+            </Button>
+            {/* Next */}
+            <Button
+              className={clsx('stepbar nav next', {
+                disabled: !isNextStepEnabled[currentPage.route],
+              })}
+              disabled={!isNextStepEnabled[currentPage.route]}
+              endIcon={<NextArrow fontSize='small' />}
+              onClick={handleNextStep}>
+              Next
+            </Button>
           </div>
         </div>
-
-        {/* logo container */}
-        <div className='logo stepbar'>
-          <img src={logo} height='50' width='37' alt='Lucivia' />
-        </div>
       </div>
-    </Container>
+
+      {/* download button */}
+      <form action={mkSaveEndpoint(projectId)} method='post'>
+        <Button
+          type='submit'
+          className={clsx('matrix', 'download', 'round', {
+            disabled: currentPage.route !== 'matrix',
+          })}
+          disabled={currentPage.route !== 'matrix'}
+          endIcon={<DownloadIcon />}>
+          Download
+        </Button>
+      </form>
+      {/* logo container */}
+      <div className='stepbar logo'>
+        <img src={logo} height='50' width='37' alt='Lucivia' />
+      </div>
+    </div>
   );
 };
 

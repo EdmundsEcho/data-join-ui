@@ -1,6 +1,7 @@
+import { useState } from 'react';
+
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
-import { useState } from 'react';
 
 export const LuciInput = (props) => {
   const { password } = props;

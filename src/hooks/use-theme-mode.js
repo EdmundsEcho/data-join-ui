@@ -1,8 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+
+/* eslint-disable no-console */
 
 export const useThemeMode = () => {
   const [themeMode, setThemeMode] = useState(() => {
-    const defaultTheme = 'light'; // get from OS later
+    const defaultTheme = window.matchMedia('(prefers-color-scheme: dark)')
+      .matches
+      ? 'dark'
+      : 'light';
     try {
       const item = window.localStorage.getItem('theme');
       return item ? JSON.parse(item) : defaultTheme;
@@ -11,19 +16,19 @@ export const useThemeMode = () => {
     }
   });
 
-  const setValue = (value) => {
-    try {
-      const valueToStore = value instanceof Function ? value(themeMode) : value;
-      setThemeMode(valueToStore);
-      window.localStorage.setItem('theme', JSON.stringify(valueToStore));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    // console.log(`${themeMode} theme enabled`);
-  }, [themeMode]);
+  const setValue = useCallback(
+    (value) => {
+      try {
+        const valueToStore =
+          value instanceof Function ? value(themeMode) : value;
+        setThemeMode(valueToStore);
+        window.localStorage.setItem('theme', JSON.stringify(valueToStore));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [themeMode],
+  );
 
   return [themeMode, setValue];
 };

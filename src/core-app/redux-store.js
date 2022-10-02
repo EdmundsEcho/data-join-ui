@@ -24,16 +24,18 @@
  * @module configuredStore
  *
  */
+/*
 import {
   persistStore,
   persistReducer,
-  /* FLUSH,
+  FLUSH,
   REHYDRATE,
   PAUSE,
   PERSIST,
   PURGE,
-  REGISTER, */
+  REGISTER,
 } from 'redux-persist';
+*/
 import { configureStore } from '@reduxjs/toolkit'; // dev only
 import { composeWithDevTools } from '@redux-devtools/extension'; // dev only
 import { createStore, applyMiddleware } from 'redux';
@@ -66,8 +68,8 @@ import workbenchMiddleware from './ducks/middleware/feature/workbench.middleware
 import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 
 // the redux-persist configuration
-import { persistConfig } from './redux-persist-cfg';
-import { addActionLogging, options as devTools } from './redux-tools-cfg';
+// import { persistConfig } from './redux-persist-cfg';
+import { options as devTools } from './redux-tools-cfg';
 
 /* eslint-disable no-console */
 const sagaMiddlewareWithPid = (projectId) =>
@@ -107,8 +109,7 @@ const configureStoreProd = (preloadedState) => {
   const sagaMiddleware = createSagaMiddleware();
 
   const middlewares = [
-    // initMiddleware, // first
-    ...featureMiddleware, //
+    ...featureMiddleware,
     ...coreMiddleware, // processing before document
     sagaMiddleware,
     saveMiddleware, // ⚠️  must be last in the sequence
@@ -119,10 +120,10 @@ const configureStoreProd = (preloadedState) => {
     `appReducers: ${typeof appReducers}`,
   );
 
-  const persistedReducer = persistReducer(persistConfig, appReducers);
+  // const persistedReducer = persistReducer(persistConfig, appReducers);
 
   const store = configureStore({
-    reducer: persistedReducer,
+    reducer: appReducers,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: false,
@@ -134,12 +135,12 @@ const configureStoreProd = (preloadedState) => {
   });
 
   // register as a listener
-  const persistor = persistStore(store);
+  // const persistor = persistStore(store);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  return { store, persistor };
+  return { store /* persistor */ };
 };
 
 // -----------------------------------------------------------------------------
@@ -147,13 +148,10 @@ const configureStoreProd = (preloadedState) => {
 //
 const configureStoreDev2 = (preloadedState) => {
   console.info(`Loading the Dev Version (v2.6) of the store`);
-  //
-  // project dependent closure
-  //
-  const sagaMiddleware = sagaMiddlewareWithPid();
+
+  const sagaMiddleware = createSagaMiddleware();
 
   const middlewares = [
-    // initMiddleware, // first
     ...featureMiddleware, //
     ...coreMiddleware, // final processing before document
     sagaMiddleware,

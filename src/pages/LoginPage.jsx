@@ -6,6 +6,7 @@ import { Box, Divider, IconButton, Paper, Typography } from '@mui/material';
 import { Google, GitHub, Twitter } from '@mui/icons-material';
 
 // import { persistConfig } from '../core-app/redux-persist-cfg';
+import { Copyright } from '../components/shared/Copyright';
 import { logout as logoutApi } from '../services/dashboard.api';
 import { usePersistedState, useAbortController, useFetchApi } from '../hooks';
 import { colors } from '../core-app/constants/variables';
@@ -13,7 +14,7 @@ import { colors } from '../core-app/constants/variables';
 import './LoginPage.css';
 
 //-----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_LOGIN === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_LOGIN === 'true';
 //-----------------------------------------------------------------------------
 const AUTH_PROVIDERS = process.env.REACT_APP_USER_AUTH_PROVIDERS.split(',');
 const AUTH_URL = process.env.REACT_APP_USER_AUTH_URL;
@@ -35,7 +36,8 @@ export const LoginPage = ({ logout: logoutProp }) => {
   // (consumed by the RedirectPage, navigate(origin))
   const location = useLocation();
   const origin = location.state?.origin || '/';
-  usePersistedState('origin', origin);
+  usePersistedState('origin', origin, 'db-tncui');
+
   // 2. proceed with the login routine
   // generic for supported authenticating services
   const errorMsg = 'this auth provider is not supported';
@@ -149,6 +151,8 @@ export const LoginPage = ({ logout: logoutProp }) => {
           </Box>
         </Box>
       </Paper>
+
+      <Copyright className='copyright' />
     </Box>
   );
 };

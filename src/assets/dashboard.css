@@ -2,59 +2,65 @@
 @import "luci-theme.css";
 
 :root {
-  /* visually confirmation
-   * To size the main-view, use top and bottom
-   * of the main-view.outlet div (should be sum of margins) */
+  /* MuiToolbar min-height */
   --main-view-top: 64px;
+  --top-bar-height: 64px;
   --main-view-bottom: 0px;
-  --main-view-min-width: 400px;
 
-  /* gap between controller and outlet */
-  --controller-outlet-gap: 0.15rem;
+  --main-margin: 0px;
+  --main-padding: 0px;
+  --default-stack-gap: 0.75rem;
+  --default-margin: 1.5rem;
+  --default-padding: 1rem;
+  --default-radius: 1rem;
+
+  /* flexbox - main menu & viewport */
+  /* WIP */
+  --main-menu-flex: 1 3 0%;
+  --main-view-flex: 6 1 0%;
+
+  /* controller main & outlet */
+  /* flex-handles */
+  --controller-main-flex-handle: 1 3 0%;
+  --controller-outlet-flex-handle: 5 1 0%;
+  /* gap between  */
+  --controller-outlet-gap: 2px;
   --controller-outlet-radius: 1rem;
+  /* margins and padding */
+  --controller-margin: 0.5rem;
+  --controller-padding: var(--default-stack-gap);
+
+  /* fixed width values */
+  --main-view-min-width: 400px;
+  --controller-main-mini-width: 80px;
+  --controller-main-max-width: 350px;
+  --stepbar-height: 100px;
+  --stepbar-nav-width: 100px;
 
   /* computed value to set the height of main-view */
   --main-view-height: calc(
     100vh
-    - var(--main-view-frame-margin) * 2
-    - var(--main-view-top)
-    - var(--main-view-bottom)
+    - var(--top-bar-height)
+    - var(--default-stack-gap)
+    - var(--controller-margin) * 2
   );
-
-  /* ⬜ Decide on which box to set margin; rest set to zero
-   * customize here
-   * use to set outer margins */
-  --root-margin: 0px;
-  --main-margin: 0px;
-  --main-padding: 0px;
-  --main-wrapper-margin: 0px;
-  --top-bar-height: 50px;
-  --main-view-margin: 0px; /* keep at zero; used in a couple of layers */
-  --main-view-padding: 0px; /* keep at zero; used in a couple of layers */
-  --main-view-frame-margin: 0.75rem;
-
-  /* flexbox - menue, controller & main views
-   *
-   * within main,
-   * 👉 main-menu
-   * 👉 main-view */
-  --main-menu-flex: 1 3 0%;
-  --main-view-flex: 6 1 0%;
-
-  /* within main-controller-root
-   * 👉 main-controller
-   * 👉 main-view.outlet */
-  --projects-controller-flex: 1 3 0%;
-  --main-view-outlet-flex: 5 1 0%;
+  --core-app-outlet-height: calc(
+    var(--main-view-height)
+    - var(--stepbar-height)
+    - var(--controller-margin) * 4
+  );
 }
 
-
+/*
+============================================================================== */
+/* box for debugging */
 .box.no-border {
   margin: 10px;
   padding: 0px;
   border: none;
   box-sizing: border-box;
 }
+
 .box {
   margin: 10px;
   padding: 10px;
@@ -62,29 +68,22 @@
   box-sizing: border-box;
 }
 
-.box.root {
-  display: flex;
-  position: relative;
-  margin: var(--root-margin);
-  padding: 0;
-}
-
-.box.root > .inner {
-  flex-grow: 1;
-}
+/*
+============================================================================== */
+/* generic formating */
 .stack {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  gap: 10px;
   box-sizing: border-box;
+  gap: var(--default-stack-gap);
 }
 /* can sometimes be substituted with display: block */
 .nostack {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  gap: 10px;
+  gap: var(--default-stack-gap);
 }
 .nogap {
   gap: 0;
@@ -98,105 +97,147 @@
 .align-items-center {
     align-items: center;
 }
-/* app-specific classes */
-.core-app-main {
-  max-width: unset;
-  padding: 0;
-  margin: 0;
+.nostack.center {
+    justify-content: center;
 }
-.main.wrapper {
-  margin: var(--main-wrapper-margin);
+.nowrap {
+  flex-wrap: nowrap;
+}
+.hidden {
+  visibility: hidden;
+}
+.hidden-o {
+  opacity: 0;
+}
+.hidden-n {
+  display: none;
+}
+
+/*
+============================================================================== */
+/* app-specific classes */
+.copyright {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary-dark);
+    font-size: 0.8rem;
+}
+/* user-profile */
+.main-page.root,
+.project-form.root,
+.user-profile.root {
+    max-width: 750px;
+    margin: var(--default-margin);
+    padding: var(--default-padding);
+    border-radius: 1rem;
+    background-color: var(--color-background-paper);
+}
+.main-page.root > :is(h5, p) {
+    margin: 1rem;
+}
+.main-page.root > img {
+    width: 140px
+}
+.project-form.root {
+    margin: 0;
+    padding: 0;
+}
+.error-page.root {
+    height: calc(100vh - 100px);
+    align-items: center;
+    justify-items: center;
+    display: grid;
+    text-align: center;
+}
+.single-page-dialog {
+    width: 300px;
+    border-radius: var(--default-radius);
+    padding: var(--default-padding);
+    background-color: var(--color-background-paper);
+    z-index: 2;
+}
+
+/* .new-project.center { */
+    /* margin: 16px auto 8px auto; */
+/* } */
+.new-project > button,
+.project-form.root button,
+.error-page.root button,
+.user-profile.root button {
+    margin-top: calc(var(--default-margin) * 1.5);
+    background-color: var(--color-primary-main);
+    font-family: "Rubik", sans-serif;
+}
+/* mini version of new-project button */
+button.new-project.mini {
+    height: 34px;
+    width: 34px;
+}
+button.cancel {
+    margin-top: 1.5rem;
 }
 .main {
+    background-color: var(--color-background);
+}
+.main.side-nav {
+    background-color: var(--color-background-sideNav);
+}
+.main-view,
+.controller,
+.horizontal-layout {
+  height: inherit;
+}
+.main,
+.main-view {
   margin: var(--main-margin);
   padding-top: var(--main-padding);
   width: 100%;
 }
-/* item exposed to container dynamics
- * inner reserved for layout of item */
-.main-menu {
-  margin: 0;
-  padding: 0;
-  flex: var(--main-menu-flex);
-  margin-right: auto;
-  max-width: 240px;
-}
-.main-controller-root {
-  gap: 0;
-}
-.projects.main-controller {
-  margin: 10px;
-  padding: 0;
-  flex: var(--projects-controller-flex);
-  max-width: 350px;
-}
-.projects.main-controller.mini {
-  flex: unset;
-  width: 80px;
-}
-/* exposed to container dynamics
- * inner reserved for layout of item */
-.main-view {
-  flex: var(--main-view-flex);
-  margin: var(--main-view-margin);
-  padding: var(--main-view-padding);
-}
-.main-view.outlet {
-  flex: var(--main-view-outlet-flex);
-  min-width: var(--main-view-min-width);
-}
-/* outlet and projects frames complements */
-.main-view.outlet.frame {
-    border-top-right-radius: var(--controller-outlet-radius);
-    border-bottom-right-radius: var(--controller-outlet-radius);
-    border-top-left-radius: 0rem;
-    border-bottom-left-radius: 0rem;
-    margin-left: var(--controller-outlet-gap);
-}
-.main-controller.projects.frame{
-    border-top-right-radius: 0rem;
-    border-bottom-right-radius: 0rem;
-    border-top-left-radius: var(--controller-outlet-radius);
-    border-bottom-left-radius: var(--controller-outlet-radius);
-    background-color: var(--color-primary-contrastText);
-    padding: 0.7rem;
-    margin-right: var(--controller-outlet-gap);
-}
-.main-view.frame {
-    border-radius: 1rem;
-    background-color: var(--color-primary-contrastText);
-    margin: var(--main-view-frame-margin);
-}
-.main-view.frame.off {
-    border-radius: 0;
-    background-color: inherit;
-    margin: var(--main-view-margin);
-}
-/* 🔖 🔑 The top is not 0 but lower on the screen.
- *    Also consider, you are pushing parents with
- *    margins and padding down; we need to consider
- *    the cummulative size of the bottom margins.
- */
-.main-view.sizing-frame {
+.main-view.sizing {
+  max-width: unset;
   height: var(--main-view-height);
 }
-.main-view.frame.sizing {
-  /* height: var(--main-view-height); */
+/* item exposed to container dynamics */
+/* complement with controller.main flex-handle */
+.controller.outlet.flex-handle {
+    flex: var(--controller-outlet-flex-handle);
+    min-width: var(--main-view-min-width);
 }
-.bottom-navigation.positioning-frame {
-  margin-top: auto;
+.controller.main.flex-handle {
+  flex: var(--controller-main-flex-handle);
 }
-
+.controller.main.flex-handle.mini {
+  flex: unset;
+  width: var(--controller-main-mini-width);
+}
+.controller-mini-overlay {
+    position: absolute;
+    background: linear-gradient(to right, transparent 60%, var(--color-background-heading) 90%);
+    transform: translateY(-12px);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+/* controller hand-off to core-app */
+.project-view,
+.app-paging-view {
+  flex-grow: 1;
+}
+.app-paging-view {
+  max-height: var(--core-app-outlet-height);
+}
+.app-paging-view > div {
+  height: 100%;
+}
 /* ---------------------------------------- */
-/* Side nav */
+/* AppBar and SideNav formatting */
 .dark-toolbar {
-  background-color: #52a5b8;
+  background-color: var(--color-primary-dark);
 }
-
 .light-toolbar {
-  background-color: #52a5b8;
+  background-color: var(--color-primary-main);
 }
-
 .appbar a,
 .luci-toolbar a,
 .links a {
@@ -206,9 +247,17 @@
 .side-nav {
     height: inherit;
 }
-.main-controller.projects {
-    --padding: 7px;
+/* show hide based on display type */
+.luci-drawer.side-nav.hidden {
+    display: none;
 }
+.appbar-show-hide.hidden {
+    display: none;
+}
+.appbar-show-hide .horizontal-layout.primary-main {
+    background-color: transparent;
+}
+/* project */
 .project-summary-view > .short-id {
     font-size: 1em;
 }
@@ -216,44 +265,33 @@
     font-size: 0.8em;
 }
 /* hide when in mini mode */
-.project-summary-view.mini  .short-id > .label,
-.project-summary-view.mini  .delete-button  {
+.project-summary-view.mini .short-id > .label,
+.project-summary-view.mini .delete-button  {
     display: none;
 }
 .project-summary-view {
     flex: 1;
 }
-.new-project.center {
-    margin: 16px auto 8px auto;
-}
-/* mini version of new-project button */
-.new-project.button.mini {
-    background-color: var(--color-primary-main);
-    height: 34px;
-    width: 34px;
-    color: var(--color-primary-contrastText);
-}
-.new-project.button.mini:hover {
-    background-color: var(--color-primary-light);
-    color: var(--color-primary-main);
-}
 /* projects list (heading, nav and items) */
-.main-controller.projects > .header {
+.controller.main.projects {
+    --padding: 7px;
+}
+.controller.main.projects > .header {
     /* follow nav */
     margin: 0;
 }
-.main-controller.projects > .header > .heading {
+.controller.main.projects > .header > .heading {
     /* aka title match list item */
     margin: 0;
     padding: var(--padding);
 }
 /* adjust toggle */
-.main-controller.projects > .header > .toggle {
+.controller.main.projects > .header > .toggle {
     margin: 0;
     padding: var(--padding);
     padding-right: var(--padding);
 }
-.main-controller.projects.mini > .header > .toggle {
+.controller.main.projects.mini > .header > .toggle {
     margin: 0 auto;
 }
 .list.projects > .item {
@@ -265,17 +303,387 @@
     background-color: rgba(0, 0, 0, 0.04);
     opacity: 1;
 }
-.list.projects > .item.enable {
-    opacity: 1;
-}
+.list.projects > .item.enable { }
+
 .list.projects > .item.Mui-selected {
     background-color: var(--color-primary-superLight);
     opacity: 1;
+}
+
+/* ---------------------------------------- */
+/* controller formatting: main & outlet     */
+.controller.main,
+.controller.outlet {
+  margin: var(--controller-margin);
+  padding: var(--controller-padding);
+}
+.controller.main {
+  max-width: var(--controller-main-max-width);
+}
+.controller.root {
+    gap: 0;
+}
+.controller.main {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: var(--controller-outlet-radius);
+    border-bottom-left-radius: var(--controller-outlet-radius);
+    margin-right: var(--controller-outlet-gap);
+    background-color: var(--color-background-paper);
+}
+.controller.outlet {
+    border-top-right-radius: var(--controller-outlet-radius);
+    border-bottom-right-radius: var(--controller-outlet-radius);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: var(--controller-outlet-gap);
+    background-color: var(--color-background-paper);
+}
+/* --------------------------------------------------------------------------- */
+/* core-app
+/* --------------------------------------------------------------------------- */
+/* stepbar */
+.stepbar.root {
+    height: var(--stepbar-height);
+}
+.stepbar.stepper-root {
+    padding: var(--default-stack-gap) calc(var(--default-stack-gap)*2);
+    border: solid 2px var(--color-primary-superLight);
+    min-width: 85%;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 30px;
+}
+.stepbar.nav-root {
+    margin-top: var(--default-stack-gap);
+}
+.stepbar.nav {
+    width: var(--stepbar-nav-width);
+    padding: 5px var(--default-stack-gap);
+    border-radius: 30px;
+}
+button.stepbar.nav.previous {
+    margin-left: auto;
+    margin-right: var(--default-stack-gap);
+}
+button.stepbar.nav.next {
+    margin-right: auto;
+    margin-left: var(--default-stack-gap);
+}
+.stepbar.nav:hover {
+    background-color: var(--color-primary-superLight);
+}
+.stepbar.nav.disabled {
+    opacity: 0.5;
+}
+/* absolute positioned items */
+.stepbar.logo {
+    position: absolute;
+    bottom: calc(var(--controller-margin) * 3);
+    right: calc(var(--controller-margin) * 3);
+}
+.matrix.download {
+    position: absolute;
+    bottom: 200px;
+    right: calc(var(--controller-margin) * 3);
+    background: #52a5b820;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 0.2rem;
+    border-radius: 50%;
+}
+.matrix.download:hover {
+    background: #52a5b880;
+    background-color: var(--color-background-paper);
+}
+.flex-1 {
+    flex: 1;
+}
+/* --------------------------------------------------------------------------- */
+/* workbench */
+.EtlUnitBase-root.palette,
+.EtlUnitBase-root.canvas {
+    background-color: var(--color-background-title);
+}
+.EtlUnitGroupBase-root {
+    background-color: var(--color-background-heading);
+}
+.EtlUnitGroupBase-root .header {
+    background-color: var(--color-primary-dark);
+    filter: brightness(1.1);
+}
+.EtlUnitBase-root .EtlUnit-ValueGrid .MuiDataGrid-footer {
+    background-color: var(--color-background-footer);
+    filter: brightness(1.1);
+}
+
+.EtlUnit-parameter.measurement
+> .header-root {
+    justify-content: space-between;
+    gap: 0.5em;
+}
+.EtlUnit-CardHeader-Tools {
+    justify-content: flex-end;
+    margin-right: -3px;
+}
+.EtlUnit-parameter.measurement
+> .header-root
+> .EtlUnit-CardHeader-Tools svg {
+    width: 0.8em;
+    height: 0.8em;
+}
+.EtlUnit-parameter.measurement
+> .header-root
+> .EtlUnit-CardHeader-Tools label {
+    margin: 0;
+}
+div.workbench.button-group {
+    background-color: var(--color-secondary-main);
+    opacity: 0.7;
+    border: none;
+    border-radius: 18px;
+    position: fixed;
+    right: 3.5%;
+    top: 75%;
+    padding: 15px;
+    width: min-content;
+    z-index: 9;
+}
+div.workbench.button-group * {
+    color: #fff;
+}
+.Luci-Workbench-board > .palette-root {
+    padding: 10px;
+}
+
+/* Span inputs */
+.MuiSpanInput--01 {
+    background-color: var(--color-secondary-dark);
+    padding: 3px;
+    justify-content: space-between;
+}
+.MuiSpanInput--01 > .switch {
+    margin-right: 3px;
+    margin-left: 5px;
+}
+.Luci-SpanLevel-Chip {
+    background-color: var(--color-secondary-dark);
+    /* filter: brightness(1.1); */
+}
+.Luci-SpanLevel-Chip .title {
+    filter: brightness(1.9);
+}
+.Luci-ValueGrid-cell.count {
+  font-family: 'JetBrainsMono';
+  font-weight: 'normal';
+}
+
+.Luci-Dialog.root .MuiDialog-paper {
+    border-radius: var(--default-radius);
+}
+.Luci-Dialog.root .frame {
+    margin: 3px;
+    padding: var(--default-padding);
+    border-radius: var(--default-radius);
+    background-color: var(--color-background-paper);
+}
+.Luci-Dialog.root .frame button {
+    padding: 0.5rem;
+    width: 65px;
+    border: none;
+}
+.Luci-Dialog.root .frame button:hover {
+    opacity: 1;
+    background-color: var(--color-background-heading);
+}
+
+button:-moz-focusring,
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
+  outline: 1px solid var(--color-background-heading);
+}
+
+.Luci-Dialog.root .frame * {
+    background-color: inherit;
+}
+.Luci-Dialog.root .frame .Luci-FileField-HeadingBox > div {
+    border-color: var(--color-background-card)
+}
+
+/* --------------------------------------------------------------------------- */
+/* FileDialog, EtlFieldView, Workbench */
+.SplitPane > .Pane,
+.SplitPane {
+    position: relative;
+    background-color: inherit;
+}
+
+.SplitPane > .Pane {
+    overflow: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+.SplitPane > .Pane > div {
+    overflow: inherit;
+}
+.Resizer {
+  background-color: var(--color-secondary-superLight);
+  opacity: 0.3;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+}
+
+.Resizer:hover {
+  -webkit-transition: all 2s ease;
+  transition: all 2s ease;
+}
+
+.Resizer.horizontal {
+  height: 11px;
+  margin: -5px 0;
+  border-top: 5px solid rgba(255, 255, 255, 0);
+  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  cursor: row-resize;
+  width: 100%;
+}
+
+.Resizer.horizontal:hover {
+  border-top: 5px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+  width: 11px;
+  margin: 0 -5px;
+  border-left: 5px solid rgba(255, 255, 255, 0);
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+  border-left: 5px solid rgba(0, 0, 0, 0.5);
+  border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+.Resizer.disabled {
+  cursor: not-allowed;
+}
+.Resizer.disabled:hover {
+  border-color: transparent;
+}
+/* --------------------------------------------------------------------------- */
+/* HeaderView, EtlFieldView */
+.Luci-EtlFieldView.MuiCard-root,
+.Luci-HeaderView.MuiCard-root,
+.Luci-sources.root * {
+    background-color: var(--color-background-card);
+}
+.Luci-sources.root {
+    width: inherit;
+}
+.Luci-sources.root > .Luci-FileField-HeadingBox > div {
+    border: 1px solid var(--color-text-primary)
+}
+
+.trashCell {
+    padding: 5px;
+    margin: 3px;
+}
+.delete-button:hover,
+.trashCell:hover {
+    opacity: 1;
+    color: var(--color-primary-main);
+}
+span.google-drive {
+    display: block;
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.input-row-group {
+  display: flex;
+  gap: 20px;
+}
+
+.input-row-group > div {
+  flex-grow: 1;
+}
+
+.input-row-group.project-name {
+    max-width: 300px;
+}
+.spinner-root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+}
+.spinner {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+.spinner.spinner-lucivia {
+  border-color: rgba(82, 165, 184, 0.4);
+  border-top-color: var(--color-primary-main);
+}
+.spinner.spinner-lg {
+  width: 55px;
+  height: 55px;
+  border-width: 5px;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------- */
+/* markdown */
+.main-page.with-markdown {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    height: calc(100% - 1rem);
+}
+.main-page.with-markdown > .footer > img {
+    width: 100px
+}
+.main-page.with-markdown > .markdown > :is(h3, h4, h5, h6) {
+    margin-bottom: 1rem;
+    background-color: inherit;
+}
+.markdown.workbench > :is(h3, h4, h5, h6) {
+    text-align: center;
 }
 /* ---------------------------------------- */
 /*
  * Debugging layout markers
  */
+.size {
+    display: none;
+}
 .marker {
   position: absolute;
   width: 50px;
@@ -320,28 +728,10 @@ ul[title]::before {
   text-decoration: line-through;
 }
 /* ---------------------------------------- */
-.project-view {
-  flex-grow: 1;
-  flex-wrap: nowrap;
-  overflow: hidden;
-}
 .message {
   font-size: 30px;
 }
 /* Style the navbar */
-.appbar {
-  height: var(--top-bar-height);
-}
-
-/* Navbar links */
-.appbar a {
-  float: left;
-  display: block;
-  text-align: center;
-  padding: 14px;
-  text-decoration: none;
-}
-
 /* Page content */
 .content {
   padding: 16px;

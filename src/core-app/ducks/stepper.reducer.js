@@ -29,7 +29,7 @@ export const getBookmark = (stateFragment) => stateFragment.bookmark;
 export const initialState = {
   isHidden: false,
   currentPage: undefined,
-  bookmark: ROUTES.meta,
+  bookmark: ROUTES.files, // align with navigate following addNew project
 };
 
 // ----------------------------------------------------------------------------
