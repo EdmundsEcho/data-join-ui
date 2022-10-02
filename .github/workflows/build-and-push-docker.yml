@@ -31,8 +31,8 @@ jobs:
 
       - name: Build image
         run: |
-          IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
-          LATEST=ghcr.io/lucivia/frontend:latest
+          IMAGE_ID=ghcr.io/lucivia/ui_v2:$GITHUB_RUN_ID
+          LATEST=ghcr.io/lucivia/ui_v2:latest
           docker build . -t $IMAGE_ID
           docker image tag $IMAGE_ID $LATEST
           docker push $IMAGE_ID
