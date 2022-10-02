@@ -230,9 +230,7 @@ function Instructions() {
   const markdown = useMarkdown({ markdownFile });
   return (
     <div className='workbench markdown instructions'>
-      <ReactMarkdown source={markdown} remarkPlugins={[remarkGfm]}>
-        {markdown}
-      </ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
     </div>
   );
 }

@@ -7,13 +7,7 @@
  * ⬇ LeftPane (ListOfFiles) & RightPane (HeaderViews ~ list of selected files)
  *
  */
-import React, {
-  useRef,
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -33,7 +27,6 @@ import StorageProviderList from './components/StorageProviderList';
 // 📖 data
 import {
   getFiles,
-  getFilesViewStatus,
   hasRequestHistory,
   peekParentRequestHistory,
   peekRequestHistory,
@@ -41,7 +34,6 @@ import {
 
 // ☎️  Callbacks to update data
 import {
-  fetchDirectoryStart,
   fetchDirectorySuccess,
   pushFetchHistory,
   popFetchHistory,
@@ -61,8 +53,8 @@ const makeAuthUrl = (projectId, provider) =>
   `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
 //------------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-const DEBUG = true;
+//------------------------------------------------------------------------------
+const DEBUG = process.env.REACT_APP_DEBUG_HEADER_VIEWS === 'true';
 // ----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -119,7 +111,7 @@ function LeftPane({ projectId, toggleFile }) {
     immediate: false,
     useSignal: true,
     caller: 'Filedialog:LeftPane',
-    DEBUG: true,
+    DEBUG,
   });
   //----------------------------------------------------------------------------
   // Derive what the file request should be going down the directory tree
@@ -164,13 +156,13 @@ function LeftPane({ projectId, toggleFile }) {
     if (fetchStatus === STATUS.UNINITIALIZED && initializingRequestReady) {
       switch (true) {
         case !hasHistory: {
-          console.log(`HEADER_ fire with no history`);
+          if (DEBUG) console.log(`HEADER_ fire with no history`);
           listDirectory(initialRequest);
           dispatch(pushFetchHistory(initialRequest));
           break;
         }
         case hasHistory:
-          console.log(`HEADER_ fire using history`);
+          if (DEBUG) console.log(`HEADER_ fire using history`);
           listDirectory(previousRequest);
           break;
         default:
@@ -231,7 +223,6 @@ function LeftPane({ projectId, toggleFile }) {
   // 🗄️ auth
   const handleDriveAuth = useCallback(
     (provider) => {
-      console.debug(`__ handleDriveAuth: ${provider}`);
       dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
       dispatch(clearFetchHistory()); // display root when user-agent returns
       window.location.replace(makeAuthUrl(projectId, provider));
@@ -243,8 +234,7 @@ function LeftPane({ projectId, toggleFile }) {
   // ---------------------------------------------------------------------------
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:cyan');
-    console.debug(`%c📋 LeftPane state summary:`, 'color:cyan');
-    console.dir({
+    console.debug(`%c📋 LeftPane state summary:`, 'color:cyan', {
       projectIdParam: projectId,
       fetchStatus,
       initializingRequestReady,
@@ -254,7 +244,7 @@ function LeftPane({ projectId, toggleFile }) {
       aborted: abortController.signal.aborted,
     });
 
-    console.log(argsDisplayString(fetchArgs, 'LeftPane', fetchStatus));
+    console.debug(argsDisplayString(fetchArgs, 'LeftPane', fetchStatus));
   }
 
   // must render even when initial state:  idle + no history

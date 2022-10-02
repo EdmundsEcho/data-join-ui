@@ -553,6 +553,9 @@ export default (mode) => {
               '& > label': {
                 marginTop: spacingFn(3),
               },
+              '& > .MuiInput-root > .MuiSelect-select:focus': {
+                backgroundColor: 'inherit',
+              },
             },
             // 🚧 generic Luci-Texfield
             // has: InputLabel, FormHelperText & wrapped Input as TextInput
@@ -1057,9 +1060,12 @@ export default (mode) => {
               margin: `${theme.spacingFn(4)}`,
               columnGap: `${theme.spacingFn(5)}`,
               width: 'auto',
+              '& .MuiGrid-item': {
+                lineHeight: '80%',
+              },
               '& .MuiTypography-root': {
                 fontSize: '0.7rem',
-                lineHeight: '0.7',
+                lineHeight: 'inherit',
               },
             },
           }),
