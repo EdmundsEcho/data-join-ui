@@ -8,7 +8,8 @@ FROM node:18.10-alpine3.15 as react-build
 
 # 🔖 Copy build configuration files
 #    use .dockerignore to limit activity
-COPY . /frontend
+COPY package.json /frontend
+COPY yarn.lock /frontend
 WORKDIR /frontend
 
 # 🔖 .dockerignore hides .env
@@ -17,6 +18,7 @@ ENV NODE_ENV=production
 ENV REACT_APP_ENV=production
 ENV PORT=3007
 
+RUN yarn
 RUN yarn build
 
 ################################################################################
