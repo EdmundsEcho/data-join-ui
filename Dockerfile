@@ -10,6 +10,7 @@ FROM node:18.10-alpine3.15 as react-build
 #    use .dockerignore to limit activity
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
+COPY public /frontend/public
 WORKDIR /frontend
 
 # 🔖 .dockerignore hides .env
