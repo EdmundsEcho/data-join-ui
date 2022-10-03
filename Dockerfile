@@ -11,6 +11,7 @@ FROM node:18.10-alpine3.15 as react-build
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
 COPY public /frontend/public
+COPY nginx.conf /frontend/nginx.conf
 COPY src /frontend/src
 WORKDIR /frontend
 
