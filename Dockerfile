@@ -12,9 +12,9 @@ COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
 COPY public /frontend/public
 COPY src /frontend/src
+COPY .eslintrc.js /frontend/.eslintrc.js
 WORKDIR /frontend
 
-# 🔖 .dockerignore hides .env
 # create the build artifact for production
 ENV NODE_ENV=production
 ENV REACT_APP_ENV=production
