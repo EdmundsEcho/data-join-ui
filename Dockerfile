@@ -8,8 +8,8 @@ FROM node:18.10-alpine3.15 as react-build
 
 # 🔖 Copy build configuration files
 #    use .dockerignore to limit activity
-COPY package.json /frontend
-COPY yarn.lock /frontend
+COPY package.json /frontend/package.json
+COPY yarn.lock /frontend/yarn.lock
 WORKDIR /frontend
 
 # 🔖 .dockerignore hides .env
