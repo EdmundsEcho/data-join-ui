@@ -8,12 +8,7 @@
 import axios from 'axios';
 
 import { stdApiResponse, gqlApiResponse } from './helpers';
-import {
-  ApiCallError,
-  // ExpiredSessionError,
-  GqlError,
-  InvalidStateError,
-} from '../lib/LuciErrors';
+import { ApiCallError, InvalidStateError } from '../lib/LuciErrors';
 import { HEADER_VIEW } from '../ducks/actions/headerView.actions';
 import { WORKBENCH } from '../ducks/actions/workbench.actions';
 import { MATRIX as MATRIX_FEATURE } from '../ducks/actions/matrix.actions';
