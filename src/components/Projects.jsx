@@ -15,9 +15,9 @@
  */
 import React, { useCallback, useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import clsx from 'clsx';
 import { NavLink, Outlet, useParams, useNavigate } from 'react-router-dom';
 import { withSize } from 'react-sizeme';
+import clsx from 'clsx';
 
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -31,16 +31,16 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AddIcon from '@mui/icons-material/Add';
 
-import { ConfirmModal, Spinner } from './components/shared';
+import { ConfirmModal, Spinner } from './shared';
 
 // 📖 (each hook used in different components)
 import {
   useProjectsApiContext,
   useProjectsDataContext,
-} from './contexts/ProjectsDataContext';
-import { DISPLAY_VERSIONS } from './core-app/lib/sum-types';
-import { getDisplayVersion as initDisplayVersion } from './dashboard.lib';
-import { useThemeMode } from './hooks/use-theme-mode';
+} from '../contexts/ProjectsDataContext';
+import { DISPLAY_VERSIONS } from '../core-app/lib/sum-types';
+import { getDisplayVersion as initDisplayVersion } from '../dashboard.lib';
+import { useThemeMode } from '../hooks/use-theme-mode';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';

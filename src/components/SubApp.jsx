@@ -11,17 +11,17 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { DesignError } from './core-app/lib/LuciErrors';
+import { DesignError } from '../core-app/lib/LuciErrors';
 
-import CoreApp from './core-app/Main';
-import { Spinner } from './components/shared';
+import CoreApp from '../core-app/Main';
+import { Spinner } from './shared';
 
-import { loadProject } from './core-app/ducks/actions/project-meta.actions';
-import { useFetchApi, STATUS } from './hooks/use-fetch-api';
+import { loadProject } from '../core-app/ducks/actions/project-meta.actions';
+import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
 
-import { fetchStore as fetchServerStore } from './core-app/services/api';
-import { loadStore as loadNewOrSavedStore } from './core-app/ducks/project-meta.reducer';
-import { getProjectId } from './core-app/ducks/rootSelectors';
+import { fetchStore as fetchServerStore } from '../core-app/services/api';
+import { loadStore as loadNewOrSavedStore } from '../core-app/ducks/project-meta.reducer';
+import { getProjectId } from '../core-app/ducks/rootSelectors';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';

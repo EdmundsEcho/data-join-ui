@@ -9,7 +9,7 @@ import { SnackbarProvider } from 'notistack';
 
 import luciviaTheme from './core-app/lucivia-theme.v2';
 
-import Dashboard from './App.V2.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import ModalRoot from './core-app/components/ModalRoot';
 
 import { useThemeMode } from './hooks/use-theme-mode';

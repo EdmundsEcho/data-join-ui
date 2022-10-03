@@ -5,7 +5,7 @@ import {
   Chat,
   Person,
   People,
-  Folder,
+  // Folder,
   Event,
   BackupTable,
 } from '@mui/icons-material';
@@ -23,8 +23,8 @@ import {
 } from '../pages';
 import { ProjectMeta } from '../pages/ProjectPage';
 import NewProjectPage from '../forms/ProjectForm';
-import ProjectDetail from '../SubApp';
-import Projects from '../Projects';
+import ProjectDetail from '../components/SubApp';
+import Projects from '../components/Projects';
 
 import { FileDialog, EtlFieldView, Workbench, Matrix } from '../core-app/pages';
 

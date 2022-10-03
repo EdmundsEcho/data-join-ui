@@ -2,13 +2,13 @@ import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
-import HorizontalLayoutWithSideBar from './layouts/HorizontalLayout';
+import HorizontalLayoutWithSideBar from '../layouts/HorizontalLayout';
 
-import { routesConfig as routes } from './router';
-import ProjectsDataProvider from './contexts/ProjectsDataContext';
+import { routesConfig as routes } from '../router';
+import ProjectsDataProvider from '../contexts/ProjectsDataContext';
 
 //-----------------------------------------------------------------------------
-const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+// const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 //-----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
