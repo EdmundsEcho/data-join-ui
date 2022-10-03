@@ -111,9 +111,6 @@
     "cosmos": "cosmos",
     "cosmos:export": "cosmos-export"
   },
-  "eslintConfig": {
-    "extends": ["react-app"]
-  },
   "browserslist": {
     "development": [
       "last 2 chrome versions",
