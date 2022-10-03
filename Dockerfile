@@ -13,6 +13,7 @@ COPY yarn.lock /frontend/yarn.lock
 COPY public /frontend/public
 COPY nginx.conf /frontend/nginx.conf
 COPY src /frontend/src
+COPY .env-prod /frontend/.env
 WORKDIR /frontend
 
 # create the build artifact for production
