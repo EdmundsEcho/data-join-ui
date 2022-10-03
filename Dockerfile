@@ -10,7 +10,6 @@ FROM node:18.10-alpine3.15 as react-build
 #    use .dockerignore to limit activity
 COPY . /frontend
 WORKDIR /frontend
-RUN ls -a
 
 # 🔖 .dockerignore hides .env
 # create the build artifact for production
