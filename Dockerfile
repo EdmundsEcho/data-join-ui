@@ -13,11 +13,14 @@ COPY yarn.lock /frontend/yarn.lock
 COPY public /frontend/public
 COPY nginx.conf /frontend/nginx.conf
 COPY src /frontend/src
-COPY .env-prod /frontend/.env
+
+# << here >>
+COPY .env-kube /frontend/.env
 WORKDIR /frontend
 
-# create the build artifact for production
+# create the build artifact for docker-compose
 ENV NODE_ENV=production
+# << docker-compose url >>
 ENV REACT_APP_ENV=production
 ENV PORT=3007
 

@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Kube Image CI
 
 on:
   push:
@@ -29,9 +29,12 @@ jobs:
     - name: Login to Github registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Build the Docker image
+    - name: Build the Kube Docker image
 
       run: |
-          LATEST=ghcr.io/lucivia/frontend:compose
-          docker build . --file Dockerfile --tag $LATEST
+          IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
+          LATEST=ghcr.io/lucivia/frontend:kube
+          docker build . --file Dockerfile.kube --tag $IMAGE_ID
+          docker image tag $IMAGE_ID $LATEST
+          docker push $IMAGE_ID
           docker push $LATEST
