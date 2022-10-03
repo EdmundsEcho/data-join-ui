@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-    
+
   workflow_dispatch:
     inputs:
       logLevel:
@@ -25,7 +25,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Login to Github registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
     - name: Build the Docker image
+
       run: |
           IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
           LATEST=ghcr.io/lucivia/frontend:latest
