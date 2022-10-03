@@ -10,6 +10,7 @@ FROM node:18.10-alpine3.15 as react-build
 #    use .dockerignore to limit activity
 COPY . /frontend
 WORKDIR /frontend
+RUN ls -a
 
 # 🔖 .dockerignore hides .env
 # create the build artifact for production
@@ -17,7 +18,6 @@ ENV NODE_ENV=production
 ENV REACT_APP_ENV=production
 ENV PORT=3007
 
-RUN yarn install
 RUN yarn build
 
 ################################################################################

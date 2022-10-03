@@ -7,7 +7,7 @@
 ################################################################################
 # 1️⃣  react-build environment
 ################################################################################
-FROM node:16.13-alpine as react-build
+FROM node:18.10-alpine3.15 as react-build
 
 # 🔖 Copy build configuration files
 #    use .dockerignore to limit activity
@@ -18,7 +18,7 @@ WORKDIR /frontend
 # create the build artifact for production
 ENV NODE_ENV=development
 ENV REACT_APP_ENV=development
-ENV PORT=3000
+ENV PORT=3007
 
 RUN yarn install
 RUN yarn build
