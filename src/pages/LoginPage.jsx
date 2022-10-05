@@ -126,13 +126,7 @@ export const LoginPage = ({ logout: logoutProp }) => {
             Sign in
           </Typography>
           <Divider />
-          <Box
-            sx={{
-              mb: 1,
-              mt: 1,
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
+          <div className='login-providers'>
             <AuthButton onClick={handleAuth('google')} disabled={isLoading}>
               <Google />
             </AuthButton>
@@ -148,7 +142,7 @@ export const LoginPage = ({ logout: logoutProp }) => {
             <AuthButton onClick={handleAuth('twitter')} disabled={isLoading}>
               <Twitter />
             </AuthButton>
-          </Box>
+          </div>
         </Box>
       </Paper>
 
