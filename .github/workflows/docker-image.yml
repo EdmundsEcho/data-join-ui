@@ -16,7 +16,6 @@ on:
         description: 'dummy input, ignore'
 
 
-
 jobs:
 
   build:
@@ -33,5 +32,5 @@ jobs:
 
       run: |
           LATEST=ghcr.io/lucivia/frontend:compose
-          docker build . --file Dockerfile --tag $LATEST
+          docker build . --file Dockerfile.compose --tag $LATEST
           docker push $LATEST
