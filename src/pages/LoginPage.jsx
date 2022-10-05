@@ -21,6 +21,7 @@ const AUTH_URL = process.env.REACT_APP_USER_AUTH_URL;
 const COLOR = colors.blue;
 //-----------------------------------------------------------------------------
 /* eslint-disable no-console, react/jsx-props-no-spreading */
+console.debug(`AUTH_URL: ${AUTH_URL}`);
 
 const AuthButton = (props) => {
   return <IconButton {...props} className='auth-button' />;

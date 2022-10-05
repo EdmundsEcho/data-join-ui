@@ -621,14 +621,6 @@ span.google-drive {
 }
 
 /* ---------------------------------------- */
-/* login WIP */
-.login-providers {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
-}
-
-/* ---------------------------------------- */
 /* spinner */
 .spinner-root {
     width: 100%;
