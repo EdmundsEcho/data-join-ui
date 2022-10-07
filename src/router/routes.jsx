@@ -193,8 +193,9 @@ const displayTypeCfg = {
  * @return {Object} display cfg showAppBar showSideNav
  */
 export const lookupDisplayTypeCfg = (pathname) => {
-  console.debug(pathname, routesConfig);
-  const { displayType } = routesConfig.find(({ path }) => path === pathname);
+  const { displayType } = routesConfig.find(
+    ({ path }) => path === pathname,
+  ) || { displayType: 'DEFAULT' };
   if (DEBUG) {
     console.debug('config output', {
       pathname,
