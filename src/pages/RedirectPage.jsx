@@ -59,7 +59,7 @@ export const RedirectPage = () => {
   // Second, user-profile when incomplete
   // 💢 fetch user profile
   useEffect(() => {
-    if (isReady) {
+    if (isReady && dataToGuideRedirect !== null) {
       const {
         email,
         last_name: lastName,

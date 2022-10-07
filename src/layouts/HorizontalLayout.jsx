@@ -43,14 +43,11 @@ function WithSideBar({ children: routesElement }) {
   const [displayTypeCfg, setDisplayTypeCfg] = useState(() =>
     lookupDisplayTypeCfg(`/${location.pathname.split('/')[1]}`),
   );
-  const setDisplayCfg = useCallback(
-    (loc) => {
-      setDisplayTypeCfg(() =>
-        lookupDisplayTypeCfg(`/${location.pathname.split('/')[1]}`),
-      );
-    },
-    [location.pathname],
-  );
+  const setDisplayCfg = useCallback(() => {
+    setDisplayTypeCfg(() =>
+      lookupDisplayTypeCfg(`/${location.pathname.split('/')[1]}`),
+    );
+  }, [location.pathname]);
   useLocationChange(setDisplayCfg);
   // debugging
   const [origin] = usePersistedState('origin'); // debugging read-only
