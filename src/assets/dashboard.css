@@ -587,13 +587,13 @@ button:-moz-focusring,
     background-color: var(--color-background-card);
 }
 .Luci-FileField-HeadingBox > .box-card {
-  border: 1px solid var(--color-box-color);
+  border: 1px solid var(--color-box-border);
   border-radius: 0.4rem;
   margin: 0 auto;
   padding: 1.3rem;
   position: relative;
 }
-
+/* sources, derived and wide field configs */
 .box-card > .children {
   display: none;
 }

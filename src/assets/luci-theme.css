@@ -72,7 +72,7 @@ const parse = jsonString => {
 
 
   /* compliment with dark-theme */
-  /* 5 levels of background (heading ~ mui table head) */
+  /* 7 levels of background (heading ~ mui table head) */
   --color-background-title: rgb(250, 250, 250);
   --color-background-heading: rgb(250, 250, 250);
   --color-background-footer: rgb(217, 217, 217);
@@ -80,6 +80,8 @@ const parse = jsonString => {
   --color-background-paper: rgb(250, 250, 250);
   --color-background-sideBar: rgb(250, 250, 250);
   --color-background: rgb(240, 240, 240);
+
+  --color-box-border: rgb(207, 207, 207);
   --color-text-primary:rgba(0, 0, 0, 0.6);
   --color-text-secondary:rgba(0, 0, 0, 0.7);
   --color-text-disabled:rgba(0, 0, 0, 0.5);
@@ -97,7 +99,7 @@ const parse = jsonString => {
   /* closer = lighter, so high z-index = lighter */
   --color-primary-main: #8edceb;
   --color-primary-dark:#42808b;
-  --color-box-color: rgb(117, 117, 117);
+  --color-box-border: rgb(90, 90, 90);
   --color-text-body: rgba(0, 0, 0, 0.6);
   --color-icon: rgb(250, 250, 250);
   /* 5 levels of background (heading ~ mui table head) */
