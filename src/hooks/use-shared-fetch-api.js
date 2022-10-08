@@ -533,7 +533,7 @@ export function is200ResponseError(response) {
       : false;
   } catch (e) {
     console.warn(e);
-    return true;
+    return 'initializing error';
   }
 }
 /**

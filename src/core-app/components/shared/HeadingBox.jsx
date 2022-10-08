@@ -54,20 +54,12 @@ const Heading = styled.div`
 `;
 
 const MinimizeContainer = styled.div`
-  background: #fff;
-  color: #999;
-  border-radius: 6px;
-  padding-left: 6px;
-  padding-right: 6px;
   position: absolute;
   top: ${({ isOpen }) => (isOpen ? `-11px` : `5px`)};
   right: 17px;
   transform: ${({ isOpen }) => `rotate(${isOpen ? 0 : 180}deg)`};
-
   &:hover {
     transform: ${({ isOpen }) => `rotate(${isOpen ? 0 : 180}deg)`};
-    background-color: #eee;
-    cursor: pointer;
     top: ${({ isOpen }) => (isOpen ? `-11px` : `5px`)};
   }
 `;
@@ -99,14 +91,14 @@ const HeadingBox = ({
 
   return (
     <Container style={style} className={clsx('Luci-FileField-HeadingBox')}>
-      <Box width={width}>
+      <Box width={width} className='box-card'>
         {canCollapse && (
           <div role='button' tabIndex={-1} onClick={() => setOpen(!isOpen)}>
             <MinimizeButton isOpen={isOpen} />
           </div>
         )}
         {heading && (
-          <Heading isOpen={isOpen}>
+          <Heading className='border-heading' isOpen={isOpen}>
             <Typography variant='body2'>{heading}</Typography>
           </Heading>
         )}
@@ -139,7 +131,7 @@ HeadingBox.defaultProps = {
 
 function MinimizeButton({ isOpen }) {
   return (
-    <MinimizeContainer isOpen={isOpen}>
+    <MinimizeContainer className='minimizable-container' isOpen={isOpen}>
       <DownArrow />
     </MinimizeContainer>
   );

@@ -77,17 +77,6 @@ export const LoginPage = ({ logout: logoutProp }) => {
     if (logoutRequest) {
       logout();
     }
-    // clear the user-agent's persisted state
-    /*
-    (async () => {
-      try {
-        await purgeStoredState(persistConfig);
-        await purgeStoredState(persistConfig);
-      } catch (e) {
-        console.error(`Failed to purge local state`);
-        console.dir(e);
-      }
-    })(); */
   }, [logoutRequest, logout]);
 
   if (DEBUG) {
