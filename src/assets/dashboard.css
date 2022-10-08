@@ -586,28 +586,54 @@ button:-moz-focusring,
 .Luci-sources.root * {
     background-color: var(--color-background-card);
 }
+.Luci-FileField-HeadingBox > .box-card {
+  border: 1px solid var(--color-box-color);
+  border-radius: 0.4rem;
+  margin: 0 auto;
+  padding: 1.3rem;
+  position: relative;
+}
+
+.box-card > .children {
+  display: none;
+}
+.box-card > .children.open {
+  display: block;
+  transition: visibility 0s, opacity 0.5s linear;
+}
 .Luci-sources.root {
     width: inherit;
 }
-.Luci-sources.root > .Luci-FileField-HeadingBox > div {
-    border: 1px solid var(--color-text-primary)
-}
 
-.Luci-FileField-HeadingBox  .minimizable-container {
+.Luci-FileField-HeadingBox .minimize-button {
   background-color: var(--color-background-card);
   color: var(--color-text-primary);
   border-radius: 6px;
   padding-left: 6px;
   padding-right: 6px;
+  position: absolute;
+  top: 5px;
+  right: 17px;
+  transform: 180deg;
 }
-
-.Luci-FileField-HeadingBox  .minimizable-container:hover {
+.Luci-FileField-HeadingBox  .minimize-button:hover {
     filter: brightness(1.2);
     cursor: pointer;
 }
+.Luci-FileField-HeadingBox  .minimize-button.open {
+  top: -11px;
+  transform: 0deg;
+}
+
 .Luci-FileField-HeadingBox .border-heading {
   border-radius: 10px;
   padding: 3px 3px;
+  position: absolute;
+  top: 9px;
+  left: 18px;
+}
+.Luci-FileField-HeadingBox .border-heading.open {
+  top: -14px;
 }
 .Luci-error-card {
     margin-top: 15px;

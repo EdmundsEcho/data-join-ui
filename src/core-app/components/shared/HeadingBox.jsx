@@ -17,52 +17,11 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-import styled from 'styled-components';
-
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import DownArrow from '@mui/icons-material/ArrowDropDown';
 
 import usePersistedState from '../../hooks/use-persisted-state';
-
-const Box = styled.div`
-  background-color: #fff;
-  border: 1px solid #d3d3d3;
-  border-radius: 6px;
-  margin: 0 auto;
-  padding: 20px;
-  position: relative;
-  width: ${({ width }) => width && `${width}px`};
-
-  div.children {
-    display: none;
-  }
-
-  div.children.isOpen {
-    display: block;
-    transition: visibility 0s, opacity 0.5s linear;
-  }
-`;
-
-const Heading = styled.div`
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 3px 3px;
-  position: absolute;
-  top: ${({ isOpen }) => (isOpen ? `-14px` : `9px`)};
-  left: 18px;
-`;
-
-const MinimizeContainer = styled.div`
-  position: absolute;
-  top: ${({ isOpen }) => (isOpen ? `-11px` : `5px`)};
-  right: 17px;
-  transform: ${({ isOpen }) => `rotate(${isOpen ? 0 : 180}deg)`};
-  &:hover {
-    transform: ${({ isOpen }) => `rotate(${isOpen ? 0 : 180}deg)`};
-    top: ${({ isOpen }) => (isOpen ? `-11px` : `5px`)};
-  }
-`;
 
 /**
  * A custom box that features
@@ -91,19 +50,19 @@ const HeadingBox = ({
 
   return (
     <Container style={style} className={clsx('Luci-FileField-HeadingBox')}>
-      <Box width={width} className='box-card'>
+      <div width={width} className='box-card'>
         {canCollapse && (
           <div role='button' tabIndex={-1} onClick={() => setOpen(!isOpen)}>
             <MinimizeButton isOpen={isOpen} />
           </div>
         )}
         {heading && (
-          <Heading className='border-heading' isOpen={isOpen}>
+          <div className={clsx('border-heading', { open: isOpen })}>
             <Typography variant='body2'>{heading}</Typography>
-          </Heading>
+          </div>
         )}
-        <div className={`children ${isOpen ? 'isOpen' : ''}`}>{children}</div>
-      </Box>
+        <div className={clsx('children', { open: isOpen })}>{children}</div>
+      </div>
     </Container>
   );
 };
@@ -131,9 +90,9 @@ HeadingBox.defaultProps = {
 
 function MinimizeButton({ isOpen }) {
   return (
-    <MinimizeContainer className='minimizable-container' isOpen={isOpen}>
+    <div className={clsx('minimize-button', { open: isOpen })}>
       <DownArrow />
-    </MinimizeContainer>
+    </div>
   );
 }
 MinimizeButton.propTypes = {
