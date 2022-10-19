@@ -69,25 +69,25 @@ const IntervalBox = (props) => {
   };
 
   return (
-    <Grid container className={clsx('Luci-IntervalBox', 'timeConfig')}>
+    <Grid container className={clsx('Luci-IntervalBox', 'time-config')}>
       {/* Row 1 */}
       {typeof unit !== 'undefined' && (
         <Grid item xs={12} container>
           {/* field name */}
-          <Grid item xs={6} className={clsx('fieldName')}>
+          <Grid item xs={6} className='fieldname'>
             <Typography>Unit:</Typography>
           </Grid>
 
           {/* field value/input */}
-          <Grid item xs={6} className={clsx('selectMenu')}>
-            <FormControl>
+          <Grid item xs={6} className='select-menu'>
+            <FormControl className='form-control'>
               <Select
-                id={`${stateId}|selectMenu`}
+                id={`${stateId}|select-menu`}
+                className='select-controller time-interval-unit'
                 name='time.interval.unit'
                 value={unitValue}
                 onChange={handleUnitChange}
-                variant='standard'
-              >
+                variant='standard'>
                 {Object.keys(timeIntervalUnitOptions).map((key) => (
                   <MenuItem key={key} value={key}>
                     {timeIntervalUnitOptions[key]}
@@ -102,18 +102,20 @@ const IntervalBox = (props) => {
       {/* Row 2 */}
       {typeof count !== 'undefined' && (
         <Grid item xs={12} container>
-          <Grid item xs={6} className={clsx('fieldName')}>
+          <Grid item xs={6} className='fieldname'>
             <Typography>Count:</Typography>
           </Grid>
 
-          <Grid item xs={6} className={clsx('numberField')}>
+          <Grid item xs={6} className='select-menu'>
             <TextField
-              id={`${stateId}|numberField`}
-              type='number'
+              id={`${stateId}|number-field`}
+              className='select-controller time-interval-count'
+              type='text'
               name='time.interval.count'
               value={countValue}
               onChange={handleCountChange}
               variant='standard'
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             />
           </Grid>
         </Grid>

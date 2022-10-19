@@ -56,13 +56,6 @@ const SAVE_MATRIX_ENDPOINT = process.env.REACT_APP_SAVE_MATRIX_ENDPOINT;
 const mkSaveEndpoint = (projectId) =>
   SAVE_MATRIX_ENDPOINT.replace('{projectId}', projectId);
 
-const handleSaveMatrix = (projectId) => {
-  fetch(mkSaveEndpoint(projectId), { responseType: 'blob' }).then(
-    (response) => {
-      response.blob();
-    },
-  );
-};
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 

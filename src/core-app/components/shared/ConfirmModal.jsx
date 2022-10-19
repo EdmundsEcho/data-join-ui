@@ -14,9 +14,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-function ConfirmModal({ themeMode, open, onCancel, onConfirm, message }) {
+import useThemeMode from '../../../hooks/use-theme-mode';
+
+function ConfirmModal({ open, onCancel, onConfirm, message }) {
+  const [themeMode] = useThemeMode();
   return (
-    <Dialog className={`Luci-Dialog root ${themeMode}-theme-mode`} open={open}>
+    <Dialog
+      className={`Luci-Dialog root ${themeMode}-theme-context`}
+      open={open}>
       <DialogTitle id='alert-dialog-title'>Please confirm.</DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
@@ -24,11 +29,15 @@ function ConfirmModal({ themeMode, open, onCancel, onConfirm, message }) {
             'Please confirm that you would like to remove this component.'}
         </DialogContentText>
       </DialogContent>
-      <DialogActions className={clsx('actions confirm')}>
-        <Button onClick={onCancel} color='primary'>
+      <DialogActions className='actions'>
+        <Button className='cancel' onClick={onCancel} color='primary'>
           Cancel
         </Button>
-        <Button onClick={onConfirm} color='primary' autoFocus>
+        <Button
+          className='proceed'
+          onClick={onConfirm}
+          color='primary'
+          autoFocus>
           Proceed
         </Button>
       </DialogActions>
@@ -37,7 +46,6 @@ function ConfirmModal({ themeMode, open, onCancel, onConfirm, message }) {
 }
 
 ConfirmModal.propTypes = {
-  themeMode: PropTypes.oneOf(['light', 'dark']).isRequired,
   message: PropTypes.string,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,

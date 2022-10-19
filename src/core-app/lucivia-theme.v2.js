@@ -481,7 +481,6 @@ export default (mode) => {
                 '& .MuiTableCell-root': {
                   border: 'none',
                   '& .MuiButtonBase-root': {
-                    padding: `${spacingFn(3)} ${spacingFn(3)}`,
                     '& .MuiSvgIcon-root': {
                       fontSize: '1.1rem',
                     },
@@ -943,7 +942,7 @@ export default (mode) => {
                   lineHeight: '1.1rem',
                   textShadow: 'none',
                 },
-                '& .timeConfig': {
+                '& .time-config': {
                   margin: '0px',
                   gap: '0.4rem 0px',
                   '& div': {
@@ -1086,15 +1085,7 @@ export default (mode) => {
       MuiDialog: {
         styleOverrides: {
           root: ({ theme }) => ({
-            '&.Luci-Dialog.root': {
-              '& .actions.confirm': {
-                marginRight: theme.spacing(5),
-                marginBottom: theme.spacing(5),
-              },
-              '& .actions.save': {
-                margin: theme.spacing(5),
-              },
-            },
+            '&.Luci-Dialog.root': {},
             // 🦀 likely deprecated
             '&.Luci-HeaderViews.dialog': {
               '& .MuiDialogTitle-root': {
@@ -2104,14 +2095,22 @@ export default (mode) => {
                 backgroundColor: '#fff',
                 color: '#666',
                 transition: 'all 0.5s',
-                border: '1px solid #999',
-                '&.selected': {
-                  backgroundColor: '#999',
-                  color: '#fff',
-                },
                 '&.disabled': {
                   opacity: '0.5',
                 },
+                border: '1px solid #999',
+                '&.selected': isLightMode
+                  ? {
+                      backgroundColor: '#999',
+                      borderColor: '#999',
+                      color: '#fff',
+                    }
+                  : {
+                      backgroundColor: theme.palette.secondary.main,
+                      borderColor: theme.palette.secondary.main,
+                      color: theme.palette.secondary.dark,
+                      fontWeight: '700',
+                    },
                 '&:hover:not(.selected)': {
                   position: 'sticky',
                   backgroundColor: theme.palette.secondary.light,
@@ -2119,7 +2118,9 @@ export default (mode) => {
                   fontWeight: '700',
                   border: `1px solid ${theme.palette.secondary.light}`,
                 },
-                '&:hover': {
+                '&.selected:hover': {
+                  backgroundColor: '#fff',
+                  fontWeight: '700',
                   color: theme.palette.secondary.light,
                 },
               },

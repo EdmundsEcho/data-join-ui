@@ -13,6 +13,7 @@
   --default-margin: 1.5rem;
   --default-padding: 1rem;
   --default-radius: 1rem;
+  --input-radius: 0.3rem;
 
   /* flexbox - main menu & viewport */
   /* WIP */
@@ -212,7 +213,7 @@ button.cancel {
 }
 .controller-mini-overlay {
     position: absolute;
-    background: linear-gradient(to right, transparent 60%, var(--color-background-heading) 90%);
+    background: var(--gradient-controller-overlay);
     transform: translateY(-12px);
     width: 100%;
     height: 100%;
@@ -359,20 +360,45 @@ button.cancel {
 }
 .stepbar.nav {
     width: var(--stepbar-nav-width);
+}
+.Luci-Stepper .Mui-completed svg {
+    fill: var(--color-primary-main);
+}
+.Luci-Stepper .Mui-active > text {
+    fill: var(--color-primary-dark);
+}
+.Luci-Stepper .Mui-disabled text {
+    fill: var(--color-text-secondary);
+}
+/* stepbar & modal dialog */
+.Luci-Dialog.root .actions > button,
+.stepbar.nav {
     padding: 5px var(--default-stack-gap);
     border-radius: 30px;
+    border: 1px solid transparent;
 }
+.Luci-Dialog.root .actions > button.cancel,
 button.stepbar.nav.previous {
+    margin: 0;
     margin-left: auto;
     margin-right: var(--default-stack-gap);
 }
+.Luci-Dialog.root .actions > button.proceed,
 button.stepbar.nav.next {
+    margin: 0;
     margin-right: auto;
     margin-left: var(--default-stack-gap);
+}
+.Luci-Dialog.root .actions > button.cancel:hover {
+    border: 1px solid var(--color-custom-red);
+}
+.Luci-Dialog.root .actions > button.proceed:hover {
+    border: 1px solid var(--color-custom-green);
 }
 .stepbar.nav:hover {
     background-color: var(--color-primary-superLight);
 }
+.Luci-Dialog.root .actions > button.disabled,
 .stepbar.nav.disabled {
     opacity: 0.5;
 }
@@ -480,6 +506,7 @@ div.workbench.button-group * {
 
 .Luci-Dialog.root .MuiDialog-paper {
     border-radius: var(--default-radius);
+    background-color: var(--color-background-card);
 }
 .Luci-Dialog.root .frame {
     margin: 3px;
@@ -492,9 +519,62 @@ div.workbench.button-group * {
     width: 65px;
     border: none;
 }
+.Luci-Dialog.root .actions > button:hover,
 .Luci-Dialog.root .frame button:hover {
     opacity: 1;
     background-color: var(--color-background-heading);
+}
+.dot-trim-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.dot-trim-text.dynamic-sizing {
+    font-size: 1.2vw;
+}
+/* headerView fieldnames */
+.Luci-SummaryDetail-Row > :not(td.Luci-Toggle) > * {
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
+.Luci-SummaryDetail-Row > :not(td.Luci-Toggle) > button:hover {
+    background-color: inherit;
+}
+.Luci-SummaryDetail-Row .fieldname {
+    text-overflow: ellipsis;
+    white-space: break-spaces;
+}
+.Luci-DataContainer > .statsSummary > .left > h6,
+.Luci-DataContainer > .statsSummary > .right > h6 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1.1vw;
+}
+.Luci-IntervalBox .select-menu .select-controller.time-interval-unit  {
+    width: 9.5ch;
+}
+.Luci-IntervalBox .select-menu .select-controller.time-interval-count {
+    width: 10.5ch;
+}
+.Luci-IntervalBox .time-interval-count .Mui-focused {
+    background-color: var(--color-background-heading);
+    border-top-right-radius: var(--input-radius);
+    border-top-left-radius: var(--input-radius);
+}
+.Luci-IntervalBox .form-control .Mui-focused {
+    background-color: var(--color-background-heading);
+}
+.Luci-IntervalBox .time-interval-count {
+    border-top-right-radius: var(--input-radius);
+    border-top-left-radius: var(--input-radius);
+}
+.Luci-IntervalBox .time-interval-count input,
+.Luci-IntervalBox .form-control > div {
+    border-top-right-radius: var(--input-radius);
+    border-top-left-radius: var(--input-radius);
+    padding-left: var(--input-radius);
 }
 
 button:-moz-focusring,
@@ -529,8 +609,10 @@ button:-moz-focusring,
     overflow: inherit;
 }
 .Resizer {
-  background-color: var(--color-secondary-superLight);
-  opacity: 0.3;
+  background-color: var(--color-resizer);
+  border-width: 3px;
+  border-radius: 6px;
+  opacity: 0.7;
   z-index: 1;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -541,8 +623,8 @@ button:-moz-focusring,
 }
 
 .Resizer:hover {
-  -webkit-transition: all 2s ease;
-  transition: all 2s ease;
+  -webkit-transition: all 1.5s ease;
+  transition: all 1.5s ease;
 }
 
 .Resizer.horizontal {
@@ -565,11 +647,17 @@ button:-moz-focusring,
   border-left: 5px solid rgba(255, 255, 255, 0);
   border-right: 5px solid rgba(255, 255, 255, 0);
   cursor: col-resize;
+
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 85%;
+  transform: translateX(3px);
 }
 
 .Resizer.vertical:hover {
   border-left: 5px solid rgba(0, 0, 0, 0.5);
   border-right: 5px solid rgba(0, 0, 0, 0.5);
+  height: 95%;
 }
 .Resizer.disabled {
   cursor: not-allowed;

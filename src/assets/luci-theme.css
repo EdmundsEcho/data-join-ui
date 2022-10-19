@@ -21,8 +21,8 @@ const parse = jsonString => {
   }, '');
 }; */
 
-  --color-test-line: #6ff;
-  --color-control-line: #f0f;
+  --color-test-line: #00ffff;
+  --color-control-line: #ff00ff;
 
   --color-primary-main:#52A5B8;
   --color-primary-light:#B2E1EC;
@@ -64,11 +64,8 @@ const parse = jsonString => {
   --color-custom-blue:#007fff;
   --color-custom-orange:#ffa500;
   --color-custom-purple:#9600cd;
-
-  --color-red: #dc143c;
-  --color-grey: #646464;
-  --color-white: #ffffff;
-  --color-yellow: #f0db4f;
+  --color-custom-grey: #646464;
+  --color-custom-white: #ffffff;
 
 
   /* compliment with dark-theme */
@@ -89,10 +86,10 @@ const parse = jsonString => {
   --color-text-hint:rgba(0, 0, 0, 0.7);
   --color-secondary-superLight: rgba(255, 168, 104, 0.3);
   --color-invert: 0;
-
   --color-split-pane-resizer: var(--color-primary-superLight);
+  --color-resizer: var(--color-primary-light);
+  --gradient-controller-overlay: linear-gradient(to right, transparent 65%, #ddd 85%);
   /* end dark-theme */
-
 }
 
 .dark-theme-context {
@@ -117,6 +114,9 @@ const parse = jsonString => {
   --color-secondary-superLight: rgba(255, 168, 104, 0.3);
   --color-secondary-dark: #a5480070;
   --color-invert: 87%;
+  --color-split-pane-resizer: var(--color-secondary-superLight);
+  --color-resizer: var(--color-secondary-dark);
+  --gradient-controller-overlay: linear-gradient(to right, transparent 60%, var(--color-background-heading) 90%);
 }
 .color-go-green {
   color: rgb(0, 179, 0, 1);

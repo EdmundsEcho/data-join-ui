@@ -113,7 +113,6 @@ const middleware =
       // fetchHeaderView -> apiFetch
       // -------------------------------------------------------------------------
       case FETCH_HEADER_VIEW: {
-        console.debug(`%cFETCH_HEADER_VIEW activated`, 'color:pink');
         try {
           if (!action?.path) {
             throw new ApiCallError(`fetchHeaderView: missing action.path`);
