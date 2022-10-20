@@ -17,6 +17,7 @@ import Root from './Root';
 console.info(`App using react version: ${reactVersion}`);
 console.info(`MATRIX_ENDPOINT: ${process.env.REACT_APP_SAVE_MATRIX_ENDPOINT}`);
 console.info(`AUTH_URL: ${process.env.REACT_APP_USER_AUTH_URL}`);
+console.info(`AUTH_DRIVE_URL: ${process.env.REACT_APP_DRIVE_AUTH_URL}`);
 
 const container = document.getElementById('root');
 const root = ReactDOMClient.createRoot(container);

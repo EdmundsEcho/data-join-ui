@@ -371,10 +371,11 @@ button.cancel {
     fill: var(--color-text-secondary);
 }
 /* stepbar & modal dialog */
-.Luci-Dialog.root .actions > button,
-.stepbar.nav {
+.stepbar.nav,
+.Luci-Dialog.root .actions > button {
     padding: 5px var(--default-stack-gap);
     border-radius: 30px;
+    box-sizing: border-box;
     border: 1px solid transparent;
 }
 .Luci-Dialog.root .actions > button.cancel,
@@ -383,8 +384,8 @@ button.stepbar.nav.previous {
     margin-left: auto;
     margin-right: var(--default-stack-gap);
 }
-.Luci-Dialog.root .actions > button.proceed,
-button.stepbar.nav.next {
+button.stepbar.nav.next,
+.Luci-Dialog.root .actions > button.proceed {
     margin: 0;
     margin-right: auto;
     margin-left: var(--default-stack-gap);
@@ -392,6 +393,7 @@ button.stepbar.nav.next {
 .Luci-Dialog.root .actions > button.cancel:hover {
     border: 1px solid var(--color-custom-red);
 }
+.Luci-Dialog.root .actions > button.save:hover,
 .Luci-Dialog.root .actions > button.proceed:hover {
     border: 1px solid var(--color-custom-green);
 }
@@ -680,6 +682,9 @@ button:-moz-focusring,
   margin: 0 auto;
   padding: 1.3rem;
   position: relative;
+}
+.Luci-Dialog .Luci-FileField-HeadingBox > .box-card {
+  padding: 0;
 }
 /* sources, derived and wide field configs */
 .box-card > .children {
