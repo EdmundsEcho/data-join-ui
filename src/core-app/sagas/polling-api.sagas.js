@@ -149,7 +149,7 @@ function* _listenForCancel({ uiKey, channel }) {
   // matches the uiKey in the 'takeEvery' action)
   function tryCancel(action) {
     if (getUiKey(action?.event) === uiKey) {
-      console.debug(`__ 3️⃣  🦀 cancel ${uiKey}`);
+      if (DEBUG) console.debug(`__ 3️⃣  🦀 cancel ${uiKey}`);
       channel.close();
     }
   }

@@ -676,6 +676,9 @@ button:-moz-focusring,
 .Luci-sources.root * {
     background-color: var(--color-background-card);
 }
+.Luci-EtlFieldView.summaryView > td:nth-child(3) p {
+    transform: translateY(0.4rem);
+}
 .Luci-FileField-HeadingBox > .box-card {
   border: 1px solid var(--color-box-border);
   border-radius: 0.4rem;
