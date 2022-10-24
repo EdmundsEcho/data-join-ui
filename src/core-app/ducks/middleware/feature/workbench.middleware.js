@@ -96,7 +96,7 @@ const DEBUG =
 
 //------------------------------------------------------------------------------
 // Global values
-const MAX_TRIES = 20;
+const MAX_TRIES = process.env.REACT_APP_WORKBENCH_MAX_TRIES || 30;
 const { isValid, getData, isValidError, getError } =
   ServiceConfigs[getServiceType(WORKBENCH)].response;
 
