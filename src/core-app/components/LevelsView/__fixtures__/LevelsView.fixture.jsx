@@ -7,7 +7,7 @@ import ConsoleLog from '../../shared/ConsoleLog';
 
 // import LevelsView from '../index.container';
 // import { PURPOSE_TYPES } from '../../../lib/sum-types';
-import { getFileLevels as getLevels } from '../../../services/api';
+import { fetchFileLevels as getLevels } from '../../../services/api';
 import stateField from './state-field.json';
 
 function ErrorFallback({ error, resetErrorBoundary }) {

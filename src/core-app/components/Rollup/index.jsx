@@ -2,7 +2,7 @@
  * @module src/component/Rollup
  * @todo Should append codomains found in initial domain object
  */
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import Table from '@mui/material/Table';
@@ -30,26 +30,58 @@ const isNil = (v) => !(typeof v === 'undefined' || v === null);
  * Rollup
  * @returns {object} rollup `{value1: group1, value2: group1, value3: group2}`
  */
-class Rollup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      rollup: {},
-      errors: [],
-      newGroups: [],
-    };
+const Rollup = (props) => {
+  const {
+    allowEmpty,
+    noHeading,
+    classes,
+    codomainDescription,
+    debug,
+    groups,
+    domainDescription,
+    values,
+    handleRollupUpdate,
+  } = props;
 
-    this.handleChange = this.handleChange.bind(this);
-  }
+  const [state, setState] = useState(() => ({
+    rollup: {},
+    errors: [],
+    newGroups: [],
+  }));
 
-  componentDidMount() {
+  /**
+   * evaluateRollup
+   * @description
+   * This method takes the original values input
+   * and overrides whatever has been added to the
+   * local rollup object
+   */
+  const evaluateRollup = useCallback(() => {
+    const rollup = { ...values, ...state.rollup };
+    const isValid =
+      allowEmpty === true || Object.values(rollup).filter(isNil).length === 0;
+    return { rollup, isValid };
+  }, [allowEmpty, state.rollup, values]);
+
+  // Helper method that returns all groups
+  // which includes those from props & internal
+  // state (groups created within the component)
+  const getGroups = useCallback(() => {
+    return dedupArray([
+      ...Object.values(values).filter(isNil),
+      ...state.newGroups,
+      ...groups,
+    ]);
+  }, [groups, state.newGroups, values]);
+
+  useEffect(() => {
     // If a handler callback has been provided we pass updates
     // up to the parent component.
-    if (this.props.handleRollupUpdate) {
-      const { rollup, isValid } = this.evaluateRollup();
-      this.props.handleRollupUpdate(rollup, isValid);
+    if (handleRollupUpdate) {
+      const { rollup, isValid } = evaluateRollup();
+      handleRollupUpdate(rollup, isValid);
     }
-  }
+  }, [evaluateRollup, handleRollupUpdate]);
 
   /**
    * Helper method that returns an array of values
@@ -60,117 +92,86 @@ class Rollup extends React.Component {
    *   { name: "The Payer", group: "Payer" }
    * ]
    */
-  getValues() {
-    return Object.keys(this.props.values).map((key) => ({
-      name: key,
-      group: this.props.values[key],
-    }));
-  }
-
-  // Helper method that returns all groups
-  // which includes those from props & internal
-  // state (groups created within the component)
-  getGroups() {
-    return dedupArray([
-      ...Object.values(this.props.values).filter(isNil),
-      ...this.state.newGroups,
-      ...this.props.groups,
-    ]);
-  }
-
-  /**
-   * evaluateRollup
-   * @description
-   * This method takes the original values input
-   * and overrides whatever has been added to the
-   * local rollup object
-   */
-  evaluateRollup() {
-    const rollup = { ...this.props.values, ...this.state.rollup };
-    const isValid =
-      this.props.allowEmpty === true ||
-      Object.values(rollup).filter(isNil).length === 0;
-    return { rollup, isValid };
-  }
-
-  handleChange(domain, codomain) {
-    this.setState(
-      { rollup: { ...this.state.rollup, [domain]: codomain } },
-      () => {
+  const handleChange = useCallback(
+    (domain, codomain) => {
+      setState({ rollup: { ...state.rollup, [domain]: codomain } }, () => {
         // If this codomain is not found in the existing list of groups we
         // add it to our newGroups array in state.
-        if (this.getGroups().indexOf(codomain) === -1) {
-          this.setState({ newGroups: [...this.state.newGroups, codomain] });
+        if (getGroups().indexOf(codomain) === -1) {
+          setState({ newGroups: [...state.newGroups, codomain] });
         }
 
-        if (this.props.handleRollupUpdate) {
-          const { rollup, isValid } = this.evaluateRollup();
+        if (handleRollupUpdate) {
+          const { rollup, isValid } = evaluateRollup();
           const rollupKeys = Object.keys(rollup);
 
           // We only care to return changed values
           const cleanedRollup = Object.values(rollup).reduce(
-            (rollup, value, idx) => {
+            (newRollup, value, idx) => {
               return value === null
-                ? rollup
-                : { ...rollup, [rollupKeys[idx]]: value };
+                ? newRollup
+                : { ...newRollup, [rollupKeys[idx]]: value };
             },
             {},
           );
 
-          this.props.handleRollupUpdate(cleanedRollup, isValid);
+          handleRollupUpdate(cleanedRollup, isValid);
         }
-      },
-    );
-  }
+      });
+    },
+    [
+      evaluateRollup,
+      getGroups,
+      handleRollupUpdate,
+      state.newGroups,
+      state.rollup,
+    ],
+  );
 
-  render() {
-    const {
-      allowEmpty,
-      noHeading,
-      classes,
-      codomainDescription,
-      debug,
-      domainDescription,
-    } = this.props;
+  const getValues = () => {
+    return Object.keys(props.values).map((key) => ({
+      name: key,
+      group: props.values[key],
+    }));
+  };
 
-    const { errors } = this.state;
+  const { errors } = state;
 
-    return (
-      <div className={classes.container}>
-        {errors.map((error, idx) => (
-          <div key={idx}>{error}</div>
-        ))}
-        {!debug ? null : (
-          <div>
-            <pre>{JSON.stringify(this.evaluateRollup(), null, 2)}</pre>
-          </div>
+  return (
+    <div className={classes.container}>
+      {errors.map((error) => (
+        <div key={`${error}`}>{error}</div>
+      ))}
+      {!debug ? null : (
+        <div>
+          <pre>{JSON.stringify(evaluateRollup(), null, 2)}</pre>
+        </div>
+      )}
+      <Table>
+        {noHeading === false && (
+          <TableHead>
+            <TableRow>
+              <TableCell>{domainDescription}</TableCell>
+              <TableCell>{codomainDescription}</TableCell>
+            </TableRow>
+          </TableHead>
         )}
-        <Table>
-          {noHeading === false && (
-            <TableHead>
-              <TableRow>
-                <TableCell>{domainDescription}</TableCell>
-                <TableCell>{codomainDescription}</TableCell>
-              </TableRow>
-            </TableHead>
-          )}
-          <TableBody>
-            {this.getValues().map((value, idx) => (
-              <Group
-                key={idx}
-                codomainDescription={codomainDescription}
-                groups={this.getGroups()}
-                handleChange={this.handleChange}
-                allowEmpty={allowEmpty}
-                {...value}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  }
-}
+        <TableBody>
+          {getValues().map((value) => (
+            <Group
+              key={JSON.stringify(value)}
+              codomainDescription={codomainDescription}
+              groups={getGroups()}
+              handleChange={handleChange}
+              allowEmpty={allowEmpty}
+              {...value}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
 
 Rollup.propTypes = {
   classes: PropTypes.shape({
@@ -184,6 +185,7 @@ Rollup.propTypes = {
   handleRollupUpdate: PropTypes.func.isRequired,
   values: PropTypes.shape({}),
   groupPlaceholder: PropTypes.string,
+  debug: PropTypes.bool,
 };
 
 Rollup.defaultProps = {
@@ -194,6 +196,7 @@ Rollup.defaultProps = {
   groups: [],
   values: {},
   groupPlaceholder: '',
+  debug: false,
 };
 
 export default withStyles(styles)(Rollup);

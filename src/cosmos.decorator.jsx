@@ -9,7 +9,7 @@ import { DragDropContext } from '@hello-pangea/dnd';
 import { SnackbarProvider } from 'notistack';
 
 import { useThemeMode } from './hooks/use-theme-mode';
-import luciviaTheme from './core-app/lucivia-theme';
+import luciviaTheme from './core-app/lucivia-theme.v2';
 import { ThemeContext } from './contexts/ThemeContext';
 
 // configured and ready to go
@@ -30,19 +30,21 @@ export default ({ children }) => {
   );
 
   return (
-    <ReduxMock>
-      <ThemeContext.Provider value={contextValue}>
-        <ThemeProvider theme={theme}>
-          <StyledEngineProvider injectFirst>
-            <SnackbarProvider maxSnack={3}>
-              <DragDropContext>
-                <CssBaseline />
-                {children}
-              </DragDropContext>
-            </SnackbarProvider>
-          </StyledEngineProvider>
-        </ThemeProvider>
-      </ThemeContext.Provider>
-    </ReduxMock>
+    <div className={`${themeMode}-theme-context`}>
+      <ReduxMock>
+        <ThemeContext.Provider value={contextValue}>
+          <ThemeProvider theme={theme}>
+            <StyledEngineProvider injectFirst>
+              <SnackbarProvider maxSnack={3}>
+                <DragDropContext>
+                  <CssBaseline />
+                  {children}
+                </DragDropContext>
+              </SnackbarProvider>
+            </StyledEngineProvider>
+          </ThemeProvider>
+        </ThemeContext.Provider>
+      </ReduxMock>
+    </div>
   );
 };

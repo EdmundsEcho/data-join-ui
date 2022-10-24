@@ -60,7 +60,7 @@ const COLOR = colors.light.blue;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const MAX_TRIES = 20;
+const MAX_TRIES = process.env.REACT_APP_MATRIX_MAX_TRIES || 30;
 
 const fetchRequestFieldNames = (projectId, request, signal) =>
   fetchFieldNamesInner({ projectId, request, signal });

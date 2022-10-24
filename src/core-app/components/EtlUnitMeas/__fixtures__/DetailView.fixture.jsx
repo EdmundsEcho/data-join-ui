@@ -16,6 +16,16 @@ import ConsoleLog from '../../shared/ConsoleLog';
 
 /* eslint-disable no-console */
 
+const Trash = (fieldName, purpose) => (
+  <TableCellTrash
+    fieldName={fieldName}
+    purpose={purpose}
+    handleDelete={() => {
+      console.log(`Delete field: ${fieldName}`);
+    }}
+  />
+);
+
 const Component = () => {
   // 📖 ... at some point, render each independently.
   const fieldsKeyedOnPurpose = useSelector(
@@ -70,15 +80,7 @@ const Component = () => {
         meaRelatedFields={etlUnitFieldsData(measurement)}
         handleClick={handleClick}
         selectedFieldName={selectedField}
-        tableCellTrash={(fieldName, purpose) => (
-          <TableCellTrash
-            fieldName={fieldName}
-            purpose={purpose}
-            handleDelete={() => {
-              console.log(`Delete field: ${fieldName}`);
-            }}
-          />
-        )}
+        tableCellTrash={Trash}
       />
       <p />
       <ConsoleLog value={meaEtlFields} advancedView />

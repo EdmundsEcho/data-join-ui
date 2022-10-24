@@ -424,6 +424,8 @@ export const cancelApiService = async (eventInterface) => {
  * ⬜ Implement pagination support using 'Connection' pattern
  *    (see also fetchLevels for graphql version)
  *
+ * see also fetchLevels
+ *
  * @function
  * @param {Object} input
  * @param {Array<Object>} input.sources
@@ -575,6 +577,8 @@ export const fetchRequestFieldNames = async ({
  * 🪟 uses signal to abort; good for useEffect
  *
  * ✅ Pulled directly to the ui (not hosted in Redux)
+ *
+ * see also fetchFileLevels
  *
  * @function
  * @param {Object} request

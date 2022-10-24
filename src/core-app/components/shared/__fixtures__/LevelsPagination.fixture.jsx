@@ -1,17 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import numeral from 'numeral';
-
-import { useSelect } from 'react-cosmos/fixture';
-import makeStyles from '@mui/styles/makeStyles';
+import React, { useState, useEffect } from 'react';
 
 import Typography from '@mui/material/Typography';
 import ConsoleLog from '../ConsoleLog';
-import { PURPOSE_TYPES } from '../../../lib/sum-types';
 // api
-import {
-  getFileLevels as getLevelsInternal,
-  fetchLevels,
-} from '../../../services/api';
+import { fetchLevels } from '../../../services/api';
 
 import data from '../../../datasets/store-headerviews_v2.json';
 
