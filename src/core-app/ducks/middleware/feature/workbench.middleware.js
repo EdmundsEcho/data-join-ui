@@ -56,7 +56,6 @@ import {
 } from '../../actions/api.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import { setUiLoadingState } from '../../actions/ui.actions';
-import { saveProject } from '../../actions/project-meta.actions';
 import {
   ApiCallError,
   InvalidStateError,
@@ -95,6 +94,8 @@ const DEBUG =
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
+//------------------------------------------------------------------------------
+// Global values
 const MAX_TRIES = 20;
 const { isValid, getData, isValidError, getError } =
   ServiceConfigs[getServiceType(WORKBENCH)].response;

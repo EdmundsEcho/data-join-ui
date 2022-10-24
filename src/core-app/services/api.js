@@ -190,6 +190,8 @@ export const ServiceConfigs = {
     resultType: 'Matrix',
     middleware: 'matrix',
     response: {
+      isValidError: ({ error }) => error,
+      getError: (request) => request?.data ?? 'Undefined error: Matrix',
       isValid: (response) => response?.data?.data?.payload?.data,
       getData: (response) => response?.data?.data?.payload?.data,
       setData: (value) => ({

@@ -31,7 +31,9 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 
 //------------------------------------------------------------------------------
 // Global values
-const { isValid, getData } = ServiceConfigs[getServiceType(MATRIX)].response;
+// const MAX_TRIES = 20;
+const { isValid, getData, isValidError, getError } =
+  ServiceConfigs[getServiceType(MATRIX)].response;
 //------------------------------------------------------------------------------
 
 /* --------------------------------------------------------------------------- */
@@ -108,24 +110,29 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
     // action :: pollingEventError
     // dispatched by sagas
     case `${MATRIX} ${POLLING_ERROR}`: {
-      if (!isValid(action?.event?.request)) {
+      if (!isValidError(action?.event?.request)) {
         console.dir(action);
         throw new ApiResponseError(
-          `matrix.middleware: unexpected response; require 'event'`,
+          `matrix.middleware: unexpected response; see ServiceConfigs`,
         );
       }
       console.assert(
-        getData(action.event.request)?.error,
+        getError(action.event.request)?.error,
         'The response is not an error',
       );
       next([
         setNotification({
           message:
-            getData(action.event.request)?.message ||
+            getError(action.event.request)?.message ||
             'The API polling request failed',
           feature: MATRIX,
         }),
-        setUiLoadingState({ toggle: false, feature: MATRIX }),
+        // 🦀 ? does not work b/c window is also waiting for data
+        setUiLoadingState({
+          toggle: false,
+          feature: MATRIX,
+          message: 'Done matrix',
+        }),
       ]);
 
       break;
