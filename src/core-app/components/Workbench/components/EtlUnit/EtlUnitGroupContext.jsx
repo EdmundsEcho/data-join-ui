@@ -17,7 +17,8 @@ import groupTypes from './groupTypes';
  *
  *  Default settings that only serve for testing
  */
-export const EtlUnitGroupContext = createContext();
+export const EtlUnitGroupContext = createContext({});
+EtlUnitGroupContext.displayName = 'Context - EtlUnitGroup';
 
 /**
  * Context provider that shares the user-driven state changes in the tools

@@ -7,7 +7,7 @@
  *
  */
 import { PropTypes } from 'prop-types';
-import { Box, Button, Paper, Typography, Container } from '@mui/material';
+import { Box, Button, Typography, Container } from '@mui/material';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 export const ErrorPage = ({

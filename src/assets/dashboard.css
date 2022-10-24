@@ -846,7 +846,6 @@ span.google-drive {
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: space-between;
-    height: calc(100% - 1rem);
 }
 .main-page.with-markdown > .footer > img {
     width: 100px

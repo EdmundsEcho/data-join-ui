@@ -171,19 +171,18 @@ const useFetchApi = ({
             compare(previousCacheRef, response, equalityFnName, caller, DEBUG)
           ) {
             dispatch({ type: SUCCESS_NOCHANGE });
-            return; // of the effect (not cleanup)
+          } else {
+            previousCacheRef.current = response.data;
+
+            // update reducer state
+            runMiddleware({
+              response,
+              consumeDataFn,
+              setCacheFn,
+              caller,
+              DEBUG,
+            });
           }
-
-          previousCacheRef.current = response.data;
-
-          // update reducer state
-          runMiddleware({
-            response,
-            consumeDataFn,
-            setCacheFn,
-            caller,
-            DEBUG,
-          });
         } catch (e) {
           if (e instanceof DOMException && e.name === 'AbortError') {
             console.warn(`use-fetch-api call was cancelle: ${caller}`);
@@ -193,7 +192,6 @@ const useFetchApi = ({
         }
       })();
       previousFetchArgsRef.current = state.fetchArgs; // used to limit effect that depends on args
-      // effect();
     }
     return cancel;
   }, [

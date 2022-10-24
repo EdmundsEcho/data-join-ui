@@ -90,6 +90,8 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
   const withShowMore = ['derivedField'].includes(displayType);
   const showFab = displayType === 'empty';
 
+  const stateId = `groupNodeContext-${nodeId}`;
+
   return (
     <EtlUnitGroupProvider
       displayType={displayType}
@@ -97,7 +99,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
       clickFabCallback={handleAddDerivedField}
       data={data}
       showDetail={showDetailInit}
-      stateId={`groupNodeContext-${nodeId}`}
+      stateId={stateId}
       showMoreMenu={false}>
       {/* only use class to show/hide header 🦀 ? */}
       <EtlUnitGroupContext.Consumer>

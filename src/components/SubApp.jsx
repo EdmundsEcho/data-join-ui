@@ -59,6 +59,7 @@ const SubApp = () => {
   const {
     execute: fetch,
     status: fetchStatus,
+    cancel,
     // reset,
   } = useFetchApi({
     asyncFn: fetchServerStore,
@@ -76,7 +77,8 @@ const SubApp = () => {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     fetch(requestedProject);
-  }, [fetch, requestedProject]);
+    return cancel;
+  }, [cancel, fetch, requestedProject]);
 
   // ---------------------------------------------------------------------------
   // report on state of the component

@@ -261,9 +261,11 @@ const ValueGridCore = ({
         setInNewClearedState(false);
       }
 
-      feature === 'SCROLL'
-        ? fetchPage({ pageSize: nextPageSize, after: max })
-        : fetchPage();
+      if (feature === 'SCROLL') {
+        fetchPage({ pageSize: nextPageSize, after: max });
+      } else {
+        fetchPage();
+      }
 
       setReadyForMore(() => true);
     }

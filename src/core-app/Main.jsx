@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 
-import Container from '@mui/material/Container';
+// import Container from '@mui/material/Container';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 
 // core-app related
 import AppInitializer from './AppInitializer';
 import { ErrorBoundary, Fallback } from './components/shared/ErrorBoundary';
-import ModalRoot from './components/ModalRoot';
+// import ModalRoot from './components/ModalRoot';
 
 import StepBar from './components/StepBar/StepBar';
 import AppSizeProvider from '../contexts/CoreAppSizeContext';

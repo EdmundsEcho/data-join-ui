@@ -64,7 +64,7 @@ export const LoginPage = ({ logout: logoutProp }) => {
   // 🔖 summary views only (detail view is part of the core-app)
   // ---------------------------------------------------------------------------
   const abortController = useAbortController();
-  const { execute: logout } = useFetchApi({
+  const { execute: logout, cancel } = useFetchApi({
     asyncFn: logoutApi,
     useSignal: true,
     immediate: false,
@@ -76,7 +76,8 @@ export const LoginPage = ({ logout: logoutProp }) => {
     if (logoutRequest) {
       logout();
     }
-  }, [logoutRequest, logout]);
+    return cancel;
+  }, [logoutRequest, logout, cancel]);
 
   if (DEBUG) {
     console.debug('%c----------------------------------------', COLOR);
