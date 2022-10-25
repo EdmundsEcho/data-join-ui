@@ -49,8 +49,7 @@ const ReturnIcon = () => (
       xmlns='http://www.w3.org/2000/svg'
       width='20'
       height='20'
-      viewBox='0 0 24 24'
-    >
+      viewBox='0 0 24 24'>
       <path d='M0 0h20v20H0z' fill='none' />
       <path d='M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z' />
     </svg>
@@ -230,10 +229,8 @@ class AutoSuggestText extends React.Component {
       // We set this initially because this is controlled
       // after this point.
       input: this.props.defaultValue || '',
-      popper: '',
       allSuggestions: [],
       filteredSuggestions: [],
-      newSuggestions: [],
     };
 
     this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
@@ -252,11 +249,13 @@ class AutoSuggestText extends React.Component {
     });
   };
 
-  handleChange = (name) => (event, { newValue }) => {
-    this.setState({
-      [name]: newValue,
-    });
-  };
+  handleChange =
+    (name) =>
+    (event, { newValue }) => {
+      this.setState({
+        [name]: newValue,
+      });
+    };
 
   // This function is called when suggestion is selected.
   onSuggestionSelected(
@@ -313,8 +312,7 @@ class AutoSuggestText extends React.Component {
             <Paper
               {...options.containerProps}
               square
-              style={{ maxHeight: 300, overflowY: 'scroll' }}
-            >
+              style={{ maxHeight: 300, overflowY: 'scroll' }}>
               {options.children}
             </Paper>
           )}
@@ -326,7 +324,7 @@ class AutoSuggestText extends React.Component {
 
 AutoSuggestText.propTypes = {
   allowEmpty: PropTypes.bool,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape({}).isRequired,
   defaultValue: PropTypes.string,
   suggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
   suggestionTypeText: PropTypes.string,
@@ -334,7 +332,7 @@ AutoSuggestText.propTypes = {
 
 AutoSuggestText.defaultProps = {
   allowEmpty: false,
-  suggestions: [],
+  defaultValue: undefined,
   suggestionTypeText: 'Suggestion',
 };
 

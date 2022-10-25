@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 
 import { useSelector, shallowEqual } from 'react-redux';
-import makeStyles from '@mui/styles/makeStyles';
 
 import EtlUnitMeas from '../EtlUnitMeas';
 import TableCellTrash from '../shared/TableCellTrash';

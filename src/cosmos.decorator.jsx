@@ -15,6 +15,12 @@ import { ThemeContext } from './contexts/ThemeContext';
 // configured and ready to go
 import ReduxMock from './cosmos.mock-store';
 
+// css that works in addition to mui-theme
+import './assets/index.css';
+import './assets/fonts.css';
+import './assets/dashboard.css';
+import './assets/core-app-sizing.css';
+
 /* eslint-disable react/prop-types, react/display-name, import/no-anonymous-default-export */
 
 export default ({ children }) => {
