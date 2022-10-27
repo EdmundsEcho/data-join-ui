@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 
 import MoodSelector from './feedback/components/MoodSelector';
 import Spinner from '../components/shared/Spinner';
 
+import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
 import { sendFeedback } from '../services/dashboard.api';
 
 // -----------------------------------------------------------------------------
 const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+// augment feedback content
+const [contextEnv, scopeEnv] = process.env.REACT_APP_FEEDBACK_META.split(',');
+const META = { context: contextEnv, scope: scopeEnv };
+
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -17,6 +22,7 @@ const validComment = (comment) => {
   }
   return comment.length <= 550 && comment.length > 10;
 };
+
 /**
  * User feedback; all input optional
  * context   string($character varying) from where sent in the app
@@ -43,6 +49,20 @@ const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
     setApiState('idle');
   };
 
+  // fetch
+  const {
+    execute: send,
+    status,
+    reset: resetApi,
+  } = useFetchApi({
+    asyncFn: onSubmit,
+    blockAsyncWithEmptyParams: true,
+    caller: 'Feedback: sendFeedback',
+    equalityFnName: 'equal',
+    immediate: false,
+    DEBUG,
+  });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (mood) {
@@ -55,18 +75,27 @@ const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
       if (DEBUG) {
         console.debug('Feedback: ', feedback);
       }
-      setApiState('busy');
-      const response = await onSubmit(feedback);
-      callback(feedback, response);
-      resetState();
+      setApiState('busy'); // display the spinner
+      send(feedback);
     }
   };
 
-  console.debug('Feedback state ------------\n', {
-    mood,
-    comment,
-    validUserInput,
-  });
+  useEffect(() => {
+    if (status === STATUS.RESOLVED) {
+      callback();
+      resetState();
+      resetApi();
+    }
+  }, [callback, status, resetApi]);
+
+  if (DEBUG) {
+    console.debug('Feedback state ------------\n', {
+      mood,
+      comment,
+      validUserInput,
+      status,
+    });
+  }
 
   return apiState === 'idle' ? (
     <form className='feedback form stack' onSubmit={handleSubmit}>
@@ -93,14 +122,9 @@ const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
 
 const noop = () => {};
 
-const meta = {
-  context: 'mock',
-  scope: 'testing',
-};
-
 Feedback.propTypes = {
-  callback: PropTypes.func,
   onSubmit: PropTypes.func,
+  callback: PropTypes.func,
   moods: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   meta: PropTypes.shape({
     scope: PropTypes.string,
@@ -108,9 +132,9 @@ Feedback.propTypes = {
   }),
 };
 Feedback.defaultProps = {
-  callback: noop,
   onSubmit: undefined,
-  meta,
+  callback: noop,
+  meta: META,
 };
 
 export default Feedback;

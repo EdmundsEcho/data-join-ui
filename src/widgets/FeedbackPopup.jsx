@@ -29,14 +29,15 @@ const FeedbackPopup = ({ horizontal, vertical, children }) => {
   const handleOpenFeedback = () => {
     setTransition(() => 'enter');
   };
-  const handleCloseFeedback = () => {
+  // used in a useEffect hook
+  const handleCloseFeedback = React.useCallback(() => {
     setTransition(() => 'exit');
     setTimeout(resetState, 300);
-  };
-  const handleSubmit = (/* formData, response */) => {
+  }, []);
+  const handleSubmit = React.useCallback(() => {
     setSubmitted(() => 'submit');
     setTimeout(handleCloseFeedback, 3000);
-  };
+  }, [handleCloseFeedback]);
 
   return (
     <>
