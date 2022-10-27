@@ -1,57 +1,38 @@
-import { XIcon } from '../../icons/xicon';
+import { PropTypes } from 'prop-types';
+import Close from '@mui/icons-material/Close';
 
-const Container = styled('div', {
-  background: '$bg',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  border: '1px solid $border',
-  borderRadius: '20px',
-  padding: '30px',
-  maxWidth: '420px',
-  position: 'relative',
-  boxSizing: 'border-box',
-});
-
-const Header = styled('div', {
-  fontFamily: sansSerif,
-  fontWeight: '700',
-  fontSize: '20px',
-  lineHeight: '24px',
-  color: '$text',
-  display: 'flex',
-  alignItems: 'center',
-
-  marginBottom: '40px',
-});
-
-const CloseButton = styled('button', {
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-  outline: 'none',
-  position: 'absolute',
-  right: '30px',
-});
-
-type ModalContainerProps = {
-  headerText?: string,
-  children: React.ReactNode,
-};
-
-export const ModalContainer: React.FC<ModalContainerProps> = ({
-  headerText = 'How was your onboarding?',
+export const ModalContainer = ({
+  className,
+  title,
+  show,
+  onClose,
   children,
 }) => {
   return (
-    <Container>
-      <Header>
-        {headerText}
-        <CloseButton aria-label='Close Feedback Modal'>
-          <XIcon />
-        </CloseButton>
-      </Header>
-      {children}
-    </Container>
+    show && (
+      <div className={`feedback-modal root ${className}`}>
+        <div className='header nostack nowrap space-between'>
+          <h5 className='heading'>{title}</h5>
+          <button type='button' className='close-button' onClick={onClose}>
+            <Close size='small' />
+          </button>
+        </div>
+        {children}
+      </div>
+    )
   );
 };
+
+ModalContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClose: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  className: PropTypes.string.isRequired,
+  show: PropTypes.bool,
+};
+ModalContainer.defaultProps = {
+  title: 'What are your thoughts?',
+  show: false,
+};
+
+export default ModalContainer;

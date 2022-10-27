@@ -7,18 +7,23 @@ import clsx from 'clsx';
 
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Fab from '@mui/material/Fab';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
+// import Badge from '@mui/material/Badge';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
+// icons
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import SideNav2 from './SideNav2';
 import AppBar from '../components/AppBar';
+import FeedbackPopup from '../widgets/FeedbackPopup';
 import { useLocationChange, usePageWidth, usePersistedState } from '../hooks';
 import { lookupDisplayTypeCfg } from '../router/routes';
 import { colors } from '../core-app/constants/variables';
@@ -109,15 +114,18 @@ function HorizontalLayout({
   secondaryElement,
   isMobile,
   className,
+  iconOnly,
 }) {
   const theme = useTheme();
   const navigate = useNavigate();
   const enqueueSnackbar = useSnackbar();
+
   // feature in-process
-  const notificationsCount = 0;
+  const notificationsCount = 2;
 
   // AppBar link
-  const handleLogOut = (event) => {
+  const handleLogout = (event) => {
+    console.debug('logout');
     event.preventDefault();
     navigate('/login?logout=true');
     try {
@@ -129,17 +137,21 @@ function HorizontalLayout({
     }
   };
 
+  const ActionItems = iconOnly ? IconOnly : TextWithIcon;
+
   return (
     <>
       <AppBar
         position='absolute'
         className={clsx(
           'luci-toolbar',
+          'app-bar',
           `${theme.palette.mode}-toolbar`,
           className,
         )}
         open={open}>
         <Toolbar
+          className='tool-bar'
           sx={{
             mr: '16px', // keep right padding when drawer closed
             ml: '16px',
@@ -161,16 +173,11 @@ function HorizontalLayout({
             color='inherit'
             noWrap
             sx={{ flexGrow: 1 }}></Typography>
-          {(!isMobile || !open) && (
-            <Link href='/login' onClick={handleLogOut} sx={{ mr: 2 }}>
-              Log out
-            </Link>
-          )}
-          <IconButton color='inherit'>
-            <Badge badgeContent={notificationsCount} color='secondary'>
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          <ActionItems
+            open={open}
+            isMobile={isMobile}
+            handleLogout={handleLogout}
+          />
         </Toolbar>
       </AppBar>
       <Box
@@ -219,6 +226,13 @@ function HorizontalLayout({
           </Grid>
         </div>
       </Box>
+      <div className={clsx('floating-actions', className)}>
+        <FeedbackPopup horizontal='left' vertical='up'>
+          <Fab color='secondary'>
+            <FeedbackIcon />
+          </Fab>
+        </FeedbackPopup>
+      </div>
     </>
   );
 }
@@ -230,6 +244,7 @@ HorizontalLayout.propTypes = {
   toggleDrawer: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
   secondaryElement: PropTypes.element,
+  iconOnly: PropTypes.bool,
   /*
   displayTypeCfg: PropTypes.shape({
     showAppBar: PropTypes.bool.isRequired,
@@ -238,6 +253,36 @@ HorizontalLayout.propTypes = {
 };
 HorizontalLayout.defaultProps = {
   secondaryElement: null,
+  iconOnly: false,
 };
 
+function TextWithIcon({ open, handleLogout, isMobile }) {
+  return (
+    <div className='button-group flex nostack relative'>
+      {(!isMobile || !open) && (
+        <Button
+          className='button-w-text regular logout'
+          onClick={handleLogout}
+          endIcon={<LogoutIcon />}
+          color='inherit'>
+          Log out
+        </Button>
+      )}
+    </div>
+  );
+}
+function IconOnly({ open, handleLogout, isMobile }) {
+  return (
+    <div className='button-group flex nostack'>
+      <IconButton color='inherit'>
+        <FeedbackIcon className='large-svg' />
+      </IconButton>
+      {(!isMobile || !open) && (
+        <IconButton onClick={handleLogout} color='inherit'>
+          <LogoutIcon className='large-svg' />
+        </IconButton>
+      )}
+    </div>
+  );
+}
 export default WithSideBar;

@@ -33,6 +33,7 @@ const config = {
       name: 'name',
       label: 'name',
       type: 'text',
+      min: '2',
       max: '20',
       placeholder: '',
       required: true,
