@@ -20,6 +20,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import LogoutIcon from '@mui/icons-material/Logout';
+import EventIcon from '@mui/icons-material/Event';
 
 import SideNav2 from './SideNav2';
 import AppBar from '../components/AppBar';
@@ -226,12 +227,23 @@ function HorizontalLayout({
           </Grid>
         </div>
       </Box>
-      <div className={clsx('floating-actions', className)}>
+      <div className={clsx('floating-actions', className, 'stack', 'nowrap')}>
         <FeedbackPopup horizontal='left' vertical='up'>
-          <Fab color='secondary'>
+          <Fab color='secondary' className='fab feedback'>
             <FeedbackIcon />
           </Fab>
         </FeedbackPopup>
+
+        {/* <Fab
+          className='fab calendar'
+          color='secondary'
+          id='SOIBTN_EdmundCape'
+          data-height='580'
+          data-psz='00'
+          data-so-page='EdmundCape'
+          data-delay='1'>
+          <EventIcon />
+        </Fab> */}
       </div>
     </>
   );

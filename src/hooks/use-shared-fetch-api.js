@@ -433,6 +433,17 @@ function middleware(dispatch, state) {
         });
         break;
 
+      case 409:
+        dispatch({
+          type: SET_NOTICE,
+          payload: {
+            message: response?.message ?? 'Error: Api error',
+            variant: 'error',
+          },
+        });
+        dispatch({ type: SUCCESS_NOCHANGE });
+        break;
+
       case 403:
         actionsFrom403Error(response, state.fetchArgs).forEach(dispatch);
         dispatch({

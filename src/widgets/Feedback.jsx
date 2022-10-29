@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
 import MoodSelector from './feedback/components/MoodSelector';
@@ -31,13 +32,14 @@ const validComment = (comment) => {
  * score     integer($smallint)         normalize to 10, higher is better
  */
 const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
+  const { pathname } = useLocation();
   const [mood, setMood] = useState(() => undefined);
   const [comment, setComment] = useState(() => undefined);
   const [apiState, setApiState] = useState(() => 'idle');
   const onSubmit = onSubmitProp || sendFeedback;
   const validUserInput = mood && validComment(comment);
 
-  const { context, scope } = meta;
+  const { scope } = meta;
 
   const handleMoodChange = (m) => {
     setMood(m);
@@ -69,7 +71,7 @@ const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
       const feedback = {
         score: mood.score,
         feedback: `${mood.id}: ${comment}`,
-        context,
+        context: pathname,
         scope,
       };
       if (DEBUG) {

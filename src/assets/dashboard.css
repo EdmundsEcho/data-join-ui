@@ -1051,8 +1051,13 @@ pre.console-log {
 .feedback .mood-label input:checked ~ .glowing-background {
     opacity: 1;
 }
-/* staging entry, exit */
-
+/* --------------------------------------------------------- */
+/* stage */
+/* --------------------------------------------------------- */
+:root {
+  --feedback-stage-width: 350px;
+  --feedback-stage-height: 339px;
+}
 .actor.thank-you,
 .feedback-modal.root {
   background: var(--color-background-feedback);
@@ -1111,18 +1116,6 @@ pre.console-log {
 .stage.feedback .relative,
 .actor.thank-you {
     position: relative;
-}
-.floating-actions {
-    position: absolute;
-    bottom: 178px;
-    right: 1.5rem;
-}
-/* --------------------------------------------------------- */
-/* stage */
-/* --------------------------------------------------------- */
-:root {
-  --feedback-stage-width: 350px;
-  --feedback-stage-height: 339px;
 }
 .stage-root {
   width: var(--feedback-stage-width);
@@ -1253,8 +1246,17 @@ pre.console-log {
 }
 
 /* end feedback */
-/* ---------------------------------------- */
 
+/* --------------------------------------------------------- */
+/* Floating button */
+/* --------------------------------------------------------- */
+.floating-actions {
+    position: absolute;
+    bottom: 178px;
+    right: 1.5rem;
+}
+.fab.calendar {}
+.fab.feedback {}
 /*
  * Debugging layout markers
  */
