@@ -9,6 +9,7 @@ import React, {
   createContext,
 } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 
 import {
   fetchProjects as fetchAllProjectsApi,
@@ -70,7 +71,10 @@ const Provider = ({ children }) => {
   // 🟢 Gateway to pulling new data
   //    The latch controls otherwise tonic (always on) data fetching
   // ---------------------------------------------------------------------------
-  const [latch, setLatch] = useState(() => ({ value: 'CLOSED' }));
+  const { pathname } = useLocation();
+  const [latch, setLatch] = useState(() => {
+    return pathname.includes('login') ? { value: 'CLOSED' } : { value: 'OPEN' };
+  });
   if (DEBUG) {
     console.debug(
       `Project context latch: ${latch.value} api status: ${status}`,
@@ -144,7 +148,7 @@ const Provider = ({ children }) => {
         callback(response.data);
       }
     },
-    [fetch, runMiddleware, abortController.signal],
+    [runMiddleware, abortController.signal],
   );
   // ---------------------------------------------------------------------------
   // 👉 Remove a project

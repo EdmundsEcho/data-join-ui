@@ -9,7 +9,7 @@ import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
 import { sendFeedback } from '../services/dashboard.api';
 
 // -----------------------------------------------------------------------------
-const DEBUG = true || process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
+const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // augment feedback content
 const [contextEnv, scopeEnv] = process.env.REACT_APP_FEEDBACK_META.split(',');
 const META = { context: contextEnv, scope: scopeEnv };

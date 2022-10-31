@@ -95,7 +95,6 @@ const Main = () => {
       onDragEnd={handleOnDragEnd}
       onBeforeCapture={handleOnBeforeCapture}>
       <Container className={clsx('Luci-Workbench-board')}>
-        <WorkbenchButtons />
         <Palette rootNode={1} />
         <Divider className='workbench-split' orientation='vertical' flexItem />
         <Canvas rootNode={2} />
@@ -104,6 +103,7 @@ const Main = () => {
   );
 };
 
+/*
 function WorkbenchButtons() {
   // 📬
   const dispatch = useDispatch();
@@ -127,6 +127,25 @@ function WorkbenchButtons() {
       <Typography align='center'>Reset Canvas</Typography>
     </div>
   );
+} */
+
+// utilized by the stepbar group of functions
+export function useWorkbenchButton() {
+  // 📬
+  const dispatch = useDispatch();
+
+  // 📖 Only requires the Canvas Node count to set reset/matrix toggles
+  const isCanvasDirty = useSelector(getIsCanvasDirty, shallowEqual);
+
+  // ⬜ use the modal app capacity to provide a confirmation dialog
+  const handleResetCanvas = useCallback(() => {
+    dispatch(resetCanvas());
+  }, [dispatch]);
+
+  return {
+    isCanvasDirty,
+    handleResetCanvas,
+  };
 }
 
 export default Main;

@@ -15,17 +15,24 @@ import IconButton from '@mui/material/IconButton';
 // import Badge from '@mui/material/Badge';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-// icons
-import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+
+// import NotificationsIcon from '@mui/icons-material/Notifications';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import LogoutIcon from '@mui/icons-material/Logout';
-import EventIcon from '@mui/icons-material/Event';
+
+// icons
+import MenuIcon from '@mui/icons-material/Menu';
+import EventIcon from '@mui/icons-material/InsertInvitation';
 
 import SideNav2 from './SideNav2';
 import AppBar from '../components/AppBar';
 import FeedbackPopup from '../widgets/FeedbackPopup';
+
 import { useLocationChange, usePageWidth, usePersistedState } from '../hooks';
+import {
+  useFloatingFunctionsDataContext,
+  useFloatingFunctionsApiContext,
+} from '../contexts/AppFloatingFunctionsContext';
 import { lookupDisplayTypeCfg } from '../router/routes';
 import { colors } from '../core-app/constants/variables';
 
@@ -49,13 +56,15 @@ function WithSideBar({ children: routesElement }) {
   const [displayTypeCfg, setDisplayTypeCfg] = useState(() =>
     lookupDisplayTypeCfg(`/${location.pathname.split('/')[1]}`),
   );
+  // 🦀 Depends on pathname structure (first two fragments)
   const setDisplayCfg = useCallback(() => {
     setDisplayTypeCfg(() =>
       lookupDisplayTypeCfg(`/${location.pathname.split('/')[1]}`),
     );
   }, [location.pathname]);
   useLocationChange(setDisplayCfg);
-  // debugging
+
+  // 🦀 debugging; does not seems to works
   const [origin] = usePersistedState('origin'); // debugging read-only
 
   //
@@ -125,7 +134,10 @@ function HorizontalLayout({
   const enqueueSnackbar = useSnackbar();
 
   // feature in-process
-  const notificationsCount = 2;
+  // const notificationsCount = 2;
+
+  // floating functions
+  const { showFeedback, inProjectRoutes } = useFloatingFunctionsDataContext();
 
   // AppBar link
   const handleLogout = (event) => {
@@ -230,24 +242,23 @@ function HorizontalLayout({
           </Grid>
         </div>
       </Box>
-      <div className={clsx('floating-actions', className, 'stack', 'nowrap')}>
-        <FeedbackPopup horizontal='left' vertical='up'>
-          <Fab color='secondary' className='fab feedback'>
-            <FeedbackIcon />
-          </Fab>
-        </FeedbackPopup>
-
-        {/* <Fab
-          className='fab calendar'
-          color='secondary'
-          id='SOIBTN_EdmundCape'
-          data-height='580'
-          data-psz='00'
-          data-so-page='EdmundCape'
-          data-delay='1'>
-          <EventIcon />
-        </Fab> */}
-      </div>
+      {/* only show when not in projects (see StepBar) */}
+      {showFeedback && !inProjectRoutes && (
+        <div className={clsx('floating-actions', className, 'stack', 'nowrap')}>
+          <FeedbackPopup horizontal='left' vertical='up'>
+            <Fab color='secondary' className='fab feedback'>
+              <FeedbackIcon />
+            </Fab>
+          </FeedbackPopup>
+          <a
+            id='Setmore_button_iframe'
+            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'>
+            <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
+              <EventIcon />
+            </Fab>
+          </a>
+        </div>
+      )}
     </>
   );
 }

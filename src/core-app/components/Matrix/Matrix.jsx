@@ -10,7 +10,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Card, CardContent, CardHeader } from '@mui/material';
+import { Card } from '@mui/material';
 
 import MatrixGrid from './MatrixGrid';
 import LoadingSplash from '../shared/LoadingSplash';

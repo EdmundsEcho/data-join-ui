@@ -140,6 +140,10 @@
 /*
 ============================================================================== */
 /* app-specific classes */
+.dashboard-layout-root {
+    position: fixed;
+    width: 100%;
+}
 .copyright {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
@@ -450,18 +454,12 @@ button.stepbar.nav.next,
     right: calc(var(--controller-margin) * 3);
 }
 .matrix.download {
-    position: absolute;
-    bottom: 200px;
-    right: calc(var(--controller-margin) * 3);
-    background: #52a5b820;
-    padding: 0.5rem;
-    padding-left: 1rem;
-    padding-right: 0.2rem;
-    border-radius: 50%;
+    background-color: var(--color-primary-main);
+    color: var(--color-primary-contrastText);
 }
 .matrix.download:hover {
-    background: #52a5b880;
-    background-color: var(--color-background-paper);
+    background-color: var(--color-primary-superLight);
+    color: var(--color-primary-main);
 }
 .flex-1 {
     flex: 1;
@@ -1252,7 +1250,7 @@ pre.console-log {
 /* --------------------------------------------------------- */
 .floating-actions {
     position: absolute;
-    bottom: 178px;
+    bottom: 200px;
     right: 1.5rem;
 }
 .fab.calendar {}

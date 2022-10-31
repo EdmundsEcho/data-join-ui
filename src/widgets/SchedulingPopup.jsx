@@ -1,3 +1,18 @@
+/*
+*
+<script id="setmore_script"
+type="text/javascript"
+src="https://my.setmore.com/webapp/js/src/others/setmore_iframe.js"></script>
+
+<a  id="Setmore_button_iframe"
+    style="float:none; position: fixed; right: -2px; top: 25%; display: block; z-index: 20000"
+    href="https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762">
+    <img border="none"
+         src="https://storage.googleapis.com/full-assets/setmore/images/1.0/Calendar/Setmore-Book-Now.png"
+         alt="Book an appointment with Lucivia using Setmore" />
+</a>
+*/
+
 (function () {
   var StaticURL = 'https://cdn.oncehub.com';
   var bookingCtrls = document.querySelectorAll('[data-so-page]');

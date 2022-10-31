@@ -6,6 +6,7 @@ import HorizontalLayoutWithSideBar from '../layouts/HorizontalLayout';
 
 import { routesConfig as routes } from '../router';
 import ProjectsDataProvider from '../contexts/ProjectsDataContext';
+import AppFloatingFunctionContext from '../contexts/AppFloatingFunctionsContext';
 
 //-----------------------------------------------------------------------------
 // const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
@@ -22,16 +23,18 @@ import ProjectsDataProvider from '../contexts/ProjectsDataContext';
 const App = () => {
   const routesElement = useRoutes(routes);
   return (
-    <ProjectsDataProvider>
-      <HorizontalLayoutWithSideBar>
-        {/* Main viewport */}
-        {routesElement}
-      </HorizontalLayoutWithSideBar>
-      {/* layout markers */}
-      <div className='marker top hidden-n' />
-      <div className='marker bottom hidden-n' />
-      <div className='marker top computed hidden-n' />
-    </ProjectsDataProvider>
+    <AppFloatingFunctionContext>
+      <ProjectsDataProvider>
+        <HorizontalLayoutWithSideBar>
+          {/* Main viewport */}
+          {routesElement}
+        </HorizontalLayoutWithSideBar>
+        {/* layout markers */}
+        <div className='marker top hidden-n' />
+        <div className='marker bottom hidden-n' />
+        <div className='marker top computed hidden-n' />
+      </ProjectsDataProvider>
+    </AppFloatingFunctionContext>
   );
 };
 
