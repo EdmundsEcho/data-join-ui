@@ -40,6 +40,8 @@ const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
   const validUserInput = mood && validComment(comment);
 
   const { scope } = meta;
+  const tmp = pathname.split('/');
+  const context = tmp[tmp.length - 1];
 
   const handleMoodChange = (m) => {
     setMood(m);
@@ -71,7 +73,7 @@ const Feedback = ({ meta, callback, onSubmit: onSubmitProp, moods }) => {
       const feedback = {
         score: mood.score,
         feedback: `${mood.id}: ${comment}`,
-        context: pathname,
+        context,
         scope,
       };
       if (DEBUG) {

@@ -60,7 +60,7 @@ const Provider = ({ children }) => {
     asyncFn: fetchAllProjectsApi,
     initialCacheValue: [],
     useSignal: true,
-    immediate: true,
+    immediate: false,
     abortController,
     caller: 'ProjectsDataContext',
     equalityFnName: 'equal',

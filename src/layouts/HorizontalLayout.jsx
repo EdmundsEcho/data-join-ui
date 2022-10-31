@@ -62,9 +62,12 @@ function WithSideBar({ children: routesElement }) {
   // mobile-dependent display of drawer
   const pageWidth = usePageWidth();
   const isMobile = pageWidth < 770;
-  const [openDrawer, setOpenDrawer] = useState(() => !isMobile);
+  const [showWideMainMenu, setShowWideMainMenu] = usePersistedState(
+    'showWideMainMenu',
+    !isMobile,
+  );
   const toggleDrawer = () => {
-    setOpenDrawer(!openDrawer);
+    setShowWideMainMenu(!showWideMainMenu);
   };
 
   if (DEBUG) {
@@ -83,7 +86,7 @@ function WithSideBar({ children: routesElement }) {
         className={clsx('side-nav', {
           hidden: !displayTypeCfg?.showSideNav,
         })}
-        open={openDrawer}
+        open={showWideMainMenu}
         toggleDrawer={toggleDrawer}
       />
       {/* Main menu - controls what is displayed in main-viewport */}
@@ -92,7 +95,7 @@ function WithSideBar({ children: routesElement }) {
           hidden: !displayTypeCfg?.showAppBar,
         })}
         toggleDrawer={toggleDrawer}
-        open={openDrawer}
+        open={showWideMainMenu}
         isMobile={isMobile}>
         {/* Main viewport */}
         {routesElement}
