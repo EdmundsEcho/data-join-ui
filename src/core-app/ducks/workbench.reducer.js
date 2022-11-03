@@ -67,6 +67,9 @@ export const getRequest = (stateFragment) => stateFragment.matrix;
 export const getSelectedEtlUnits = (stateFragment) => stateFragment.selected;
 export const getPalette = (stateFragment) => stateFragment.palette;
 export const getTree = (stateFragment) => stateFragment?.tree ?? {};
+export const isAppDataCompleted = (stateFragment) =>
+  stateFragment.hostedWarehouseState !== 'STALE' &&
+  stateFragment.hostedMatrixState !== 'STALE';
 
 /**
  * Predicate - computed tree

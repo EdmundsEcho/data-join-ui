@@ -177,15 +177,10 @@ function ListOfProjects({ size: sizeProp }) {
   const renderOverlay = () => <div className='controller-mini-overlay' />;
 
   return (
-    <Box
+    <div
       className={clsx('controller main projects flex-handle', {
         [displayVersion.toLowerCase()]: true,
-      })}
-      sx={{
-        p: '30px 0',
-        overflow: 'hidden',
-        position: 'relative',
-      }}>
+      })}>
       {minimizeView && renderOverlay()}
       <Box
         className='header'
@@ -229,7 +224,7 @@ function ListOfProjects({ size: sizeProp }) {
       </List>
 
       {selectedProject && <NewProjectButton displayVersion={displayVersion} />}
-    </Box>
+    </div>
   );
 }
 ListOfProjects.propTypes = {

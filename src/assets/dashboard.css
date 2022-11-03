@@ -3,12 +3,15 @@
 
 :root {
   /* MuiToolbar min-height */
-  --main-view-top: 64px;
-  --top-bar-height: 64px;
+  --main-view-top: 3rem;
+  --app-bar-height: var(--main-view-top);
   --main-view-bottom: 0px;
+
 
   --main-margin: 0px;
   --main-padding: 0px;
+  --page-margin: 2rem;
+
   --default-stack-gap: 0.75rem;
   --default-margin: 1.5rem;
   --default-padding: 1rem;
@@ -41,8 +44,7 @@
   /* computed value to set the height of main-view */
   --main-view-height: calc(
     100vh
-    - var(--top-bar-height)
-    - var(--default-stack-gap)
+    - var(--app-bar-height)
     - var(--controller-margin) * 2
   );
   --core-app-outlet-height: calc(
@@ -272,6 +274,12 @@ button.cancel {
     text-decoration: none;
     color: unset;
 }
+/* coordinated height of topbar and left side toggle */
+.appbar-toolbar,
+.app-bar > .tool-bar,
+.dashboard-layout-root > .side-nav > div > .MuiToolbar-regular {
+    min-height: var(--app-bar-height)
+}
 .app-bar > .tool-bar > .button-group {
     column-gap: 1.5rem;
     font-size: 1.5rem;
@@ -316,6 +324,8 @@ button.cancel {
 /* projects list (heading, nav and items) */
 .controller.main.projects {
     --padding: 7px;
+    overflow: hidden;
+    position: relative;
 }
 .controller.main.projects > .header {
     /* follow nav */
@@ -1253,8 +1263,76 @@ pre.console-log {
     bottom: 200px;
     right: 1.5rem;
 }
+.floating-actions.hidden {
+    visibility: hidden;
+}
 .fab.calendar {}
 .fab.feedback {}
+
+/* --------------------------------------------------------- */
+/* Project Meta - artifacts */
+/* --------------------------------------------------------- */
+.project-page.root {
+    margin: var(--page-margin);
+}
+.project-artifacts {
+    max-width: 500px;
+}
+
+/* --------------------------------------------------------- */
+.project-artifact.root {
+    /* shared context */
+    --avatar-fill-color: var(--color-primary-main);
+    --avatar-background-color: var(--color-primary-superLight);
+    --opacity: 1;
+}
+.project-artifact.root.disabled {
+    /* shared context */
+    --opacity: 0.5;
+    pointer-events: none;
+}
+.project-artifact.root:hover {
+    /* shared context */
+    --avatar-fill-color: var(--color-primary-dark);
+    --avatar-background-color: var(--color-primary-main);
+}
+/* --------------------------------------------------------- */
+.project-artifact.root > .link {
+    text-decoration: none;
+    cursor: pointer;
+}
+.artifact.text > span:hover {
+}
+.project-artifact.root.disabled > .link {
+    cursor: default;
+    opacity: 0.3;
+}
+.artifact.text > p {
+    text-decoration: none;
+}
+.artifact.text > p:hover {
+    text-decoration: none;
+}
+.project-artifact {
+    gap: 1.5rem;
+}
+.artifact.avatar {
+    padding-top: 0.5rem;
+}
+.artifact.avatar > div {
+    /* svg frame */
+    background-color: var(--avatar-background-color);
+}
+.artifact.avatar > div > svg {
+    fill: var(--avatar-fill-color);
+}
+.project-artifact .MuiListItemText-primary {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-strong);
+}
+.project-artifact .MuiListItemText-secondary {
+}
 /*
  * Debugging layout markers
  */

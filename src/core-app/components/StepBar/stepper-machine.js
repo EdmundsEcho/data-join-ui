@@ -12,6 +12,7 @@ import {
   getHasEtlViewErrors,
   getHasPendingRequests,
   runRequestSpecValidations as passRequestSpecValidations,
+  isAppDataCompleted,
 } from '../../ducks/rootSelectors';
 
 // utility location.pathname -> route
@@ -51,6 +52,7 @@ const pagesMachine = {
       actions: [],
     },
     on: {
+      PREV: { target: 'workbench' },
       NEXT: { target: 'files' },
     },
   },
@@ -173,7 +175,7 @@ export const forwardGuards = {
  */
 const defaultBackwardGuard = () => true;
 const customBackwardGuards = {
-  meta: () => false,
+  meta: (reduxState) => isAppDataCompleted(reduxState),
 };
 export const backwardGuards = Object.keys(pagesMachine).reduce((acc, key) => {
   if (key in acc) {

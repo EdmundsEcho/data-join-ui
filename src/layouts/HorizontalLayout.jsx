@@ -141,7 +141,6 @@ function HorizontalLayout({
 
   // AppBar link
   const handleLogout = (event) => {
-    console.debug('logout');
     event.preventDefault();
     navigate('/login?logout=true');
     try {

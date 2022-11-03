@@ -3,6 +3,7 @@
 import React, {
   useCallback,
   useContext,
+  useEffect,
   useState,
   useMemo,
   createContext,
@@ -38,12 +39,11 @@ const Provider = ({ children }) => {
   //   State depends on displayed route
   // ---------------------------------------------------------------------------
   const { pathname } = useLocation();
-  const { projectId = undefined } = useParams();
   const [showFeedback, setShowFeedback] = useState(() => false);
   const [showResetCanvas, setShowResetCanvas] = useState(() => false);
   const [showDownloadMatrix, setShowDownloadMatrix] = useState(() => false);
   const [inProjectRoutes, setInProjectRoutes] = useState(
-    () => typeof projectId !== 'undefined',
+    () => pathname.includes('projects') && pathname.split('/').length > 2,
   );
 
   // ---------------------------------------------------------------------------
@@ -52,13 +52,15 @@ const Provider = ({ children }) => {
   const lastPathFragment = temp[temp.length - 1];
   const firstPathFragment = temp[1]; // skip host
 
-  const handleLocationChange = useCallback(() => {
+  const handleLocationChange = () => {
     // set whether to display the function
     setShowFeedback(() => firstPathFragment !== 'login');
     setShowResetCanvas(() => lastPathFragment === 'workbench');
     setShowDownloadMatrix(() => lastPathFragment === 'matrix');
-    setInProjectRoutes(() => typeof projectId !== 'undefined');
-  }, [firstPathFragment, lastPathFragment, projectId]);
+    setInProjectRoutes(
+      () => pathname.includes('projects') && pathname.split('/').length > 2,
+    );
+  };
 
   // effect called when location changes
   useLocationChange(handleLocationChange);
