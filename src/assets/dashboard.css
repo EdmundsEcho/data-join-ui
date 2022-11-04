@@ -723,8 +723,12 @@ button:-moz-focusring,
 .Luci-sources.root * {
     background-color: var(--color-background-card);
 }
-.Luci-EtlFieldView.summaryView > td:nth-child(3) p {
-    transform: translateY(0.4rem);
+.Luci-EtlFieldView.summaryView > td:nth-child(3) > .componentCountCell > div {
+    display: flex;
+}
+.Luci-EtlFieldView.summaryView > td:nth-child(3) > .componentCountCell > div > p {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 .Luci-FileField-HeadingBox > .box-card {
   border: 1px solid var(--color-box-border);

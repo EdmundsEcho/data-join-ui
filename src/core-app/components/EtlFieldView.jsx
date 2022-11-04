@@ -20,13 +20,7 @@
  * @module src/components/EtlFieldView.jsx
  *
  */
-import React, {
-  useMemo,
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -159,6 +153,7 @@ function EtlFieldView() {
   const numKeys = Object.keys(fieldsKeyedOnPurpose).length;
   const [subEtlField] = fieldsKeyedOnPurpose?.subject ?? [undefined];
   const isValidData = numKeys > 0 && typeof subEtlField !== 'undefined';
+  const [nextField, setNextField] = useState(() => undefined);
 
   if (isLoading || !isValidData) {
     return (
@@ -170,7 +165,11 @@ function EtlFieldView() {
   }
   return (
     <WithModal ModalComponent={ConfirmModal}>
-      <Top data={fieldsKeyedOnPurpose} />
+      <Top
+        data={fieldsKeyedOnPurpose}
+        nextField={nextField}
+        setNextField={setNextField}
+      />
     </WithModal>
   );
 }
@@ -183,7 +182,7 @@ const dummySeedData = {
 //-----------------------------------------------------------------------------
 // renders Main
 // reactive: data
-function Top({ data: fieldsKeyedOnPurpose }) {
+function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
   //-----------------------------------------------------------------------------
   const stateId = 'etlFieldView';
   const dispatch = useDispatch();
@@ -249,6 +248,29 @@ function Top({ data: fieldsKeyedOnPurpose }) {
   // list of fields
   // ---------------------------------------------------------------------------
 
+  // cache in the event the user old -> new fieldName
+  // 🔖  newFieldName: [oldName, newName]
+  const setNextDetailView = useCallback(
+    (value) => {
+      if (DEBUG) {
+        if (typeof value === 'undefined') {
+          console.debug('%cSetting nextField: undefined', 'color:red');
+        } else {
+          console.debug(
+            `%cSetting nextField: ${value[0]} -> ${value[1]}`,
+            'color:red',
+          );
+        }
+      }
+      setNextField(value);
+      console.debug(`%c${nextField} (async)`, 'color:yellow');
+    },
+    [nextField, setNextField],
+  );
+  const nextDetailView = nextField;
+
+  const [inRenameState, setInRenameState] = useState(() => false);
+
   // ---------------------------------------------------------------------------
   // new etl field related
   // ---------------------------------------------------------------------------
@@ -282,51 +304,52 @@ function Top({ data: fieldsKeyedOnPurpose }) {
     `${stateId}|selectedFieldName`,
     subEtlField.name,
   );
-  // cache in the event the user old -> new fieldName
-  // 🔖  newFieldName: [oldName, newName]
-  const setNextDetailViewArrayRef = useRef(undefined);
-
   // ---------------------------------------------------------------------------
   // used by both right and left sides
   //
   // Sync access to which field to put in the detail view
   // This field changes based on user-input && "next best" when deletes
   // a field.
-  const getSelectedFieldName = useCallback(
-    (/* selectedFieldName, listOfFieldNames */) => {
-      //
-      const nextDetailViewArray = setNextDetailViewArrayRef.current;
+  const getSelectedFieldName = useCallback(() => {
+    //
+    const nextDetailViewArray = nextDetailView;
+    if (DEBUG) {
+      console.debug(
+        `%c ... getting the selected field name: ${nextDetailView}`,
+        'color:green',
+      );
+    }
 
-      switch (true) {
-        // first choice:
-        // next detail view set when adding or removing a field
-        // ...with a fallback when in error state.
-        case typeof nextDetailViewArray !== 'undefined': {
-          const maybeNewName = hasEtlViewErrors
-            ? nextDetailViewArray[0] // fallback, revert to the old name
-            : nextDetailViewArray[1]; // proceed with the new name
-          setSelectedFieldName(maybeNewName); // async
-          setNextDetailViewArrayRef.current = undefined;
-          return maybeNewName;
-        }
-
-        // next best: the latest user-selected field
-        case listOfFieldNames.includes(selectedFieldName):
-          return selectedFieldName;
-
-        // failsafe: subject field
-        default:
-          return subEtlField.name;
+    switch (true) {
+      // first choice:
+      // next detail view set when adding or removing a field
+      // ...with a fallback when in error state.
+      case typeof nextDetailViewArray !== 'undefined': {
+        const maybeNewName = hasEtlViewErrors
+          ? nextDetailViewArray[0] // fallback, revert to the old name
+          : nextDetailViewArray[1]; // proceed with the new name
+        setSelectedFieldName(maybeNewName); // async
+        setNextDetailView(undefined);
+        return maybeNewName;
       }
-    },
-    [
-      hasEtlViewErrors,
-      listOfFieldNames,
-      selectedFieldName,
-      setSelectedFieldName,
-      subEtlField.name,
-    ],
-  );
+
+      // next best: the latest user-selected field
+      case listOfFieldNames.includes(selectedFieldName):
+        return selectedFieldName;
+
+      // failsafe: subject field
+      default:
+        return subEtlField.name;
+    }
+  }, [
+    hasEtlViewErrors,
+    listOfFieldNames,
+    selectedFieldName,
+    setSelectedFieldName,
+    subEtlField.name,
+    nextDetailView,
+    setNextDetailView,
+  ]);
   // ---------------------------------------------------------------------------
   // 📖 this is my local state
   // retrieve the field itself from the index of EtlFields
@@ -380,10 +403,10 @@ function Top({ data: fieldsKeyedOnPurpose }) {
         // 1️⃣  Removing a field
         // move/shift the cursor away from deleted, to the previous field
         .then(() => {
-          setNextDetailViewArrayRef.current = [
+          setNextDetailView([
             fieldName, // maybe remove
             getNextDisplayField(fieldName, listOfFieldNames, etlUnits),
-          ];
+          ]);
           // put into memory for Phase 2
           // when we dispatch the action to change the state
           // triggers the effect with dependency array [removeFieldName]
@@ -396,7 +419,7 @@ function Top({ data: fieldsKeyedOnPurpose }) {
           }
         });
     },
-    [confirmP, etlUnits, listOfFieldNames, selectFieldData],
+    [confirmP, etlUnits, listOfFieldNames, selectFieldData, setNextDetailView],
   );
   // 💫 ...once the selected field has been moved off of the
   //    removed field slot, dispatch the removal of the field.
@@ -473,10 +496,11 @@ function Top({ data: fieldsKeyedOnPurpose }) {
   // ✅ Save right side user input
   const handleRenameField = useCallback(
     (oldName, newName) => {
-      setNextDetailViewArrayRef.current = [oldName, newName];
+      setInRenameState(true);
+      setNextDetailView([oldName, newName]);
       dispatch(renameEtlField(oldName, newName, listNameAndPurpose));
     },
-    [dispatch, listNameAndPurpose],
+    [dispatch, listNameAndPurpose, setNextDetailView],
   );
 
   // ✅ Open dialog to express component state
@@ -534,7 +558,7 @@ function Top({ data: fieldsKeyedOnPurpose }) {
     const listValueOk =
       (!deletedFieldNameInList && removingFieldName) || !removingFieldName;
 
-    const nextViewRef = setNextDetailViewArrayRef.current;
+    const nextViewRef = nextDetailView;
 
     // removing field steps
     // 1 = start and finish
@@ -556,12 +580,13 @@ function Top({ data: fieldsKeyedOnPurpose }) {
       listOfFieldNames,
       openNewFieldDialog,
       removingFieldName,
-      nextViewRef,
       addedDerivedFieldName,
       deletedFieldNameInList,
       listValueOk: listValueOk ? 'OK' : 'Wrong',
       steps,
       currentStep,
+      nextViewRef,
+      inRenameState,
     });
   }
 

@@ -16,7 +16,7 @@ import {
   areSimilarObjects,
   equal,
 } from '../core-app/constants/variables';
-import { DesignError } from '../core-app/lib/LuciErrors';
+import { ApiTncError, DesignError } from '../core-app/lib/LuciErrors';
 
 import useAbortController from './use-abort-controller';
 import { useSharedFetchApi, is200ResponseError } from './use-shared-fetch-api';
@@ -311,6 +311,9 @@ const equalityFns = {
  */
 function compare(cacheRef, response_, equalityFnName) {
   //
+  if (!('data' in response_)) {
+    return false;
+  }
   const maybeErr = is200ResponseError(response_); // false | error
   const response = maybeErr ? maybeErr : response_; // eslint-disable-line
 
