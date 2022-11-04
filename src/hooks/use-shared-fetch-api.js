@@ -342,13 +342,16 @@ function middleware(dispatch, state) {
     //
     if (response instanceof CanceledError) {
       response.status = 204;
+      response.data = undefined;
     }
     if (response?.status === 0) {
       response.status = 204;
+      response.data = undefined;
     }
     if (typeof response?.status === 'undefined') {
       console.warn(response);
       response.status = 205;
+      response.data = undefined;
     }
 
     console.assert(
@@ -428,6 +431,17 @@ function middleware(dispatch, state) {
         dispatch({
           type: SUCCESS_NOCHANGE,
         });
+        break;
+
+      case 409:
+        dispatch({
+          type: SET_NOTICE,
+          payload: {
+            message: response?.message ?? 'Error: Api error',
+            variant: 'error',
+          },
+        });
+        dispatch({ type: SUCCESS_NOCHANGE });
         break;
 
       case 403:
@@ -533,6 +547,7 @@ export function is200ResponseError(response) {
       : false;
   } catch (e) {
     console.warn(e);
+    console.dir(e);
     return 'initializing error';
   }
 }

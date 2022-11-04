@@ -245,3 +245,34 @@ export async function editUserProfile(data, signal = undefined) {
   }
   return apiInstance(axiosOptions);
 }
+
+/**
+ *
+ * 🪟 uses signal to abort; good for useEffect
+ *
+ * description:
+ *
+ * User feedback; all input optional
+ * context   string($character varying) from where sent in the app
+ * feedback  string($character varying)
+ * scope     string($character varying) feedback, bug, feature etc...
+ * score     integer($smallint)         normalize to 10, higher is better
+ *
+ * @function
+ * @param {Object} feedback
+ * @param {Function} signal
+ * @return {Promise} response
+ */
+export async function sendFeedback(feedback, signal) {
+  const axiosOptions = {
+    url: '/feedback',
+    method: 'POST',
+    signal,
+    data: feedback,
+  };
+  if (DEBUG) {
+    console.debug(`%c testing POST @ "v1/feedback" endpoint`, 'color:orange');
+  }
+
+  return apiInstance(axiosOptions);
+}

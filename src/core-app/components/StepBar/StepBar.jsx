@@ -31,10 +31,20 @@ import clsx from 'clsx';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import Button from '@mui/material/Button';
+import Fab from '@mui/material/Fab';
+// icons
 import PreviousArrow from '@mui/icons-material/ArrowBackIos';
 import NextArrow from '@mui/icons-material/ArrowForwardIos';
-import Button from '@mui/material/Button';
 import DownloadIcon from '@mui/icons-material/Download';
+import ResetIcon from '@mui/icons-material/Replay';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import EventIcon from '@mui/icons-material/InsertInvitation';
+
+import FeedbackPopup from '../../../widgets/FeedbackPopup';
+import { useWorkbenchButton } from '../Workbench/components/Main';
+
+import { useFloatingFunctionsDataContext } from '../../../contexts/AppFloatingFunctionsContext';
 
 import logo from '../../assets/l@3x.png';
 
@@ -97,6 +107,18 @@ const StepBarComponent = () => {
       event,
     );
 
+  const handleNextStep = () => navigate(nextPage(tryNextEvent));
+  const handlePrevStep = () => navigate(nextPage(tryPrevEvent));
+
+  // floating functions
+  const { showFeedback, showResetCanvas, showDownloadMatrix } =
+    useFloatingFunctionsDataContext();
+
+  // 💢 navigate to the bookmark
+  useEffect(() => {
+    navigate(bookmark);
+  }, [bookmark, navigate]);
+
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:orange');
     console.debug(`%c📋 StepBar loaded state summary:`, 'color:orange', {
@@ -107,14 +129,6 @@ const StepBarComponent = () => {
       currentPage,
     });
   }
-
-  const handleNextStep = () => navigate(nextPage(tryNextEvent));
-  const handlePrevStep = () => navigate(nextPage(tryPrevEvent));
-
-  // 💢 navigate to the bookmark
-  useEffect(() => {
-    navigate(bookmark);
-  }, [bookmark, navigate]);
 
   return currentPage.hideStepper ? null : (
     /* Stepper */
@@ -157,18 +171,37 @@ const StepBarComponent = () => {
         </div>
       </div>
 
-      {/* download button */}
-      <form action={mkSaveEndpoint(projectId)} method='post'>
-        <Button
-          type='submit'
-          className={clsx('matrix', 'download', 'round', {
-            disabled: currentPage.route !== 'matrix',
-          })}
-          disabled={currentPage.route !== 'matrix'}
-          endIcon={<DownloadIcon />}>
-          Download
-        </Button>
-      </form>
+      {/* Floating functions */}
+      <div className={clsx('floating-actions', 'stack', 'nowrap')}>
+        {showResetCanvas && <ResetCanvas />}
+
+        {showDownloadMatrix && (
+          <a href={mkSaveEndpoint(projectId)} download>
+            <Fab
+              color='secondary'
+              className={clsx('matrix', 'download', 'round')}>
+              <DownloadIcon />
+            </Fab>
+          </a>
+        )}
+        {showFeedback && (
+          <FeedbackPopup horizontal='left' vertical='up'>
+            <Fab color='secondary' className='fab feedback'>
+              <FeedbackIcon />
+            </Fab>
+          </FeedbackPopup>
+        )}
+        {showFeedback && (
+          <a
+            id='Setmore_button_iframe'
+            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'>
+            <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
+              <EventIcon />
+            </Fab>
+          </a>
+        )}
+      </div>
+
       {/* logo container */}
       <div className='stepbar logo'>
         <img src={logo} height='50' width='37' alt='Lucivia' />
@@ -176,6 +209,19 @@ const StepBarComponent = () => {
     </div>
   );
 };
+
+function ResetCanvas() {
+  const { isCanvasDirty, handleResetCanvas } = useWorkbenchButton();
+  return (
+    <Fab
+      color='secondary'
+      className='fab feedback'
+      onClick={handleResetCanvas}
+      disabled={!isCanvasDirty}>
+      <ResetIcon />
+    </Fab>
+  );
+}
 
 StepBarComponent.propTypes = {};
 StepBarComponent.defaultProps = {};

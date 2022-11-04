@@ -17,7 +17,7 @@ import { ReadWriteError } from '../lib/LuciErrors';
 // Will create a db using projectId when possible, otherwise
 //
 const PREFIX = 'db-';
-const DEFAULT_DB = `${PREFIX}tncui`;
+const DEFAULT_DB = `${PREFIX}tnc-ui`;
 const TBL = 'stateId-val';
 // -----------------------------------------------------------------------------
 /**

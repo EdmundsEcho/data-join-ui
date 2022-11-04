@@ -13,6 +13,7 @@ const ConsoleLog = ({
 }) => {
   return advancedView ? (
     <ReactJson
+      className='console-log'
       src={value}
       theme='rjv-default'
       iconStyle='circle'
@@ -20,7 +21,7 @@ const ConsoleLog = ({
       displayDataTypes={false}
     />
   ) : (
-    <pre style={{ backgroundColor: '#eee', padding: '1em' }}>
+    <pre className='console-log'>
       <code>{JSON.stringify(value, replace, space)}</code>
     </pre>
   );

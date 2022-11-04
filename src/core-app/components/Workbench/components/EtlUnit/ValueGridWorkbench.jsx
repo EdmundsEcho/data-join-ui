@@ -1,11 +1,12 @@
 // src/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
+import invariant from 'invariant';
 
 // api
 import { fetchLevels as fetchLevelsInner } from '../../../../services/api';
@@ -94,13 +95,22 @@ const parseResponse = (response) => response.data.levels;
  *
  * User input: request true/false
  *
+ * Content is one of two types
+ * - Quality (intValues or txtValues)
+ * - Component (intValues or txtValues)
+ *
  * @component
  *
  */
 function ValueGridWorkbench(props) {
   /* eslint-disable react/jsx-props-no-spreading */
 
-  const { type, identifier, measurementType, nodeId } = props;
+  const { type, identifier, measurementType, nodeId, instanceOf } = props;
+
+  invariant(
+    instanceOf === 'quality' || typeof measurementType !== 'undefined',
+    `Failed invariant instanceOf: ${instanceOf} with measurementType: ${measurementType}`,
+  );
 
   const { projectId } = useParams();
 
@@ -115,12 +125,14 @@ function ValueGridWorkbench(props) {
   const dispatch = useDispatch();
   const abortController = useAbortController();
 
-  // baseline selectAll levels
+  // baseline/default selectAll levels
+  // :: filter used in the datagrid
+  // selectAll { props to pull data }
   const [selectAll, isQuality] = useMemo(() => {
-    return typeof measurementType === 'undefined'
+    return instanceOf === 'quality'
       ? [{ qualityName: identifier }, true]
       : [{ componentName: identifier, measurementType }, false];
-  }, [identifier, measurementType]);
+  }, [identifier, instanceOf, measurementType]);
 
   const selectionModel = useSelector((state) =>
     getSelectionModel(state, nodeId, identifier),
@@ -128,6 +140,28 @@ function ValueGridWorkbench(props) {
 
   const reduced = useSelector((state) =>
     getIsCompReducedMap(state, nodeId, identifier),
+  );
+
+  // prop for child component that are used in a useEffect
+  const handleToggleValue = useCallback(
+    ({ level, isSelected }) => {
+      if (DEBUG) {
+        console.debug('handle event', level, isSelected);
+      }
+      dispatch(toggleValue(nodeId, level, identifier, isSelected));
+    },
+    [dispatch, identifier, nodeId],
+  );
+
+  // prop for child component that are used in a useEffect
+  const handleSetAllValues = useCallback(
+    (values) => {
+      if (DEBUG) {
+        console.debug('handle event all', values);
+      }
+      dispatch(setCompValues(nodeId, identifier, values));
+    },
+    [dispatch, identifier, nodeId],
   );
 
   return (
@@ -147,26 +181,20 @@ function ValueGridWorkbench(props) {
       limitGridHeight={limitGridHeight}
       // handlers
       // will recieve column values for the toggled record
-      handleToggleValue={({ level, isSelected }) => {
-        if (DEBUG) {
-          console.debug('handle event', level, isSelected);
-        }
-        dispatch(toggleValue(nodeId, level, identifier, isSelected));
-      }}
-      handleSetAllValues={(values) => {
-        if (DEBUG) {
-          console.debug('handle event all', values);
-        }
-        dispatch(setCompValues(nodeId, identifier, values));
-      }}
+      handleToggleValue={handleToggleValue}
+      handleSetAllValues={handleSetAllValues}
       // version of the grid
       feature='SCROLL'
       checkboxSelection
       pageSize={PAGE_SIZE}
+      rowHeight={25}
+      gridHeightAdjustment={10}
       DEBUG={DEBUG}
     />
   );
 }
+
+const INSTANCES = ['measurement', 'quality', 'component', 'mspan'];
 
 ValueGridWorkbench.whyDidYouRender = true;
 ValueGridWorkbench.propTypes = {
@@ -174,6 +202,7 @@ ValueGridWorkbench.propTypes = {
   identifier: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['txtValues', 'intValues']).isRequired,
   measurementType: PropTypes.string,
+  instanceOf: PropTypes.oneOf(INSTANCES).isRequired,
 };
 
 ValueGridWorkbench.defaultProps = {

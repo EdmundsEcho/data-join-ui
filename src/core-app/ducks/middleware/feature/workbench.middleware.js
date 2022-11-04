@@ -153,6 +153,7 @@ const middleware =
           semantic: 'derivedField',
         };
         next([setGroupSemantic(nodeState)]);
+        // send to the top of the middleware stack
         // sagas -> SET_MATRIX_CACHE // document
         dispatch(
           fetchMatrixCache({
@@ -200,11 +201,14 @@ const middleware =
         // check if the parent is a group that needs to be updated
         const state = getState();
         const { parent } = selectNodeState(state, action.id);
+        // reset the parent cache
         const parentState = removeProp(
           'cache',
           state.workbench.tree[parent].data,
         );
 
+        // if the parent is a derivedField, add/re-add derived field
+        // send to the top of the middleware stack
         if (state.workbench.tree[parent].data.displayType === 'derivedField') {
           dispatch({
             type: ADD_DERIVED_FIELD,

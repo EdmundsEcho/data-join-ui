@@ -130,6 +130,7 @@ const pagesMachine = {
       actions: ['fetchMatrix', bookmark('matrix'), 'saveProject'],
     },
     on: {
+      NEXT: { target: 'meta', cond: 'forwardGuard' },
       PREV: { target: 'workbench' },
     },
   },
@@ -165,7 +166,7 @@ export const forwardGuards = {
   workbench: (reduxState) => {
     return passRequestSpecValidations(reduxState);
   },
-  matrix: () => false,
+  matrix: () => true,
 };
 /**
  * configure the forward guards

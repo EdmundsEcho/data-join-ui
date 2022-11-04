@@ -19,7 +19,7 @@
  *
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -46,7 +46,7 @@ export { filterOperators, ROW_HEIGHT };
 
 //-----------------------------------------------------------------------------
 /* eslint-disable no-console */
-
+// const DEBUG = false;
 //------------------------------------------------------------------------------
 const pureSelectionModel = {
   __ALL__: {
@@ -71,7 +71,7 @@ const ValueGridCore = ({
   //
   identifier, // lookup key
   purpose,
-  baseSelectAll, // interface for using the key
+  baseSelectAll, // filter, interface for using the key
   fetchFn, // api fetch
   abortController,
   normalizer, // raw api -> fodder for edgeToGridRowFn
@@ -82,7 +82,7 @@ const ValueGridCore = ({
   // 🙂 user input (parent retrieves)
   //
   selectionModel,
-  reduced,
+  reduced, // bool
   //
   // 📬 events that update the redux-store
   //
@@ -97,13 +97,17 @@ const ValueGridCore = ({
   limitGridHeight,
   rowHeight,
   headerHeight,
+  gridHeightAdjustment,
   DEBUG,
   ...rest
 }) => {
   //
   const apiRef = useGridApiRef();
   // initialize the api edge -> grid row transformer
-  const toGridFn = toGrid(edgeToIdFn, edgeToGridRowFn);
+  const toGridFn = useMemo(
+    () => toGrid(edgeToIdFn, edgeToGridRowFn),
+    [edgeToIdFn, edgeToGridRowFn],
+  );
 
   // derived fields (e.g., group-by-file, already have data
   const dataPreloaded = typeof rows !== 'undefined';
@@ -166,6 +170,8 @@ const ValueGridCore = ({
   // undefined -> isQuality
   //
   // const { switchOn /* setDisableSwitch */ } = useContext(ToolContext);
+  // inSeries <-> !reduced
+  //
   const inSeriesBuildingStateStore =
     typeof reduced === 'undefined' ? false : !reduced;
 
@@ -234,6 +240,7 @@ const ValueGridCore = ({
       inGridHasAllValuesState,
       inFromSelectAllState,
       inSeriesBuildingState,
+      reduced,
       dataPreloaded,
       cache: {
         status,
@@ -314,7 +321,7 @@ const ValueGridCore = ({
     handleSetAllValues(rowIdsToRequestModel(apiRef.current.getAllRowIds()));
     // grid selection model gets an empty list
     apiRef.current.setSelectionModel([]);
-  }, [DEBUG, apiRef, identifier, handleSetAllValues]);
+  }, [apiRef, identifier, handleSetAllValues]);
 
   const deSelectAllValues = useCallback(() => {
     if (DEBUG) {
@@ -330,7 +337,7 @@ const ValueGridCore = ({
     handleToggleValue({ level: [], isSelected: false });
     // grid selection model gets the full list
     apiRef.current.setSelectionModel(apiRef.current.getAllRowIds());
-  }, [DEBUG, apiRef, identifier, handleToggleValue]);
+  }, [apiRef, identifier, handleToggleValue]);
 
   const handleToggleAll = useCallback(
     ({ field }) => {
@@ -370,7 +377,7 @@ const ValueGridCore = ({
       }
     },
     [
-      DEBUG,
+      // DEBUG,
       apiRef,
       deSelectAllValues,
       inSeriesBuildingState,
@@ -390,16 +397,8 @@ const ValueGridCore = ({
       (typeof reduced === 'undefined' && isQuality) || !isQuality,
       `${identifier}: The store reduced state should be undefined for Quality values: isQuality: ${isQuality} reduced: ${reduced}`,
     );
-    console.assert(
-      inSeriesBuildingStateStore === inSeriesBuildingState,
-      `${identifier}: Store does not align with component state: inSeriesBuildingStateStore: ${inSeriesBuildingStateStore} !== inSeriesBuildingState: ${inSeriesBuildingState}`,
-    );
-    console.assert(
-      inSeriesBuildingState === !reduced ||
-        isQuality ||
-        typeof reduced === 'undefined',
-      `${identifier}: Store does not align with component state: reduced: ${reduced} === inSeriesBuildingState: ${inSeriesBuildingState}`,
-    );
+    // inSeriesBuildingStateStore false
+    // inSeriesBuildingState true
   }
 
   // ----------------------------------------------------------------------
@@ -478,7 +477,7 @@ const ValueGridCore = ({
       }
     }
   }, [
-    DEBUG,
+    // DEBUG,
     MAX_ROWS,
     apiRef,
     baseSelectAll,
@@ -585,12 +584,13 @@ const ValueGridCore = ({
         if (DEBUG) {
           console.debug(`%cEffect Expanding to Series`, 'color:yellow');
           console.debug(
-            ` 📬 handleSetAllValues: ${makeStoreRequestSelectionModel(
+            ' 📬 handleSetAllValues:',
+            makeStoreRequestSelectionModel(
               storeSelectionModel,
               data.cache.edges,
               (edge) => ({ value: edge.node.level, request: true }),
               inFromSelectAllState,
-            )}`,
+            ),
           );
         }
         handleSetAllValues(
@@ -629,14 +629,29 @@ const ValueGridCore = ({
 
         break;
       }
+      case status === STATUS.RESOLVED &&
+        apiRef.current.getAllRowIds().length === 0: {
+        // move data from the cache into the grid
+        if (DEBUG) {
+          console.debug(`%cEffect trying to reload empty grid`, 'color:yellow');
+        }
+        const { rows: newRows, selectedRows: newSelected } = toGridFn(
+          data.cache,
+          storeSelectionModel,
+        );
+        apiRef.current.updateRows(newRows);
+        apiRef.current.selectRows(newSelected);
+
+        break;
+      }
       default:
       /* do nothing */
     }
   }, [
-    data,
-    DEBUG,
-    apiRef,
+    data.cache,
+    // DEBUG,
     handleSetAllValues,
+    apiRef,
     identifier,
     inFromSelectAllState,
     inSeriesBuildingState,
@@ -664,13 +679,20 @@ const ValueGridCore = ({
     setInGridHasAllValuesState(() =>
       hasAllRecords(apiRef, MAX_ROWS, inFilterState),
     );
-  }, [DEBUG, MAX_ROWS, apiRef, inFilterState, inGridHasAllValuesState]);
+  }, [MAX_ROWS, apiRef, inFilterState, inGridHasAllValuesState]);
+
+  if (DEBUG) {
+    console.assert(
+      inSeriesBuildingStateStore === inSeriesBuildingState,
+      `${identifier}: Store does not align with component state: inSeriesBuildingStateStore: ${inSeriesBuildingStateStore} !== inSeriesBuildingState: ${inSeriesBuildingState}`,
+    );
+  }
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <ValueGridInner
       apiRef={apiRef}
-      className={clsx(className)}
+      className={className}
       rowClassName={clsx(className, 'row')}
       columnClassName={clsx(className, 'column')}
       columns={columns}
@@ -681,6 +703,7 @@ const ValueGridCore = ({
         limitGridHeight,
         rowHeight,
         headerHeight,
+        gridHeightAdjustment,
       )}
       rowHeight={rowHeight}
       headerHeight={headerHeight}
@@ -703,6 +726,8 @@ const ValueGridCore = ({
   );
 };
 
+const noop = () => {};
+
 ValueGridCore.whyDidYouRender = true;
 ValueGridCore.propTypes = {
   className: PropTypes.string,
@@ -719,6 +744,7 @@ ValueGridCore.propTypes = {
   pageSize: PropTypes.number.isRequired,
   limitGridHeight: PropTypes.number.isRequired,
   headerHeight: PropTypes.number,
+  gridHeightAdjustment: PropTypes.number,
   rowHeight: PropTypes.number,
   normalizer: PropTypes.func.isRequired,
   selectionModel: PropTypes.shape({
@@ -739,14 +765,15 @@ ValueGridCore.defaultProps = {
   checkboxSelection: false,
   DEBUG: false,
   reduced: undefined,
-  handleSetAllValues: () => {},
-  handleToggleValue: () => {},
+  handleSetAllValues: noop,
+  handleToggleValue: noop,
   selectionModel: {
     totalCount: undefined,
     selectionModel: { __ALL__: { value: '__ALL__', request: true } },
   },
   abortController: undefined,
   headerHeight: undefined,
+  gridHeightAdjustment: 0,
   rowHeight: undefined,
   // ⬜ move this to a required prop
   edgeToIdFn: (edge) => edge.node.level,

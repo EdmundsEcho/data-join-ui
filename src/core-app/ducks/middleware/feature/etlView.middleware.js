@@ -24,7 +24,8 @@ import {
   RENAME_ETL_FIELD, // command
   setEtlViewErrors, // document
   resetEtlViewErrors, // document
-  deleteDerivedField, // document
+  deleteDerivedField,
+  UPDATE_ETL_FIELD, // document
 } from '../../actions/etlView.actions';
 import { setHeaderViews as setHeaderViewsAction } from '../../actions/headerView.actions';
 import { setUiLoadingState } from '../../actions/ui.actions';
@@ -154,6 +155,13 @@ const middleware =
         break;
       }
 
+      case UPDATE_ETL_FIELD: {
+        if (['format', 'sources', 'codomain-reducer'].includes(action.key)) {
+          next(tagWarehouseState('STALE'));
+        }
+        break;
+      }
+
       /* ✅ All good (no state mutation issues) */
       case MAKE_DERIVED_FIELD: {
         const state = getState();
@@ -234,6 +242,7 @@ const middleware =
         break;
       }
 
+      // 🦀 fails to associate etlFieldChanges to newly named field
       case RENAME_ETL_FIELD: {
         const { oldValue, newValue, etlFieldNameAndPurposeValues } = action;
 

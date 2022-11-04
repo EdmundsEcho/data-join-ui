@@ -163,6 +163,7 @@ export const gridHeightFn = (
   limitGridHeight,
   rowHeightProp = undefined,
   headerHeightProp = undefined,
+  gridHeightAdjustment = 0,
 ) => {
   if (DEBUG) {
     console.debug('gridHeightFn parameters:', {
@@ -176,10 +177,9 @@ export const gridHeightFn = (
   const rowHeight = rowHeightProp || ROW_HEIGHT;
   const nonBody = headerHeight + FOOTER_HEIGHT + ADJUST_HEIGHT;
   const limitBodyHeight = limitGridHeight - nonBody;
-  const gridBody = Math.min(
-    limitBodyHeight,
-    Math.max(2, maxRecords) * rowHeight,
-  );
+  const gridBody =
+    Math.min(limitBodyHeight, Math.max(2, maxRecords) * rowHeight) +
+    gridHeightAdjustment;
   return gridBody + headerHeight + FOOTER_HEIGHT + ADJUST_HEIGHT;
 };
 

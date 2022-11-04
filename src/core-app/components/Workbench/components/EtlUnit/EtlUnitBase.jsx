@@ -5,6 +5,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import invariant from 'invariant';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -29,6 +30,7 @@ import ToolContextProvider, { ToolContext } from './ToolContext';
 import detailViewTypes from './detailViewTypes';
 import displayTypes from './displayTypes';
 import etlUnitTypes from './etlUnitTypes';
+// import { PURPOSE_TYPES } from '../../../../lib/sum-types';
 // actions
 import { setCompReduced } from '../../../../ducks/actions/workbench.actions';
 
@@ -172,6 +174,8 @@ export function EtlUnitParameter({
   */
 
   return configs.map((config, valueIdx) => {
+    const { instanceOf, parameterOrMeasurement } =
+      etlUnitParameterInstance(config);
     return (
       <ToolContextProvider
         switchCallback={handleReducedToggle(config, valueIdx)}
@@ -184,10 +188,9 @@ export function EtlUnitParameter({
             return (
               <CardContent
                 className={clsx({
-                  'EtlUnit-parameter':
-                    config.etlUnitType === 'quality' ||
-                    config.tag !== 'measurement',
-                  'EtlUnit-measurement': config.tag === 'measurement',
+                  'EtlUnit-parameter': parameterOrMeasurement === 'parameter',
+                  'EtlUnit-measurement':
+                    parameterOrMeasurement === 'measurement',
                   quality: config.etlUnitType === 'quality',
                   measurement: config.etlUnitType !== 'quality',
                   'no-border': config.tag === 'measurement',
@@ -216,6 +219,7 @@ export function EtlUnitParameter({
                       tag={config.tag}
                       identifier={config.identifier}
                       measurementType={measurementType}
+                      instanceOf={instanceOf}
                     />
                   ) : null}
                 </Collapse>
@@ -227,6 +231,48 @@ export function EtlUnitParameter({
     );
   });
 }
+
+/**
+ * config -> etlUnitParameterInstance
+ * Local helper to identify display characteristics.
+ *
+ * FYI for when streamline types - {
+ *   measurement: PURPOSE_TYPES.MVALUE,
+ *   quality: PURPOSE_TYPES.QUALITY,
+ *   component: PURPOSE_TYPES.MCOMP,
+ *   mspan: PURPOSE_TYPES.MSPAN,
+ * };
+ *
+ * @function
+ * @param {Object} config
+ * @return {Object}
+ */
+function etlUnitParameterInstance({ tag, etlUnitType }) {
+  switch (true) {
+    case tag === 'measurement':
+      invariant(
+        etlUnitType === 'measurement',
+        `Unexpected etlUnitType: ${etlUnitType}`,
+      );
+      return {
+        instanceOf: 'measurement',
+        parameterOrMeasurement: 'measurement',
+      };
+
+    case etlUnitType === 'quality':
+      return { instanceOf: 'quality', parameterOrMeasurement: 'parameter' };
+
+    case etlUnitType !== 'quality' && ['txtValues', 'intValues'].includes(tag):
+      return { instanceOf: 'component', parameterOrMeasurement: 'parameter' };
+
+    case tag === 'spanValues':
+      return { instanceOf: 'mspan', parameterOrMeasurement: 'parameter' };
+
+    default:
+      throw Error('Unreachable');
+  }
+}
+const INSTANCES = ['measurement', 'quality', 'component', 'mspan'];
 
 EtlUnitParameter.propTypes = {
   nodeId: PropTypes.number.isRequired,
@@ -248,34 +294,39 @@ EtlUnitParameter.defaultProps = {
 };
 
 /**
- * One of three types
+ * One of four instances
+ * - Measurement (a parent)
+ * - Component or Quality
+ * - mspan (a version of component)
  */
 function DetailView(props) {
-  const { nodeId, palette, measurementType, identifier, tag } = props;
+  const { nodeId, palette, measurementType, identifier, tag, instanceOf } =
+    props;
   useTraceUpdate(props);
 
   switch (true) {
-    case tag === 'measurement':
+    case instanceOf === 'measurement':
       // expand measurement to components
       return (
         <Components nodeId={nodeId} palette={palette} identifier={identifier} />
       );
 
-    case ['txtValues', 'intValues'].includes(tag):
+    case ['quality', 'component'].includes(instanceOf):
       return (
         <EtlUnitValueGrid
           type={tag}
           measurementType={measurementType}
           identifier={identifier}
           nodeId={nodeId}
+          instanceOf={instanceOf}
         />
       );
 
-    case tag === 'spanValues':
+    case instanceOf === 'mspan':
       return <EtlUnitSpanGrid nodeId={nodeId} />;
 
     default:
-      return <div>{`${identifier} ${tag} Unreachable`}</div>;
+      return <div>{`${identifier} ${instanceOf} Unreachable`}</div>;
   }
 }
 
@@ -285,6 +336,7 @@ DetailView.propTypes = {
   identifier: PropTypes.string.isRequired,
   tag: PropTypes.string.isRequired,
   measurementType: PropTypes.string,
+  instanceOf: PropTypes.oneOf(INSTANCES).isRequired,
 };
 
 DetailView.defaultProps = {
