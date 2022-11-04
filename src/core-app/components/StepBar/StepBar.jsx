@@ -57,6 +57,7 @@ import Machine, {
   tryNextEvent,
   tryPrevEvent,
 } from './stepper-machine';
+import { isUiLoading, isAppDataCompleted } from '../../ducks/rootSelectors';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
@@ -91,13 +92,19 @@ const StepBarComponent = () => {
     workbench: useSelector(backwardGuards.workbench),
     matrix: useSelector(backwardGuards.matrix),
   };
+  // tagMatrixState, tagWarehouseState,
   const bookmark = useSelector(getBookmark);
+  const { isLoading } = useSelector(isUiLoading);
+  const isProjectCompleted = useSelector(isAppDataCompleted);
 
   // current page (local state) is derived from Router url
   const { pathname } = location;
-  // depends on static import of objects
+
+  // depends on static import of objects; immutable ref
   const currentPage = lookupPageWithPathname(pathname);
-  // immutable reference recorded in local state
+
+  // active step that depends on a completed cycle
+  const activeStep = isProjectCompleted ? 5 : currentPage.stepNumber;
 
   // "next page" determined by prev or next event
   const nextPage = (event) =>
@@ -134,9 +141,7 @@ const StepBarComponent = () => {
     /* Stepper */
     <div className='stepbar root stack nowrap nogap'>
       <div className='stepbar stepper-root frame'>
-        <Stepper
-          className={clsx('Luci-Stepper root')}
-          activeStep={currentPage.stepNumber}>
+        <Stepper className={clsx('Luci-Stepper root')} activeStep={activeStep}>
           {pages.map(({ stepDisplay: label }) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -172,7 +177,10 @@ const StepBarComponent = () => {
       </div>
 
       {/* Floating functions */}
-      <div className={clsx('floating-actions', 'stack', 'nowrap')}>
+      <div
+        className={clsx('floating-actions', 'stack', 'nowrap', {
+          hidden: isLoading,
+        })}>
         {showResetCanvas && <ResetCanvas />}
 
         {showDownloadMatrix && (

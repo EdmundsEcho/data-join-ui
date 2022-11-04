@@ -94,6 +94,7 @@ const Matrix = () => {
         title='Processing'
         message={messageWhileLoading || 'Pulling the requested data'}
         cancel={handleCancel}
+        turnOffMessaging
       />
     );
   }

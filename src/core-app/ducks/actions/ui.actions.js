@@ -20,7 +20,7 @@ export const CLEAR_BOOKMARK = `${feature} CLEAR_BOOKMARK`; // document (state re
 /* eslint-disable no-shadow */
 export const setUiLoadingState = ({ toggle, feature, message }) => ({
   type: `${feature} ${SET_LOADER} ${toggle ? '... loading' : 'done'}`,
-  payload: { toggle, message, feature },
+  payload: { loading: toggle, message, feature },
 });
 /* eslint-enable no-shadow */
 

@@ -337,6 +337,12 @@ export const getSelectedEtlUnits = (state) =>
 export const isHostedWarehouseStale = (state) =>
   fromWorkbench.isHostedWarehouseStale(state.workbench);
 
+export const isHostedMatrixStale = (state) =>
+  fromWorkbench.isHostedMatrixStale(state.workbench);
+
+export const isAppDataCompleted = (state) =>
+  fromWorkbench.isAppDataCompleted(state.workbench);
+
 export const getMatrix = (state) => fromWorkbench.getMatrix(state.workbench);
 
 export const getRequest = (state) => fromWorkbench.getRequest(state.workbench);
@@ -355,9 +361,6 @@ export const selectPaletteGroup = (state) =>
  */
 export const isWorkbenchInitialized = (state) =>
   fromWorkbench.isWorkbenchInitialized(state.workbench);
-
-export const isHostedMatrixStale = (state) =>
-  fromWorkbench.isHostedMatrixStale(state.workbench);
 
 export const isCanvasDirty = (state) =>
   fromWorkbench.isCanvasDirty(state.workbench);

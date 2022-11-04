@@ -541,7 +541,10 @@ function changedArgs(
  */
 export function is200ResponseError(response) {
   try {
-    const { error = false, status } = response.data;
+    const { error = false, status } = response?.data ?? {
+      error: true,
+      status: 'Unexpected response',
+    };
     return error && status !== 'Error' && response.status === 200
       ? error
       : false;
