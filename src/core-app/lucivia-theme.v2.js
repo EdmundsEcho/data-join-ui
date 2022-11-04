@@ -371,16 +371,6 @@ export default (mode) => {
                     width: '70px',
                   },
                 },
-                // coordinate with addMeaImpliedFieldButton
-                '& .componentCountCell': {
-                  display: 'flex',
-                  justifyContent: 'center',
-                  '& .MuiTypography-root': {
-                    marginTop: '5px',
-                    marginBottom: '0px',
-                    marginLeft: 'auto',
-                  },
-                },
               },
             },
             //--------------------------------------------------------------------
