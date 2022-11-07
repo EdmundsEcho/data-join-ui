@@ -51,6 +51,7 @@
     var(--main-view-height)
     - var(--stepbar-height)
     - var(--controller-margin) * 4
+    - 4px
   );
 }
 
