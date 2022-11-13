@@ -170,7 +170,6 @@ function StatSummary({ getValue, fieldType }) {
   let view = null;
   let displayVersion = 'one';
   //
-  console.debug(`localstore`, localStore);
 
   switch (status) {
     case STATUS.UNINITIALIZED:

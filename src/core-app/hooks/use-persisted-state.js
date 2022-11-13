@@ -14,6 +14,8 @@ import {
 import { ReadWriteError } from '../lib/LuciErrors';
 
 // -----------------------------------------------------------------------------
+/* eslint-disable no-console */
+// -----------------------------------------------------------------------------
 // Will create a db using projectId when possible, otherwise
 //
 const PREFIX = 'db-';
@@ -107,10 +109,11 @@ const usePersistedState = (
         });
       } catch (e) {
         if (e instanceof ReadWriteError) {
-          /* eslint-disable-next-line */
+          console.error(e);
+        } else {
+          console.error('Unexpected Error');
           console.error(e);
         }
-        throw e;
       }
     },
     [idbStore, keyToPersistWith],

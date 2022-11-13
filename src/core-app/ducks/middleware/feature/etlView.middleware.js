@@ -156,7 +156,14 @@ const middleware =
       }
 
       case UPDATE_ETL_FIELD: {
-        if (['format', 'sources', 'codomain-reducer'].includes(action.key)) {
+        if (
+          [
+            'format',
+            'sources',
+            'codomain-reducer',
+            'null-value-expansion',
+          ].includes(action.key)
+        ) {
           next(tagWarehouseState('STALE'));
         }
         break;

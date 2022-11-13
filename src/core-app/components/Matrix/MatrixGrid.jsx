@@ -14,6 +14,8 @@ import {
 //----------------------------------------------------------------------------
 // Static utilized by MatrixGrid
 //----------------------------------------------------------------------------
+const PAGE_SIZE = 1000;
+
 const identityFn = (x) => x;
 function rowsFn(data) {
   return Object.entries(data).reduce((rows, [subject, values]) => {
@@ -77,7 +79,7 @@ function MatrixGrid({ matrixPage, gridHeight, abortController }) {
       baseSelectAll={{}}
       limitGridHeight={gridHeight}
       feature='LIMIT'
-      pageSize={100}
+      pageSize={PAGE_SIZE}
       DEBUG={false}
       {...gridOptions}
     />

@@ -36,6 +36,9 @@ const DEBUG = false || process.env.REACT_APP_DEBUG_STEP_BAR === 'true';
 //
 // NEXT: Set the component values; have it read by the router
 //
+// TODO: consider guards for when to fetch data; i.e., skip
+//       when relevant state is 'STALE'
+//
 const pagesMachine = {
   meta: {
     key: 'meta',

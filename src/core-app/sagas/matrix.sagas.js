@@ -21,9 +21,8 @@ import {
   setMatrixCache,
 } from '../ducks/actions/matrix.actions';
 import { setNotification } from '../ducks/actions/notifications.actions';
-import { getProjectId } from '../ducks/rootSelectors';
+import { getProjectId, isHostedMatrixStale } from '../ducks/rootSelectors';
 import { initAbortController } from '../../hooks/use-abort-controller';
-
 // -----------------------------------------------------------------------------
 // 📡
 // direct calls to fetch (see api MATRIX)
@@ -44,7 +43,6 @@ import {
   withDerivedFields,
   dedupMeaExpressions,
 } from '../lib/obsEtlToMatrix/matrix-request';
-
 import {
   SagasError,
   InvalidStateError,
@@ -132,47 +130,52 @@ function* _queueMatrixRequest(action) {
   const requestedProject = action?.projectId;
 
   try {
-    yield put(
-      setUiLoadingState({
-        toggle: true,
-        feature: MATRIX,
-        message: 'Queued the matrix request',
-      }),
-    );
-
-    // 1. build the request using a series of automated graphql calls
-    const request = yield buildMatrixSpec(abortController);
-
-    // 2. engage the tnc-py polling api with the now completed request
-    const projectInRedux = yield select(getProjectId);
-    if (projectInRedux !== requestedProject) {
-      throw new InvalidStateError(
-        `Matrix request failed: invalid project state ${JSON.stringify(
-          action,
-          null,
-          2,
-        )}`,
-        new Error().stack,
-      );
-    }
-    try {
-      //
+    // guard - run when hostedMatrixState = 'STALE'
+    const isStale = yield select(isHostedMatrixStale);
+    //
+    if (isStale) {
       yield put(
-        apiFetch(
-          {
-            // ::event
-            meta: { uiKey: 'matrix', feature: MATRIX },
-            request: {
-              project_id: requestedProject,
-              spec: request,
-              maxTries: MAX_TRIES,
-              signal: abortController.signal,
-            },
-          }, // map + translation
-        ),
+        setUiLoadingState({
+          toggle: true,
+          feature: MATRIX,
+          message: 'Queued the matrix request',
+        }),
       );
-    } catch (e) {
-      throw new ApiCallError(`Queuing the matrix request failed`, e);
+
+      // 1. build the request using a series of automated graphql calls
+      const request = yield buildMatrixSpec(abortController);
+
+      // 2. engage the tnc-py polling api with the now completed request
+      const projectInRedux = yield select(getProjectId);
+      if (projectInRedux !== requestedProject) {
+        throw new InvalidStateError(
+          `Matrix request failed: invalid project state ${JSON.stringify(
+            action,
+            null,
+            2,
+          )}`,
+          new Error().stack,
+        );
+      }
+      try {
+        //
+        yield put(
+          apiFetch(
+            {
+              // ::event
+              meta: { uiKey: 'matrix', feature: MATRIX },
+              request: {
+                project_id: requestedProject,
+                spec: request,
+                maxTries: MAX_TRIES,
+                signal: abortController.signal,
+              },
+            }, // map + translation
+          ),
+        );
+      } catch (e) {
+        throw new ApiCallError(`Queuing the matrix request failed`, e);
+      }
     }
   } catch (e) {
     abortController.abort();

@@ -263,7 +263,9 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
         }
       }
       setNextField(value);
-      console.debug(`%c${nextField} (async)`, 'color:yellow');
+      if (DEBUG) {
+        console.debug(`%c${nextField} (async)`, 'color:yellow');
+      }
     },
     [nextField, setNextField],
   );

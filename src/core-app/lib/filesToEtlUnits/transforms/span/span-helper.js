@@ -114,6 +114,9 @@ export const setTimeProp = (key, newValue, timeProp = initialTimeProp) => {
 };
 
 export const getTimePropValueWithCompoundedKey = (compoundedKey, timeProp) => {
+  if (typeof timeProp === 'undefined') {
+    return null;
+  }
   const map = {
     'time.reference.value': timeProp.reference.value,
     'time.reference.isoFormat': timeProp.reference.isoFormat,
