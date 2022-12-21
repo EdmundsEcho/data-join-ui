@@ -257,6 +257,7 @@ button.cancel {
 }
 .app-paging-view {
   max-height: var(--core-app-outlet-height);
+  overflow: scroll;
 }
 .app-paging-view > div {
   height: 100%;

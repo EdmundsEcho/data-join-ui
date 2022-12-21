@@ -10,19 +10,12 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import withStyles from '@mui/styles/withStyles';
 
 import Group from './Group';
 
 import { dedupArray } from '../../utils/common';
 
 /* eslint-disable react/destructuring-assignment */
-
-const styles = {
-  container: {
-    backgroundColor: '#FFF',
-  },
-};
 
 const isNil = (v) => !(typeof v === 'undefined' || v === null);
 
@@ -34,7 +27,6 @@ const Rollup = (props) => {
   const {
     allowEmpty,
     noHeading,
-    classes,
     codomainDescription,
     debug,
     groups,
@@ -51,7 +43,6 @@ const Rollup = (props) => {
 
   /**
    * evaluateRollup
-   * @description
    * This method takes the original values input
    * and overrides whatever has been added to the
    * local rollup object
@@ -69,7 +60,7 @@ const Rollup = (props) => {
   const getGroups = useCallback(() => {
     return dedupArray([
       ...Object.values(values).filter(isNil),
-      ...state.newGroups,
+      ...(state?.newGroups ?? []),
       ...groups,
     ]);
   }, [groups, state.newGroups, values]);
@@ -135,10 +126,10 @@ const Rollup = (props) => {
     }));
   };
 
-  const { errors } = state;
+  const { errors = [] } = state;
 
   return (
-    <div className={classes.container}>
+    <div className='rollup'>
       {errors.map((error) => (
         <div key={`${error}`}>{error}</div>
       ))}
@@ -199,4 +190,4 @@ Rollup.defaultProps = {
   debug: false,
 };
 
-export default withStyles(styles)(Rollup);
+export default Rollup;

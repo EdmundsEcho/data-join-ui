@@ -163,11 +163,11 @@ export const renderSuggestion = curry(
           <div className='suggestion-item' style={{ width: '100%' }}>
             {parts.map((part, index) =>
               part.highlight ? (
-                <span key={String(index)} style={{ fontWeight: 500 }}>
+                <span key={`${index}`} style={{ fontWeight: 500 }}>
                   {part.text}
                 </span>
               ) : (
-                <strong key={String(index)} style={{ fontWeight: 300 }}>
+                <strong key={`${index}`} style={{ fontWeight: 300 }}>
                   {part.text}
                 </strong>
               ),

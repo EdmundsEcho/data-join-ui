@@ -3,6 +3,7 @@
  * Fixtures inside the directory get wrapped accordingly.
  */
 import React, { useMemo, useCallback } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline'; // fixes some html
 import { DragDropContext } from '@hello-pangea/dnd';
@@ -41,12 +42,14 @@ export default ({ children }) => {
         <ThemeContext.Provider value={contextValue}>
           <ThemeProvider theme={theme}>
             <StyledEngineProvider injectFirst>
-              <SnackbarProvider maxSnack={3}>
-                <DragDropContext>
-                  <CssBaseline />
-                  {children}
-                </DragDropContext>
-              </SnackbarProvider>
+              <BrowserRouter>
+                <SnackbarProvider maxSnack={3}>
+                  <DragDropContext>
+                    <CssBaseline />
+                    {children}
+                  </DragDropContext>
+                </SnackbarProvider>
+              </BrowserRouter>
             </StyledEngineProvider>
           </ThemeProvider>
         </ThemeContext.Provider>

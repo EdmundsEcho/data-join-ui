@@ -8,7 +8,7 @@ const Component = () => {
   };
   return (
     <div style={{ margin: '20px', width: '300px' }}>
-      <MoodSelector moods={moods} handleChange={handleMoodChange} />;
+      <MoodSelector moods={moods} handleChange={handleMoodChange} />
     </div>
   );
 };
