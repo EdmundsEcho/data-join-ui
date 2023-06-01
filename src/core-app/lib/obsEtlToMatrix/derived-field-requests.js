@@ -122,6 +122,20 @@ export const derivedFields = {
         'Add any number of factors to the group.  Place the binary factor at the top.',
     },
   },
+  timeAlignEvent: {
+    id: 'timeAlignEvent',
+    menuItem: 'time align event',
+    config: configTimeAlignEventFn,
+    fmapOrApply: 'fmap',
+    arity: 1,
+    userInput: {
+      metric: { name: 'metric', type: 'fieldName', displayType: 'none' },
+    },
+    meta: {
+      description: 'Mark the earliest data to mark the event',
+      instructions: 'Select a field that marks an event',
+    },
+  },
   identity: {
     id: 'identity',
     menuItem: 'identity fn',
@@ -284,6 +298,30 @@ function configRatioWithUniverse(input) {
   };
 }
 
+/**
+ * spec is set by the backend
+ *
+ * @param {string} etlUnitFieldName
+ * @return {Object} with props fieldName and config
+ */
+function configTimeAlignEventFn(input) {
+  const { metric = input, fieldName = null } = input;
+
+  return {
+    fieldName: fieldName || `${input}.derivedField::timeAlignEvent`,
+    config: {
+      name: fieldName || `${input}.derivedField::timeAlignEvent`,
+      inputs: {
+        metric,
+      },
+      function: {
+        input: [{ type: 'number', scope: 'subject' }],
+        output: { type: 'number' },
+        name: 'timeAlignEvent',
+      },
+    },
+  };
+}
 /**
  * spec is set by the backend
  *

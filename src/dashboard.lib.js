@@ -10,7 +10,7 @@ import { DISPLAY_VERSIONS } from './core-app/lib/sum-types';
 export function getDisplayVersion(thresholds) {
   return (size) =>
     Object.keys(DISPLAY_VERSIONS)[
-      Math.max(
+    Math.max(
         0,
         thresholds.findIndex((threshold) => size > threshold),
       )
