@@ -71,7 +71,7 @@ const mkArtifacts = (projectId) => [
         name: 'subject.feather',
         description:
             'Part of the series of etlUnits stored in a dataframe compatible format',
-        endpoint: hitThis(projectId, 'cache/subject.feather'),
+        endpoint: hitThis(projectId, 'subject.feather'),
         isReady: (appStatus) => appStatus.isWarehouseReady,
     },
 ];
