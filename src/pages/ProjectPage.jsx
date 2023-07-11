@@ -18,105 +18,112 @@ import ProjectForm from '../forms/ProjectForm';
 import { useProjectsSelectorContext } from '../contexts/ProjectsDataContext';
 
 import {
-  isHostedMatrixStale,
-  isHostedWarehouseStale,
+    isHostedMatrixStale,
+    isHostedWarehouseStale,
 } from '../core-app/ducks/rootSelectors';
 
 // -----------------------------------------------------------------------------
 // Dowloading link-related
 const META_ARTIFACT_ENDPOINT = process.env.REACT_APP_META_ARTIFACT_ENDPOINT;
 const hitThis = (projectId, filename) =>
-  META_ARTIFACT_ENDPOINT.replace('{projectId}', projectId).replace(
-    '{filename}',
-    filename,
-  );
+    META_ARTIFACT_ENDPOINT.replace('{projectId}', projectId).replace(
+        '{filename}',
+        filename,
+    );
 // -----------------------------------------------------------------------------
 
 const NewProjectPage = () => {
-  return (
-    <Box sx={{ m: '30px' }}>
-      <Typography variant='h5' component='h6'>
-        New Project
-      </Typography>
-      Create new project form
-      <Divider sx={{ m: 2, mt: 4, mb: 4 }} />
-      <ProjectForm />
-    </Box>
-  );
+    return (
+        <Box sx={{ m: '30px' }}>
+            <Typography variant='h5' component='h6'>
+                New Project
+            </Typography>
+            Create new project form
+            <Divider sx={{ m: 2, mt: 4, mb: 4 }} />
+            <ProjectForm />
+        </Box>
+    );
 };
 
 // figure out when to display the files
 const mkArtifacts = (projectId) => [
-  {
-    name: 'subject-universe.sqlite',
-    description: 'Hosts the complete set of subjects and measurements',
-    endpoint: hitThis(projectId, 'subject-universe.sqlite'),
-    isReady: (appStatus) => appStatus.isWarehouseReady,
-  },
-  {
-    name: 'matrix.csv',
-    description:
-      'Hosts the requested data and computed derived fields for a selected subject universe',
-    endpoint: hitThis(projectId, 'matrix.csv'),
-    isReady: (appStatus) => appStatus.isMatrixReady,
-  },
-  {
-    name: 'matrix.pickle',
-    description:
-      'Hosts the requested data and computed derived fields in the python dataframe format',
-    endpoint: hitThis(projectId, 'matrix.pickle'),
-    isReady: (appStatus) => appStatus.isMatrixReady,
-  },
+    {
+        name: 'subject-universe.sqlite',
+        description: 'Hosts the complete set of subjects and measurements',
+        endpoint: hitThis(projectId, 'subject-universe.sqlite'),
+        isReady: (appStatus) => appStatus.isWarehouseReady,
+    },
+    {
+        name: 'matrix.csv',
+        description:
+            'Hosts the requested data and computed derived fields for a selected subject universe',
+        endpoint: hitThis(projectId, 'matrix.csv'),
+        isReady: (appStatus) => appStatus.isMatrixReady,
+    },
+    {
+        name: 'matrix.pickle',
+        description:
+            'Hosts the requested data and computed derived fields in the python dataframe format',
+        endpoint: hitThis(projectId, 'matrix.pickle'),
+        isReady: (appStatus) => appStatus.isMatrixReady,
+    },
+    {
+        name: 'subject.feather',
+        description:
+            'Part of the series of etlUnits stored in a dataframe compatible format',
+        endpoint: hitThis(projectId, 'cache/subject.feather'),
+        isReady: (appStatus) => appStatus.isWarehouseReady,
+    },
 ];
 
 const ProjectMeta = () => {
-  const { projectId } = useParams();
-  const { select } = useProjectsSelectorContext();
-  const projectMeta = select(projectId);
-  const isMatrixReady = !useSelector(isHostedMatrixStale);
-  const isWarehouseReady = !useSelector(isHostedWarehouseStale);
+    const { projectId } = useParams();
+    const { select } = useProjectsSelectorContext();
+    const projectMeta = select(projectId);
+    const isMatrixReady = !useSelector(isHostedMatrixStale);
+    const isWarehouseReady = !useSelector(isHostedWarehouseStale);
 
-  const appStatus = { isMatrixReady, isWarehouseReady };
+    const appStatus = { isMatrixReady, isWarehouseReady };
 
-  // figure out when to display the files
-  const artifacts = mkArtifacts(projectId);
-  return (
-    <div className='project-page root'>
-      <h5>Project Meta</h5>
-      <Divider sx={{ m: 2, mt: 4, mb: 4 }} />
-      <ProjectForm data={projectMeta} />
-      <Divider sx={{ m: 2, mt: 4, mb: 8 }} />
-      <h5>Artifacts</h5>
-      <div>Dowloadable files</div>
-      <List className='project-artifacts root'>
-        {artifacts.map(({ name, description, endpoint, isReady }) => {
-          console.debug(endpoint);
-          return (
-            <div
-              key={name}
-              className={clsx('project-artifact root', {
-                disabled: !isReady(appStatus),
-              })}>
-              <a className='link' href={endpoint} download>
-                <ListItem className='project-artifact item'>
-                  <ListItemAvatar className='artifact avatar'>
-                    <Avatar>
-                      <FolderIcon className='icon' />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    className='artifact text'
-                    primary={name}
-                    secondary={description}
-                  />
-                </ListItem>
-              </a>
-            </div>
-          );
-        })}
-      </List>
-    </div>
-  );
+    // figure out when to display the files
+    const artifacts = mkArtifacts(projectId);
+    return (
+        <div className='project-page root'>
+            <h5>Project Meta</h5>
+            <Divider sx={{ m: 2, mt: 4, mb: 4 }} />
+            <ProjectForm data={projectMeta} />
+            <Divider sx={{ m: 2, mt: 4, mb: 8 }} />
+            <h5>Artifacts</h5>
+            <div>Dowloadable files</div>
+            <List className='project-artifacts root'>
+                {artifacts.map(({ name, description, endpoint, isReady }) => {
+                    console.debug(endpoint);
+                    return (
+                        <div
+                            key={name}
+                            className={clsx('project-artifact root', {
+                                disabled: !isReady(appStatus),
+                            })}>
+                            <a className='link' href={endpoint} download>
+                                <ListItem className='project-artifact item'>
+                                    <ListItemAvatar className='artifact avatar'>
+                                        <Avatar>
+                                            <FolderIcon className='icon' />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        className='artifact text'
+                                        primary={name}
+                                        secondary={description}
+                                    />
+                                </ListItem>
+                            </a>
+                        </div>
+                    );
+                })}
+            </List>
+        </div>
+    );
 };
 
 export { ProjectMeta, NewProjectPage };
