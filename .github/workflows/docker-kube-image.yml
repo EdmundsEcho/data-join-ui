@@ -2,9 +2,9 @@ name: Docker Kube Image CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    paths:
+      - 'Dockerfile.kube'
+      - 'src/**'
 
   workflow_dispatch:
     inputs:
@@ -15,26 +15,31 @@ on:
       tags:
         description: 'dummy input, ignore'
 
-
-
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
 
-    - name: Login to Github registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Set up Actions
+        uses: actions/checkout@v3
 
-    - name: Build the Kube Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      run: |
-          IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
+      - name: Login to Github registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build the Kube Docker image
+        run: |
+          IMAGE_ID=ghcr.io/lucivia/tnc-py:$GITHUB_RUN_ID
           LATEST=ghcr.io/lucivia/frontend:kube
-          docker build . --file Dockerfile.kube --tag $IMAGE_ID
-          docker image tag $IMAGE_ID $LATEST
-          docker push $IMAGE_ID
-          docker push $LATEST
+          docker buildx build . \
+          --file Dockerfile.kube \
+          --cache-to type=gha,mode=max \
+          --cache-from type=gha \
+          --tag $IMAGE_ID
+          docker buildx image tag $IMAGE_ID $LATEST
+          docker buildx push $IMAGE_ID
+          docker buildx push $LATEST
