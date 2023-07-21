@@ -29,40 +29,40 @@ const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 // Read the .env
 //------------------------------------------------------------------------------
 const API_BASE_URL =
-  process.env.REACT_APP_ENV === 'production'
-    ? `${window.location.origin}/v1`
-    : `http://${window.location.hostname}:5005/v1`;
+    process.env.REACT_APP_ENV === 'production'
+        ? `${window.location.origin}/v1`
+        : `http://${window.location.hostname}:5005/v1`;
 
 const GQL_BASE_URL =
-  process.env.REACT_APP_ENV === 'production'
-    ? `${window.location.origin}/v1`
-    : `http://${window.location.hostname}:5003/v1`;
+    process.env.REACT_APP_ENV === 'production'
+        ? `${window.location.origin}/v1`
+        : `http://${window.location.hostname}:5003/v1`;
 //------------------------------------------------------------------------------
 
 if (DEBUG) {
-  console.info('loading services/api');
+    console.info('loading services/api');
 }
 
 //------------------------------------------------------------------------------
 // Configure axios endpoints
 //------------------------------------------------------------------------------
 export const apiInstance = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    Accept: 'application/json',
-  },
-  withCredentials: true,
+    baseURL: API_BASE_URL,
+    headers: {
+        Accept: 'application/json',
+    },
+    withCredentials: true,
 });
 apiInstance.interceptors.response.use(stdApiResponse, stdApiResponse);
 
 export const gqlInstance = axios.create({
-  baseURL: GQL_BASE_URL,
-  method: 'POST',
-  headers: {
-    'content-type': 'application/json',
-    Accept: 'application/json',
-  },
-  withCredentials: process.env.REACT_APP_ENV === 'production',
+    baseURL: GQL_BASE_URL,
+    method: 'POST',
+    headers: {
+        'content-type': 'application/json',
+        Accept: 'application/json',
+    },
+    withCredentials: process.env.REACT_APP_ENV === 'production',
 });
 gqlInstance.interceptors.response.use(gqlApiResponse, gqlApiResponse);
 
@@ -78,26 +78,26 @@ gqlInstance.interceptors.response.use(gqlApiResponse, gqlApiResponse);
  *   methods=['GET', 'POST'])
  */
 export function fetchStore(projectId, signal) {
-  //
-  if (DEBUG) {
-    console.debug(`Loading project store: ${projectId}`);
-  }
-  if (typeof projectId === 'undefined') {
-    throw new ApiCallError('Missing projectId');
-  }
-  const axiosOptions = {
-    url: `/project-store/${projectId}`,
-    method: 'GET',
-    signal,
-  };
-  //
-  if (DEBUG) {
-    console.debug(
-      `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
-      'color:orange',
-    );
-  }
-  return apiInstance(axiosOptions);
+    //
+    if (DEBUG) {
+        console.debug(`Loading project store: ${projectId}`);
+    }
+    if (typeof projectId === 'undefined') {
+        throw new ApiCallError('Missing projectId');
+    }
+    const axiosOptions = {
+        url: `/project-store/${projectId}`,
+        method: 'GET',
+        signal,
+    };
+    //
+    if (DEBUG) {
+        console.debug(
+            `%c testing POST @ "v1/project-store/<project_id>" endpoint`,
+            'color:orange',
+        );
+    }
+    return apiInstance(axiosOptions);
 }
 //------------------------------------------------------------------------------
 
@@ -108,39 +108,39 @@ export function fetchStore(projectId, signal) {
  * @return {boolean}
  */
 export const ResponseTypePredicates = {
-  RESOLVED: (response) => {
-    return (
-      response?.data?.results === 'stopped' ||
-      response?.data?.results.includes('object is not subscriptable') ||
-      false
-    );
-  },
-  CANCELLED: (response) => response?.data?.results === 'killed',
-  ERROR: (response) => response?.data?.results?.error ?? false,
+    RESOLVED: (response) => {
+        return (
+            response?.data?.results === 'stopped' ||
+            response?.data?.results.includes('object is not subscriptable') ||
+            false
+        );
+    },
+    CANCELLED: (response) => response?.data?.results === 'killed',
+    ERROR: (response) => response?.data?.results?.error ?? false,
 };
 export const ResponseTypes = {
-  STATUS: 'status',
-  RESULT: 'result',
-  JOB_ID: 'jobId',
-  CANCELLED: 'cancelled',
+    STATUS: 'status',
+    RESULT: 'result',
+    JOB_ID: 'jobId',
+    CANCELLED: 'cancelled',
 };
 
 // tnc-py init, status, kill and results
 // does not include gql endpoints
 const statusEndpointMaker = (SERVICE) => {
-  return (projectId, jid, resultsOrCancel, pid) => {
-    let suffix = '';
-    if (typeof jid !== 'undefined') {
-      suffix = `/${jid}`;
-    }
-    if (resultsOrCancel === 'RESULTS') {
-      suffix = `${suffix}/results`;
-    }
-    if (resultsOrCancel === 'CANCEL') {
-      suffix = `${suffix}?pid=${pid}`;
-    }
-    return `/${SERVICE}/${projectId}${suffix}`;
-  };
+    return (projectId, jid, resultsOrCancel, pid) => {
+        let suffix = '';
+        if (typeof jid !== 'undefined') {
+            suffix = `/${jid}`;
+        }
+        if (resultsOrCancel === 'RESULTS') {
+            suffix = `${suffix}/results`;
+        }
+        if (resultsOrCancel === 'CANCEL') {
+            suffix = `${suffix}?pid=${pid}`;
+        }
+        return `/${SERVICE}/${projectId}${suffix}`;
+    };
 };
 //------------------------------------------------------------------------------
 // Configure api response::result -> required format
@@ -148,57 +148,62 @@ const statusEndpointMaker = (SERVICE) => {
 //
 //------------------------------------------------------------------------------
 export const ServiceConfigs = {
-  // @inspection_blueprint.route("/v1/inspection/<project_id>", methods=['POST'])
-  INSPECTION: {
-    type: 'INSPECTION',
-    endpoint: statusEndpointMaker('inspection'), // init and job status
-    feature: HEADER_VIEW,
-    resultType: 'HeaderView',
-    middleware: 'headerView',
-    response: {
-      isValid: (response) => {
-        return response?.data?.data?.results;
-      },
-      getData: (response) => response.data.data.results,
-      getApiError: (event) => event.request.data?.cause,
-      setData: (value) => ({
-        response: { data: { data: { results: value } } },
-      }),
+    // @inspection_blueprint.route("/v1/inspection/<project_id>", methods=['POST'])
+    INSPECTION: {
+        type: 'INSPECTION',
+        endpoint: statusEndpointMaker('inspection'), // init and job status
+        feature: HEADER_VIEW,
+        resultType: 'HeaderView',
+        middleware: 'headerView',
+        response: {
+            isValid: (response) => {
+                return response?.data?.data?.results;
+            },
+            isError: (response) => {
+                const results = response?.data?.data?.results;
+                results?.status == "Error";
+            },
+            getError: (response) => response.data.data.results,
+            getData: (response) => response.data.data.results,
+            getApiError: (event) => event.request.data?.cause,
+            setData: (value) => ({
+                response: { data: { data: { results: value } } },
+            }),
+        },
     },
-  },
-  EXTRACTION: {
-    type: 'EXTRACTION',
-    endpoint: statusEndpointMaker('extraction'), // init and job status
-    graphql: statusEndpointMaker('warehouse'),
-    feature: WORKBENCH,
-    resultType: 'EtlObject',
-    middleware: 'workbench',
-    response: {
-      isValidError: ({ error }) => error,
-      getError: ({ errorMessage }) => errorMessage,
-      isValid: (response) => response?.data?.data.data.getObsEtl,
-      getData: (response) => response.data.data.data.getObsEtl,
-      setData: (value) => ({
-        response: { data: { data: { data: { getObsEtl: value } } } },
-      }),
+    EXTRACTION: {
+        type: 'EXTRACTION',
+        endpoint: statusEndpointMaker('extraction'), // init and job status
+        graphql: statusEndpointMaker('warehouse'),
+        feature: WORKBENCH,
+        resultType: 'EtlObject',
+        middleware: 'workbench',
+        response: {
+            isValidError: ({ error }) => error,
+            getError: ({ errorMessage }) => errorMessage,
+            isValid: (response) => response?.data?.data.data.getObsEtl,
+            getData: (response) => response.data.data.data.getObsEtl,
+            setData: (value) => ({
+                response: { data: { data: { data: { getObsEtl: value } } } },
+            }),
+        },
     },
-  },
-  MATRIX: {
-    type: 'MATRIX',
-    endpoint: statusEndpointMaker('matrix'), // init and job status
-    feature: MATRIX_FEATURE,
-    resultType: 'Matrix',
-    middleware: 'matrix',
-    response: {
-      isValidError: ({ error }) => error,
-      getError: (request) => request?.data ?? 'Undefined error: Matrix',
-      isValid: (response) => response?.data?.data?.payload?.data,
-      getData: (response) => response?.data?.data?.payload?.data,
-      setData: (value) => ({
-        response: { data: { data: { payload: { data: value } } } },
-      }),
+    MATRIX: {
+        type: 'MATRIX',
+        endpoint: statusEndpointMaker('matrix'), // init and job status
+        feature: MATRIX_FEATURE,
+        resultType: 'Matrix',
+        middleware: 'matrix',
+        response: {
+            isValidError: ({ error }) => error,
+            getError: (request) => request?.data ?? 'Undefined error: Matrix',
+            isValid: (response) => response?.data?.data?.payload?.data,
+            getData: (response) => response?.data?.data?.payload?.data,
+            setData: (value) => ({
+                response: { data: { data: { payload: { data: value } } } },
+            }),
+        },
     },
-  },
 };
 /*
   const dummyResponse = ServiceConfigs[INSPECTION].response.setData('test');
@@ -214,13 +219,13 @@ export const ServiceConfigs = {
  * aka requestType
  */
 export const ServiceTypes = Object.entries(ServiceConfigs).reduce(
-  /* eslint-disable no-param-reassign */
-  (serviceTypes, [key, value]) => {
-    serviceTypes[key] = value.type;
-    return serviceTypes;
-  },
-  {},
-  /* eslint-enable no-param-reassign */
+    /* eslint-disable no-param-reassign */
+    (serviceTypes, [key, value]) => {
+        serviceTypes[key] = value.type;
+        return serviceTypes;
+    },
+    {},
+    /* eslint-enable no-param-reassign */
 );
 
 //------------------------------------------------------------------------------
@@ -231,15 +236,15 @@ export const ServiceTypes = Object.entries(ServiceConfigs).reduce(
  * @return {string} type
  */
 export const getServiceType = (feature) => {
-  /* eslint-disable no-param-reassign */
-  if (typeof feature !== 'undefined') {
-    return Object.values(ServiceConfigs).reduce((mapToFeature, service) => {
-      mapToFeature[service.feature] = service.type;
-      return mapToFeature;
-    }, {})[feature];
-  }
-  /* eslint-enable no-param-reassign */
-  return undefined;
+    /* eslint-disable no-param-reassign */
+    if (typeof feature !== 'undefined') {
+        return Object.values(ServiceConfigs).reduce((mapToFeature, service) => {
+            mapToFeature[service.feature] = service.type;
+            return mapToFeature;
+        }, {})[feature];
+    }
+    /* eslint-enable no-param-reassign */
+    return undefined;
 };
 const { INSPECTION, EXTRACTION, MATRIX } = ServiceTypes;
 
@@ -258,46 +263,46 @@ const { INSPECTION, EXTRACTION, MATRIX } = ServiceTypes;
  *
  */
 export const initApiService = async (eventInterface) => {
-  //
-  // local routine
-  // input required to complete the feature request
-  // 'path' | 'spec' | 'etlObject'
-  //
-  const sendQueueRequest = async (featureInput) => {
-    validateEventRequest(eventInterface, featureInput);
-    const { project_id: projectId, signal = undefined } =
-      eventInterface.request;
-    const serviceType = getServiceType(eventInterface.meta.feature);
-    const axiosOptions = {
-      method: 'POST',
-      url: ServiceConfigs[serviceType].endpoint(projectId),
-      data: eventInterface.request,
-      signal,
+    //
+    // local routine
+    // input required to complete the feature request
+    // 'path' | 'spec' | 'etlObject'
+    //
+    const sendQueueRequest = async (featureInput) => {
+        validateEventRequest(eventInterface, featureInput);
+        const { project_id: projectId, signal = undefined } =
+            eventInterface.request;
+        const serviceType = getServiceType(eventInterface.meta.feature);
+        const axiosOptions = {
+            method: 'POST',
+            url: ServiceConfigs[serviceType].endpoint(projectId),
+            data: eventInterface.request,
+            signal,
+        };
+        const response = await apiInstance(axiosOptions);
+
+        return jobIdInterface(response);
     };
-    const response = await apiInstance(axiosOptions);
 
-    return jobIdInterface(response);
-  };
+    validateEventInterface(eventInterface, false /* jobId */);
 
-  validateEventInterface(eventInterface, false /* jobId */);
+    let featureInput = '';
 
-  let featureInput = '';
+    switch (eventInterface.meta.feature) {
+        case HEADER_VIEW:
+            featureInput = 'path';
+            break;
+        case WORKBENCH:
+            featureInput = 'etlObject';
+            break;
+        case MATRIX_FEATURE:
+            featureInput = 'spec';
+            break;
+        default:
+            throw new InvalidStateError('Unreachable');
+    }
 
-  switch (eventInterface.meta.feature) {
-    case HEADER_VIEW:
-      featureInput = 'path';
-      break;
-    case WORKBENCH:
-      featureInput = 'etlObject';
-      break;
-    case MATRIX_FEATURE:
-      featureInput = 'spec';
-      break;
-    default:
-      throw new InvalidStateError('Unreachable');
-  }
-
-  return sendQueueRequest(featureInput);
+    return sendQueueRequest(featureInput);
 };
 //------------------------------------------------------------------------------
 /**
@@ -315,20 +320,20 @@ export const initApiService = async (eventInterface) => {
  *
  */
 export const statusApiService = async (eventInterface) => {
-  validateEventInterface(eventInterface, true /* jobId */);
-  const { jobId, project_id: projectId } = eventInterface.request;
-  const { feature } = eventInterface.meta;
-  const serviceType = getServiceType(feature);
+    validateEventInterface(eventInterface, true /* jobId */);
+    const { jobId, project_id: projectId } = eventInterface.request;
+    const { feature } = eventInterface.meta;
+    const serviceType = getServiceType(feature);
 
-  const response = await apiInstance.get(
-    ServiceConfigs[serviceType].endpoint(projectId, jobId),
-  );
+    const response = await apiInstance.get(
+        ServiceConfigs[serviceType].endpoint(projectId, jobId),
+    );
 
-  return {
-    ...response,
-    request: eventInterface.request,
-    responseType: ResponseTypes.STATUS,
-  };
+    return {
+        ...response,
+        request: eventInterface.request,
+        responseType: ResponseTypes.STATUS,
+    };
 };
 
 //------------------------------------------------------------------------------
@@ -340,57 +345,56 @@ export const statusApiService = async (eventInterface) => {
  *
  */
 export const resultApiService = async (eventInterface) => {
-  validateEventInterface(eventInterface, true /* jobId */);
-  const { jobId, project_id: projectId } = eventInterface.request;
-  const { feature } = eventInterface.meta;
-  const serviceType = getServiceType(feature);
+    validateEventInterface(eventInterface, true /* jobId */);
+    const { jobId, project_id: projectId } = eventInterface.request;
+    const { feature } = eventInterface.meta;
+    const serviceType = getServiceType(feature);
 
-  let response;
+    let response;
 
-  switch (serviceType) {
-    case INSPECTION:
-      response = await apiInstance.get(
-        ServiceConfigs[serviceType].endpoint(projectId, jobId, 'RESULTS'),
-      );
+    switch (serviceType) {
+        case INSPECTION:
+            response = await apiInstance.get(
+                ServiceConfigs[serviceType].endpoint(projectId, jobId, 'RESULTS'),
+            );
 
-      break;
+            break;
 
-    case EXTRACTION:
-      // hit the graphql endpoint
-      response = await gqlInstance({
-        url: ServiceConfigs[serviceType].graphql(projectId),
-        data: GQL.viewObsEtl(), // hydrates workbench
-      });
-      break;
+        case EXTRACTION:
+            // hit the graphql endpoint
+            response = await gqlInstance({
+                url: ServiceConfigs[serviceType].graphql(projectId),
+                data: GQL.viewObsEtl(), // hydrates workbench
+            });
+            break;
 
-    case MATRIX:
-      // pull data from the warehouse
-      response = await fetchRenderedMatrix(projectId); // used both by machine and directly when paging
-      break;
+        case MATRIX:
+            // pull data from the warehouse
+            response = await fetchRenderedMatrix(projectId); // used both by machine and directly when paging
+            break;
 
-    default:
-      throw new ApiCallError(
-        `services.api: Unsupported serviceType: ${
-          serviceType || 'no service type'
-        }`,
-      );
-  }
+        default:
+            throw new ApiCallError(
+                `services.api: Unsupported serviceType: ${serviceType || 'no service type'
+                }`,
+            );
+    }
 
-  //
-  // 🚧 WIP - update errors
-  //
-  if (response.status > 200) {
-    throw new ApiCallError(
-      `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(
-        response,
-      )}`,
-    );
-  }
+    //
+    // 🚧 WIP - update errors
+    //
+    if (response.status > 200) {
+        throw new ApiCallError(
+            `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(
+                response,
+            )}`,
+        );
+    }
 
-  return {
-    ...response,
-    responseType: ResponseTypes.RESULT,
-  };
+    return {
+        ...response,
+        responseType: ResponseTypes.RESULT,
+    };
 };
 
 //------------------------------------------------------------------------------
@@ -398,19 +402,19 @@ export const resultApiService = async (eventInterface) => {
 // ✅ Utilized by the polling-machine
 //
 export const cancelApiService = async (eventInterface) => {
-  validateEventInterface(eventInterface, true /* jobId */);
-  const { project_id: projectId, jobId, processId } = eventInterface.request;
-  const { feature } = eventInterface.meta;
-  const serviceType = getServiceType(feature);
+    validateEventInterface(eventInterface, true /* jobId */);
+    const { project_id: projectId, jobId, processId } = eventInterface.request;
+    const { feature } = eventInterface.meta;
+    const serviceType = getServiceType(feature);
 
-  const response = await apiInstance.delete(
-    ServiceConfigs[serviceType].endpoint(projectId, jobId, 'CANCEL', processId),
-  );
+    const response = await apiInstance.delete(
+        ServiceConfigs[serviceType].endpoint(projectId, jobId, 'CANCEL', processId),
+    );
 
-  return {
-    ...response,
-    responseType: ResponseTypes.CANCELLED,
-  };
+    return {
+        ...response,
+        responseType: ResponseTypes.CANCELLED,
+    };
 };
 
 //------------------------------------------------------------------------------
@@ -435,30 +439,30 @@ export const cancelApiService = async (eventInterface) => {
  *
  */
 export const fetchFileLevels = ({
-  projectId,
-  sources,
-  purpose,
-  signal,
-  arrows = {},
-  page = 1,
-  limit = 10,
-}) => {
-  const data = {
-    purpose,
+    projectId,
     sources,
-    arrows,
-    limit: purpose === 'mspan' ? 99999999999 : limit,
-    page,
-  };
-  return apiInstance({
-    url: `/levels/${projectId}`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    purpose,
     signal,
-    data,
-  });
+    arrows = {},
+    page = 1,
+    limit = 10,
+}) => {
+    const data = {
+        purpose,
+        sources,
+        arrows,
+        limit: purpose === 'mspan' ? 99999999999 : limit,
+        page,
+    };
+    return apiInstance({
+        url: `/levels/${projectId}`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        signal,
+        data,
+    });
 };
 
 //------------------------------------------------------------------------------
@@ -475,20 +479,20 @@ export const fetchFileLevels = ({
  * @return {Promise} matrix records
  */
 export async function fetchRenderedMatrix(
-  projectId,
-  { page = 1, limit = 100 } = {},
-  signal = undefined,
+    projectId,
+    { page = 1, limit = 100 } = {},
+    signal = undefined,
 ) {
-  const axiosOptions = {
-    url: `/matrix/${projectId}/results`,
-    method: 'POST',
-    data: { page, limit },
-    signal,
-  };
-  if (DEBUG) {
-    console.debug(`%cpulling matrix page: ${page}`, 'color:orange');
-  }
-  return apiInstance(axiosOptions);
+    const axiosOptions = {
+        url: `/matrix/${projectId}/results`,
+        method: 'POST',
+        data: { page, limit },
+        signal,
+    };
+    if (DEBUG) {
+        console.debug(`%cpulling matrix page: ${page}`, 'color:orange');
+    }
+    return apiInstance(axiosOptions);
 }
 /**
  * Utilized by MatrixGrid
@@ -496,15 +500,15 @@ export async function fetchRenderedMatrix(
  * @return {Object}
  */
 export const fetchRenderedMatrixWithProjectId =
-  (projectId, signal) =>
-  async (...args) =>
-    fetchRenderedMatrix(projectId, ...args, signal);
+    (projectId, signal) =>
+        async (...args) =>
+            fetchRenderedMatrix(projectId, ...args, signal);
 export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
-  return {
-    pageInfo: raw.payload.pageInfo,
-    edges: edgesFn(JSON.parse(raw.payload.data)),
-    totalCount: raw.payload.totalCount,
-  };
+    return {
+        pageInfo: raw.payload.pageInfo,
+        edges: edgesFn(JSON.parse(raw.payload.data)),
+        totalCount: raw.payload.totalCount,
+    };
 };
 //------------------------------------------------------------------------------
 
@@ -521,20 +525,20 @@ export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
  * @return {Promise}
  */
 export const fetchMatrixSpec = async ({ projectId, request, signal }) => {
-  if (DEBUG) {
-    console.debug(`fetchMatrixSpec api params`, projectId, request, signal);
-  }
-  const axiosOptions = {
-    // single endpoint for all of the graphql requests
-    url: `/warehouse/${projectId}`,
-    data: GQL.requestMatrix(request),
-    signal,
-  };
+    if (DEBUG) {
+        console.debug(`fetchMatrixSpec api params`, projectId, request, signal);
+    }
+    const axiosOptions = {
+        // single endpoint for all of the graphql requests
+        url: `/warehouse/${projectId}`,
+        data: GQL.requestMatrix(request),
+        signal,
+    };
 
-  return gqlInstance(axiosOptions).then((response) => ({
-    ...GQL.extractGql(response),
-    meta: {},
-  }));
+    return gqlInstance(axiosOptions).then((response) => ({
+        ...GQL.extractGql(response),
+        meta: {},
+    }));
 };
 
 //------------------------------------------------------------------------------
@@ -548,24 +552,24 @@ export const fetchMatrixSpec = async ({ projectId, request, signal }) => {
  * @return {Promise}
  */
 export const fetchRequestFieldNames = async ({
-  projectId,
-  request,
-  signal,
-}) => {
-  const requestConfig = GQL.requestFieldNames(request);
-  const axiosOptions = {
-    url: `/warehouse/${projectId}`,
-    data: requestConfig.gql,
+    projectId,
+    request,
     signal,
-  };
-  return gqlInstance(axiosOptions).then((response) => {
-    return {
-      ...GQL.extractGql(response),
-      meta: {
-        normalizer: requestConfig.normalizer,
-      },
+}) => {
+    const requestConfig = GQL.requestFieldNames(request);
+    const axiosOptions = {
+        url: `/warehouse/${projectId}`,
+        data: requestConfig.gql,
+        signal,
     };
-  });
+    return gqlInstance(axiosOptions).then((response) => {
+        return {
+            ...GQL.extractGql(response),
+            meta: {
+                normalizer: requestConfig.normalizer,
+            },
+        };
+    });
 };
 
 //------------------------------------------------------------------------------
@@ -585,14 +589,14 @@ export const fetchRequestFieldNames = async ({
  * @return {Object}
  */
 export const fetchLevels = async ({ projectId, signal, request }) => {
-  const axiosOptions = {
-    // single endpoint for all of the graphql requests
-    url: `/warehouse/${projectId}`,
-    data: GQL.requestLevels(request),
-    signal,
-  };
+    const axiosOptions = {
+        // single endpoint for all of the graphql requests
+        url: `/warehouse/${projectId}`,
+        data: GQL.requestLevels(request),
+        signal,
+    };
 
-  return gqlInstance(axiosOptions);
+    return gqlInstance(axiosOptions);
 };
 /*-----------------------------------------------------------------------------*/
 // Local utilities
@@ -601,44 +605,44 @@ export const fetchLevels = async ({ projectId, signal, request }) => {
 // api response -> { jobId, processId }
 //
 function jobIdInterface(response) {
-  if (DEBUG) {
-    console.debug(
-      '%c** api response does it look as expected? **',
-      colors.purple,
-    );
-    console.dir(response);
-  }
-  /*
-  if (response.status === 401) {
-    throw new ExpiredSessionError();
-  }
-  if (response.status === 403) {
-    throw new ApiCallError(
-      response?.data ?? {
-        message: `403 Unauthorized when retrieving job ticket`,
-      },
-    );
-  }
-  */
-  if (response.status > 200) {
-    throw new ApiCallError({
-      message: `Request failed: no job ticket returned.`,
-      ...response.data,
-    });
-  }
-  // used to run the polling task
-  return {
-    jobId: response.data.results.job_id,
-    processId: response.data.results.process_id,
-  };
+    if (DEBUG) {
+        console.debug(
+            '%c** api response does it look as expected? **',
+            colors.purple,
+        );
+        console.dir(response);
+    }
+    /*
+    if (response.status === 401) {
+      throw new ExpiredSessionError();
+    }
+    if (response.status === 403) {
+      throw new ApiCallError(
+        response?.data ?? {
+          message: `403 Unauthorized when retrieving job ticket`,
+        },
+      );
+    }
+    */
+    if (response.status > 200) {
+        throw new ApiCallError({
+            message: `Request failed: no job ticket returned.`,
+            ...response.data,
+        });
+    }
+    // used to run the polling task
+    return {
+        jobId: response.data.results.job_id,
+        processId: response.data.results.process_id,
+    };
 }
 function validateEventRequest(event, requestKey) {
-  if (!event?.request || !event.request?.[requestKey]) {
-    console.dir(event);
-    throw new ApiCallError(
-      `The api request requires a valid ${requestKey}: requires valid event.request.path`,
-    );
-  }
+    if (!event?.request || !event.request?.[requestKey]) {
+        console.dir(event);
+        throw new ApiCallError(
+            `The api request requires a valid ${requestKey}: requires valid event.request.path`,
+        );
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -653,18 +657,18 @@ function validateEventRequest(event, requestKey) {
  * @return {Promise} response
  */
 export async function fetchProjectDrives(projectId, signal) {
-  const axiosOptions = {
-    url: `/project-drives/${projectId}`,
-    method: 'GET',
-    signal,
-  };
-  if (DEBUG) {
-    console.debug(
-      `%c testing "/project-drives/<pid>" endpoint`,
-      'color:orange',
-    );
-  }
-  return apiInstance(axiosOptions);
+    const axiosOptions = {
+        url: `/project-drives/${projectId}`,
+        method: 'GET',
+        signal,
+    };
+    if (DEBUG) {
+        console.debug(
+            `%c testing "/project-drives/<pid>" endpoint`,
+            'color:orange',
+        );
+    }
+    return apiInstance(axiosOptions);
 }
 /**
  * List files | drives
@@ -692,19 +696,19 @@ export async function fetchProjectDrives(projectId, signal) {
  * @return {Promise} response
  */
 export const readDirectory = (request, signal) => {
-  const axiosOptions = {
-    url: `/filesystem/readdir`,
-    method: 'POST',
-    data: request,
-    signal,
-  };
-  if (DEBUG) {
-    console.debug(
-      `%c testing POST @ "v1/filesystem/readdir" endpoint`,
-      'color:orange',
-    );
-    console.debug('readDirectory api axios options:', axiosOptions);
-  }
+    const axiosOptions = {
+        url: `/filesystem/readdir`,
+        method: 'POST',
+        data: request,
+        signal,
+    };
+    if (DEBUG) {
+        console.debug(
+            `%c testing POST @ "v1/filesystem/readdir" endpoint`,
+            'color:orange',
+        );
+        console.debug('readDirectory api axios options:', axiosOptions);
+    }
 
-  return apiInstance(axiosOptions);
+    return apiInstance(axiosOptions);
 };
