@@ -1,10 +1,15 @@
 // src/lib/filesToEtlUnits/transforms/prepare-for-transit.js
 
 /**
+ *
  * @module /lib/filesToEtlUnits/transforms/prepare-for-transit
+ *
  * @description
  * Removes levels and otherwise prepares the ui-designed configuration for
  * sending to the API.
+ *
+ * This module is a side-effect of a poorly desiged fielname translation
+ * to meet the needs of the hosted db service.
  *
  */
 
@@ -15,33 +20,35 @@ import { PURPOSE_TYPES } from '../../sum-types';
  * preEtlObj
  */
 const etlObjectTransit = (etlObject) => {
-  const etlFields = Object.entries(etlObject.etlFields).reduce(
-    (fields, [fieldName, field]) => {
-      const updatedField = {
-        ...H.removeProp('levels', field),
-        sources: field.sources.map((s) => H.removeProp('levels', s)),
-      };
+    const etlFields = Object.entries(etlObject.etlFields).reduce(
+        (fields, [fieldName, field]) => {
+            const updatedField = {
+                ...H.removeProp('levels', field),
+                sources: field.sources.map((s) => H.removeProp('levels', s)),
+            };
 
-      return {
-        ...fields,
-        [fieldName]: {
-          'map-weights': null,
-          ...updatedField,
-          // time: time ? time : null
+            return {
+                ...fields,
+                [fieldName]: {
+                    'map-weights': null,
+                    ...updatedField,
+                    // time: time ? time : null
+                },
+            };
         },
-      };
-    },
-    {},
-  );
+        {},
+    );
 
-  return {
-    etlFields,
-    etlUnits: etlObject.etlUnits,
-  };
+    return {
+        etlFields,
+        etlUnits: etlObject.etlUnits,
+    };
 };
 
 /**
  * 📌
+ *
+ * Utilized (Jul 2023)
  *
  * Initialize with etlFields
  *
@@ -54,11 +61,16 @@ const etlObjectTransit = (etlObject) => {
  *
  */
 export function toEtlFieldName(etlFields) {
-  const lookupMap = createNameMap(etlFields);
-  return (warehouseName) => lookupMap[warehouseName];
+    const lookupMap = createNameMap(etlFields);
+    return (warehouseName) => lookupMap[warehouseName];
 }
 
 /**
+ *
+ * Utilized (Jul 2023)
+ *
+ * Prepare the field names for what the backend uses.
+ *
  * Missing post-processing of the extraction
  *
  *   🔖 ObsEtl props:
@@ -70,10 +82,7 @@ export function toEtlFieldName(etlFields) {
  *     👉 measurementType with 'm_' prefix
  *
  *     ⬜ replace spanValues with what is in the etlObject
- */
-
-/**
- * Prepare the field names for what the backend uses.
+ *
  *
  * 🛈  Need to think more about what might "get lost in translation"
  *    However, most of the risk is mitigated if this is run prior
@@ -88,30 +97,30 @@ export function toEtlFieldName(etlFields) {
  *
  */
 export function createNameMap(etlFields) {
-  let fieldName = '';
-  /* eslint-disable no-param-reassign */
-  return Object.values(etlFields).reduce((nameMap, field) => {
-    fieldName = sanitizeFieldName(field.name);
-    switch (field.purpose) {
-      case PURPOSE_TYPES.QUALITY:
-        fieldName = `q_${fieldName}`;
-        break;
-      case PURPOSE_TYPES.MVALUE:
-        fieldName = `m_${fieldName}`;
-        break;
-      case PURPOSE_TYPES.MSPAN:
-        fieldName = `time`;
-        break;
-      default:
-        break;
-    }
-    nameMap[fieldName] = field.name;
-    return nameMap;
-  }, {});
+    let fieldName = '';
+    /* eslint-disable no-param-reassign */
+    return Object.values(etlFields).reduce((nameMap, field) => {
+        fieldName = sanitizeFieldName(field.name);
+        switch (field.purpose) {
+            case PURPOSE_TYPES.QUALITY:
+                fieldName = `q_${fieldName}`;
+                break;
+            case PURPOSE_TYPES.MVALUE:
+                fieldName = `m_${fieldName}`;
+                break;
+            case PURPOSE_TYPES.MSPAN:
+                fieldName = `time`;
+                break;
+            default:
+                break;
+        }
+        nameMap[fieldName] = field.name;
+        return nameMap;
+    }, {});
 }
 
 export function sanitizeFieldName(name) {
-  return name.replace(/[\W_]/g, '').toLowerCase();
+    return name.replace(/[\W_]/g, '').toLowerCase();
 }
 /*
 This function is run by tnc-py to generate names for the sql db

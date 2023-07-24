@@ -13,62 +13,7 @@ import { lowerFirstChar } from '../../utils/common';
 
 /**
  *
- * 1️⃣   Used to instantiate the obs graphql server
- *
- * Use this augmented version to initialize server
- *
- * 🔑 SpanValues: relative value is adjusted/normalized using the time prop.
- *                ...normalized using the universal reference.
- *
- *                rangeStart = rangeStart + timeRef
- *
- * obsEtl from the warehouse -> augmented obsEtl
- *
- *
- * @function
- * @param {EtlObject} input From the warehouse api
- * @return {EtlObject}
- *
- */
-const augmentWarehouseMeasurement = ({ etlFields, etlUnits }) => (
-  measurement,
-) => {
-  const etlNameLookup = toEtlFieldName(etlFields);
-  const { measurementType, components } = measurement;
-  const timeRef =
-    etlFields[etlUnits[etlNameLookup(measurementType)].mspan]?.time.reference
-      .idx;
-
-  const adjustedSpanvalue = (spanValue /* 🔑 timeRef */) => {
-    return {
-      ...spanValue,
-      rangeStart: spanValue.rangeStart + timeRef,
-    };
-  };
-
-  return {
-    measurementType,
-    components: components.map((component) => ({
-      ...component,
-      componentValues: component.componentValues?.spanValues
-        ? {
-            ...component.componentValues,
-
-            spanValues:
-              etlFields[etlUnits[etlNameLookup(measurementType)].mspan]?.[
-                'levels-mspan'
-              ].map((spanValue) => adjustedSpanvalue(spanValue, timeRef)) ??
-              etlFields[
-                etlUnits[etlNameLookup(measurementType)].mspan
-              ]?.levels.map((spanValue) =>
-                adjustedSpanvalue(spanValue, timeRef),
-              ),
-          }
-        : component.componentValues,
-    })),
-  };
-};
-/**
+ * Utilized (Jul 2023)
  *
  * 2️⃣   Post-process what comes from mms/obs for use by the user
  *     when designing the request.
@@ -85,40 +30,40 @@ const augmentWarehouseMeasurement = ({ etlFields, etlUnits }) => (
  * @return {Object}
  */
 const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
-  // closure/memoize for reuse
-  const etlNameLookup = toEtlFieldName(etlFields);
+    // closure/memoize for reuse
+    const etlNameLookup = toEtlFieldName(etlFields);
 
-  const { measurementType, components } = data;
+    const { measurementType, components } = data;
 
-  // 🔖 components for the measurement are values
-  const values = Object.keys(components).reduce((acc, k) => {
-    //
-    // the lookup for time does not work; must go through etlUnit
-    // 🦀 the backend names every mspan field using "time"
-    // 🔖 the displayName is what the user knows about the field
-    //
-    const [displayName, timeProp] = components[k].componentValues?.spanValues
-      ? [
-          etlUnits[etlNameLookup(measurementType)].mspan,
-          etlFields[etlUnits[etlNameLookup(measurementType)].mspan].time,
-        ]
-      : [etlNameLookup(components[k].componentName), undefined];
-    acc[k] = iniComponent(components[k], displayName, timeProp);
+    // 🔖 components for the measurement are values
+    const values = Object.keys(components).reduce((acc, k) => {
+        //
+        // the lookup for time does not work; must go through etlUnit
+        // 🦀 the backend names every mspan field using "time"
+        // 🔖 the displayName is what the user knows about the field
+        //
+        const [displayName, timeProp] = components[k].componentValues?.spanValues
+            ? [
+                etlUnits[etlNameLookup(measurementType)].mspan,
+                etlFields[etlUnits[etlNameLookup(measurementType)].mspan].time,
+            ]
+            : [etlNameLookup(components[k].componentName), undefined];
+        acc[k] = iniComponent(components[k], displayName, timeProp);
 
-    return acc;
-  }, {});
+        return acc;
+    }, {});
 
-  // measurement display name
-  const displayName = etlNameLookup(measurementType);
+    // measurement display name
+    const displayName = etlNameLookup(measurementType);
 
-  return {
-    request: true,
-    measurementType,
-    displayName,
-    'palette-name': displayName,
-    'canvas-alias': displayName,
-    values,
-  };
+    return {
+        request: true,
+        measurementType,
+        displayName,
+        'palette-name': displayName,
+        'canvas-alias': displayName,
+        values,
+    };
 };
 
 /**
@@ -129,83 +74,82 @@ const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
  *    Only use for spanValues; other values are not recorded in state.
  */
 const iniValue = (value, requestDefault = true) => {
-  return {
-    request: requestDefault,
-    value,
-  };
+    return {
+        request: requestDefault,
+        value,
+    };
 };
 
 function iniComponent(
-  { componentName, componentValues, count },
-  displayName,
-  timeProp,
-) {
-  const tag = lowerFirstChar(componentValues.__typename);
-  const values = componentValues?.spanValues ?? [];
-
-  /*
-  ((values = componentValues.txtValues) && (tag = 'txtValues')) ||
-    ((values = componentValues.intValues) && (tag = 'intValues')) ||
-    ((values = componentValues.spanValues) && (tag = 'spanValues'));
- */
-
-  const result = {
-    request: tag === 'spanValues', // default not requested for anything other than time
-    componentName,
+    { componentName, componentValues, count },
     displayName,
-    'palette-name': displayName,
-    'canvas-alias': displayName,
-    reduced: tag !== 'spanValues', // default series for time
-    tag,
-    count,
-    values:
-      tag === 'spanValues'
-        ? {
-            // with a new key = index
-            ...values.map((v) => iniValue(v, tag === 'spanValues')),
-          }
-        : { __ALL__: { value: '__ALL__', request: false } },
-  };
-  if (timeProp) {
-    result.timeProp = timeProp;
-  }
-  return result;
+    timeProp,
+) {
+    const tag = lowerFirstChar(componentValues.__typename);
+    const values = componentValues?.spanValues ?? [];
+
+    /*
+    ((values = componentValues.txtValues) && (tag = 'txtValues')) ||
+      ((values = componentValues.intValues) && (tag = 'intValues')) ||
+      ((values = componentValues.spanValues) && (tag = 'spanValues'));
+   */
+
+    const result = {
+        request: tag === 'spanValues', // default not requested for anything other than time
+        componentName,
+        displayName,
+        'palette-name': displayName,
+        'canvas-alias': displayName,
+        reduced: tag !== 'spanValues', // default series for time
+        tag,
+        count,
+        values:
+            tag === 'spanValues'
+                ? {
+                    // with a new key = index
+                    ...values.map((v) => iniValue(v, tag === 'spanValues')),
+                }
+                : { __ALL__: { value: '__ALL__', request: false } },
+    };
+    if (timeProp) {
+        result.timeProp = timeProp;
+    }
+    return result;
 }
 
 /**
  *
- * obsEtl.subject -> qualities used to instantiate the workbench tree
+ * Utilized (Jul 2023)
  *
- * ⬜ Create an endpoint for the warehouse version of the levels
- *    (the current endpoint for levels uses an array of filenames)
+ * obsEtl.subject -> qualities used to instantiate the workbench tree
  *
  * @function
  * @param {Subject} subject
  * @returns {Array}
  */
 const iniEtlUnitQual = (subject, etlFields) => ({
-  qualityName,
-  qualityValues,
-  count,
-}) => {
-  const etlNameLookup = toEtlFieldName(etlFields);
-
-  return {
-    request: true,
-    subjectType: subject.subjectType,
     qualityName,
-    displayName: etlNameLookup(qualityName),
-    'palette-name': etlNameLookup(qualityName),
-    'canvas-alias': etlNameLookup(qualityName),
-    tag: lowerFirstChar(qualityValues.__typename),
+    qualityValues,
     count,
-    values: { __ALL__: { value: '__ALL__', request: true } },
-    /*
-    values: {
-      ...values.map((v) => iniValue(v)),
-    }, // generates an index
-    */
-  };
+}) => {
+    const etlNameLookup = toEtlFieldName(etlFields);
+
+    return {
+        request: true,
+        subjectType: subject.subjectType,
+        qualityName,
+        displayName: etlNameLookup(qualityName),
+        'palette-name': etlNameLookup(qualityName),
+        'canvas-alias': etlNameLookup(qualityName),
+        tag: lowerFirstChar(qualityValues.__typename),
+        count,
+        values: { __ALL__: { value: '__ALL__', request: true } },
+        /*
+        values: {
+          ...values.map((v) => iniValue(v)),
+        }, // generates an index
+        */
+    };
 };
 
-export { iniEtlUnitMea, iniEtlUnitQual, augmentWarehouseMeasurement };
+export { iniEtlUnitMea, iniEtlUnitQual };

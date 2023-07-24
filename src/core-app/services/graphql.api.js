@@ -21,15 +21,15 @@ const DEBUG = process.env.REACT_APP_DEBUG_GQL === 'true';
  * @return {Object}
  */
 export function extractGql(response) {
-  const error = response.data?.error ?? null;
-  const obsResponseData = response.data?.data?.reqMatrixSpec;
-  const noData = obsResponseData === null;
-  if (response.data.status > 200 || noData || error !== null) {
-    return {
-      error: noData ? `The gql matrix request returned null` : error,
-    };
-  }
-  return { data: obsResponseData };
+    const error = response.data?.error ?? null;
+    const obsResponseData = response.data?.data?.reqMatrixSpec;
+    const noData = obsResponseData === null;
+    if (response.data.status > 200 || noData || error !== null) {
+        return {
+            error: noData ? `The gql matrix request returned null` : error,
+        };
+    }
+    return { data: obsResponseData };
 }
 
 /**
@@ -41,11 +41,11 @@ export function extractGql(response) {
  * @return {Object} data.newObsEtl with subject, measurements keys
  */
 export const initObsEtl = ({ subject, measurements }) => {
-  if (typeof subject === 'undefined') {
-    throw new ApiCallError(`Tried to instantiate obs/mms with undefined`);
-  }
-  return {
-    query: `mutation createObsETL($obsValue: ObsEtlInput!) {
+    if (typeof subject === 'undefined') {
+        throw new ApiCallError(`Tried to instantiate obs/mms with undefined`);
+    }
+    return {
+        query: `mutation createObsETL($obsValue: ObsEtlInput!) {
   newObsEtl(value: $obsValue) {
     subject {
       subjectType
@@ -76,10 +76,10 @@ export const initObsEtl = ({ subject, measurements }) => {
     }
   }
 }`,
-    variables: {
-      obsValue: { subject, measurements },
-    },
-  };
+        variables: {
+            obsValue: { subject, measurements },
+        },
+    };
 };
 
 /**
@@ -90,8 +90,8 @@ export const initObsEtl = ({ subject, measurements }) => {
  * @return {Object} data.newObsEtl with subject, measurements keys
  */
 export const viewObsEtl = () => {
-  return {
-    query: `query view {
+    return {
+        query: `query view {
   getObsEtl {
     id
     subject {
@@ -123,7 +123,7 @@ export const viewObsEtl = () => {
     }
   }
 }`,
-  };
+    };
 };
 
 /**
@@ -136,8 +136,8 @@ export const viewObsEtl = () => {
  * @return {Object} data.data.request query
  */
 export const requestMatrix = (request) => {
-  return {
-    query: `query matrix($request: RequestInput!) {
+    return {
+        query: `query matrix($request: RequestInput!) {
   reqMatrixSpec(requestSpec: $request) {
     fieldCount
     subExpression {
@@ -215,24 +215,24 @@ export const requestMatrix = (request) => {
     }
   }
 }`,
-    variables: {
-      request,
-    },
-  };
+        variables: {
+            request,
+        },
+    };
 };
 
 export const requestFieldNames = (request) => {
-  const normalizer = ({ meaExpressions }) => {
-    return {
-      data: Object.values(meaExpressions).map(
-        ({ filter: { fieldName } }) => fieldName.value,
-      ),
+    const normalizer = ({ meaExpressions }) => {
+        return {
+            data: Object.values(meaExpressions).map(
+                ({ filter: { fieldName } }) => fieldName.value,
+            ),
+        };
     };
-  };
-  return {
-    normalizer,
-    gql: {
-      query: `query matrixFieldNames($request: RequestInput!) {
+    return {
+        normalizer,
+        gql: {
+            query: `query matrixFieldNames($request: RequestInput!) {
   reqMatrixSpec(requestSpec: $request) {
     meaExpressions {
       filter {
@@ -243,11 +243,11 @@ export const requestFieldNames = (request) => {
     }
   }
 }`,
-      variables: {
-        request,
-      },
-    },
-  };
+            variables: {
+                request,
+            },
+        },
+    };
 };
 
 /**
@@ -273,30 +273,30 @@ export const requestFieldNames = (request) => {
  *
  */
 export const requestLevels = ({ filter, ...pagingArgsRaw }) => {
-  //
-  if (DEBUG) {
-    console.log(`graphy.api filter and pagingArgs`);
-    console.dir(filter);
-    console.dir(pagingArgsRaw);
-  }
-  //
-  const { inputType, fieldName } =
-    typeof filter.qualityName !== 'undefined'
-      ? { inputType: 'FromQuality', fieldName: 'fromQuality' }
-      : {
-          fieldName: 'fromComponent',
-          inputType: 'FromComponent',
-        };
+    //
+    if (DEBUG) {
+        console.log(`graphy.api filter and pagingArgs`);
+        console.dir(filter);
+        console.dir(pagingArgsRaw);
+    }
+    //
+    const { inputType, fieldName } =
+        typeof filter.qualityName !== 'undefined'
+            ? { inputType: 'FromQuality', fieldName: 'fromQuality' }
+            : {
+                fieldName: 'fromComponent',
+                inputType: 'FromComponent',
+            };
 
-  const pagingArgs = Object.entries(pagingArgsRaw).reduce(
-    (request, [key, value]) => {
-      return `${request}${key}: ${value},`;
-    },
-    '',
-  );
+    const pagingArgs = Object.entries(pagingArgsRaw).reduce(
+        (request, [key, value]) => {
+            return `${request}${key}: ${value},`;
+        },
+        '',
+    );
 
-  return {
-    query: `query levels($input: ${inputType}) {
+    return {
+        query: `query levels($input: ${inputType}) {
          levels(${fieldName}: $input, ${pagingArgs}) {
            totalCount
            pageInfo {
@@ -315,67 +315,8 @@ export const requestLevels = ({ filter, ...pagingArgsRaw }) => {
            }
          }
        }`,
-    variables: {
-      input: filter,
-    },
-  };
-};
-//
-// dummy request while the workbench is being developed
-//
-export const dummyRequest = () => {
-  const request = {
-    subReq: {
-      subjectType: 'HCP',
-      qualityMix: [
-        {
-          qualityName: 'q_specialty',
-          qualityValues: {
-            txtValues: ['OBGYN', 'NOT HERE'],
-          },
+        variables: {
+            input: filter,
         },
-      ],
-    },
-    meaReqs: [
-      {
-        measurementType: 'm_reachtype',
-        componentMix: [
-          {
-            componentNames: ['type', 'NOT HERE'],
-          },
-          {
-            componentName: 'type',
-            componentValues: {
-              reduced: false,
-              txtValues: ['Open', 'Click'],
-            },
-          },
-          {
-            componentName: 'time',
-            componentValues: {
-              reduced: false,
-              spanValues: [
-                {
-                  rangeStart: 0,
-                  rangeLength: 3,
-                  reduced: true,
-                },
-                {
-                  rangeStart: 3,
-                  rangeLength: 3,
-                  reduced: true,
-                },
-                {
-                  rangeStart: 6,
-                  rangeLength: 3,
-                  reduced: true,
-                },
-              ],
-            },
-          },
-        ],
-      },
-    ],
-  };
-  return request;
+    };
 };
