@@ -16,8 +16,8 @@ on:
         description: 'dummy input, ignore'
 
 jobs:
-
   build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -34,12 +34,10 @@ jobs:
       - name: Build the Kube Docker image
         run: |
           IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
-          # LATEST=ghcr.io/lucivia/frontend:kube
-          docker buildx build . \
-          --file Dockerfile.kube \
+          docker buildx build \
           --cache-to type=gha,mode=max \
           --cache-from type=gha \
-          --tag $IMAGE_ID
-          docker buildx push $IMAGE_ID
+          --tag $IMAGE_ID \
+          --push .
           # docker buildx image tag $IMAGE_ID $LATEST
           # docker buildx push $LATEST
