@@ -1,9 +1,5 @@
 // src/services/graphql.api.js
 
-import { ApiCallError } from '../lib/LuciErrors';
-
-/* eslint-disable no-console */
-
 //
 // use 'graphql-tag' to build graphql using AST
 //
@@ -31,56 +27,6 @@ export function extractGql(response) {
     }
     return { data: obsResponseData };
 }
-
-/**
- *
- * Call to initialize the obs/mms gql server (sets state)
- *
- * @function
- * @param {EtlObj} obsValue The api return value: ObsEtl -> EtlObs
- * @return {Object} data.newObsEtl with subject, measurements keys
- */
-export const initObsEtl = ({ subject, measurements }) => {
-    if (typeof subject === 'undefined') {
-        throw new ApiCallError(`Tried to instantiate obs/mms with undefined`);
-    }
-    return {
-        query: `mutation createObsETL($obsValue: ObsEtlInput!) {
-  newObsEtl(value: $obsValue) {
-    subject {
-      subjectType
-      qualities {
-        qualityName
-        count
-        qualityValues {
-          __typename
-        }
-      }
-    }
-    measurements {
-      measurementType
-      components {
-        componentName
-        count
-        componentValues {
-          __typename
-          ... on SpanValues {
-            spanValues {
-              rangeStart
-              rangeLength
-              reduced
-            }
-          }
-        }
-      }
-    }
-  }
-}`,
-        variables: {
-            obsValue: { subject, measurements },
-        },
-    };
-};
 
 /**
  *
