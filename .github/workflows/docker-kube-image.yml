@@ -35,6 +35,7 @@ jobs:
         run: |
           IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
           docker buildx build \
+          --file Dockerfile.kube \
           --cache-to type=gha,mode=max \
           --cache-from type=gha \
           --tag $IMAGE_ID \
