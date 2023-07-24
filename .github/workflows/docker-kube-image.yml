@@ -33,13 +33,13 @@ jobs:
 
       - name: Build the Kube Docker image
         run: |
-          IMAGE_ID=ghcr.io/lucivia/tnc-py:$GITHUB_RUN_ID
-          LATEST=ghcr.io/lucivia/frontend:kube
+          IMAGE_ID=ghcr.io/lucivia/frontend:$GITHUB_RUN_ID
+          # LATEST=ghcr.io/lucivia/frontend:kube
           docker buildx build . \
           --file Dockerfile.kube \
           --cache-to type=gha,mode=max \
           --cache-from type=gha \
           --tag $IMAGE_ID
-          docker buildx image tag $IMAGE_ID $LATEST
           docker buildx push $IMAGE_ID
-          docker buildx push $LATEST
+          # docker buildx image tag $IMAGE_ID $LATEST
+          # docker buildx push $LATEST
