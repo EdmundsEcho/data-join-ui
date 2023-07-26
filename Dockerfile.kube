@@ -2,16 +2,17 @@
 # hosted on nginx
 
 ################################################################################
-# 1️⃣  react-build environment
+# react-build environment
 ################################################################################
 FROM node:18.10-alpine3.15 as react-build
 
-# 🔖 Copy build configuration files
-#    use .dockerignore to limit activity
+# Stage 1 build dependencies
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
+RUN  yarn install
+
+# Stage 2 build app
 COPY public /frontend/public
-COPY nginx.conf /frontend/nginx.conf
 COPY src /frontend/src
 
 # << here >>
@@ -24,16 +25,15 @@ ENV NODE_ENV=production
 ENV REACT_APP_ENV=production
 ENV PORT=3007
 
-RUN yarn
 RUN yarn build
 
 ################################################################################
-# 2️⃣  production environment
+# production environment
 ################################################################################
 FROM nginx:stable-alpine
 RUN rm -rf /usr/share/nginx/html
 COPY --from=react-build /frontend/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
-COPY --from=react-build /frontend/nginx.conf /etc/nginx/conf.d
+COPY nginx.conf /etc/nginx/conf.d
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
