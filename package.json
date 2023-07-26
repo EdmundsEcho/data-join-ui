@@ -2,7 +2,12 @@
   "name": "LuciApp",
   "version": "0.3.10",
   "description": "Luci ready data and analysis platform",
-  "keywords": ["data", "processing", "analysis", "test-and-control"],
+  "keywords": [
+    "data",
+    "processing",
+    "analysis",
+    "test-and-control"
+  ],
   "main": "src/index.js",
   "private": true,
   "dependencies": {
@@ -68,6 +73,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@testing-library/react": "^8.0.1",
     "all-contributors-cli": "^5.2.1",
     "better-docs": "^2.3.2",
