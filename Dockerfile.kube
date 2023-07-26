@@ -9,6 +9,7 @@ FROM node:18.10-alpine3.15 as react-build
 # Stage 1 build dependencies
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
+WORKDIR /frontend
 RUN  yarn install --verbose
 
 # Stage 2 build app
@@ -17,7 +18,6 @@ COPY src /frontend/src
 
 # << here >>
 COPY .env-kube /frontend/.env
-WORKDIR /frontend
 
 # create the build artifact for docker-compose
 ENV NODE_ENV=production
