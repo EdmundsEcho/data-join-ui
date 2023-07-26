@@ -301,7 +301,7 @@ export function deepRightMerge(...objects) {
 // prettyPrice :: String -> String
 export const prettyPrice = (price) =>
   /* eslint-disable no-nested-ternary */
-  isNaN(price)
+  Number.isNaN(price)
     ? '?'
     : price.toString().indexOf('.') >= 0
     ? price.toString().split('.')[1].length === 2
@@ -459,7 +459,7 @@ export const sanitizeString = (string) => {
   return string.trim();
 };
 
-const whitelist = new RegExp(/([a-z]+)|_/);
+const whitelist = /([a-z]+)|_/;
 
 export const sanitizeTableName = (name) =>
   name

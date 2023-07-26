@@ -606,11 +606,11 @@ export default (mode) => {
             padding: `0 ${theme.spacingFn(4)}`,
             paddingBottom: theme.spacingFn(4),
           }),
-          columnHeaderTitleContainer: ({ theme }) => ({
+          columnHeaderTitleContainer: () => ({
             // a flex box
             alignItems: 'flex-end',
           }),
-          columnHeaderTitle: ({ theme }) => ({
+          columnHeaderTitle: () => ({
             height: 'max-content',
             fontSize: '0.9em',
             lineHeight: '1.1em',
@@ -620,26 +620,26 @@ export default (mode) => {
             wordBreak: 'break-word',
             hyphens: 'auto',
           }),
-          columnSeparator: ({ theme }) => ({
+          columnSeparator: () => ({
             '& > svg': {
               marginTop: 'auto',
             },
           }),
-          cell: ({ theme }) => ({
+          cell: () => ({
             padding: `0 ${spacingFn(4)}`,
             border: 'none',
             '&:focus': {
               outline: 'none',
             },
           }),
-          columnHeaderCheckbox: ({ theme }) => ({
+          columnHeaderCheckbox: () => ({
             '& .MuiDataGrid-columnHeaderTitleContainerContent > svg': {
               height: '1.2rem',
               width: '1.2rem',
               fontSize: '1.2rem',
             },
           }),
-          cellCheckbox: ({ theme }) => ({
+          cellCheckbox: () => ({
             '& > svg': {
               height: '1.2rem',
               width: '1.2rem',
@@ -1169,7 +1169,7 @@ export default (mode) => {
       //--------------------------------------------------------------------------
       MuiStepper: {
         styleOverrides: {
-          root: ({ theme }) => ({}),
+          root: () => ({}),
         },
       },
       //--------------------------------------------------------------------------
@@ -1553,7 +1553,7 @@ export default (mode) => {
       // Popover-paper
       MuiMenu: {
         styleOverrides: {
-          root: ({ theme }) => ({
+          root: () => ({
             '& .MuiMenu-paper': {
               borderRadius: '0.5rem',
               filter: isLightMode ? 'brightness(0.93)' : 'brightness(1.7)',
