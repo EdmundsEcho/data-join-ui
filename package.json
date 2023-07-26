@@ -1,7 +1,7 @@
 {
   "name": "LuciApp",
   "version": "0.3.10",
-  "description": "Luci Ready Data And Analysis",
+  "description": "Luci ready data and analysis platform",
   "keywords": [],
   "main": "src/index.js",
   "private": true,
