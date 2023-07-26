@@ -14,6 +14,8 @@ import './assets/core-app-sizing.css';
 import Root from './Root';
 
 /* eslint-disable no-console */
+console.info(`App name: ${process.env.REACT_APP_NAME}`);
+console.info(`App version: ${process.env.REACT_APP_VERSION}`);
 console.info(`App using react version: ${reactVersion}`);
 console.info(`MATRIX_ENDPOINT: ${process.env.REACT_APP_SAVE_MATRIX_ENDPOINT}`);
 console.info(`AUTH_URL: ${process.env.REACT_APP_USER_AUTH_URL}`);

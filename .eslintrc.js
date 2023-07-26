@@ -222,10 +222,10 @@ module.exports = {
 
   // only use overrides to manage subsets of files in different ways.
   // This means, an override must include a regex to id the subset(s).
-  overrides: [
-    {
-      files: ['**/*.jsx'],
-      rules: {},
-    },
-  ],
+  //overrides: [
+  //  {
+  //    files: ['**/*.jsx'],
+  //    rules: {},
+  //  },
+  //],
 };

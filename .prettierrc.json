@@ -1,5 +1,3 @@
-# copy/paste from .eslintrc
-
 {
   "arrowParens": "always",
   "bracketSpacing": true,

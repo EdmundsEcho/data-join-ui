@@ -1,7 +1,7 @@
 {
-  "name": "luci-dashboard-with-core",
-  "version": "0.3.9",
-  "description": "Wraps core-app with multi-user and project context",
+  "name": "Luci Ready Data and Analysis",
+  "version": "0.3.10",
+  "description": "Core analytics within a multi-user and project context",
   "keywords": [],
   "main": "src/index.js",
   "private": true,
