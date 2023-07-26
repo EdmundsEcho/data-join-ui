@@ -9,7 +9,7 @@ FROM node:18.10-alpine3.15 as react-build
 # Stage 1 build dependencies
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
-RUN  yarn install
+RUN  yarn install --verbose
 
 # Stage 2 build app
 COPY public /frontend/public
