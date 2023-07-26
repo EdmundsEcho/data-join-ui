@@ -100,11 +100,11 @@
     "replace-in-file": "^3.4.0"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "./node_modules/.bin/react-scripts build",
     "docs": "./node_modules/.bin/jsdoc -c ./jsdoc.json",
     "format": "prettier --config ./.prettierrc.json --write '**/*.{js|jsx}'",
     "setup": "node ./scripts/verify && node ./scripts/install && npm run validate && node ./scripts/autofill-feedback-email.js",
-    "start": "react-scripts start --no-cache",
+    "start": "./node_modules/.bin/react-scripts start --no-cache",
     "test": "react-scripts test --env=jsdom",
     "test:coverage": "npm run test -- --coverage",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
