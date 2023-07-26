@@ -1,7 +1,7 @@
 {
-  "name": "Luci Ready Data and Analysis",
+  "name": "LuciApp",
   "version": "0.3.10",
-  "description": "Core analytics within a multi-user and project context",
+  "description": "Luci Ready Data And Analysis",
   "keywords": [],
   "main": "src/index.js",
   "private": true,
