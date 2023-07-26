@@ -17,7 +17,8 @@ import * as H from '../headerview-helpers';
 import { PURPOSE_TYPES } from '../../sum-types';
 
 /**
- * preEtlObj
+ * preEtlObj that is db-compliant
+ * 👎 exposes db implementation
  */
 const etlObjectTransit = (etlObject) => {
     const etlFields = Object.entries(etlObject.etlFields).reduce(
@@ -95,6 +96,8 @@ export function toEtlFieldName(etlFields) {
  * @param {EtlFields} etlFields
  * @return {Object} keyed by fieldName -> sanitizedName
  *
+ * Private, export for testing only
+ *
  */
 export function createNameMap(etlFields) {
     let fieldName = '';
@@ -119,14 +122,9 @@ export function createNameMap(etlFields) {
     }, {});
 }
 
+/* private, export for testing only */
 export function sanitizeFieldName(name) {
     return name.replace(/[\W_]/g, '').toLowerCase();
 }
-/*
-This function is run by tnc-py to generate names for the sql db
-def sanitize_name(name):
-        allowed_chars = re.compile(r'[\W_]+')
-        return allowed_chars.sub('', name).lower().replace(' ', '')
-*/
 
 export default etlObjectTransit;
