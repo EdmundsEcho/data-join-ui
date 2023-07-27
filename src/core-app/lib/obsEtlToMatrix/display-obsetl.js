@@ -18,8 +18,6 @@ import { lowerFirstChar } from '../../utils/common';
  * 2️⃣   Post-process what comes from mms/obs for use by the user
  *     when designing the request.
  *
- * ⚠️  the etlName to reconstruct the etlObject names is a mess.
- *
  * Initialize newly added CompMix entries
  * ... appends request: bool
  *
@@ -31,7 +29,7 @@ import { lowerFirstChar } from '../../utils/common';
  */
 const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
     // closure/memoize for reuse
-    const etlNameLookup = toEtlFieldName(etlFields);
+    // const etlNameLookup = toEtlFieldName(etlFields);
 
     const { measurementType, components } = data;
 
@@ -39,22 +37,21 @@ const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
     const values = Object.keys(components).reduce((acc, k) => {
         //
         // the lookup for time does not work; must go through etlUnit
-        // 🦀 the backend names every mspan field using "time"
-        // 🔖 the displayName is what the user knows about the field
+        // 🔖 the displayName is what the user knows
         //
         const [displayName, timeProp] = components[k].componentValues?.spanValues
             ? [
-                etlUnits[etlNameLookup(measurementType)].mspan,
-                etlFields[etlUnits[etlNameLookup(measurementType)].mspan].time,
+                etlUnits[measurementType].mspan,
+                etlFields[etlUnits[measurementType].mspan].time,
             ]
-            : [etlNameLookup(components[k].componentName), undefined];
+            : [components[k].componentName, undefined];
         acc[k] = iniComponent(components[k], displayName, timeProp);
 
         return acc;
     }, {});
 
     // measurement display name
-    const displayName = etlNameLookup(measurementType);
+    const displayName = measurementType;
 
     return {
         request: true,
@@ -127,20 +124,20 @@ function iniComponent(
  * @param {Subject} subject
  * @returns {Array}
  */
-const iniEtlUnitQual = (subject, etlFields) => ({
+const iniEtlUnitQual = (subject) => ({
     qualityName,
     qualityValues,
     count,
 }) => {
-    const etlNameLookup = toEtlFieldName(etlFields);
+    // const etlNameLookup = toEtlFieldName(etlFields);
 
     return {
         request: true,
         subjectType: subject.subjectType,
         qualityName,
-        displayName: etlNameLookup(qualityName),
-        'palette-name': etlNameLookup(qualityName),
-        'canvas-alias': etlNameLookup(qualityName),
+        displayName: qualityName,
+        'palette-name': qualityName,
+        'canvas-alias': qualityName,
         tag: lowerFirstChar(qualityValues.__typename),
         count,
         values: { __ALL__: { value: '__ALL__', request: true } },

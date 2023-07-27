@@ -77,11 +77,11 @@ import {
 import { Tree } from '../../../lib/obsEtlToMatrix/tree';
 import { moveItemInArray, removeProp } from '../../../utils/common';
 // -----------------------------------------------------------------------------
-// normalize obsetl (db implementation dependent)
-//import {
-//    iniEtlUnitMea,
-//    iniEtlUnitQual,
-//} from '../../../lib/obsEtlToMatrix/display-obsetl';
+// normalize obsetl (can include db hosting spec)
+import {
+    iniEtlUnitMea,
+    iniEtlUnitQual,
+} from '../../../lib/obsEtlToMatrix/display-obsetl';
 //import prepareForTransit from '../../../lib/filesToEtlUnits/transforms/prepare-for-transit';
 // -----------------------------------------------------------------------------
 
@@ -619,23 +619,16 @@ const middleware =
                             // ⬜ This should be something we can configure to better encapsulate
                             //    the tree structure vs how it can be used.
                             //
-                            //const tree = Tree.fromObsEtl(
-                            //  {
-                            //    qualities: subject.qualities.map(
-                            //      iniEtlUnitQual(subject.subjectType, etlFields),
-                            //    ),
-                            //    measurements: measurements.map(
-                            //      iniEtlUnitMea({ etlFields, etlUnits }),
-                            //    ),
-                            //  },
-                            //  3 /* ⚠️  number of canvas stubs (superGroups) */,
-                            //);
                             const tree = Tree.fromObsEtl(
-                                {
-                                    qualities: subject.qualities,
-                                    measurements: measurements,
-                                },
-                                3 /* ⚠️  number of canvas stubs (superGroups) */,
+                              {
+                                qualities: subject.qualities.map(
+                                  iniEtlUnitQual(subject.subjectType),
+                                ),
+                                measurements: measurements.map(
+                                  iniEtlUnitMea({ etlFields, etlUnits }),
+                                ),
+                              },
+                              3 /* ⚠️  number of canvas stubs (superGroups) */,
                             );
 
                             // document the flat version of the tree
