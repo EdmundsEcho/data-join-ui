@@ -27,20 +27,17 @@ import SpanInput from '../../../shared/SpanInput';
  * Displays either a singleton or a group of span values.
  * The collection shares the timeProp for all span values.
  *
- * ⚠️  Retrieving the time prop requires visiting a different state
+ * Note: Is the mspan version of ValueGridWorkbench
+ *
+ * ⚠️  ?? Retrieving the displayed data requires visiting a different state
  *    fragment and "piecing-together" the required lookup values.
  *
  * @component
  *
  */
-const EtlUnitSpanGrid = ({ nodeId }) => {
+const EtlUnitSpanGrid = ({ nodeId, identifier }) => {
   const dispatch = useDispatch();
-  /*
 
-  const mspanName = useSelector((state) =>
-    selectEtlUnit(state, mea.measurementType),
-  );
-  */
 
   // 📖
   const { displayName: etlUnitName, value: spanData } = useSelector((state) =>
@@ -51,13 +48,16 @@ const EtlUnitSpanGrid = ({ nodeId }) => {
     getEtlUnitTimeProp(state, etlUnitName),
   );
 
+  // see ValueGridWorkbench for equivalent
   // from Quality: (valueIdx)
   // from Component: (valueIdx, componentName)
+  // ...where component is mcomp | mspan
+  // dispatch(toggleValue(nodeId, level, identifier, isSelected));
   const handleToggleValue = useCallback(
     (valueIdx) => () => {
-      dispatch(toggleValue(nodeId, valueIdx, 'time'));
+      dispatch(toggleValue(nodeId, valueIdx, identifier));
     },
-    [dispatch, nodeId],
+    [dispatch, nodeId, identifier],
   );
 
   const handleUpdate = useCallback(
@@ -65,13 +65,13 @@ const EtlUnitSpanGrid = ({ nodeId }) => {
       dispatch(
         setSpanValue(
           nodeId,
-          'time', // 🦀
+          identifier, // was 'time' 🦀?
           spanId,
           newSpan,
         ),
       );
     },
-    [dispatch, nodeId],
+    [dispatch, nodeId, identifier],
   );
 
   const displayType =
@@ -104,6 +104,7 @@ const EtlUnitSpanGrid = ({ nodeId }) => {
 
 EtlUnitSpanGrid.propTypes = {
   nodeId: PropTypes.number.isRequired,
+  identifier: PropTypes.string.isRequired,
 };
 
 export default EtlUnitSpanGrid;

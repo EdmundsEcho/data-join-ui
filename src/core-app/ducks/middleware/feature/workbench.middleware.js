@@ -596,6 +596,7 @@ const middleware =
                             );
                         }
                         try {
+                            // pull project_id, graphql data, and etlObj
                             const projectId = getProjectId(getState());
                             const { id, subject, measurements } = getData(action.event.request);
                             const { etlFields, etlUnits } = getEtlObject(getState());

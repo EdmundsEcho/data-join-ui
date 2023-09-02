@@ -15,7 +15,20 @@ import { lowerFirstChar } from '../../utils/common';
  *
  * Utilized (Jul 2023)
  *
- * 2️⃣   Post-process what comes from mms/obs for use by the user
+ * 🚧 Interprets view using both etlObj and graphql data.
+ *    WIP maintain user-view independent from underlying, server-side processing.
+ *
+ * 🟡 Weak-link in design: need to lookup span data using etlObj (user-centric)
+ *    using data from graphql server (may or may not be db-compliant, may or may
+ *    not be user-centric). 💥 How update state with actions.
+ *    🔑 what can you use to find the etlObj data? displayName
+ *
+ *    Augmenting graphql data with etlObj
+ *
+ *      Data not present in graphql required to present workbench view
+ *      - time configuration
+ *
+ * 2️⃣   Post-process what comes from mms/obs graphql for use by the user
  *     when designing the request.
  *
  * Initialize newly added CompMix entries
@@ -28,16 +41,19 @@ import { lowerFirstChar } from '../../utils/common';
  * @return {Object}
  */
 const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
-    // closure/memoize for reuse
+    // closure/memoize with etlObj data for reuse
     // const etlNameLookup = toEtlFieldName(etlFields);
 
+    // 🚧 Should remain user-centric (separate from db-compliant)
     const { measurementType, components } = data;
 
-    // 🔖 components for the measurement are values
-    const values = Object.keys(components).reduce((acc, k) => {
+    // update graphql components for the measurement (mcomp or mspan)
+    const newComponents = Object.keys(components).reduce((acc, k) => {
         //
-        // the lookup for time does not work; must go through etlUnit
-        // 🔖 the displayName is what the user knows
+        // augment the mea component with etlObj timeProp when
+        // graphql component has spanValues
+        //
+        // ?? 🦀 using componentName to set displayName (see iniComponent)
         //
         const [displayName, timeProp] = components[k].componentValues?.spanValues
             ? [
@@ -45,9 +61,11 @@ const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
                 etlFields[etlUnits[measurementType].mspan].time,
             ]
             : [components[k].componentName, undefined];
+
         acc[k] = iniComponent(components[k], displayName, timeProp);
 
         return acc;
+
     }, {});
 
     // measurement display name
@@ -59,7 +77,7 @@ const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
         displayName,
         'palette-name': displayName,
         'canvas-alias': displayName,
-        values,
+        values: newComponents,
     };
 };
 
@@ -70,7 +88,7 @@ const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
  *
  *    Only use for spanValues; other values are not recorded in state.
  */
-const iniValue = (value, requestDefault = true) => {
+const _iniValue = (value, requestDefault = true) => {
     return {
         request: requestDefault,
         value,
@@ -104,7 +122,7 @@ function iniComponent(
             tag === 'spanValues'
                 ? {
                     // with a new key = index
-                    ...values.map((v) => iniValue(v, tag === 'spanValues')),
+                    ...values.map((v) => _iniValue(v, tag === 'spanValues')),
                 }
                 : { __ALL__: { value: '__ALL__', request: false } },
     };
@@ -143,7 +161,7 @@ const iniEtlUnitQual = (subject) => ({
         values: { __ALL__: { value: '__ALL__', request: true } },
         /*
         values: {
-          ...values.map((v) => iniValue(v)),
+          ...values.map((v) => _iniValue(v)),
         }, // generates an index
         */
     };

@@ -323,7 +323,7 @@ function DetailView(props) {
       );
 
     case instanceOf === 'mspan':
-      return <EtlUnitSpanGrid nodeId={nodeId} />;
+      return <EtlUnitSpanGrid nodeId={nodeId} identifier={identifier} />;
 
     default:
       return <div>{`${identifier} ${instanceOf} Unreachable`}</div>;

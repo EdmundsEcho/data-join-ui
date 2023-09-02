@@ -31,7 +31,7 @@ export const getTreeValuesOptions = (tree) => {
       return data.type === 'etlUnit::quality'
         ? [{ identifier: data?.value?.qualityName }]
         : Object.values(data?.value?.values)
-            .filter(({ componentName }) => componentName !== 'time')
+            .filter(({ tag }) => tag !== 'spanValues')
             .map(({ componentName }) => ({
               identifier: componentName,
               measurementType: data?.value?.measurementType,

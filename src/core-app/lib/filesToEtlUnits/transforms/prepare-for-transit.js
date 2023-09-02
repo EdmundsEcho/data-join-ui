@@ -49,7 +49,8 @@ const etlObjectTransit = (etlObject) => {
 /**
  * 📌
  *
- * Utilized (Jul 2023)
+ * Aug 2023
+ * use depends on db-compliant nature of graphql data
  *
  * Initialize with etlFields
  *

@@ -1072,6 +1072,7 @@ function updateNodeData(state, id, newData) {
 }
 //-------------------------------------------------------------------------------
 // Reuse
+// 🔑 uses componentName to update state
 //
 function updateComp(state, action) {
   if (DEBUG) {
