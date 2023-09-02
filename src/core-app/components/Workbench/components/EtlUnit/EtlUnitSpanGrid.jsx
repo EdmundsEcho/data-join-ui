@@ -29,8 +29,11 @@ import SpanInput from '../../../shared/SpanInput';
  *
  * Note: Is the mspan version of ValueGridWorkbench
  *
- * ⚠️  ?? Retrieving the displayed data requires visiting a different state
- *    fragment and "piecing-together" the required lookup values.
+ * See for how state is set
+ *      * display-obsetl
+ *      * workbench-middleware
+ *      * iniValue
+ *
  *
  * @component
  *

@@ -22,6 +22,11 @@ import { lowerFirstChar } from '../../utils/common';
  *    using data from graphql server (may or may not be db-compliant, may or may
  *    not be user-centric). 💥 How update state with actions.
  *    🔑 what can you use to find the etlObj data? displayName
+ *       How maintain user vs db-compliant? Consider:
+ *          componentName -> db-compliant
+ *          displayName, palette-name, canvas-name -> user
+ *      ?? How bridge eltObj with db-compliant (align the sources)?
+ *
  *
  *    Augmenting graphql data with etlObj
  *
