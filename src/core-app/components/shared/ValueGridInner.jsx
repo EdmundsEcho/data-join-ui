@@ -295,7 +295,7 @@ const ValueGridInner = ({
           return onRowClick({
             id: rowModel.id,
             level: rowModel.level,
-            isSelected: !apiRef.current.isRowSelected(rowModel.id), // ⚠️  reverse the interpretation
+            isSelected: apiRef.current.isRowSelected(rowModel.id), // 🟡 🦀 no-longer reversing
           });
         }}
         onColumnHeaderClick={onToggleAll}

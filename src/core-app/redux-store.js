@@ -72,8 +72,8 @@ import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 import { options as devTools } from './redux-tools-cfg';
 
 /* eslint-disable no-console */
-const sagaMiddlewareWithPid = (projectId) =>
-  createSagaMiddleware({ context: { projectId } });
+// const sagaMiddlewareWithPid = (projectId) =>
+//   createSagaMiddleware({ context: { projectId } });
 
 /**
  * See programming with Actions
@@ -147,7 +147,7 @@ const configureStoreProd = (preloadedState) => {
 // Development
 //
 const configureStoreDev2 = (preloadedState) => {
-  console.info(`Loading the Dev Version (v2.6) of the store`);
+  console.info(`Loading the Dev Version (v0.2.7) of the store`);
 
   const sagaMiddleware = createSagaMiddleware();
 

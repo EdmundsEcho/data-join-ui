@@ -13,7 +13,6 @@
  * ✅ LeftPane: User can delete a field
  * ✅ RightPane: User can change etlField props
  * ✅ RightPane: User can change the name of an etlField
- *
  * ⬜ changing field name: copy config state of old name to new name
  *
  * 🔖 The sources prop is a *view*, a subset of what the prop hosts on the
