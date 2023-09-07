@@ -48,9 +48,9 @@ const NewProjectPage = () => {
 // figure out when to display the files
 const mkArtifacts = (projectId) => [
   {
-    name: 'subject-universe.sqlite',
-    description: 'Hosts the complete set of subjects and measurements',
-    endpoint: hitThis(projectId, 'subject-universe.sqlite'),
+    name: 'warehouse.sqlite',
+    description: 'Project warehouse that hosts the full set of subjects, qualities and measurements',
+    endpoint: hitThis(projectId, 'warehouse.sqlite'),
     isReady: (appStatus) => appStatus.isWarehouseReady,
   },
   {
@@ -61,19 +61,12 @@ const mkArtifacts = (projectId) => [
     isReady: (appStatus) => appStatus.isMatrixReady,
   },
   {
-    name: 'matrix.pickle',
+    name: 'matrix.feather',
     description:
       'Hosts the requested data and computed derived fields in the python dataframe format',
-    endpoint: hitThis(projectId, 'matrix.pickle'),
+    endpoint: hitThis(projectId, 'matrix.feather'),
     isReady: (appStatus) => appStatus.isMatrixReady,
-  },
-  {
-    name: 'subject.feather',
-    description:
-      'Part of the series of etlUnits stored in a dataframe compatible format',
-    endpoint: hitThis(projectId, 'subject.feather'),
-    isReady: (appStatus) => appStatus.isWarehouseReady,
-  },
+  }
 ];
 
 const ProjectMeta = () => {

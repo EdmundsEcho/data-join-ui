@@ -104,7 +104,7 @@ const coreMiddleware = [
 // Production
 //
 const configureStoreProd = (preloadedState) => {
-  console.info(`Loading the Prod Version (v2.6) of the store`);
+  console.info(`Loading the Prod Version (v0.2.7) of the store`);
 
   const sagaMiddleware = createSagaMiddleware();
 
