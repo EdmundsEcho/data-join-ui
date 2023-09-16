@@ -208,17 +208,6 @@ const middleware =
                             'cache',
                             state.workbench.tree[parent].data,
                         );
-                        // split the action to select comp values when reduced = false
-                        if (action.type === SET_COMP_REDUCED && action.payload === false) {
-                            dispatch({
-                                type: TOGGLE_VALUE,
-                                id: action.id,
-                                valueOrId: [],
-                                identifier: action.identifier,
-                                isSelected: false
-                            });
-                        }
-
                         // if the parent is a derivedField, add/re-add derived field
                         // send to the top of the middleware stack
                         if (state.workbench.tree[parent].data.displayType === 'derivedField') {
@@ -230,6 +219,18 @@ const middleware =
                                 },
                             });
                         };
+
+                        // split the action to select comp values when reduced = false
+                        if (action.type === SET_COMP_REDUCED && action.payload === false) {
+                            dispatch({
+                                type: TOGGLE_VALUE,
+                                id: action.id,
+                                valueOrId: [],
+                                identifier: action.identifier,
+                                isSelected: false
+                            });
+                        }
+
                         next(tagMatrixState('STALE'));
                         break;
                     }
