@@ -46,6 +46,10 @@ const NewProjectPage = () => {
 };
 
 // figure out when to display the files
+// *.feather
+// warehouse.sqlite
+// matrix.csv
+// matrix.feather
 const mkArtifacts = (projectId) => [
   {
     name: 'warehouse.sqlite',

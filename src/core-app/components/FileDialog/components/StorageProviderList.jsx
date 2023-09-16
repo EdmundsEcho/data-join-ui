@@ -3,6 +3,8 @@
  * Display the list of shared drive services.
  * Manage the authorization process.
  *
+ * Display icons align with DriveRowItem
+ *
  */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -10,7 +12,7 @@ import clsx from 'clsx';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid';
 import { IconButton } from '@mui/material';
-import { Google } from '@mui/icons-material';
+import { Google, CloudUpload } from '@mui/icons-material';
 
 const CustomButton = (props) => {
   return <IconButton {...props} className='auth-button' />;
@@ -51,6 +53,11 @@ const StorageProviderList = ({ authFn, className }) => {
           <Grid item>
             <CustomButton title='Dropbox' onClick={() => authFn('dropbox')}>
               <span className='iconify' data-icon='mdi:dropbox'></span>
+            </CustomButton>
+          </Grid>
+          <Grid item>
+            <CustomButton title='Upload' onClick={() => authFn('lucidrive')}>
+              <CloudUpload />
             </CustomButton>
           </Grid>
         </Grid>

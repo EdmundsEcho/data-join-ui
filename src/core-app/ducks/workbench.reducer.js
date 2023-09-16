@@ -647,7 +647,7 @@ const setRequestValues = (toValue /* values */) => {
 };
 /**
  * Logic to coordinate compOrQualNode value when all values
- * are requested = true |false
+ * are requested = true | false
  */
 const setAll = (compOrQualNode, isSelected) => {
   return {
@@ -837,6 +837,7 @@ const reducer = createReducer(initialState, {
           `valueOrId: ${valueOrId} isSelected: ${isSelected}`,
       );
     }
+    // may be an empty array to signal change all
     const updateGroupOfValues = Array.isArray(valueOrId);
 
     // pull the "prev/current" values from the store

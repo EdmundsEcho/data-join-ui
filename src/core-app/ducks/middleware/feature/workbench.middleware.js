@@ -220,6 +220,16 @@ const middleware =
                                 },
                             });
                         }
+                        // split the action to select comp values when reduced = false
+                        if (action.type === TOGGLE_REDUCED && action.payload === false) {
+                            dispatch({
+                                type: TOGGLE_VALUE,
+                                id: action.id,
+                                valueOrId: [],
+                                identifier: action.identifier,
+                                isSelected: false
+                            });
+                        }
                         next(tagMatrixState('STALE'));
                         break;
                     }

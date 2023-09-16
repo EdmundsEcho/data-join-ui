@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { Google } from '@mui/icons-material';
+import { Google, CloudUpload } from '@mui/icons-material';
 import Icon from '@mui/material/Icon';
 
 function DriveRow(props) {
@@ -24,6 +24,7 @@ function DriveRow(props) {
     google: <Google />,
     msgraph: <span className='iconify' data-icon='mdi:microsoft-azure'></span>,
     dropbox: <span className='iconify' data-icon='mdi:dropbox'></span>,
+    lucidrive: <CloudUpload />,
   }[displayName];
 
   return (
