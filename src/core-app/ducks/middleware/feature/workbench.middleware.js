@@ -209,7 +209,7 @@ const middleware =
                             state.workbench.tree[parent].data,
                         );
                         // split the action to select comp values when reduced = false
-                        if (action.type === TOGGLE_REDUCED && action.payload === false) {
+                        if (action.type === SET_COMP_REDUCED && action.payload === false) {
                             dispatch({
                                 type: TOGGLE_VALUE,
                                 id: action.id,
