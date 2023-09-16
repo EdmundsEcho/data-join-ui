@@ -221,6 +221,8 @@ const middleware =
                             });
                         }
                         // split the action to select comp values when reduced = false
+                        console.log("action:");
+                        console.log(action);
                         if (action.type === TOGGLE_REDUCED && action.payload === false) {
                             dispatch({
                                 type: TOGGLE_VALUE,
