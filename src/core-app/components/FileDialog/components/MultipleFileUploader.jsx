@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+// import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 /* eslint-disable no-console */
 
@@ -26,8 +26,7 @@ const makeUploadUrl = (projectId) => {
   return `https://lucivia.net/v1/upload/${projectId}`;
 };
 
-const MultipleFileUploader = () => {
-  const { projectId } = useParams();
+const MultipleFileUploader = ({projectId}) => {
 
   const [files, setFiles] = useState(() => []);
   // < "initial" | "uploading" | "success" | "fail" >
@@ -97,5 +96,9 @@ const MultipleFileUploader = () => {
     </>
   );
 };
+
+MultipleFileUploader.propTypes = {
+    projectId: PropTypes.string.isRequired
+}
 
 export default MultipleFileUploader;
