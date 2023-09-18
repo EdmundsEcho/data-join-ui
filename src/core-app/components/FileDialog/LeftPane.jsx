@@ -299,7 +299,7 @@ function LeftPane({ projectId, toggleFile }) {
             />
         </CardContent>
         <CardContent className={clsx('Luci-DirectoryView', { hidden: !showUpload })}>
-            <MultipleFileUploader className='Luci-FileUploader'/>
+            <MultipleFileUploader className='Luci-FileUploader' projectId={projectId}/>
         </CardContent>
       </div>
       {/* Data drive providers */}
