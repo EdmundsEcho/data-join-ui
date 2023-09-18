@@ -52,7 +52,7 @@ const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeAuthUrl = (projectId, provider) => {
   // WIP: url endpoint:
   if (provider === 'lucidrive') {
-    return `projects/${projectId || 'dummy-project-id'}/lucidrive`;
+    return `lucidrive`;
   }
   return `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
 };
