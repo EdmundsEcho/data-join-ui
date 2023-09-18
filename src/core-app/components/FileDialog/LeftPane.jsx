@@ -160,21 +160,23 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
   // initial state = [] -> post fetch state
   //
   useEffect(() => {
-    if (fetchStatus === STATUS.UNINITIALIZED && initializingRequestReady) {
-      switch (true) {
-        case !hasHistory: {
-          if (DEBUG) console.log(`HEADER_ fire with no history`);
-          listDirectory(initialRequest);
-          dispatch(pushFetchHistory(initialRequest));
-          break;
+    if (!showUpload) {
+      if (fetchStatus === STATUS.UNINITIALIZED && initializingRequestReady) {
+        switch (true) {
+          case !hasHistory: {
+            if (DEBUG) console.log(`HEADER_ fire with no history`);
+            listDirectory(initialRequest);
+            dispatch(pushFetchHistory(initialRequest));
+            break;
+          }
+          case hasHistory:
+            if (DEBUG) console.log(`HEADER_ fire using history`);
+            listDirectory(previousRequest);
+            break;
+          default:
         }
-        case hasHistory:
-          if (DEBUG) console.log(`HEADER_ fire using history`);
-          listDirectory(previousRequest);
-          break;
-        default:
-      }
-    } // else: user-driven requests for data
+      } // else: user-driven requests for data
+    }
     return cancel;
   }, [
     dispatch,
@@ -185,6 +187,7 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
     cancel,
     listDirectory,
     initializingRequestReady,
+    showUpload,
   ]);
 
   // the deconstructed result used to render the state of the component

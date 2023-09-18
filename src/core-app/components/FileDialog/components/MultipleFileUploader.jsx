@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 /* eslint-disable no-console */
 
@@ -20,10 +21,17 @@ Result.propTypes = {
   status: PropTypes.oneOf(['success', 'fail', 'uploading']).isRequired,
 };
 
+// const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
+const makeUploadUrl = (projectId) => {
+  return `https://lucivia.net/v1/upload/${projectId}`;
+};
+
 const MultipleFileUploader = () => {
-  const [files, setFiles] = useState(null);
+  const { projectId } = useParams();
+
+  const [files, setFiles] = useState(() => []);
   // < "initial" | "uploading" | "success" | "fail" >
-  const [status, setStatus] = useState('initial');
+  const [status, setStatus] = useState(() => 'initial');
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -43,7 +51,7 @@ const MultipleFileUploader = () => {
       });
 
       try {
-        const result = await fetch('https://httpbin.org/post', {
+        const result = await fetch(makeUploadUrl(projectId), {
           method: 'POST',
           body: formData,
         });
