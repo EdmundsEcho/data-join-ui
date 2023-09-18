@@ -26,7 +26,7 @@ const makeUploadUrl = (projectId) => {
   return `https://lucivia.net/v1/upload/${projectId}`;
 };
 
-const MultipleFileUploader = ({projectId}) => {
+const MultipleFileUploader = ({projectId, className}) => {
 
   const [files, setFiles] = useState(() => []);
   // < "initial" | "uploading" | "success" | "fail" >
@@ -67,7 +67,7 @@ const MultipleFileUploader = ({projectId}) => {
   };
 
   return (
-    <>
+    <div className={className}>
       <div className='input-group'>
         <label htmlFor='file' className='sr-only'>
           Choose files
@@ -93,11 +93,12 @@ const MultipleFileUploader = ({projectId}) => {
       )}
 
       <Result status={status} />
-    </>
+    </div>
   );
 };
 
 MultipleFileUploader.propTypes = {
+    className: PropTypes.string.isRequired,
     projectId: PropTypes.string.isRequired
 }
 
