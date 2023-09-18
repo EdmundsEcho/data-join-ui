@@ -83,7 +83,8 @@ function LeftPane({ projectId, toggleFile }) {
   //
   // show the upload component when requested
   const [search] = useSearchParams();
-  const showUpload = search.has('showUpload');
+  const showUploadUrl = search.has('showUpload');
+  const [showUpload, setShowUpload] = useState(() => showUploadUrl)
   console.debug(`%cupload ${showUpload}`, colors.green);
 
   const dispatch = useDispatch(); // 📬
@@ -236,14 +237,18 @@ function LeftPane({ projectId, toggleFile }) {
       : cache.filter((file) => file.display_name.includes(fileViewFilter));
 
   // ---------------------------------------------------------------------------
-  // 🗄️ auth
+  // 🗄️ auth & lucidrive uploading
   const handleDriveAuth = useCallback(
     (provider) => {
-      dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
-      dispatch(clearFetchHistory()); // display root when user-agent returns
-      window.location.replace(makeAuthUrl(projectId, provider));
+      if (provider !== 'lucidrive') {
+        dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
+        dispatch(clearFetchHistory()); // display root when user-agent returns
+        window.location.replace(makeAuthUrl(projectId, provider));
+      } else {
+        setShowUpload(!showUpload);
+      }
     },
-    [dispatch, projectId],
+    [dispatch, projectId, showUpload],
   );
   // ---------------------------------------------------------------------------
   // report on state of the component

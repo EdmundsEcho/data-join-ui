@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 // import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 /* eslint-disable no-console */
@@ -23,7 +24,7 @@ Result.propTypes = {
 
 // const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeUploadUrl = (projectId) => {
-  return `https://lucivia.net/v1/upload/${projectId}`;
+  return `https://www.lucivia.net/v1/upload/${projectId}`;
 };
 
 const MultipleFileUploader = ({projectId, className}) => {
@@ -38,6 +39,8 @@ const MultipleFileUploader = ({projectId, className}) => {
       setFiles(e.target.files);
     }
   };
+
+  [...files].map(file => console.dir(file))
 
   const handleUpload = async () => {
     if (files) {
@@ -82,6 +85,7 @@ const MultipleFileUploader = ({projectId, className}) => {
               <li>Name: {file.name}</li>
               <li>Type: {file.type}</li>
               <li>Size: {file.size} bytes</li>
+              <li>Last modified: {file.lastModified}</li>
             </ul>
           </section>
         ))}

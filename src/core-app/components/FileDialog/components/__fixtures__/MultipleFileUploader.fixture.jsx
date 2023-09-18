@@ -6,10 +6,9 @@ import MultipleFileUploader from '../MultipleFileUploader';
 /* eslint-disable no-console */
 
 const data = {
-  comment: 'Great work',
-  scope: 'bug',
-  context: 'test-page',
-  score: '10',
+  Name: 'upload_this.csv',
+  Type: 'text/csv',
+  Size: '3000 bytes',
 };
 
 const Component = () => {
