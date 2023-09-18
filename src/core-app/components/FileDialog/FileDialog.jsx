@@ -65,25 +65,8 @@ const FileDialog = () => {
   }
 
   // show the upload component when requested
-  const [showingUpload, setShowingUpload] = useState(() => undefined);
-
-  // first set to true by query
   const [search] = useSearchParams();
-  let showUpload = search.get('showUpload') ?? false;
-  useEffect(() => {
-    if (showUpload) {
-      // set the state to true
-      setShowingUpload(true);
-    } else if (!showUpload && showingUpload) {
-      showUpload = true;
-      setShowingUpload(false);
-    } else if (!showUpload && !showingUpload) {
-      showUpload = false;
-    }
-  }, [showUpload, showingUpload]);
-  // remember if displaying upload component (required to live past
-  // left-pane reloads triggered by effects).  May eventually prevent
-  // useEffect when in this state?
+  const showUpload = search.has('showUpload');
   console.debug(`%cupload ${showUpload}`, colors.green);
 
   const leftPaneStyle = useMemo(
@@ -153,15 +136,17 @@ const FileDialog = () => {
 
   // snackbars
   useEffect(() => {
-    if (fileInspectionErrors.length) {
-      fileInspectionErrors.forEach((entry) => {
-        const [path, error] = Object.entries(entry)[0];
-        enqueueSnackbar(`${getFilenameFromPath(path)}: ${error}`, {
-          variant: 'warning',
+    if (!showUpload) {
+      if (fileInspectionErrors.length) {
+        fileInspectionErrors.forEach((entry) => {
+          const [path, error] = Object.entries(entry)[0];
+          enqueueSnackbar(`${getFilenameFromPath(path)}: ${error}`, {
+            variant: 'warning',
+          });
         });
-      });
+      }
     }
-  }, [enqueueSnackbar, fileInspectionErrors]);
+  }, [enqueueSnackbar, fileInspectionErrors, showUpload]);
 
   return (
     /* ROOT VIEW */
