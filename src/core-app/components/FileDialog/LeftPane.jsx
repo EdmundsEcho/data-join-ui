@@ -54,7 +54,7 @@ const makeAuthUrl = (projectId, provider) => {
   if (provider === 'lucidrive') {
     // append to root projects/{project_id} to display component
     // specified in routes.jsx
-    return `lucidrive`;
+    return `files/?upload`;
   }
   return `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
 };
