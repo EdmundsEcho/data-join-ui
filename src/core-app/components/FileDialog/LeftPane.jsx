@@ -52,6 +52,8 @@ const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeAuthUrl = (projectId, provider) => {
   // WIP: url endpoint:
   if (provider === 'lucidrive') {
+    // append to root projects/{project_id} to display component
+    // specified in routes.jsx
     return `lucidrive`;
   }
   return `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
@@ -73,7 +75,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_HEADER_VIEWS === 'true';
  * @component
  *
  */
-function LeftPane({ projectId, toggleFile, upload }) {
+function LeftPane({ projectId, toggleFile, showUpload }) {
   //
   const dispatch = useDispatch(); // 📬
   // local state to update the view of the files
@@ -270,7 +272,7 @@ function LeftPane({ projectId, toggleFile, upload }) {
         {/* ✅ does *not* depend on presence of data */}
         {/* 🔖  ListOfFiles uses fetchStatus (also, file or drives) */}
         <CardContent className='Luci-DirectoryView'>
-          {upload ? (
+          {showUpload ? (
             <MultipleFileUploader />
           ) : (
             <ListOfFiles
@@ -302,10 +304,10 @@ function LeftPane({ projectId, toggleFile, upload }) {
 LeftPane.propTypes = {
   projectId: PropTypes.string.isRequired,
   toggleFile: PropTypes.func.isRequired,
-  upload: PropTypes.bool,
+  showUpload: PropTypes.bool,
 };
 LeftPane.defaultProps = {
-  upload: false,
+  showUpload: false,
 };
 
 export default LeftPane;

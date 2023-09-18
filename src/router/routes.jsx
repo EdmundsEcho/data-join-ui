@@ -121,10 +121,6 @@ export const routesConfig = [
             element: <FileDialog />,
           },
           {
-            path: 'lucidrive',
-            element: <FileDialog upload />,
-          },
-          {
             path: 'fields',
             element: <EtlFieldView />,
           },

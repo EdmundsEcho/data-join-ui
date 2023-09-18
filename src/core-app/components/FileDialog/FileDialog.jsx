@@ -12,7 +12,7 @@
  */
 import React, { useMemo, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
@@ -59,10 +59,14 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
  * @component
  *
  */
-const FileDialog = ({ upload }) => {
+const FileDialog = () => {
   if (DEBUG) {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
+
+  const [search] = useSearchParams();
+  const showUpload = search.get('upload') ?? false;
+  console.debug(`%cupload ${showUpload}`, colors.green);
 
   const leftPaneStyle = useMemo(
     () => ({
@@ -150,18 +154,18 @@ const FileDialog = ({ upload }) => {
       pane2Style={rightPaneStyle}
       minSize={240}
       defaultSize={434}>
-      <LeftPane projectId={projectId} toggleFile={handleToggleFile} />
+      <LeftPane
+        projectId={projectId}
+        toggleFile={handleToggleFile}
+        showUpload={showUpload}
+      />
       <RightPane selectedFiles={selectedFiles} removeFile={handleRemoveFile} />
     </SplitPane>
   );
 };
 
-FileDialog.propTypes = {
-  upload: PropTypes.bool,
-};
-FileDialog.defaultProps = {
-  upload: false,
-};
+FileDialog.propTypes = {};
+FileDialog.defaultProps = {};
 
 function RightPane({ selectedFiles, removeFile }) {
   const title = selectedFiles.length === 1 ? 'file selected' : 'files selected';
