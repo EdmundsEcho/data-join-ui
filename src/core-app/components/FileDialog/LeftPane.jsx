@@ -20,6 +20,7 @@ import CardContent from '@mui/material/CardContent';
 import SearchBar from './components/SearchBar';
 import ListOfFiles from './components/ListOfFiles';
 import StorageProviderList from './components/StorageProviderList';
+import MultipleFileUploader from './components/MultipleFileUploader';
 
 // layout support
 // import useDimensions from '../../hooks/use-react-dimensions';
@@ -48,9 +49,13 @@ import useAbortController from '../../../hooks/use-abort-controller';
 
 //------------------------------------------------------------------------------
 const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
-// e.g., http://localhost:3099/drive
-const makeAuthUrl = (projectId, provider) =>
-  `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
+const makeAuthUrl = (projectId, provider) => {
+  // WIP: url endpoint:
+  if (provider === 'lucidrive') {
+    return `projects/${projectId || 'dummy-project-id'}/lucidrive`;
+  }
+  return `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
+};
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -68,7 +73,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_HEADER_VIEWS === 'true';
  * @component
  *
  */
-function LeftPane({ projectId, toggleFile }) {
+function LeftPane({ projectId, toggleFile, upload }) {
   //
   const dispatch = useDispatch(); // 📬
   // local state to update the view of the files
@@ -265,15 +270,21 @@ function LeftPane({ projectId, toggleFile }) {
         {/* ✅ does *not* depend on presence of data */}
         {/* 🔖  ListOfFiles uses fetchStatus (also, file or drives) */}
         <CardContent className='Luci-DirectoryView'>
-          <ListOfFiles
-            className='list-of-files'
-            files={displayFiles || []}
-            path={pathQuery || ''}
-            fetchDirectory={handleFetchDirectory}
-            fetchParentPath={parentRequest ? handleFetchParentDirectory : null}
-            toggleFile={toggleFile}
-            viewStatus={fetchStatus}
-          />
+          {upload ? (
+            <MultipleFileUploader />
+          ) : (
+            <ListOfFiles
+              className='list-of-files'
+              files={displayFiles || []}
+              path={pathQuery || ''}
+              fetchDirectory={handleFetchDirectory}
+              fetchParentPath={
+                parentRequest ? handleFetchParentDirectory : null
+              }
+              toggleFile={toggleFile}
+              viewStatus={fetchStatus}
+            />
+          )}
         </CardContent>
       </div>
       {/* Data drive providers */}
@@ -291,6 +302,10 @@ function LeftPane({ projectId, toggleFile }) {
 LeftPane.propTypes = {
   projectId: PropTypes.string.isRequired,
   toggleFile: PropTypes.func.isRequired,
+  upload: PropTypes.bool,
+};
+LeftPane.defaultProps = {
+  upload: false,
 };
 
 export default LeftPane;

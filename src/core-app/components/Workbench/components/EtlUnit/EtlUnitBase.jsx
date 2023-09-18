@@ -243,6 +243,8 @@ export function EtlUnitParameter({
  *   mspan: PURPOSE_TYPES.MSPAN,
  * };
  *
+ * TODO: Figure out how to type derived field transformation
+ *
  * @function
  * @param {Object} config
  * @return {Object}
@@ -251,7 +253,7 @@ function etlUnitParameterInstance({ tag, etlUnitType }) {
   switch (true) {
     case tag === 'measurement':
       invariant(
-        etlUnitType === 'measurement',
+        etlUnitType === 'measurement' || etlUnitType === 'transformation',
         `Unexpected etlUnitType: ${etlUnitType}`,
       );
       return {

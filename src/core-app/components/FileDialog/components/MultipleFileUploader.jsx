@@ -1,59 +1,70 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 /* eslint-disable no-console */
 
 const Result = ({ status }) => {
-  if (status === "success") { return <p>✅ Uploaded successfully!</p>; }
-  if (status === "fail") { return <p>❌ Upload failed!</p>; }
-  if (status === "uploading") { return <p>⏳ Uploading started...</p>; }
+  if (status === 'success') {
+    return <p>✅ Uploaded successfully!</p>;
+  }
+  if (status === 'fail') {
+    return <p>❌ Upload failed!</p>;
+  }
+  if (status === 'uploading') {
+    return <p>⏳ Uploading started...</p>;
+  }
   return null;
+};
+
+Result.propTypes = {
+  status: PropTypes.oneOf(['success', 'fail', 'uploading']).isRequired,
 };
 
 const MultipleFileUploader = () => {
   const [files, setFiles] = useState(null);
   // < "initial" | "uploading" | "success" | "fail" >
-  const [status, setStatus] = useState("initial");
+  const [status, setStatus] = useState('initial');
 
   const handleFileChange = (e) => {
     if (e.target.files) {
-      setStatus("initial");
+      setStatus('initial');
       setFiles(e.target.files);
     }
   };
 
   const handleUpload = async () => {
     if (files) {
-      setStatus("uploading");
+      setStatus('uploading');
 
       const formData = new FormData();
 
       [...files].forEach((file) => {
-        formData.append("files", file);
+        formData.append('files', file);
       });
 
       try {
-        const result = await fetch("https://httpbin.org/post", {
-          method: "POST",
+        const result = await fetch('https://httpbin.org/post', {
+          method: 'POST',
           body: formData,
         });
 
         const data = await result.json();
 
         console.log(data);
-        setStatus("success");
+        setStatus('success');
       } catch (error) {
         console.error(error);
-        setStatus("fail");
+        setStatus('fail');
       }
     }
   };
 
   return (
     <>
-      <div className="input-group">
-        <label htmlFor="file" className="sr-only">
+      <div className='input-group'>
+        <label htmlFor='file' className='sr-only'>
           Choose files
-          <input id="file" type="file" multiple onChange={handleFileChange} />
+          <input id='file' type='file' multiple onChange={handleFileChange} />
         </label>
       </div>
       {files &&
@@ -69,8 +80,8 @@ const MultipleFileUploader = () => {
         ))}
 
       {files && (
-        <button onClick={handleUpload} className="submit">
-          Upload {files.length > 1 ? "files" : "a file"}
+        <button type='submit' onClick={handleUpload} className='submit'>
+          Upload {files.length > 1 ? 'files' : 'a file'}
         </button>
       )}
 
@@ -78,6 +89,5 @@ const MultipleFileUploader = () => {
     </>
   );
 };
-
 
 export default MultipleFileUploader;

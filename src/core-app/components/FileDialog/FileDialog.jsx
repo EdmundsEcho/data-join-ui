@@ -59,7 +59,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
  * @component
  *
  */
-const FileDialog = () => {
+const FileDialog = ({ upload }) => {
   if (DEBUG) {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
@@ -156,7 +156,12 @@ const FileDialog = () => {
   );
 };
 
-FileDialog.propTypes = {};
+FileDialog.propTypes = {
+  upload: PropTypes.bool,
+};
+FileDialog.defaultProps = {
+  upload: false,
+};
 
 function RightPane({ selectedFiles, removeFile }) {
   const title = selectedFiles.length === 1 ? 'file selected' : 'files selected';

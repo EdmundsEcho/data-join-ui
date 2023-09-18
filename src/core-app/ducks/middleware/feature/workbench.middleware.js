@@ -221,6 +221,7 @@ const middleware =
                         };
 
                         // split the action to select comp values when reduced = false
+                        // 🦀 Does not seem to work TODO
                         if (action.type === SET_COMP_REDUCED && action.payload === false) {
                             dispatch({
                                 type: TOGGLE_VALUE,

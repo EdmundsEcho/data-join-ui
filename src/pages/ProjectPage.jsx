@@ -51,12 +51,12 @@ const NewProjectPage = () => {
 // matrix.csv
 // matrix.feather
 const mkArtifacts = (projectId) => [
-  {
-    name: 'warehouse.sqlite',
-    description: 'Project warehouse that hosts the full set of subjects, qualities and measurements',
-    endpoint: hitThis(projectId, 'warehouse.sqlite'),
-    isReady: (appStatus) => appStatus.isWarehouseReady,
-  },
+  // {
+  //   name: 'warehouse.sqlite',
+  //   description: 'Project warehouse that hosts the full set of subjects, qualities and measurements',
+  //   endpoint: hitThis(projectId, 'warehouse.sqlite'),
+  //   isReady: (appStatus) => appStatus.isWarehouseReady,
+  // },
   {
     name: 'matrix.csv',
     description:
@@ -70,7 +70,7 @@ const mkArtifacts = (projectId) => [
       'Hosts the requested data and computed derived fields in the python dataframe format',
     endpoint: hitThis(projectId, 'matrix.feather'),
     isReady: (appStatus) => appStatus.isMatrixReady,
-  }
+  },
 ];
 
 const ProjectMeta = () => {
