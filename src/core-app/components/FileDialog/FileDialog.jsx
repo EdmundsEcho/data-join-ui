@@ -10,7 +10,7 @@
  * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
  */
-import React, { useMemo, useEffect, useCallback } from 'react';
+import React, { useMemo, useEffect, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -64,8 +64,26 @@ const FileDialog = () => {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
 
+  // show the upload component when requested
+  const [showingUpload, setShowingUpload] = useState(() => undefined);
+
+  // first set to true by query
   const [search] = useSearchParams();
-  const showUpload = search.get('upload') ?? false;
+  let showUpload = search.get('showUpload') ?? false;
+  useEffect(() => {
+    if (showUpload) {
+      // set the state to true
+      setShowingUpload(true);
+    } else if (!showUpload && showingUpload) {
+      showUpload = true;
+      setShowingUpload(false);
+    } else if (!showUpload && !showingUpload) {
+      showUpload = false;
+    }
+  }, [showUpload, showingUpload]);
+  // remember if displaying upload component (required to live past
+  // left-pane reloads triggered by effects).  May eventually prevent
+  // useEffect when in this state?
   console.debug(`%cupload ${showUpload}`, colors.green);
 
   const leftPaneStyle = useMemo(
