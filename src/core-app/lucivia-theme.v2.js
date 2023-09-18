@@ -1695,6 +1695,9 @@ export default (mode) => {
               marginRight: theme.spacingFn(3), // ⬜ match parent that set left
               fontSize: '1.0vw', // ⬜ match parent that set left
             },
+            '&.hidden': {
+              visibility: 'hidden',
+            },
           }),
         },
       },

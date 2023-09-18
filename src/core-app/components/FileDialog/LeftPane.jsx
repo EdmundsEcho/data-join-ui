@@ -8,6 +8,7 @@
  *
  */
 import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -47,6 +48,9 @@ import { readDirectory } from '../../services/api';
 import { useFetchApi, argsDisplayString } from '../../../hooks/use-fetch-api';
 import useAbortController from '../../../hooks/use-abort-controller';
 
+// debug
+import { colors } from '../../constants/variables';
+
 //------------------------------------------------------------------------------
 const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeAuthUrl = (projectId, provider) => {
@@ -75,8 +79,13 @@ const DEBUG = process.env.REACT_APP_DEBUG_HEADER_VIEWS === 'true';
  * @component
  *
  */
-function LeftPane({ projectId, toggleFile, showUpload }) {
+function LeftPane({ projectId, toggleFile }) {
   //
+  // show the upload component when requested
+  const [search] = useSearchParams();
+  const showUpload = search.has('showUpload');
+  console.debug(`%cupload ${showUpload}`, colors.green);
+
   const dispatch = useDispatch(); // 📬
   // local state to update the view of the files
   // set the filter value for which files to view
@@ -160,23 +169,21 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
   // initial state = [] -> post fetch state
   //
   useEffect(() => {
-    if (!showUpload) {
-      if (fetchStatus === STATUS.UNINITIALIZED && initializingRequestReady) {
-        switch (true) {
-          case !hasHistory: {
-            if (DEBUG) console.log(`HEADER_ fire with no history`);
-            listDirectory(initialRequest);
-            dispatch(pushFetchHistory(initialRequest));
-            break;
-          }
-          case hasHistory:
-            if (DEBUG) console.log(`HEADER_ fire using history`);
-            listDirectory(previousRequest);
-            break;
-          default:
+    if (fetchStatus === STATUS.UNINITIALIZED && initializingRequestReady) {
+      switch (true) {
+        case !hasHistory: {
+          if (DEBUG) console.log(`HEADER_ fire with no history`);
+          listDirectory(initialRequest);
+          dispatch(pushFetchHistory(initialRequest));
+          break;
         }
-      } // else: user-driven requests for data
-    }
+        case hasHistory:
+          if (DEBUG) console.log(`HEADER_ fire using history`);
+          listDirectory(previousRequest);
+          break;
+        default:
+      }
+    } // else: user-driven requests for data
     return cancel;
   }, [
     dispatch,
@@ -187,7 +194,6 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
     cancel,
     listDirectory,
     initializingRequestReady,
-    showUpload,
   ]);
 
   // the deconstructed result used to render the state of the component
@@ -274,10 +280,7 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
         </CardActions>
         {/* ✅ does *not* depend on presence of data */}
         {/* 🔖  ListOfFiles uses fetchStatus (also, file or drives) */}
-        <CardContent className='Luci-DirectoryView'>
-          {showUpload ? (
-            <MultipleFileUploader />
-          ) : (
+        <CardContent className={clsx('Luci-DirectoryView', { hidden: showUpload })}>
             <ListOfFiles
               className='list-of-files'
               files={displayFiles || []}
@@ -289,7 +292,9 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
               toggleFile={toggleFile}
               viewStatus={fetchStatus}
             />
-          )}
+        </CardContent>
+        <CardContent className={clsx('Luci-DirectoryView', { hidden: !showUpload })}>
+            <MultipleFileUploader />
         </CardContent>
       </div>
       {/* Data drive providers */}
@@ -307,10 +312,7 @@ function LeftPane({ projectId, toggleFile, showUpload }) {
 LeftPane.propTypes = {
   projectId: PropTypes.string.isRequired,
   toggleFile: PropTypes.func.isRequired,
-  showUpload: PropTypes.bool,
 };
-LeftPane.defaultProps = {
-  showUpload: false,
-};
+LeftPane.defaultProps = {};
 
 export default LeftPane;

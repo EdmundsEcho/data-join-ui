@@ -10,9 +10,9 @@
  * ⬇ LeftPane (ListOfFiles) & RightPane (SelectedListOfFiles)
  *
  */
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
+import React, { useMemo, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
@@ -63,11 +63,6 @@ const FileDialog = () => {
   if (DEBUG) {
     console.debug(`%crendering FileDialog component`, colors.green);
   }
-
-  // show the upload component when requested
-  const [search] = useSearchParams();
-  const showUpload = search.has('showUpload');
-  console.debug(`%cupload ${showUpload}`, colors.green);
 
   const leftPaneStyle = useMemo(
     () => ({
@@ -136,17 +131,15 @@ const FileDialog = () => {
 
   // snackbars
   useEffect(() => {
-    if (!showUpload) {
-      if (fileInspectionErrors.length) {
+    if (fileInspectionErrors.length) {
         fileInspectionErrors.forEach((entry) => {
           const [path, error] = Object.entries(entry)[0];
           enqueueSnackbar(`${getFilenameFromPath(path)}: ${error}`, {
             variant: 'warning',
           });
         });
-      }
     }
-  }, [enqueueSnackbar, fileInspectionErrors, showUpload]);
+  }, [enqueueSnackbar, fileInspectionErrors]);
 
   return (
     /* ROOT VIEW */
@@ -160,7 +153,6 @@ const FileDialog = () => {
       <LeftPane
         projectId={projectId}
         toggleFile={handleToggleFile}
-        showUpload={showUpload}
       />
       <RightPane selectedFiles={selectedFiles} removeFile={handleRemoveFile} />
     </SplitPane>
