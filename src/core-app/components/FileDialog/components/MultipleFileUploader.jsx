@@ -48,12 +48,12 @@ const MultipleFileUploader = ({projectId, className}) => {
       const formData = new FormData();
 
       // append to files (coordinate with tnc-py)
+      // (reuse the same key to create an index)
       [...files].forEach((file) => {
         formData.append('files', file);
       });
 
-      console.dir("Debugging output of input");
-      console.dir(formData);
+      console.log("🦀 Debugging output of input");
       console.debug(formData);
 
       try {
