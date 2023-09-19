@@ -34,13 +34,12 @@ const MultipleFileUploader = ({projectId, className}) => {
   const [status, setStatus] = useState(() => 'initial');
 
   const handleFileChange = (e) => {
+        // save the file objects
     if (e.target.files) {
       setStatus('initial');
       setFiles(e.target.files);
     }
   };
-
-  [...files].map(file => console.dir(file))
 
   const handleUpload = async () => {
     if (files) {
@@ -49,7 +48,7 @@ const MultipleFileUploader = ({projectId, className}) => {
       const formData = new FormData();
 
       [...files].forEach((file) => {
-        formData.append('files', file);
+        formData.append('file', file);
       });
 
       try {
@@ -74,7 +73,10 @@ const MultipleFileUploader = ({projectId, className}) => {
       <div className='input-group'>
         <label htmlFor='file' className='sr-only'>
           Choose files
-          <input id='file' type='file' multiple onChange={handleFileChange} />
+          <input id='upload-files'
+                 type='file'
+                 multiple
+                 onChange={handleFileChange} />
         </label>
       </div>
       {files &&
