@@ -1693,7 +1693,8 @@ export default (mode) => {
               flex: 1,
               overflow: 'inherit',
               marginRight: theme.spacingFn(3), // ⬜ match parent that set left
-              fontSize: '1.5vw', // ⬜ match parent that set left
+              // fontSize: '1.2vw', // ⬜ match parent that set left
+              fontSize: '1.0rem', // ⬜ match parent that set left
             },
             '&.hidden': {
               visibility: 'hidden',
