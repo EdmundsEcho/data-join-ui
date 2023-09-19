@@ -52,6 +52,10 @@ const MultipleFileUploader = ({projectId, className}) => {
         formData.append('files', file);
       });
 
+      console.dir("Debugging output of input");
+      console.dir(formData);
+      console.debug(formData);
+
       try {
         const result = await fetch(makeUploadUrl(projectId), {
           method: 'POST',
