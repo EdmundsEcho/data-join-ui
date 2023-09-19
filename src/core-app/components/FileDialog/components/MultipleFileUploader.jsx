@@ -80,6 +80,7 @@ const MultipleFileUploader = ({projectId, className}) => {
           Choose files
           <input id='upload-files'
                  type='file'
+                 name='files'
                  multiple
                  onChange={handleFileChange} />
         </label>
