@@ -459,6 +459,18 @@ button.stepbar.nav.next,
 .Luci-DirectoryView.drive-providers {
     background: transparent;
 }
+/* luci-drive file uploading */
+input.Lucidrive.hidden-input {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    white-space: nowrap;
+    width: 1;
+}
 /* absolute positioned items */
 .stepbar.logo {
     position: absolute;

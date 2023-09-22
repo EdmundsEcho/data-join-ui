@@ -84,8 +84,7 @@ function LeftPane({ projectId, toggleFile }) {
   // show the upload component when requested
   const [search] = useSearchParams();
   const showUploadUrl = search.has('showUpload');
-  const [showUpload, setShowUpload] = useState(() => showUploadUrl)
-  console.debug(`%cupload ${showUpload}`, colors.green);
+  const [showUpload, setShowUpload] = useState(() => showUploadUrl);
 
   const dispatch = useDispatch(); // 📬
   // local state to update the view of the files
@@ -285,7 +284,8 @@ function LeftPane({ projectId, toggleFile }) {
         </CardActions>
         {/* ✅ does *not* depend on presence of data */}
         {/* 🔖  ListOfFiles uses fetchStatus (also, file or drives) */}
-        <CardContent className={clsx('Luci-DirectoryView', { hidden: showUpload })}>
+        {!showUpload ? (
+          <CardContent className={clsx('Luci-DirectoryView')}>
             <ListOfFiles
               className='list-of-files'
               files={displayFiles || []}
@@ -297,10 +297,15 @@ function LeftPane({ projectId, toggleFile }) {
               toggleFile={toggleFile}
               viewStatus={fetchStatus}
             />
-        </CardContent>
-        <CardContent className={clsx('Luci-DirectoryView', { hidden: !showUpload })}>
-            <MultipleFileUploader className='Luci-FileUploader' projectId={projectId}/>
-        </CardContent>
+          </CardContent>
+        ) : (
+          <CardContent className={clsx('Luci-DirectoryView')}>
+            <MultipleFileUploader
+              className='Luci-FileUploader'
+              projectId={projectId}
+            />
+          </CardContent>
+        )}
       </div>
       {/* Data drive providers */}
       {/* ✅ does *not* depend on presence of data */}

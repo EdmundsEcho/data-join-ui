@@ -1570,6 +1570,23 @@ export default (mode) => {
           },
         },
       },
+      //--------------------------------------------------------------------------
+      // ListItems
+      MuiList: {
+        styleOverrides: {
+          root: {
+            '&.Luci-FileUploader': {
+              width: '90%',
+              '& .MuiListItemText-primary': {
+                fontSize: '1.05rem',
+              },
+              '& .MuiListItemText-secondary': {
+                fontSize: '0.85rem',
+              },
+            },
+          },
+        },
+      },
       // ------------------------------------------------------------------------------
       // SpanInput Icon and Avatar
       // ------------------------------------------------------------------------------

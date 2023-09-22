@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ConsoleLog from '../../../shared/ConsoleLog'
+import ConsoleLog from '../../../shared/ConsoleLog';
 import MultipleFileUploader from '../MultipleFileUploader';
 
 /* eslint-disable no-console */
@@ -14,7 +14,10 @@ const data = {
 const Component = () => {
   return (
     <div style={{ margin: '20px', width: '300px' }}>
-      <MultipleFileUploader />
+      <MultipleFileUploader
+        className='Luci-FileUploader'
+        projectId='dummy-project-id'
+      />
       <p />
       <ConsoleLog value={data} advancedView expanded />
     </div>
