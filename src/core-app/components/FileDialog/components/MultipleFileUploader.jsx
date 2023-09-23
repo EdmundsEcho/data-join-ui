@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
@@ -18,6 +18,8 @@ import ListItemText from '@mui/material/ListItemText';
 import FileIcon from '@mui/icons-material/InsertDriveFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import { useUploadForm } from '../../../../hooks';
+
 /* eslint-disable no-console */
 
 // const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
@@ -29,6 +31,7 @@ const MultipleFileUploader = ({ projectId, className }) => {
   const [files, setFiles] = useState(() => []);
   // < "initial" | "uploading" | "success" | "fail" >
   const [status, setStatus] = useState(() => 'initial');
+  const [progress, setProgress] = useState(() => 0);
 
   const handleFileChange = (e) => {
     // save the file objects
@@ -48,21 +51,48 @@ const MultipleFileUploader = ({ projectId, className }) => {
     if (files) {
       setStatus('uploading');
 
+      const files_ = Array.from(files);
+
       const formData = new FormData();
 
       // append to files (coordinate with tnc-py)
       // (reuse the same key to create an index)
-      [...files].forEach((file) => {
+      files_.forEach((file) => {
         formData.append('files', file);
       });
 
       try {
-        const result = await fetch(makeUploadUrl(projectId), {
+        const response = await fetch(makeUploadUrl(projectId), {
           method: 'POST',
           body: formData,
         });
 
-        const data = await result.json();
+        // total length
+        const reader = response.body.getReader();
+        const length = response.headers.get('Content-Length');
+        let received = 0;
+
+        const onReadChunk = (chunk) => {
+          // Each chunk has a `done` property. If it's done,
+          if (chunk.done) {
+            setStatus('success');
+            return;
+          }
+
+          // If it's not done, increment the received variable, and the bar's fill.
+          received += chunk.value.length;
+          setProgress(received / length);
+
+          console.debug(` 👉 progress: ${progress}`);
+
+          // Keep reading, and keep doing this AS LONG AS IT'S NOT DONE.
+          reader.read().then(onReadChunk);
+        };
+
+        // Do the first read().
+        reader.read().then(onReadChunk);
+
+        const data = await response.json();
 
         console.log(data);
         setStatus('success');
