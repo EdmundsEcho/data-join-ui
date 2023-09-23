@@ -1,19 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
 import clsx from 'clsx';
 import moment from 'moment';
 
-import { styled } from '@mui/material/styles';
-
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 
 import FileIcon from '@mui/icons-material/InsertDriveFile';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -65,32 +67,37 @@ const MultipleFileUploader = ({ projectId, className }) => {
         const response = await fetch(makeUploadUrl(projectId), {
           method: 'POST',
           body: formData,
+          headers: {
+            Accept:
+              'application/json, application/xml, text/plain, text/html, *.*',
+            'Content-Type': 'multipart/form-data',
+          },
         });
 
         // total length
-        const reader = response.body.getReader();
-        const length = response.headers.get('Content-Length');
-        let received = 0;
+        //const reader = response.body.getReader();
+        //const length = response.headers.get('Content-Length');
+        //let received = 0;
 
-        const onReadChunk = (chunk) => {
-          // Each chunk has a `done` property. If it's done,
-          if (chunk.done) {
-            setStatus('success');
-            return;
-          }
+        //const onReadChunk = (chunk) => {
+        //  // Each chunk has a `done` property. If it's done,
+        //  if (chunk.done) {
+        //    setStatus('success');
+        //    return;
+        //  }
 
-          // If it's not done, increment the received variable, and the bar's fill.
-          received += chunk.value.length;
-          setProgress(received / length);
+        //  // If it's not done, increment the received variable, and the bar's fill.
+        //  received += chunk.value.length;
+        //  setProgress(Math.round((received / length) * 100));
 
-          console.debug(` 👉 progress: ${progress}`);
+        //  console.debug(` 👉 progress: ${progress}`);
 
-          // Keep reading, and keep doing this AS LONG AS IT'S NOT DONE.
-          reader.read().then(onReadChunk);
-        };
+        //  // Keep reading, and keep doing this AS LONG AS IT'S NOT DONE.
+        //  reader.read().then(onReadChunk);
+        //};
 
         // Do the first read().
-        reader.read().then(onReadChunk);
+        // reader.read().then(onReadChunk);
 
         const data = await response.json();
 
@@ -152,6 +159,7 @@ const MultipleFileUploader = ({ projectId, className }) => {
             </Button>
           </CardActions>
           <Result status={status} />
+          <CircularProgressWithLabel value={progress} />;
         </div>
       )}
     </Card>
@@ -200,6 +208,37 @@ function Result({ status }) {
 Result.propTypes = {
   status: PropTypes.oneOf(['initial', 'success', 'fail', 'uploading'])
     .isRequired,
+};
+
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant='determinate' {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Typography variant='caption' component='div' color='text.secondary'>
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+CircularProgressWithLabel.propTypes = {
+  /**
+   * The value of the progress indicator for the determinate variant.
+   * Value between 0 and 100.
+   * @default 0
+   */
+  value: PropTypes.number.isRequired,
 };
 
 export default MultipleFileUploader;
