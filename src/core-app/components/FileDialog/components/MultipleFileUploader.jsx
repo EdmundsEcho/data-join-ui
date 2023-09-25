@@ -67,8 +67,7 @@ const MultipleFileUploader = ({ projectId, className }) => {
     if (files) {
       const formData = new FormData();
 
-      // append to files (coordinate with tnc-py)
-      // (reuse the same key to create an index)
+      // use the same key to create an index; files match tnc-py
       [...files].forEach((file) => {
         formData.append('files', file);
       });
