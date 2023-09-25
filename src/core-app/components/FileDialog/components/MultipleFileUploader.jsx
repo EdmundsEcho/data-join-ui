@@ -24,6 +24,21 @@ import { useUploadForm } from '../../../../hooks';
 
 /* eslint-disable no-console */
 
+const configUppy = {
+  id: 'luci-file-uploader',
+  autoProceed: false,
+  debug: true,
+  allowMultipleUpladBatches: true,
+
+  restrictions: {
+    maxNumberOfFiles: 20,
+    minNumberOfFiles: 1,
+    allowFilesTyps: ['csv'],
+    maxTotalFileSize: 100 * 1024 * 1024,
+    maxFileSize: 80 * 1024 * 1024,
+    minFileSize: 16,
+  },
+};
 // const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeUploadUrl = (projectId) => {
   return `https://www.lucivia.net/v1/upload/${projectId}`;
@@ -31,14 +46,13 @@ const makeUploadUrl = (projectId) => {
 
 const MultipleFileUploader = ({ projectId, className }) => {
   const [files, setFiles] = useState(() => []);
-  // < "initial" | "uploading" | "success" | "fail" >
-  const [status, setStatus] = useState(() => 'initial');
-  const [progress, setProgress] = useState(() => 0);
+  const { isLoading, progress, status, uploadForm } = useUploadForm(
+    makeUploadUrl(projectId),
+  );
 
   const handleFileChange = (e) => {
     // save the file objects
     if (e.target.files) {
-      setStatus('initial');
       setFiles(e.target.files);
     }
   };
@@ -51,62 +65,17 @@ const MultipleFileUploader = ({ projectId, className }) => {
 
   const handleUpload = async () => {
     if (files) {
-      setStatus('uploading');
-
-      const files_ = Array.from(files);
-
       const formData = new FormData();
 
       // append to files (coordinate with tnc-py)
       // (reuse the same key to create an index)
-      files_.forEach((file) => {
+      [...files].forEach((file) => {
         formData.append('files', file);
       });
+      const response = uploadForm(formData);
+      const data = await response.json();
 
-      try {
-        const response = await fetch(makeUploadUrl(projectId), {
-          method: 'POST',
-          body: formData,
-          headers: {
-            Accept:
-              'application/json, application/xml, text/plain, text/html, *.*',
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        // total length
-        //const reader = response.body.getReader();
-        //const length = response.headers.get('Content-Length');
-        //let received = 0;
-
-        //const onReadChunk = (chunk) => {
-        //  // Each chunk has a `done` property. If it's done,
-        //  if (chunk.done) {
-        //    setStatus('success');
-        //    return;
-        //  }
-
-        //  // If it's not done, increment the received variable, and the bar's fill.
-        //  received += chunk.value.length;
-        //  setProgress(Math.round((received / length) * 100));
-
-        //  console.debug(` 👉 progress: ${progress}`);
-
-        //  // Keep reading, and keep doing this AS LONG AS IT'S NOT DONE.
-        //  reader.read().then(onReadChunk);
-        //};
-
-        // Do the first read().
-        // reader.read().then(onReadChunk);
-
-        const data = await response.json();
-
-        console.log(data);
-        setStatus('success');
-      } catch (error) {
-        console.error(error);
-        setStatus('fail');
-      }
+      console.log(data);
     }
   };
 
@@ -159,7 +128,7 @@ const MultipleFileUploader = ({ projectId, className }) => {
             </Button>
           </CardActions>
           <Result status={status} />
-          <CircularProgressWithLabel value={progress} />;
+          {isLoading && <CircularProgressWithLabel value={progress} />}
         </div>
       )}
     </Card>
