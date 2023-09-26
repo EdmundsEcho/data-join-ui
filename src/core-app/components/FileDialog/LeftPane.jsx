@@ -49,17 +49,11 @@ import { useFetchApi, argsDisplayString } from '../../../hooks/use-fetch-api';
 import useAbortController from '../../../hooks/use-abort-controller';
 
 // debug
-import { colors } from '../../constants/variables';
+// import { colors } from '../../constants/variables';
 
 //------------------------------------------------------------------------------
 const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeAuthUrl = (projectId, provider) => {
-  // WIP: url endpoint:
-  if (provider === 'lucidrive') {
-    // append to root projects/{project_id} to display component
-    // specified in routes.jsx
-    return `?showUpload=true`;
-  }
   return `${DRIVE_AUTH_URL}/${provider}/${projectId}`;
 };
 //------------------------------------------------------------------------------
@@ -303,6 +297,7 @@ function LeftPane({ projectId, toggleFile }) {
             <MultipleFileUploader
               className='Luci-FileUploader'
               projectId={projectId}
+              hideMe={() => setShowUpload(false)}
             />
           </CardContent>
         )}

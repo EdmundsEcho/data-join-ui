@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
-import moment from 'moment';
+// import moment from 'moment';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -24,27 +24,12 @@ import { useUploadForm } from '../../../../hooks';
 
 /* eslint-disable no-console */
 
-const configUppy = {
-  id: 'luci-file-uploader',
-  autoProceed: false,
-  debug: true,
-  allowMultipleUpladBatches: true,
-
-  restrictions: {
-    maxNumberOfFiles: 20,
-    minNumberOfFiles: 1,
-    allowFilesTyps: ['csv'],
-    maxTotalFileSize: 100 * 1024 * 1024,
-    maxFileSize: 80 * 1024 * 1024,
-    minFileSize: 16,
-  },
-};
 // const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
 const makeUploadUrl = (projectId) => {
   return `https://www.lucivia.net/v1/upload/${projectId}`;
 };
 
-const MultipleFileUploader = ({ projectId, className }) => {
+const MultipleFileUploader = ({ projectId, className, hideMe }) => {
   const [files, setFiles] = useState(() => []);
   const { isLoading, progress, status, uploadForm } = useUploadForm(
     makeUploadUrl(projectId),
@@ -61,7 +46,8 @@ const MultipleFileUploader = ({ projectId, className }) => {
   };
 
   const showSelectButton = files.length === 0;
-  console.log(`👉 files in state: ${files.length}`);
+  const showFilesUpload = progress === 0;
+  // console.log(`👉 files in state: ${files.length}`);
 
   const handleUpload = async () => {
     if (files) {
@@ -71,10 +57,10 @@ const MultipleFileUploader = ({ projectId, className }) => {
       [...files].forEach((file) => {
         formData.append('files', file);
       });
-      const response = uploadForm(formData);
-      // const data = await response.json();
 
-      console.dir(response);
+      // 🟢 start uploading
+      uploadForm(formData);
+      hideMe();
     }
   };
 
@@ -93,7 +79,12 @@ const MultipleFileUploader = ({ projectId, className }) => {
         />
       </CardActions>
 
-      {files.length > 0 && (
+      {!showFilesUpload && (
+        <CardActions>
+          <CircularProgressWithLabel value={progress} />
+        </CardActions>
+      )}
+      {files.length > 0 && showFilesUpload && (
         <div>
           <CardContent>
             <List className='Luci-FileUploader'>
@@ -114,7 +105,7 @@ const MultipleFileUploader = ({ projectId, className }) => {
                   </ListItemIcon>
                   <ListItemText
                     primary={file.name}
-                    secondary={`${file.size} ${file.type}`}
+                    secondary={`${file.size}bytes  ${file.type}`}
                   />
                   {/* lastModified */}
                 </ListItem>
@@ -122,31 +113,27 @@ const MultipleFileUploader = ({ projectId, className }) => {
             </List>
           </CardContent>
           <CardActions>
-            {isLoading ? (
-              <CircularProgressWithLabel value={progress} />
-            ) : (
-              <Button
-                type='submit'
-                onClick={handleUpload}
-                className='upload-files submit'
-                component='label'
-                size='small'
-                color='primary'
-                variant='contained'>
-                Upload
-              </Button>
-            )}
+            <Button
+              type='submit'
+              onClick={handleUpload}
+              className='upload-files submit'
+              component='label'
+              size='small'
+              color='primary'
+              variant='contained'>
+              Upload
+            </Button>
           </CardActions>
-          <Result status={status} />
         </div>
       )}
     </Card>
   );
 };
-
+// <Result status={status} />
 MultipleFileUploader.propTypes = {
   className: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
+  hideMe: PropTypes.func.isRequired,
 };
 
 function InputFileUpload({ onChange, showSelectButton }) {

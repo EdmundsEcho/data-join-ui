@@ -10,7 +10,7 @@ const styles = (theme) => ({
     '&.AppBarSearchInput': {
       padding: '8px 12px 8px 6px',
       alignItems: 'center',
-      backgroundColor: theme.palette.grey[100],
+      backgroundColor: '#f5f5f5',
       '& .input': {
         flex: 1,
       },

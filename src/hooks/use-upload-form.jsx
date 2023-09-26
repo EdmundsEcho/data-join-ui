@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-/* eslint-disable no-console */
+/* eslint-disable no-console, no-shadow */
 
 export const useUploadForm = (url) => {
   const [status, setStatus] = useState(() => 'initializing'); // 'successful', 'failed'
@@ -13,11 +13,11 @@ export const useUploadForm = (url) => {
     try {
       const response = await axios.post(url, formData, {
         onUploadProgress: (progressEvent) => {
-          console.dir(progressEvent);
           const { loaded, total } = progressEvent;
           const progress = Math.floor((loaded * 100) / total);
-          console.log(progress);
           setProgress(() => progress);
+          // console.debug(progressEvent);
+          // console.debug(progress);
         },
         headers: { 'Content-Type': 'multipart/form-data' },
       });
