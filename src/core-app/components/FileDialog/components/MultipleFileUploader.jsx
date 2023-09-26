@@ -122,7 +122,10 @@ const MultipleFileUploader = ({ projectId, className }) => {
             </List>
           </CardContent>
           <CardActions>
-            <Button type='submit' onClick={handleUpload} className='submit'>
+            <Button
+              type='submit'
+              onClick={handleUpload}
+              className='upload-files submit'>
               Upload
             </Button>
           </CardActions>

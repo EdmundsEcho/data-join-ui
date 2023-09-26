@@ -1,3 +1,4 @@
+// NOT UTILIZED
 // Get DOM elements to interact with.
 const fetchButton = document.querySelector('#fetch-button');
 const resetButton = document.querySelector('#reset-button');

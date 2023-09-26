@@ -1576,6 +1576,7 @@ export default (mode) => {
         styleOverrides: {
           root: {
             '&.Luci-FileUploader': {
+              backgroundColor: 'inherit',
               width: '90%',
               '& .MuiListItemText-primary': {
                 fontSize: '1.05rem',
