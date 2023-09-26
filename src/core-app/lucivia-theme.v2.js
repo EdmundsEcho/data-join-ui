@@ -1576,7 +1576,6 @@ export default (mode) => {
         styleOverrides: {
           root: {
             '&.Luci-FileUploader': {
-              backgroundColor: 'inherit',
               width: '90%',
               '& .MuiListItemText-primary': {
                 fontSize: '1.05rem',
@@ -1723,6 +1722,9 @@ export default (mode) => {
       MuiCard: {
         styleOverrides: {
           root: ({ theme }) => ({
+            '&.Luci-FileUploader': {
+              backgroundColor: 'inherit',
+            },
             //---------------------------------------------------------------------
             // Luci-matrix
             // Most of the formatting occurs in the MuiDataGrid

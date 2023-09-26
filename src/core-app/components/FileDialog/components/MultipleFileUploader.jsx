@@ -128,7 +128,11 @@ const MultipleFileUploader = ({ projectId, className }) => {
               <Button
                 type='submit'
                 onClick={handleUpload}
-                className='upload-files submit'>
+                className='upload-files submit'
+                component='label'
+                size='small'
+                color='primary'
+                variant='contained'>
                 Upload
               </Button>
             )}
@@ -150,6 +154,8 @@ function InputFileUpload({ onChange, showSelectButton }) {
     <Button
       className={clsx({ hidden: !showSelectButton })}
       component='label'
+      size='small'
+      color='primary'
       variant='contained'>
       Select files
       <input
