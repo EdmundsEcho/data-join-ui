@@ -72,9 +72,9 @@ const MultipleFileUploader = ({ projectId, className }) => {
         formData.append('files', file);
       });
       const response = uploadForm(formData);
-      const data = await response.json();
+      // const data = await response.json();
 
-      console.log(data);
+      console.dir(response);
     }
   };
 
