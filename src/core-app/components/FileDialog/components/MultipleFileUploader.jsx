@@ -35,6 +35,10 @@ const MultipleFileUploader = ({ projectId, className, hideMe }) => {
     makeUploadUrl(projectId),
   );
 
+  if (status === 'successful') {
+    hideMe();
+  }
+
   const handleFileChange = (e) => {
     // save the file objects
     if (e.target.files) {
@@ -60,7 +64,6 @@ const MultipleFileUploader = ({ projectId, className, hideMe }) => {
 
       // 🟢 start uploading
       uploadForm(formData);
-      hideMe();
     }
   };
 
