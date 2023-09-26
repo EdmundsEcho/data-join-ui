@@ -127,7 +127,7 @@ const MultipleFileUploader = ({ projectId, className }) => {
             </Button>
           </CardActions>
           <Result status={status} />
-          {isLoading && <CircularProgressWithLabel value={progress.pc} />}
+          {isLoading && <CircularProgressWithLabel value={progress} />}
         </div>
       )}
     </Card>

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export const useUploadForm = (url) => {
   const [status, setStatus] = useState(() => 'initializing'); // 'successful', 'failed'
-  const [progress, setProgress] = useState(() => ({ pc: 0 }));
+  const [progress, setProgress] = useState(() => 0);
   const [isLoading, setIsLoading] = useState(() => false);
 
   const uploadForm = async (formData) => {
@@ -13,9 +13,11 @@ export const useUploadForm = (url) => {
     try {
       const response = await axios.post(url, formData, {
         onUploadProgress: (progressEvent) => {
-          setProgress((prevState) => {
-            return { ...prevState, pc: progressEvent.progress * 100 };
-          });
+          console.dir(progressEvent);
+          const { loaded, total } = progressEvent;
+          const progress = Math.floor((loaded * 100) / total);
+          console.log(progress);
+          setProgress(() => progress);
         },
         headers: { 'Content-Type': 'multipart/form-data' },
       });
