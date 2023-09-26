@@ -192,7 +192,7 @@
     /* margin: 16px auto 8px auto; */
 /* } */
 .new-project > button,
-.upload-files button,
+.upload-files > button,
 .project-form.root button,
 .error-page.root button,
 .user-profile.root button {

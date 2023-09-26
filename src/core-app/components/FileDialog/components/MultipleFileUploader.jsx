@@ -122,15 +122,18 @@ const MultipleFileUploader = ({ projectId, className }) => {
             </List>
           </CardContent>
           <CardActions>
-            <Button
-              type='submit'
-              onClick={handleUpload}
-              className='upload-files submit'>
-              Upload
-            </Button>
+            {isLoading ? (
+              <CircularProgressWithLabel value={progress} />
+            ) : (
+              <Button
+                type='submit'
+                onClick={handleUpload}
+                className='upload-files submit'>
+                Upload
+              </Button>
+            )}
           </CardActions>
           <Result status={status} />
-          {isLoading && <CircularProgressWithLabel value={progress} />}
         </div>
       )}
     </Card>
