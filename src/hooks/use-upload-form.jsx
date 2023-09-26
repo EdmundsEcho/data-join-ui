@@ -5,7 +5,7 @@ import axios from 'axios';
 
 export const useUploadForm = (url) => {
   const [status, setStatus] = useState(() => 'initializing'); // 'successful', 'failed'
-  const [progress, setProgress] = useState(() => 0);
+  const [progress, setProgress] = useState(() => ({ pc: 0 }));
   const [isLoading, setIsLoading] = useState(() => false);
 
   const uploadForm = async (formData) => {
