@@ -23,10 +23,10 @@ import {
   READ_DIR_START,
   READ_DIR_SUCCESS,
   READ_DIR_ERROR,
-  CLEAR_FETCH_HISTORY,
   PUSH_FETCH_HIST,
   POP_FETCH_HIST,
   SET_DIR_STATUS,
+  SHOW_ROOT_FETCH_HIST,
   STATUS,
 } from './actions/fileView.actions';
 import { RESET } from './actions/project-meta.actions';
@@ -160,11 +160,17 @@ const reducer = createReducer(initialState, {
     ...state,
     requests: popRequest(state.requests)[1],
   }),
-
-  // document
-  [CLEAR_FETCH_HISTORY]: (state) => ({
+  // document (project_id required; lookup post drive auth)
+  [SHOW_ROOT_FETCH_HIST]: (state, { payload: projectId }) => ({
     ...state,
-    requests: undefined,
+    requests: [
+      {
+        project_id: projectId,
+        token_id: null,
+        path_query: null,
+        display_name: 'Data sources',
+      },
+    ],
     readdirErrors: [],
     status: STATUS.idle,
   }),

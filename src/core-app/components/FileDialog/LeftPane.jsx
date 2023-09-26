@@ -39,7 +39,7 @@ import {
   fetchDirectorySuccess,
   pushFetchHistory,
   popFetchHistory,
-  clearFetchHistory,
+  showRootFetchHistory,
   setDirStatus,
   STATUS,
 } from '../../ducks/actions/fileView.actions';
@@ -241,7 +241,7 @@ function LeftPane({ projectId, toggleFile }) {
     (provider) => {
       if (provider !== 'lucidrive') {
         dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
-        dispatch(clearFetchHistory()); // display root when user-agent returns
+        dispatch(showRootFetchHistory(projectId)); // display root when user-agent returns
         window.location.replace(makeAuthUrl(projectId, provider));
       } else {
         setShowUpload(!showUpload);
