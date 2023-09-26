@@ -196,8 +196,7 @@ function LeftPane({ projectId, toggleFile }) {
     : initialRequest;
 
   // ---------------------------------------------------------------------------
-  // User-driven fetch request
-  // child directory
+  // User-driven fetch request - child directory
   const handleFetchDirectory = useCallback(
     (newRequest_) => {
       if (fetchStatus !== STATUS.pending) {
@@ -213,7 +212,7 @@ function LeftPane({ projectId, toggleFile }) {
     },
     [dispatch, previousRequest, fetchStatus, listDirectory],
   );
-  // parent directory
+  // ... - parent directory
   const handleFetchParentDirectory = useCallback(() => {
     if (fetchStatus !== STATUS.pending) {
       setFileViewFilter(''); // reset the local view filter
@@ -235,14 +234,20 @@ function LeftPane({ projectId, toggleFile }) {
     (provider) => {
       if (provider !== 'lucidrive') {
         dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
-        dispatch(showRootFetchHistory(projectId)); // display root when user-agent returns
+        dispatch(showRootFetchHistory({ projectId })); // display root when user-agent returns
         window.location.replace(makeAuthUrl(projectId, provider));
       } else {
-        setShowUpload(!showUpload);
+        setShowUpload((/* prev */) => true);
       }
     },
-    [dispatch, projectId, showUpload],
+    [dispatch, projectId],
   );
+
+  const handleCompletedLucidriveUpload = useCallback(() => {
+    setShowUpload((/* prev */) => false);
+    dispatch(showRootFetchHistory({ projectId })); // display root when user-agent returns
+  }, [dispatch, projectId]);
+
   // ---------------------------------------------------------------------------
   // report on state of the component
   // ---------------------------------------------------------------------------
@@ -297,7 +302,7 @@ function LeftPane({ projectId, toggleFile }) {
             <MultipleFileUploader
               className='Luci-FileUploader'
               projectId={projectId}
-              hideMe={() => setShowUpload(false)}
+              hideMe={handleCompletedLucidriveUpload}
             />
           </CardContent>
         )}

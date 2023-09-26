@@ -35,6 +35,7 @@ const MultipleFileUploader = ({ projectId, className, hideMe }) => {
     makeUploadUrl(projectId),
   );
 
+  // TODO: work on error handling
   if (status === 'successful') {
     hideMe();
   }
