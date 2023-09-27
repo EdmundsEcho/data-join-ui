@@ -7,7 +7,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-// import makeStyles from '@mui/styles/makeStyles';
 import TablePagination from '@mui/material/TablePagination';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
@@ -22,17 +21,10 @@ import SearchIcon from '@mui/icons-material/SearchRounded';
 import TextField from '../../../shared/TextField';
 import ToggleIncludeField from '../../../shared/ToggleIncludeField';
 
-// likely deprecate
-// import styles from './etlUnit.styles';
-// last
-
-// const useStyles = makeStyles(styles);
-
 /**
  * className ValueSearchToolbar
  */
 const ValueSearchToolbar = ({ toggleAll }) => {
-  // const classes = useStyles();
   const classes = { root: null };
   return (
     <div className={clsx(classes.root, 'AppBarSearchInput')}>
