@@ -255,13 +255,6 @@ function LeftPane({ projectId, toggleFile }) {
   const handleCompletedLucidriveUpload = useCallback(() => {
     setShowUpload((/* prev */) => false);
     listDirectory(previousRequest);
-    /*
-    listDirectory({
-      project_id: projectId,
-      token_id: 'idrive',
-      path_query: null,
-      display_name: 'lucidrive',
-    }); */
   }, [listDirectory, previousRequest]);
 
   // ---------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -54,7 +54,7 @@ const MultipleFileUploader = ({ projectId, className, hideMe }) => {
   const showFilesUpload = progress === 0;
   // console.log(`👉 files in state: ${files.length}`);
 
-  const handleUpload = async () => {
+  const handleUpload = useCallback(async () => {
     if (files) {
       const formData = new FormData();
 
@@ -64,9 +64,9 @@ const MultipleFileUploader = ({ projectId, className, hideMe }) => {
       });
 
       // 🟢 start uploading
-      uploadForm(formData);
+      await uploadForm(formData);
     }
-  };
+  }, [files, uploadForm]);
 
   /* display states
    * 1. no files selected
