@@ -161,7 +161,7 @@ const reducer = createReducer(initialState, {
     requests: popRequest(state.requests)[1],
   }),
   // document (project_id required; lookup post drive auth)
-  // ... called prior to using luci-drive file uploader
+  // ... called *prior* to using luci-drive file uploader (or auth)
   [PUSH_ROOT_FETCH_HIST]: (
     state,
     { payload: { projectId, tokenId = undefined, displayName = undefined } },

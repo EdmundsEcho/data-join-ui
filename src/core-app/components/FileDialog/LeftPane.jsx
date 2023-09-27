@@ -189,7 +189,7 @@ function LeftPane({ projectId, toggleFile }) {
     initializingRequestReady,
   ]);
 
-  // the deconstructed result used to render the state of the component
+  // read the fetch history to set display location and query
   const { path_query: pathQuery, display_name: displayName } = hasHistory
     ? previousRequest
     : initialRequest;
@@ -231,6 +231,7 @@ function LeftPane({ projectId, toggleFile }) {
   // 🗄️ auth & lucidrive uploading
   const handleDriveAuth = useCallback(
     (provider) => {
+      // reset the search history and re-pull the list of files
       dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
       dispatch(pushRootFetchHistory({ projectId })); // display root when user-agent returns
 
@@ -238,6 +239,14 @@ function LeftPane({ projectId, toggleFile }) {
         window.location.replace(makeAuthUrl(projectId, provider));
       } else {
         setShowUpload((/* prev */) => true);
+        dispatch(
+          pushFetchHistory({
+            project_id: projectId,
+            token_id: 'idrive',
+            path_query: null,
+            display_name: 'lucidrive',
+          }),
+        ); // display idrive root when user-agent returns
       }
     },
     [dispatch, projectId],
@@ -245,13 +254,15 @@ function LeftPane({ projectId, toggleFile }) {
 
   const handleCompletedLucidriveUpload = useCallback(() => {
     setShowUpload((/* prev */) => false);
+    listDirectory(previousRequest);
+    /*
     listDirectory({
       project_id: projectId,
       token_id: 'idrive',
       path_query: null,
       display_name: 'lucidrive',
-    });
-  }, [listDirectory, projectId]);
+    }); */
+  }, [listDirectory, previousRequest]);
 
   // ---------------------------------------------------------------------------
   // report on state of the component
