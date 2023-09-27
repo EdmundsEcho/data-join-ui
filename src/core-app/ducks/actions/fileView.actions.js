@@ -21,7 +21,7 @@ export const READ_DIR_SUCCESS = `${FILEVIEW} READ_DIR_SUCCESS`; // event
 export const READ_DIR_ERROR = `${FILEVIEW} READ_DIR_ERROR`; // event
 
 export const SET_DIR_STATUS = `${FILEVIEW} SET_DIR_STATUS`; // document
-export const SHOW_ROOT_FETCH_HIST = `${FILEVIEW} SHOW_ROOT_FETCH_HIST (REQUESTS)`; // document
+export const PUSH_ROOT_FETCH_HIST = `${FILEVIEW} PUSH_ROOT_FETCH_HIST (REQUESTS)`; // document
 export const PUSH_FETCH_HIST = `${FILEVIEW} PUSH_FETCH_HIST`; // document
 export const POP_FETCH_HIST = `${FILEVIEW} POP_FETCH_HIST`; // document
 
@@ -43,9 +43,9 @@ export const popFetchHistory = () => {
     type: POP_FETCH_HIST,
   };
 };
-export const showRootFetchHistory = (payload) => {
+export const pushRootFetchHistory = (payload) => {
   return {
-    type: SHOW_ROOT_FETCH_HIST,
+    type: PUSH_ROOT_FETCH_HIST,
     payload,
   };
 };

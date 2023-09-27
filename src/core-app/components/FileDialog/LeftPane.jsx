@@ -38,8 +38,8 @@ import {
 import {
   fetchDirectorySuccess,
   pushFetchHistory,
+  pushRootFetchHistory,
   popFetchHistory,
-  showRootFetchHistory,
   setDirStatus,
   STATUS,
 } from '../../ducks/actions/fileView.actions';
@@ -75,12 +75,11 @@ const DEBUG = process.env.REACT_APP_DEBUG_HEADER_VIEWS === 'true';
  */
 function LeftPane({ projectId, toggleFile }) {
   //
-  // show the upload component when requested
-  const [search] = useSearchParams();
-  const showUploadUrl = search.has('showUpload');
-  const [showUpload, setShowUpload] = useState(() => showUploadUrl);
-
   const dispatch = useDispatch(); // 📬
+
+  // show the upload component when requested
+  const [showUpload, setShowUpload] = useState(() => false);
+
   // local state to update the view of the files
   // set the filter value for which files to view
   const [fileViewFilter, setFileViewFilter] = useState(() => '');
@@ -232,9 +231,10 @@ function LeftPane({ projectId, toggleFile }) {
   // 🗄️ auth & lucidrive uploading
   const handleDriveAuth = useCallback(
     (provider) => {
+      dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
+      dispatch(pushRootFetchHistory({ projectId })); // display root when user-agent returns
+
       if (provider !== 'lucidrive') {
-        dispatch(setDirStatus(STATUS.idle)); // re-run the initial fetch when done
-        dispatch(showRootFetchHistory({ projectId })); // display root when user-agent returns
         window.location.replace(makeAuthUrl(projectId, provider));
       } else {
         setShowUpload((/* prev */) => true);
@@ -245,8 +245,13 @@ function LeftPane({ projectId, toggleFile }) {
 
   const handleCompletedLucidriveUpload = useCallback(() => {
     setShowUpload((/* prev */) => false);
-    dispatch(showRootFetchHistory({ projectId })); // display root when user-agent returns
-  }, [dispatch, projectId]);
+    listDirectory({
+      project_id: projectId,
+      token_id: 'idrive',
+      path_query: null,
+      display_name: 'lucidrive',
+    });
+  }, [listDirectory, projectId]);
 
   // ---------------------------------------------------------------------------
   // report on state of the component

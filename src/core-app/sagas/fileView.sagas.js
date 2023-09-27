@@ -1,5 +1,7 @@
 /**
  *
+ * DEPRECATED - using useFetchApi hook instead
+ *
  * Maintain the list of files in the active directory.
  *
  * 🔖 Critical that it only export the watch function for the sagas
@@ -7,7 +9,6 @@
  *
  * ⬜ Likely change to middleware that leverages the API core
  *
- * DEPRECATED - using useFetchApi hook instead
  *
  * @module src/sagas/fileView.sagas
  *
