@@ -2,32 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-import makeStyles from '@mui/styles/makeStyles';
-
 import IconButton from '@mui/material/IconButton';
 import ErrorIconFilled from '@mui/icons-material/Error';
 
-const useStyles = makeStyles((theme) => ({
-  buttonAnimate: {
-    width: '30px',
-    height: '30px',
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(0),
-    marginLeft: theme.spacing(3),
-    color: theme.palette.error.main,
-  },
-  buttonStatic: {
-    width: '25px',
-    height: '25px',
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(0),
-    marginLeft: theme.spacing(3),
-    color: theme.palette.error.main,
-  },
-  hidden: {
-    display: 'none',
-  },
-}));
+//const useStyles = makeStyles((theme) => ({
+//  buttonAnimate: {
+//    width: '30px',
+//    height: '30px',
+//    marginTop: theme.spacing(5),
+//    marginBottom: theme.spacing(0),
+//    marginLeft: theme.spacing(3),
+//    color: theme.palette.error.main,
+//  },
+//  buttonStatic: {
+//    width: '25px',
+//    height: '25px',
+//    marginTop: theme.spacing(5),
+//    marginBottom: theme.spacing(0),
+//    marginLeft: theme.spacing(3),
+//    color: theme.palette.error.main,
+//  },
+//  hidden: {
+//    display: 'none',
+//  },
+//}));
 
 /**
  *
