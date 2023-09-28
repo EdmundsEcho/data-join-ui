@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-// import CssBaseline from '@mui/material/CssBaseline';
 
 import { SnackbarProvider } from 'notistack';
 
@@ -51,14 +50,12 @@ const Root = () => {
       <Provider store={store}>
         <ThemeContext.Provider value={contextValue}>
           <ThemeProvider theme={theme}>
-            <StyledEngineProvider injectFirst>
-              <BrowserRouter>
-                <SnackbarProvider maxSnack={3} preventDuplicate>
-                  <Dashboard />
-                  <ModalRoot themeMode={themeMode} />
-                </SnackbarProvider>
-              </BrowserRouter>
-            </StyledEngineProvider>
+            <BrowserRouter>
+              <SnackbarProvider maxSnack={3} preventDuplicate>
+                <Dashboard />
+                <ModalRoot themeMode={themeMode} />
+              </SnackbarProvider>
+            </BrowserRouter>
           </ThemeProvider>
         </ThemeContext.Provider>
       </Provider>

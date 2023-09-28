@@ -490,6 +490,17 @@ input.Lucidrive.hidden-input {
     flex: 1;
 }
 /* --------------------------------------------------------------------------- */
+/* Inpsection related */
+
+div.WideToLongCard-FactorWithMenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+div.WideToLongCard-FactorWithMenu > .text {
+    flex-grow: 1;
+}
+/* --------------------------------------------------------------------------- */
 /* workbench */
 .EtlUnitBase-root.palette,
 .EtlUnitBase-root.canvas {
@@ -540,12 +551,24 @@ div.workbench.button-group {
     z-index: 9;
 }
 div.workbench.button-group * {
-    color: #fff;
+    color: #FFFFFF;
 }
 .Luci-Workbench-board > .palette-root {
     padding: 10px;
 }
 
+.Luci-Workbench.etlUnit.tools {
+    display: 'flex';
+    flex-direction: 'row';
+    align-items: 'flex-start';
+    padding: 10px;
+}
+.Luci-Workbench.etlUnit.tools > .button.menu {
+    width: 24px;
+}
+.Luci-Workbench.etlUnit.tools .EtlUnit-CardHeader-Tools {
+      padding: 0;
+}
 /* Span inputs */
 .MuiSpanInput--01 {
     background-color: var(--color-secondary-dark);
@@ -917,17 +940,49 @@ div.root.AppBarSearchInput {
  div.root.AppBarSearchInput.header-root > .EtlUnit-CardHeader-Name > .MuiFormControl-root {
      display: flex;
 }
-/* ---------------------------------------- */
-/* ⬜ Use MuiTypography + classname to input this in overrides */
+/* miscellaneous theme.typography.etlUnit.componentsInputText and the like */
 .componentsInputText {
-    font-family: 'Lato';
-    font-size: 0.8rem;
-  }
-.componentsHelperText {
-          font-family: 'Lato';
-          font-size: 0.6rem;
-          lineHeight: 0.6rem;
-          color: #334343;
+     font-family: 'Lato';
+     font-size: 0.8rem;
+}
+ .componentsHelperText {
+     font-family: 'Lato';
+     font-size: 0.6rem;
+     line-height: 0.6rem;
+     color: var(--color-primary-main);
+}
+ .componentsInputLabel {
+     font-family: 'Lato';
+     font-size: 0.6rem;
+     line-height: 0.6rem;
+}
+ .componentsInputTextSpanInput {
+     font-family: 'Lato';
+     font-size: 10px;
+     line-height: 19px;
+}
+/* ---------------------------------------- */
+/* upload progress */
+.Luci-Circular-Progress {
+     display: inline-flex;
+     position: relative;
+}
+.Luci-Circular-Progress > * + * {
+     width: 100%;
+     height: 100%;
+}
+.Luci-Circular-Progress > .label {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Luci-Circular-Progress > .label > * {
+    /* font-size: 0.7rem; */
 }
 
 /* ---------------------------------------- */

@@ -41,16 +41,14 @@ export default ({ children }) => {
       <ReduxMock>
         <ThemeContext.Provider value={contextValue}>
           <ThemeProvider theme={theme}>
-            <StyledEngineProvider injectFirst>
-              <BrowserRouter>
-                <SnackbarProvider maxSnack={3}>
-                  <DragDropContext>
-                    <CssBaseline />
-                    {children}
-                  </DragDropContext>
-                </SnackbarProvider>
-              </BrowserRouter>
-            </StyledEngineProvider>
+            <BrowserRouter>
+              <SnackbarProvider maxSnack={3}>
+                <DragDropContext>
+                  <CssBaseline />
+                  {children}
+                </DragDropContext>
+              </SnackbarProvider>
+            </BrowserRouter>
           </ThemeProvider>
         </ThemeContext.Provider>
       </ReduxMock>

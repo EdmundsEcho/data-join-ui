@@ -4,34 +4,32 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 // import moment from 'moment';
 
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
 
 import FileIcon from '@mui/icons-material/InsertDriveFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import CircularProgress from '../../shared/CircularProgress';
 import { useUploadForm } from '../../../../hooks';
 
 /* eslint-disable no-console */
 
-// const DRIVE_AUTH_URL = process.env.REACT_APP_DRIVE_AUTH_URL;
+const LUCI_DRIVE_URL = process.env.REACT_APP_LUCI_DRIVE_URL;
 const makeUploadUrl = (projectId) => {
-  return `https://www.lucivia.net/v1/upload/${projectId}`;
+  return `${LUCI_DRIVE_URL}/${projectId}`;
 };
 
 const MultipleFileUploader = ({ projectId, className, hideMe }) => {
   const [files, setFiles] = useState(() => []);
-  const { isLoading, progress, status, uploadForm } = useUploadForm(
+  const { /* isLoading, */ progress, status, uploadForm } = useUploadForm(
     makeUploadUrl(projectId),
   );
 
@@ -85,7 +83,7 @@ const MultipleFileUploader = ({ projectId, className, hideMe }) => {
 
       {!showFilesUpload && (
         <CardActions>
-          <CircularProgressWithLabel value={progress} />
+          <CircularProgress value={progress} />
         </CardActions>
       )}
       {files.length > 0 && showFilesUpload && (
@@ -179,37 +177,6 @@ function Result({ status }) {
 Result.propTypes = {
   status: PropTypes.oneOf(['initial', 'success', 'fail', 'uploading'])
     .isRequired,
-};
-
-function CircularProgressWithLabel(props) {
-  return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <CircularProgress variant='determinate' {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Typography variant='caption' component='div' color='text.secondary'>
-          {`${Math.round(props.value)}%`}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-CircularProgressWithLabel.propTypes = {
-  /**
-   * The value of the progress indicator for the determinate variant.
-   * Value between 0 and 100.
-   * @default 0
-   */
-  value: PropTypes.number.isRequired,
 };
 
 export default MultipleFileUploader;

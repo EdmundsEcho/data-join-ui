@@ -1,4 +1,3 @@
-// import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 import { useSelect } from 'react-cosmos/fixture';
 import Span from '../Span';

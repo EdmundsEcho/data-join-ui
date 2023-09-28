@@ -6,15 +6,20 @@ import { useSelector } from 'react-redux';
 import { getSelected, selectHeaderView } from '../../../ducks/rootSelectors';
 
 import ValueGridFileLevels from '../ValueGridFileLevels';
+
+import ReduxMock from '../../../../cosmos.mock-store';
+import initialState from '../../../datasets/store_v4.json';
+
 import ConsoleLog from '../ConsoleLog';
 import { PURPOSE_TYPES, FIELD_TYPES } from '../../../lib/sum-types';
 
-/* eslint-disable no-shadow, react/prop-types */
+/* eslint-disable no-console, no-shadow, react/prop-types */
 
 const Component = ({ hideConsole }) => {
   const filename = useSelector((state) => getSelected(state)).find((filename) =>
     filename.includes('sava'),
   );
+  console.log(`filename: ${filename}`);
 
   const qualityField = useSelector((state) =>
     selectHeaderView(state, filename),
@@ -36,4 +41,9 @@ const Component = ({ hideConsole }) => {
   );
 };
 
-export default Component;
+const fixtures = (
+  <ReduxMock initialState={initialState}>
+    <Component />
+  </ReduxMock>
+);
+export default fixtures;

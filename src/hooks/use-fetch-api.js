@@ -16,7 +16,7 @@ import {
   areSimilarObjects,
   equal,
 } from '../core-app/constants/variables';
-import { ApiTncError, DesignError } from '../core-app/lib/LuciErrors';
+import { DesignError } from '../core-app/lib/LuciErrors';
 
 import useAbortController from './use-abort-controller';
 import { useSharedFetchApi, is200ResponseError } from './use-shared-fetch-api';

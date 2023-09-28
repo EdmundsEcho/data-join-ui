@@ -7,6 +7,9 @@ import ValueGridFileLevels from '../ValueGridFileLevels';
 
 import { getSelected, selectHeaderView } from '../../../ducks/rootSelectors';
 
+import ReduxMock from '../../../../cosmos.mock-store';
+import initialState from '../../../datasets/store_v4.json';
+
 import ConsoleLog from '../ConsoleLog';
 import { PURPOSE_TYPES } from '../../../lib/sum-types';
 
@@ -45,8 +48,7 @@ const Component = () => {
             toggleErrorState(true);
           }
         }
-        FallbackComponent={Fallback}
-      >
+        FallbackComponent={Fallback}>
         {!inErrorState && (
           <ValueGridFileLevels getValue={(prop) => qualityField[prop]} />
         )}
@@ -55,4 +57,9 @@ const Component = () => {
   );
 };
 
-export default Component;
+const fixtures = (
+  <ReduxMock initialState={initialState}>
+    <Component />
+  </ReduxMock>
+);
+export default fixtures;

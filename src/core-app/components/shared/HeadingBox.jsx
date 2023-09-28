@@ -4,10 +4,6 @@
  * @module components/HeadingBox
  *
  * @description
- * A styled-component
- *
- * ⬜ Refactor to use a more traditional Material-UI approach.
- *
  * 🦀 The div role button continues to have a tabindex despite setting
  *    its value to zero.
  *

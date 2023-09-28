@@ -4,7 +4,6 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-import makeStyles from '@mui/styles/makeStyles';
 import IconButton from '@mui/material/IconButton';
 import MoreVert from '@mui/icons-material/MoreVert';
 
@@ -13,23 +12,8 @@ import ShowDetail from './ShowDetail';
 
 import { ToolContext } from './ToolContext';
 
-//
-// ⬜ get rid of makeStyles
-//
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    // target child
-    '& .EtlUnit-CardHeader-Tools': {
-      padding: '0px',
-    },
-  },
-  menu: {
-    width: '24px',
-  },
-});
+const tags = ['quality', 'measurement', 'txtValues', 'intValues', 'spanValues'];
+const etlUnitTypes = ['quality', 'measurement'];
 
 /**
  * Add-on for a header
@@ -40,7 +24,6 @@ const useStyles = makeStyles({
  *     👉 menu
  */
 function Tools({ onClickMenu, tag, etlUnitType }) {
-  const classes = useStyles();
   const {
     // setShowDetail, ⬜ read from stateId record
     // setSwitchOn,
@@ -54,7 +37,7 @@ function Tools({ onClickMenu, tag, etlUnitType }) {
   } = useContext(ToolContext);
 
   return (
-    <div className={clsx(classes.root, 'EtlUnit-CardHeader-Tools')}>
+    <div className={clsx('Luci-Workbench', 'etlUnit', 'tools')}>
       <Rollup
         showSwitch={showSwitch}
         etlUnitType={etlUnitType}
@@ -65,7 +48,7 @@ function Tools({ onClickMenu, tag, etlUnitType }) {
       />
 
       {showMoreMenu ? (
-        <IconButton size='small' className='menu' onClick={onClickMenu}>
+        <IconButton size='small' className='button menu' onClick={onClickMenu}>
           <MoreVert />
         </IconButton>
       ) : null}
@@ -74,14 +57,8 @@ function Tools({ onClickMenu, tag, etlUnitType }) {
   );
 }
 Tools.propTypes = {
-  etlUnitType: PropTypes.oneOf(['quality', 'measurement']).isRequired,
-  tag: PropTypes.oneOf([
-    'quality',
-    'measurement',
-    'txtValues',
-    'intValues',
-    'spanValues',
-  ]).isRequired,
+  etlUnitType: PropTypes.oneOf(etlUnitTypes).isRequired,
+  tag: PropTypes.oneOf(tags).isRequired,
   onClickMenu: PropTypes.func.isRequired,
 };
 
@@ -109,5 +86,13 @@ function Rollup({
     />
   );
 }
+Rollup.propTypes = {
+  showSwitch: PropTypes.bool.isRequired,
+  etlUnitType: PropTypes.oneOf(etlUnitTypes).isRequired,
+  tag: PropTypes.oneOf(tags).isRequired,
+  switchOn: PropTypes.bool.isRequired,
+  toggleSwitchOn: PropTypes.bool.isRequired,
+  disableSwitch: PropTypes.bool.isRequired,
+};
 
 export default Tools;

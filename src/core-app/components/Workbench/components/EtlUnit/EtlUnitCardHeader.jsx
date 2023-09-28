@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-import makeStyles from '@mui/styles/makeStyles';
 import Icon from '@mui/material/Icon';
 import Typography from '@mui/material/Typography';
 
@@ -17,10 +16,6 @@ import Functions from '@mui/icons-material/Functions';
 import TextField from '../../../shared/TextField';
 import Tools from './Tools';
 
-// ⬜  deprecate use css overrides instead
-import styles from './etlUnit.styles';
-
-const useStyles = makeStyles(styles);
 /**
  * className EtlUnit-CardHeader
  *
@@ -58,8 +53,8 @@ function EtlUnitCardHeader({
   handleNameChange,
 }) {
   // required to control styles linked to Box
-  const classes = useStyles();
 
+  // TODO make sure part of custom theme
   const format =
     etlUnitType === 'quality' || tag === 'measurement' ? 'large' : 'small';
 
@@ -90,26 +85,25 @@ function EtlUnitCardHeader({
 
   // 🔖 Parent is EtlUnit-measurement | -parameter
   return (
-    <div className={clsx(classes.root, 'header-root')}>
-      <div className={clsx('EtlUnit-CardHeader-IconWrap')}>
-        <Icon className={clsx('EtlUnit-CardHeader-Icon')}>
+    <div className='root header-root'>
+      <div className='EtlUnit-CardHeader-IconWrap'>
+        <Icon className='EtlUnit-CardHeader-Icon'>
           <IconImg
             className={clsx('EtlUnit-CardHeader-SvgIcon', format)}
             color='secondary'
           />
         </Icon>
       </div>
-      <div className={clsx('EtlUnit-CardHeader-Name')}>
+      <div className='EtlUnit-CardHeader-Name'>
         <TextWrap
           handleNameChange={handleNameChange}
           etlUnitType={etlUnitType}
           meta={meta}
           title={title}
           palette={palette}
-          classes={classes}
         />
       </div>
-      <div className={clsx('EtlUnit-CardHeader-Tools')}>
+      <div className='EtlUnit-CardHeader-Tools'>
         <MaybeTools
           handleMenu={handleMenu}
           palette={palette}
@@ -154,15 +148,20 @@ function MaybeTools({ handleMenu, palette, tag, etlUnitType }) {
     <Tools onClickMenu={handleMenu} tag={tag} etlUnitType={etlUnitType} />
   );
 }
+MaybeTools.propTypes = {
+  handleMenu: PropTypes.func.isRequired,
+  palette: PropTypes.bool.isRequired,
+  tag: PropTypes.oneOf([
+    'quality',
+    'measurement',
+    'txtValues',
+    'intValues',
+    'spanValues',
+  ]).isRequired,
+  etlUnitType: PropTypes.oneOf(['quality', 'measurement']).isRequired,
+};
 
-function TextWrap({
-  handleNameChange,
-  etlUnitType,
-  meta,
-  title,
-  palette,
-  classes,
-}) {
+function TextWrap({ handleNameChange, etlUnitType, meta, title, palette }) {
   return palette ? (
     <Typography component='span'>{title}</Typography>
   ) : (
@@ -170,13 +169,13 @@ function TextWrap({
       stateId={title}
       className={clsx('EtlUnit-CardHeader-TextField')}
       InputLabelProps={{
-        classes: { root: classes.componentsInputLabel },
+        classes: 'componentsInputLabel',
       }}
       FormHelperTextProps={{
-        classes: { root: classes.componentsHelperText },
+        classes: 'componentsHelperText',
       }}
       InputProps={{
-        classes: { root: classes.componentsInputText },
+        classes: 'componentsInputText',
       }}
       saveChange={handleNameChange}
       name={title}
@@ -189,5 +188,12 @@ function TextWrap({
     />
   );
 }
+TextWrap.propTypes = {
+  handleNameChange: PropTypes.func.isRequired,
+  etlUnitType: PropTypes.oneOf(['quality', 'measurement']).isRequired,
+  meta: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  palette: PropTypes.string.isRequired,
+};
 
 export default EtlUnitCardHeader;

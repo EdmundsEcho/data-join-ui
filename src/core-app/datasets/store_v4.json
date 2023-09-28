@@ -81,6 +81,142 @@
         "modified_at": "2019-05-25 19:21:39.371047",
         "path": "/Users/edmund/Desktop/data/column-cutter.sh",
         "size": 664
+      },
+      {
+        "created_at": "2019-05-17 17:55:08.208353",
+        "display_name": "fat_campaign_activity.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-17 17:55:08.208353",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity.csv",
+        "size": 28996
+      },
+      {
+        "created_at": "2020-02-06 10:26:03.051318",
+        "display_name": "fat_campaign_activity_vDate.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-24 10:02:00.231930",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity_vDate.csv",
+        "size": 14657
+      },
+      {
+        "created_at": "2020-06-16 17:46:32.550887",
+        "display_name": "fat_campaign_activity_vDateNull.csv",
+        "is_directory": false,
+        "modified_at": "2020-06-16 17:46:32.550887",
+        "path": "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv",
+        "size": 7256
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.625875",
+        "display_name": "spec_rollup_spi.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:27:56",
+        "path": "/Users/edmund/Desktop/data/spec_rollup_spi.csv",
+        "size": 1664
+      },
+      {
+        "created_at": "2020-02-06 10:26:00.715388",
+        "display_name": "specialty",
+        "is_directory": false,
+        "modified_at": "2019-05-22 19:11:18.121796",
+        "path": "/Users/edmund/Desktop/data/specialty",
+        "size": 18
+      },
+      {
+        "created_at": "2018-10-15 12:27:44.655879",
+        "display_name": "tBrand_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:28:56",
+        "path": "/Users/edmund/Desktop/data/tBrand_staged.csv",
+        "size": 3517027
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.460325",
+        "display_name": "tGenerics_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:30:45",
+        "path": "/Users/edmund/Desktop/data/tGenerics_staged.csv",
+        "size": 107705101
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.952054",
+        "display_name": "tHeadroom_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:29:46",
+        "path": "/Users/edmund/Desktop/data/tHeadroom_staged.csv",
+        "size": 75605885
+      },
+      {
+        "created_at": "2018-10-15 12:27:45.976108",
+        "display_name": "tTL_staged.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 22:28:37",
+        "path": "/Users/edmund/Desktop/data/tTL_staged.csv",
+        "size": 3746055
+      },
+      {
+        "created_at": "2019-05-22 19:44:59.589526",
+        "display_name": "temp.csv",
+        "is_directory": false,
+        "modified_at": "2019-05-22 19:44:59.589526",
+        "path": "/Users/edmund/Desktop/data/temp.csv",
+        "size": 31984018
+      },
+      {
+        "created_at": "2018-10-15 12:27:46.975503",
+        "display_name": "warfarin_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:57:55",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv",
+        "size": 134156196
+      },
+      {
+        "created_at": "2020-02-06 10:26:00.715186",
+        "display_name": "warfarin_NRx.csv.bk",
+        "is_directory": false,
+        "modified_at": "2019-05-25 19:18:24.654841",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv.bk",
+        "size": 134156196
+      },
+      {
+        "created_at": "2020-12-12 11:28:42.258481",
+        "display_name": "warfarin_NRx.csv.idx",
+        "is_directory": false,
+        "modified_at": "2020-12-12 11:28:42.258481",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx.csv.idx",
+        "size": 14068368
+      },
+      {
+        "created_at": "2021-01-26 20:43:29.087589",
+        "display_name": "warfarin_NRx_head.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-26 20:43:29.087589",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx_head.csv",
+        "size": 382
+      },
+      {
+        "created_at": "2021-01-26 20:40:46.597098",
+        "display_name": "warfarin_NRx_tail.csv",
+        "is_directory": false,
+        "modified_at": "2021-01-26 20:40:46.597098",
+        "path": "/Users/edmund/Desktop/data/warfarin_NRx_tail.csv",
+        "size": 392
+      },
+      {
+        "created_at": "2018-10-20 16:41:50.810797",
+        "display_name": "xarelto_NRx.csv",
+        "is_directory": false,
+        "modified_at": "2018-08-10 21:59:08",
+        "path": "/Users/edmund/Desktop/data/xarelto_NRx.csv",
+        "size": 96277201
+      },
+      {
+        "created_at": "2020-10-01 20:15:19.105519",
+        "display_name": "xarelto_NRx_short.csv",
+        "is_directory": false,
+        "modified_at": "2020-10-01 20:15:19.105519",
+        "path": "/Users/edmund/Desktop/data/xarelto_NRx_short.csv",
+        "size": 6413653
       }
     ],
     "filterText": "",
@@ -88,6 +224,8 @@
   },
   "headerView": {
     "selected": [
+      "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+      "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
       "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv"
     ],
     "fileInspectionErrors": [],

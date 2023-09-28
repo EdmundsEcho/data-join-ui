@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { ErrorBoundary } from 'react-error-boundary';
 import Typography from '@mui/material/Typography';
@@ -8,7 +9,7 @@ import EtlUnitBase from '../EtlUnitBase';
 import ReduxMock from '../../../../../cosmos.mock-store';
 import initialState from '../../../../../datasets/store_v4.json';
 
-function ErrorFallback({ error, resetErrorBoundary }) {
+function ErrorFallback({ error /* resetErrorBoundary */ }) {
   return (
     <div role='alert'>
       <p>Something went wrong:</p>
@@ -16,6 +17,10 @@ function ErrorFallback({ error, resetErrorBoundary }) {
     </div>
   );
 }
+ErrorFallback.propTypes = {
+  error: PropTypes.shape({ message: PropTypes.string.isRequired }).isRequired,
+  // resetErrorBoundary: PropTypes.func.isRequired,
+};
 const Components = () => {
   const ids = [5, 13, 20, 22, 23];
 
@@ -24,12 +29,10 @@ const Components = () => {
     return (
       <div
         key={`EtlUnitBase-${id}-${idx}`}
-        style={{ width: '300px', margin: '20px' }}
-      >
+        style={{ width: '300px', margin: '20px' }}>
         <ErrorBoundary
           key={`ErrorBoundary-${id}-${idx}`}
-          FallbackComponent={ErrorFallback}
-        >
+          FallbackComponent={ErrorFallback}>
           <EtlUnitBase nodeId={id} context={context} />
         </ErrorBoundary>
       </div>

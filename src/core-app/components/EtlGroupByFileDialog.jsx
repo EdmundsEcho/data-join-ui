@@ -29,8 +29,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import makeStyles from '@mui/styles/makeStyles';
-
 import Collapse from '@mui/material/Collapse';
 import Table from '@mui/material/Table';
 import TableContainer from '@mui/material/TableContainer';
@@ -57,12 +55,6 @@ import { debug, useTraceUpdate } from '../constants/variables';
 /* eslint-disable no-console */
 
 const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
-
-const useStyles = makeStyles((theme) => ({
-  tableRow: {
-    borderBottom: '0px',
-  },
-}));
 
 const dummyData = { purpose: TYPES.QUALITY, etlUnit: null };
 
@@ -99,7 +91,6 @@ function EtlFieldForm(props) {
     console.dir(props);
   }
 
-  const classes = useStyles();
   // use to render the dialog
   const [readyToSave, setReadyToSave] = useState(() => false);
 
@@ -177,16 +168,13 @@ function EtlFieldForm(props) {
       instructions={`Record the information encoded by definition of a subject being
           included in a given file.`}
       handleSave={handleSave}
-      handleCancel={handleCancel}
-    >
+      handleCancel={handleCancel}>
       <TableContainer>
-        <Table>
+        <Table className='Luci-Table group-by-file dialog'>
           <TableBody>
             <TableRow>
-              <TableCell className={classes.tableRow}>
-                New Field Name:
-              </TableCell>
-              <TableCell className={classes.tableRow}>
+              <TableCell className='cell'>New Field Name:</TableCell>
+              <TableCell className='cell'>
                 <TextField
                   key={`${stateId}|name`}
                   stateId={`${stateId}|name`}
@@ -200,10 +188,8 @@ function EtlFieldForm(props) {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className={classes.tableRow}>
-                Null-value (expansion):
-              </TableCell>
-              <TableCell className={classes.tableRow}>
+              <TableCell className='cell'>Null-value (expansion):</TableCell>
+              <TableCell className='cell'>
                 <TextField
                   key={`${stateId}|null-value-expansion`}
                   stateId={`${stateId}|null-value-expansion`}
@@ -224,11 +210,10 @@ function EtlFieldForm(props) {
         </HeadingBox>
       </TableContainer>
       <Collapse
-        className={classes.errors}
+        className='Luci-Collapse group-by-file dialog error'
         in={error(formData.name)}
         timeout='auto'
-        unmountOnExit
-      >
+        unmountOnExit>
         <Box mx={0} mt={5} mb={0}>
           <ErrorCard
             key={`${stateId}|errorCard`}

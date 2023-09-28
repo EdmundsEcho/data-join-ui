@@ -32,6 +32,16 @@ const Component = ({ hideConsole }) => {
   const configs = useSelector((state) =>
     selectEtlUnitDisplayConfig(state, nodeId, identifier),
   );
+  /*
+            "request": true,
+            "qualityName": "q_specialty",
+            "displayName": "specialty",
+            "palette-name": "specialty",
+            "canvas-alias": "specialty",
+            "tag": "txtValues",
+            "count": 37,
+            "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+    */
   return (
     <div style={{ margin: '30px' }}>
       <ConsoleLog value={configs} advancedView collapsed={hideConsole} />
@@ -41,6 +51,7 @@ const Component = ({ hideConsole }) => {
           type={tag}
           identifier={identifier}
           nodeId={nodeId}
+          instanceOf='quality' // hack testing
         />
       ))}
     </div>

@@ -194,15 +194,14 @@ function ValueGridWorkbench(props) {
   );
 }
 
-const INSTANCES = ['measurement', 'quality', 'component', 'mspan'];
-
 ValueGridWorkbench.whyDidYouRender = true;
 ValueGridWorkbench.propTypes = {
   nodeId: PropTypes.number.isRequired,
   identifier: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['txtValues', 'intValues']).isRequired,
   measurementType: PropTypes.string,
-  instanceOf: PropTypes.oneOf(INSTANCES).isRequired,
+  instanceOf: PropTypes.oneOf(['measurement', 'quality', 'component', 'mspan'])
+    .isRequired,
 };
 
 ValueGridWorkbench.defaultProps = {

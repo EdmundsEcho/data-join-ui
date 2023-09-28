@@ -51,6 +51,7 @@ const paletteDark = {
 export default (mode) => {
   const isLightMode = mode === 'light';
   const palette = isLightMode ? paletteLight : paletteDark;
+
   return createTheme({
     spacingFn,
 
@@ -116,30 +117,6 @@ export default (mode) => {
         lineHeight: 1.43,
         color: isLightMode ? palette.grey[800] : palette.text.secondary,
       },
-      // ⬜ integrate with other etlUnit overrides
-      etlUnit: {
-        componentsHelperText: {
-          fontFamily: 'Lato',
-          fontSize: '0.6rem',
-          lineHeight: '0.6rem',
-          color: palette.primary.main,
-        },
-        componentsInputLabel: {
-          fontFamily: 'Lato',
-          fontSize: '0.6rem',
-          lineHeight: '0.6rem',
-        },
-        componentsInputText: {
-          fontFamily: 'Lato',
-          fontSize: '0.8rem',
-        },
-      },
-      componentsInputTextSpanInput: {
-        fontFamily: 'Lato',
-        fontSize: '10px',
-        lineHeight: '19px',
-      },
-      // button
       button: {
         fontFamily: 'lato',
         fontWeight: 500,
@@ -373,6 +350,14 @@ export default (mode) => {
                 },
               },
             },
+            //--------------------------------------------------------------------
+            // Group-by-file etlField
+            '&.Luci-Table.group-by-file.dialog': {
+              '& .cell': {
+                borderBottom: '0px',
+              },
+            },
+            '&.Luci-Table.group-by-file.dialog.error': {},
             //--------------------------------------------------------------------
             // Directory view
             //
@@ -1120,7 +1105,7 @@ export default (mode) => {
       // MuiSwitch-switchBase MuiSwitch-colorPrimary
       // Mui-checked PrivateSwitchBase-root
       // Mui-checked css-1i5zfsu-MuiButtonBase-root-MuiSwitch-switchBase" style="transform: translateX(10px);padding: 5px;"><input class="MuiSwitch-input PrivateSwitchBase-input css-1m9pwf3" type="checkbox" checked=""><span class="MuiSwitch-thumb css-jyxm41-MuiSwitch-thumb"></span></span>
-      // const SuccessSlider = styled(Slider)(({ theme }) => ({
+      // const SuccessSlider = st(Slider)(({ theme }) => ({
       //  width: 300,
       //  color: theme.palette.success.main,
       //  '& .MuiSlider-thumb': {
@@ -1694,6 +1679,7 @@ export default (mode) => {
           root: ({ theme }) => ({
             margin: 'inherit',
             padding: 'inherit',
+            // workbench
             '&.EtlUnit-parameter, &.EtlUnit-measurement': {
               padding: '0px',
               margin: `${theme.spacingFn(2)} 0px`,
@@ -1701,6 +1687,63 @@ export default (mode) => {
               borderRadius: '4px',
               '&.no-border, &.quality': {
                 border: `none`,
+              },
+              // 🦀 root?
+              '& > .root.AppBarSearchInput': {
+                padding: '8px 12px 8px 6px',
+                alignItems: 'center',
+                backgroundColor: theme.palette.grey[50],
+                '& .input': {
+                  flex: 1,
+                },
+                '& .searchIcon': {
+                  width: '24px',
+                },
+                '& .sortIcon': {
+                  width: '24px',
+                },
+                '& .MuiTypography-body1': {
+                  fontSize: '0.8rem',
+                  // lineHeight: '0.8rem',
+                },
+                '& .MuiTableCell-head': {
+                  borderBottom: 'none',
+                  fontSize: '0.8rem',
+                  alignItems: 'center',
+                },
+                '& .MuiInputBase-root': {
+                  fontSize: '0.8rem',
+                },
+              },
+              // 🦀 root?
+              '& > div.root.header-root': {
+                display: 'flex',
+                flexDirection: 'row',
+                // alignItems: 'flex-start',
+                alignItems: 'center',
+                padding: '5px 8px 7px 8px',
+                '&.component-detailView, &.spanValues-detailView': {
+                  padding: `0px 0px 8px 0px`,
+                  margin: '0px',
+                },
+                '& > div.EtlUnit-CardHeader-IconWrap': {
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0px 3px 0px 0px',
+                  '& .component': {
+                    padding: '0px',
+                  },
+                  '& > .EtlUnit-CardHeader-Icon': {
+                    '& > .EtlUnit-CardHeader-SvgIcon': {},
+                  },
+                },
+                '& > div.EtlUnit-CardHeader-Name': {
+                  flex: 1,
+                  '& .MuiFormControl-root': {
+                    display: 'flex',
+                  },
+                },
+                '& > div.EtlUnit-CardHeader-Tools': {},
               },
             },
             '&.Luci-DirectoryView': {
@@ -2260,6 +2303,16 @@ export default (mode) => {
               padding: '0px',
               marginLeft: '12px',
               color: theme.palette.primary.main,
+            },
+            '&.Luci-IconButton.etlUnit.workbench': {
+              marginLeft: 'auto',
+              transform: 'rotate(0deg)',
+              transition: theme.transitions.create('transform', {
+                duration: theme.transitions.duration.shortest,
+              }),
+              '&.open': {
+                transform: 'rotate(180deg)',
+              },
             },
           }),
         },

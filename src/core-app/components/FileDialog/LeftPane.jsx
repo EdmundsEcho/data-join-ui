@@ -8,7 +8,6 @@
  *
  */
 import React, { useMemo, useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 

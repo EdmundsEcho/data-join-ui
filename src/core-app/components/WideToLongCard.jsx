@@ -40,8 +40,6 @@ import clsx from 'clsx';
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 
-import makeStyles from '@mui/styles/makeStyles';
-
 import AddIcon from '@mui/icons-material/AddCircleOutline';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -496,20 +494,11 @@ SetFactorValueTable.propTypes = {
   selectFactorValue: PropTypes.func.isRequired,
 };
 
-const useStyles = makeStyles(() => ({
-  'WideToLongCard-FactorWithMenu': {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-}));
-
 function FactorWithMenu({ text, menu }) {
-  const classes = useStyles();
   return (
-    <div className={classes['WideToLongCard-FactorWithMenu']}>
-      <div style={{ flexGrow: 1 }}>{text}</div>
-      <div>{menu}</div>
+    <div className='WideToLongCard-FactorWithMenu'>
+      <div className='text'>{text}</div>
+      <div className='menu'>{menu}</div>
     </div>
   );
 }
