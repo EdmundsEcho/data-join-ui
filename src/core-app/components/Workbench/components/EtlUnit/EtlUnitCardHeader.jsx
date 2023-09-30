@@ -53,6 +53,7 @@ function EtlUnitCardHeader({
   displayType,
   handleMenu,
   handleNameChange,
+  className,
 }) {
   // required to control styles linked to Box
 
@@ -87,7 +88,7 @@ function EtlUnitCardHeader({
 
   // 🔖 Parent is EtlUnit-measurement | -parameter
   return (
-    <Div className='root header-root'>
+    <Div className={`${className} root`}>
       <Div className='EtlUnit-CardHeader-IconWrap'>
         <Icon className='EtlUnit-CardHeader-Icon'>
           <IconImg
@@ -170,15 +171,6 @@ function TextWrap({ handleNameChange, etlUnitType, meta, title, palette }) {
     <TextField
       stateId={title}
       className={clsx('EtlUnit-CardHeader-TextField')}
-      InputLabelProps={{
-        classes: 'componentsInputLabel',
-      }}
-      FormHelperTextProps={{
-        classes: 'componentsHelperText',
-      }}
-      InputProps={{
-        classes: 'componentsInputText',
-      }}
       saveChange={handleNameChange}
       name={title}
       value={title}
@@ -195,7 +187,7 @@ TextWrap.propTypes = {
   etlUnitType: PropTypes.oneOf(['quality', 'measurement']).isRequired,
   meta: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  palette: PropTypes.string.isRequired,
+  palette: PropTypes.bool.isRequired,
 };
 
 export default EtlUnitCardHeader;

@@ -192,7 +192,7 @@
     /* margin: 16px auto 8px auto; */
 /* } */
 .new-project > button,
-.upload-files button,
+.upload-files > button,
 .project-form.root button,
 .error-page.root button,
 .user-profile.root button {
@@ -200,6 +200,31 @@
     background-color: var(--color-primary-main);
     font-family: "Rubik", sans-serif;
 }
+/* ---------------------------------------- */
+/* upload progress */
+.Luci-Circular-Progress {
+     display: inline-flex;
+     position: relative;
+}
+.Luci-Circular-Progress > * + * {
+     width: 100%;
+     height: 100%;
+}
+.Luci-Circular-Progress > .label {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Luci-Circular-Progress > .label > * {
+    font-size: 0.7rem;
+}
+/* ---------------------------------------- */
+
 /* mini version of new-project button */
 button.new-project.mini {
     height: 34px;
@@ -490,36 +515,9 @@ input.Lucidrive.hidden-input {
     flex: 1;
 }
 /* --------------------------------------------------------------------------- */
-/* Inpsection related */
-
-div.WideToLongCard-FactorWithMenu {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-div.WideToLongCard-FactorWithMenu > .text {
-    flex-grow: 1;
-}
-/* --------------------------------------------------------------------------- */
 /* workbench */
-.EtlUnitBase-root.palette,
-.EtlUnitBase-root.canvas {
-    background-color: var(--color-background-title);
-}
-.EtlUnitGroupBase-root {
-    background-color: var(--color-background-heading);
-}
-.EtlUnitGroupBase-root .header {
-    background-color: var(--color-primary-dark);
-    filter: brightness(1.1);
-}
-.EtlUnitBase-root .EtlUnit-ValueGrid .MuiDataGrid-footer {
-    background-color: var(--color-background-footer);
-    filter: brightness(1.1);
-}
-
 .EtlUnit-parameter.measurement
-> .header-root {
+> .EtlUnit-CardHeader {
     justify-content: space-between;
     gap: 0.5em;
 }
@@ -528,16 +526,17 @@ div.WideToLongCard-FactorWithMenu > .text {
     margin-right: -3px;
 }
 .EtlUnit-parameter.measurement
-> .header-root
+> .EtlUnit-CardHeader
 > .EtlUnit-CardHeader-Tools svg {
     width: 0.8em;
     height: 0.8em;
 }
 .EtlUnit-parameter.measurement
-> .header-root
+> .EtlUnit-CardHeader
 > .EtlUnit-CardHeader-Tools label {
     margin: 0;
 }
+/*
 div.workbench.button-group {
     background-color: var(--color-secondary-main);
     opacity: 0.7;
@@ -551,38 +550,13 @@ div.workbench.button-group {
     z-index: 9;
 }
 div.workbench.button-group * {
-    color: #FFFFFF;
-}
+    color: #fff;
+} */
 .Luci-Workbench-board > .palette-root {
     padding: 10px;
 }
 
-.Luci-Workbench.etlUnit.tools {
-    display: 'flex';
-    flex-direction: 'row';
-    align-items: 'flex-start';
-    padding: 10px;
-}
-.Luci-Workbench.etlUnit.tools > .button.menu {
-    width: 24px;
-}
-.Luci-Workbench.etlUnit.tools .EtlUnit-CardHeader-Tools {
-      padding: 0;
-}
 /* Span inputs */
-.MuiSpanInput--01 {
-    background-color: var(--color-secondary-dark);
-    padding: 3px;
-    justify-content: space-between;
-}
-.MuiSpanInput--01 > .switch {
-    margin-right: 3px;
-    margin-left: 5px;
-}
-.Luci-SpanLevel-Chip {
-    background-color: var(--color-secondary-dark);
-    /* filter: brightness(1.1); */
-}
 .Luci-SpanLevel-Chip .title {
     filter: brightness(1.9);
 }
@@ -886,103 +860,6 @@ span.google-drive {
 
 .input-row-group.project-name {
     max-width: 300px;
-}
-
-/* ---------------------------------------- */
-/* workbench etlUnit */
-div.root.AppBarSearchInput {
-     display: flex;
-     flex-direction: row;
-     align-items: flex-start;
-     padding: '8px 12px 8px 6px';
-     align-items: 'center';
-     background-color: '#f5f5f5';
-}
- div.root.AppBarSearchInput > .input {
-     flex: 1;
-}
- div.root.AppBarSearchInput > .searchIcon {
-     width: 24;
-}
- div.root.AppBarSearchInput > .sortIcon {
-     width: 24;
-}
- div.root.AppBarSearchInput > .MuiTypography-body1 {
-     font-size: 0.8rem;
-}
- div.root.AppBarSearchInput > .MuiTableCell-head {
-     border-bottom: none;
-     font-size: 0.8rem;
-     align-items: center;
-}
- div.root.AppBarSearchInput > .MuiInputBase-root {
-     font-size: 0.8rem;
-}
- div.root.AppBarSearchInput.header-root {
-     align-items: center;
-     padding: 5px 8px 7px 8px;
-}
- div.root.AppBarSearchInput.header-root.component-detailView div.root.AppBarSearchInput.header-root.spanValues-detailView {
-     padding: 0px 0px 8px 0px;
-     margin: 0px;
-}
- div.root.AppBarSearchInput.header-root > .EtlUnit-CardHeader-IconWrap {
-     display: flex;
-     align-items: center;
-     padding: 0 3 0 0;
-}
- div.root.AppBarSearchInput.header-root > .EtlUnit-CardHeader-IconWrap > .component {
-     padding: 0;
-}
- div.root.AppBarSearchInput.header-root > .EtlUnit-CardHeader-Name {
-     flex: 1;
-}
- div.root.AppBarSearchInput.header-root > .EtlUnit-CardHeader-Name > .MuiFormControl-root {
-     display: flex;
-}
-/* miscellaneous theme.typography.etlUnit.componentsInputText and the like */
-.componentsInputText {
-     font-family: 'Lato';
-     font-size: 0.8rem;
-}
- .componentsHelperText {
-     font-family: 'Lato';
-     font-size: 0.6rem;
-     line-height: 0.6rem;
-     color: var(--color-primary-main);
-}
- .componentsInputLabel {
-     font-family: 'Lato';
-     font-size: 0.6rem;
-     line-height: 0.6rem;
-}
- .componentsInputTextSpanInput {
-     font-family: 'Lato';
-     font-size: 10px;
-     line-height: 19px;
-}
-/* ---------------------------------------- */
-/* upload progress */
-.Luci-Circular-Progress {
-     display: inline-flex;
-     position: relative;
-}
-.Luci-Circular-Progress > * + * {
-     width: 100%;
-     height: 100%;
-}
-.Luci-Circular-Progress > .label {
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.Luci-Circular-Progress > .label > * {
-    /* font-size: 0.7rem; */
 }
 
 /* ---------------------------------------- */
@@ -1441,7 +1318,8 @@ pre.console-log {
     text-decoration: none;
     cursor: pointer;
 }
-.artifact.text > span:hover { }
+.artifact.text > span:hover {
+}
 .project-artifact.root.disabled > .link {
     cursor: default;
     opacity: 0.3;
