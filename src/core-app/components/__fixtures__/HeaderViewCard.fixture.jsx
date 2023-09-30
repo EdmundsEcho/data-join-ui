@@ -12,7 +12,7 @@ const HeaderView1 = () => {
   const filenames = useSelector(getSelected);
   return (
     <>
-      <HeaderView filename={filenames[0]} />
+      <HeaderView filename={filenames[0]} displayName='test 1' />
       <ConsoleLog value={filenames} />
     </>
   );
@@ -22,7 +22,7 @@ const HeaderView2 = () => {
   const filenames = useSelector(getSelected);
   return (
     <>
-      <HeaderView filename={filenames[1]} />
+      <HeaderView filename={filenames[1]} displayName='test 2' />
       <ConsoleLog value={filenames} />
     </>
   );
@@ -32,7 +32,7 @@ const HeaderView3 = () => {
   const filenames = useSelector(getSelected);
   return (
     <>
-      <HeaderView filename={filenames[2]} />
+      <HeaderView filename={filenames[2]} displayName='test 3' />
       <ConsoleLog value={filenames} />
     </>
   );

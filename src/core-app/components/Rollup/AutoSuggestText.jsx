@@ -7,13 +7,12 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Autosuggest from 'react-autosuggest';
-import match from 'autosuggest-highlight/match';
-import parse from 'autosuggest-highlight/parse';
+// import Autosuggest from 'react-autosuggest';
+// import match from 'autosuggest-highlight/match';
+// import parse from 'autosuggest-highlight/parse';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
-import withStyles from '@mui/styles/withStyles';
 import curry from 'lodash.curry';
 
 /* eslint-disable react/destructuring-assignment */
@@ -43,7 +42,8 @@ const cleanText = (text) => text.trim().toLowerCase();
 // SVG icon of the return icon used to communicate to
 // the user that pressing the return key will select
 // the currently hovered/highlighted item
-const ReturnIcon = () => (
+const ReturnIcon = () => null;
+/*
   <div style={{ float: 'right' }}>
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -55,6 +55,7 @@ const ReturnIcon = () => (
     </svg>
   </div>
 );
+  */
 
 /**
  *
@@ -62,6 +63,9 @@ const ReturnIcon = () => (
  * @component
  */
 function renderInputComponent(inputProps) {
+  return null;
+}
+/*
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
 
   return (
@@ -81,6 +85,7 @@ function renderInputComponent(inputProps) {
     />
   );
 }
+  */
 
 /**
  *
@@ -88,6 +93,7 @@ function renderInputComponent(inputProps) {
  * @param {string} rawQuery raw input of user query
  */
 export const getSuggestions = (suggestions, rawQuery) => {
+  /*
   const cleanedSuggestions = suggestions.map(cleanText);
   const cleanedQuery = cleanText(rawQuery);
   const inputLength = rawQuery.length;
@@ -127,6 +133,7 @@ export const getSuggestions = (suggestions, rawQuery) => {
   if (!cleanedSuggestions.includes(cleanedQuery))
     return filtered.concat(rawQuery);
   return filtered;
+  */
 };
 
 /**
@@ -197,6 +204,7 @@ function getSuggestionValue(suggestion) {
   return suggestion;
 }
 
+/*
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -220,6 +228,7 @@ const styles = (theme) => ({
     listStyleType: 'none',
   },
 });
+*/
 
 class AutoSuggestText extends React.Component {
   constructor(props) {
@@ -336,4 +345,4 @@ AutoSuggestText.defaultProps = {
   suggestionTypeText: 'Suggestion',
 };
 
-export default withStyles(styles)(AutoSuggestText);
+export default AutoSuggestText;

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
-import AutoComplete from '../AutoSuggestText';
+// import AutoComplete from './AutoSuggestText';
 
 const Group = ({
   name,
@@ -14,7 +14,8 @@ const Group = ({
   handleChange,
   codomainDescription,
 }) => {
-  return (
+  return null;
+  /*
     <TableRow hover>
       <TableCell>{name}</TableCell>
       <TableCell>
@@ -28,6 +29,7 @@ const Group = ({
       </TableCell>
     </TableRow>
   );
+  */
 };
 
 Group.propTypes = {

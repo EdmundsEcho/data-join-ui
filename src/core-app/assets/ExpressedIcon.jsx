@@ -1,5 +1,5 @@
 import React from 'react';
-import SvgIcon from '@material-ui/core/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 
 /* eslint-disable react/jsx-props-no-spreading */
 
@@ -10,8 +10,7 @@ const ExpressedIcon = (props) => (
     viewBox='0 0 60 60'
     fill='none'
     xmlns='http://www.w3.org/2000/svg'
-    {...props}
-  >
+    {...props}>
     <rect
       x='12.5'
       y='1.5'

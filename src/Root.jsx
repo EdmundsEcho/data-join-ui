@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 
 import { SnackbarProvider } from 'notistack';
 

@@ -9,6 +9,8 @@ FROM node:18.10-alpine3.15 as react-build
 # Stage 1 build dependencies
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
+# mui patch
+COPY mui-material-5.14.11.tgz /frontend/mui-material-5.14.11.tgz
 WORKDIR /frontend
 RUN  yarn install --silent
 

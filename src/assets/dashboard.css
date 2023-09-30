@@ -1441,8 +1441,7 @@ pre.console-log {
     text-decoration: none;
     cursor: pointer;
 }
-.artifact.text > span:hover {
-}
+.artifact.text > span:hover { }
 .project-artifact.root.disabled > .link {
     cursor: default;
     opacity: 0.3;

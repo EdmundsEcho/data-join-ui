@@ -2,8 +2,6 @@
 import React, { useState, useCallback } from 'react';
 import numeral from 'numeral';
 
-import makeStyles from '@mui/styles/makeStyles';
-
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import PurposeButtons from '../PurposeButtons';
@@ -16,6 +14,7 @@ import data from '../../../datasets/store-headerviews_v2.json';
 
 /* eslint-disable no-console, no-shadow */
 
+/*
 const useStyles = makeStyles((theme) => ({
   zero: {
     backgroundColor: theme.palette.primary.light,
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   rest: {
     backgroundColor: theme.palette.primary.main,
   },
-}));
+})); */
 
 const field = Object.values(data.headerView.headerViews)[0].fields.find(
   (fld) => fld.enabled && fld.purpose === 'mvalue',
@@ -47,8 +46,6 @@ const Component = () => {
   //
   const [purposeValue, setPurpose] = useState(() => '');
   const [data, setData] = useState(() => undefined);
-
-  const classes = useStyles();
 
   const renderTriangle = ({ countZero, countAll, height }) => {
     const countZeroHeight = (countZero / countAll) * height;
@@ -116,7 +113,6 @@ const Component = () => {
           </Grid>
           <Grid item>
             <div
-              className={classes.zero}
               style={
                 renderTriangle({
                   countZero: getZeroAllCount(data, 'zero'),
@@ -126,7 +122,6 @@ const Component = () => {
               }
             />
             <div
-              className={classes.rest}
               style={
                 renderTriangle({
                   countZero: getZeroAllCount(data, 'zero'),

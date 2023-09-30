@@ -2317,12 +2317,22 @@ export default (mode) => {
           }),
         },
       },
+      //----------------------------------------------------------------------------
       /* FilledInput */
       MuiFilledInput: {
         styleOverrides: {
           root: {
             borderRadius: '6px 6px 0px 0px',
           },
+        },
+      },
+      //----------------------------------------------------------------------------
+      /* FilledInput */
+      MuiDiv: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            background: theme.palette.primary.main,
+          }),
         },
       },
     },

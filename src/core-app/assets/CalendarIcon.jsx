@@ -1,5 +1,5 @@
 import React from 'react';
-import SvgIcon from '@material-ui/core/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 
 export default (props) => (
   <SvgIcon
@@ -8,8 +8,7 @@ export default (props) => (
     viewBox='0 0 14 15'
     fill='none'
     xmlns='http://www.w3.org/2000/svg'
-    {...props}
-  >
+    {...props}>
     <rect
       x='0.5'
       y='1.45453'

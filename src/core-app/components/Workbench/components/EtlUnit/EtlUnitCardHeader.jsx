@@ -7,6 +7,8 @@ import clsx from 'clsx';
 import Icon from '@mui/material/Icon';
 import Typography from '@mui/material/Typography';
 
+import Div from '@mui/material/Div';
+
 import InsertChart from '@mui/icons-material/InsertChart';
 import PersonPin from '@mui/icons-material/PersonPinCircleRounded';
 import PieChart from '@mui/icons-material/PieChart';
@@ -85,16 +87,16 @@ function EtlUnitCardHeader({
 
   // 🔖 Parent is EtlUnit-measurement | -parameter
   return (
-    <div className='root header-root'>
-      <div className='EtlUnit-CardHeader-IconWrap'>
+    <Div className='root header-root'>
+      <Div className='EtlUnit-CardHeader-IconWrap'>
         <Icon className='EtlUnit-CardHeader-Icon'>
           <IconImg
             className={clsx('EtlUnit-CardHeader-SvgIcon', format)}
             color='secondary'
           />
         </Icon>
-      </div>
-      <div className='EtlUnit-CardHeader-Name'>
+      </Div>
+      <Div className='EtlUnit-CardHeader-Name'>
         <TextWrap
           handleNameChange={handleNameChange}
           etlUnitType={etlUnitType}
@@ -102,16 +104,16 @@ function EtlUnitCardHeader({
           title={title}
           palette={palette}
         />
-      </div>
-      <div className='EtlUnit-CardHeader-Tools'>
+      </Div>
+      <Div className='EtlUnit-CardHeader-Tools'>
         <MaybeTools
           handleMenu={handleMenu}
           palette={palette}
           tag={tag}
           etlUnitType={etlUnitType}
         />
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 

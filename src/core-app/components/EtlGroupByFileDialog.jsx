@@ -256,16 +256,12 @@ EtlFieldForm.defaultProps = {
  *
  */
 function InlineLevels({ files, onChange }) {
-  const classes = useStyles();
-
   return (
-    <Table>
+    <Table className='Luci-Table group-by-file dialog'>
       <TableHead>
         <TableRow>
-          <TableCell className={classes.tableRow}>File Name</TableCell>
-          <TableCell className={classes.tableRow}>
-            Field Value (level)
-          </TableCell>
+          <TableCell className='cell'>File Name</TableCell>
+          <TableCell className='cell'>Field Value (level)</TableCell>
           {/* <TableCell align='center'>Weight</TableCell> */}
         </TableRow>
       </TableHead>
@@ -273,10 +269,10 @@ function InlineLevels({ files, onChange }) {
         {files &&
           Object.entries(files).map(([filename]) => (
             <TableRow key={filename}>
-              <TableCell className={classes.tableRow}>
+              <TableCell className='cell'>
                 <span title={filename}>{getFilenameFromPath(filename)}</span>
               </TableCell>
-              <TableCell className={classes.tableRow}>
+              <TableCell className='cell'>
                 <TextField
                   key={`${filename}|new-etl-field|codomain`}
                   stateId={`${filename}|new-etl-field|codomain`}
