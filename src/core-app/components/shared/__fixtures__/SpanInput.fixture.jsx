@@ -95,6 +95,7 @@ const Component = () => {
         alignItems='stretch'
         component='div'
         width={200}>
+        <p />
         <SpanInput
           span={span}
           timeProp={timeProp}
@@ -104,6 +105,7 @@ const Component = () => {
           displayType='toggle'
           request
         />
+        <p />
         <SpanInput
           span={span}
           timeProp={timeProp}
@@ -113,6 +115,7 @@ const Component = () => {
           displayType='toggle'
           request={false}
         />
+        <p />
         <SpanInput
           span={span}
           timeProp={timeProp}
@@ -122,6 +125,7 @@ const Component = () => {
           displayType='icon'
           request={false}
         />
+        <p />
         <SpanInput
           span={span}
           timeProp={timeProp}
@@ -130,6 +134,7 @@ const Component = () => {
           handleToggleValue={handleToggleValue}
         />
       </Box>
+      <p />
       <p />
       <ConsoleLog value={spanObject} advancedView collapsed={false} />
       <ConsoleLog value={timeProp} advancedView collapsed={false} />

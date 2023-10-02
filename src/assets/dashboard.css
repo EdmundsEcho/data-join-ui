@@ -55,6 +55,9 @@
   );
 }
 
+.test-outside-mui {
+    background-color: blue
+}
 /*
 ============================================================================== */
 /* box for debugging */
@@ -290,13 +293,21 @@ button.cancel {
 }
 /* ---------------------------------------- */
 /* AppBar and SideNav formatting */
+/* MuiPaper-root
+*  MuiPaper-elevation
+*  MuiPaper-elevation4
+*  MuiAppBar-root
+*  MuiAppBar-colorPrimary
+*  MuiAppBar-positionAbsolute
+*  luci-toolbar app-bar dark-toolbar appbar-show-hide
+*  css-y0uuxo
+*/
 .dark-toolbar {
   background-color: var(--color-primary-dark);
 }
 .light-toolbar {
-  background-color: var(--color-primary-main);
+  background-color: var(--color-primary-dark);
 }
-.appbar a,
 .luci-toolbar a,
 .links a {
     text-decoration: none;

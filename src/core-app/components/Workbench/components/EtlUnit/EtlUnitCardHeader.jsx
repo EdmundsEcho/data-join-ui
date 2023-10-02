@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import Icon from '@mui/material/Icon';
 import Typography from '@mui/material/Typography';
 
-import Div from '@mui/material/Div';
+// import Div from '@mui/material/Div';
 
 import InsertChart from '@mui/icons-material/InsertChart';
 import PersonPin from '@mui/icons-material/PersonPinCircleRounded';
@@ -15,6 +15,7 @@ import PieChart from '@mui/icons-material/PieChart';
 import DateRange from '@mui/icons-material/DateRange';
 import Functions from '@mui/icons-material/Functions';
 
+import Div from '../../../../../components/shared/Div';
 import TextField from '../../../shared/TextField';
 import Tools from './Tools';
 
@@ -171,6 +172,21 @@ function TextWrap({ handleNameChange, etlUnitType, meta, title, palette }) {
     <TextField
       stateId={title}
       className={clsx('EtlUnit-CardHeader-TextField')}
+      InputLabelProps={{
+        classes: {
+          root: {
+            fontFamily: 'Lato',
+            fontSize: '0.6rem',
+            lineHeight: '0.6rem',
+          },
+        },
+      }}
+      FormHelperTextProps={{
+        classes: ['componentsHelperText'],
+      }}
+      InputProps={{
+        classes: ['componentsInputText'],
+      }}
       saveChange={handleNameChange}
       name={title}
       value={title}

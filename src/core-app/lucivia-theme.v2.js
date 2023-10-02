@@ -145,6 +145,13 @@ export default (mode) => {
     components: {
       //--------------------------------------------------------------------------
       MuiCssBaseline: {},
+      MuiAppBar: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundColor: theme.palette.themeToggle['color-primary-dark'],
+          }),
+        },
+      },
 
       MuiCheckbox: {
         defaultProps: {
@@ -2312,7 +2319,6 @@ export default (mode) => {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'flex-start',
-
             //----------------------------------------------------------------------------
             // AppBarSearchInput
             // force specialization
@@ -2342,10 +2348,8 @@ export default (mode) => {
                 fontSize: '0.8rem',
               },
             },
-
             //----------------------------------------------------------------------------
             // EtlUnitCardHeader
-            // force specialization
             '&.EtlUnit-CardHeader.root': {
               alignItems: 'center',
               padding: '5px 8px 7px 8px',
@@ -2356,7 +2360,6 @@ export default (mode) => {
               backgroundColor:
                 theme.palette.themeToggle['color-background-title'],
             },
-            // target child
             '& .EtlUnit-CardHeader-IconWrap': {
               display: 'flex',
               alignItems: 'center',
@@ -2365,19 +2368,23 @@ export default (mode) => {
                 padding: '0px',
               },
             },
-            // target child
             '& .EtlUnit-CardHeader-Name': {
               flex: 1,
               '& .MuiFormControl-root': {
                 display: 'flex',
               },
             },
-            //----------------------------------------------------------------------------
             '& .componentsInputTextSpanInput': {
               fontFamily: 'Lato',
               fontSize: '10px',
               lineHeight: '19px',
               color: theme.palette.primary.main,
+            },
+            //----------------------------------------------------------------------------
+            // testing Div
+            '&.test': {
+              backgroundColor:
+                theme.palette.themeToggle['color-background-title'],
             },
           }),
         },
