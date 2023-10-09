@@ -7,8 +7,6 @@ import clsx from 'clsx';
 import Icon from '@mui/material/Icon';
 import Typography from '@mui/material/Typography';
 
-// import Div from '@mui/material/Div';
-
 import InsertChart from '@mui/icons-material/InsertChart';
 import PersonPin from '@mui/icons-material/PersonPinCircleRounded';
 import PieChart from '@mui/icons-material/PieChart';

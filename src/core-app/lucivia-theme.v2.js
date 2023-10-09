@@ -145,6 +145,7 @@ export default (mode) => {
     components: {
       //--------------------------------------------------------------------------
       MuiCssBaseline: {},
+      //--------------------------------------------------------------------------
       MuiAppBar: {
         styleOverrides: {
           root: ({ theme }) => ({
@@ -152,7 +153,7 @@ export default (mode) => {
           }),
         },
       },
-
+      //--------------------------------------------------------------------------
       MuiCheckbox: {
         defaultProps: {
           disableRipple: true,
@@ -160,7 +161,6 @@ export default (mode) => {
           icon: <Clear />,
         },
       },
-
       //--------------------------------------------------------------------------
       /* Table */
       /* Note: can also pass { theme, ownerState } */

@@ -31,7 +31,7 @@ import FeedbackPopup from '../widgets/FeedbackPopup';
 import { useLocationChange, usePageWidth, usePersistedState } from '../hooks';
 import {
   useFloatingFunctionsDataContext,
-  useFloatingFunctionsApiContext,
+  // useFloatingFunctionsApiContext,
 } from '../contexts/AppFloatingFunctionsContext';
 import { lookupDisplayTypeCfg } from '../router/routes';
 import { colors } from '../core-app/constants/variables';

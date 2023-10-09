@@ -15,7 +15,7 @@
     "@emotion/styled": "^11.9.3",
     "@hello-pangea/dnd": "^16.0.0",
     "@mui/icons-material": "^5.8.4",
-    "@mui/material": "file:mui-material-5.14.11.tgz",
+    "@mui/material": "^5.14.11",
     "@mui/system": "^5.9.2",
     "@mui/x-data-grid-pro": "^5.17.0",
     "@redux-devtools/extension": "^3.2.3",
