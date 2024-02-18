@@ -1,0 +1,7 @@
+[env]
+# supports arbitrary env vars so mise can be used like direnv/dotenv
+NODE_ENV = 'development'
+
+[tools]
+# node = ['16', 'prefix:20', 'ref:master', 'path:~/.nodes/14']
+node = '18.9.0'
