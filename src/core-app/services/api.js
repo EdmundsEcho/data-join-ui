@@ -28,15 +28,10 @@ const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 // Set the endpoint base url based on env setting
 // Read the .env
 //------------------------------------------------------------------------------
-const API_BASE_URL =
-  process.env.REACT_APP_ENV === 'production'
-    ? `${window.location.origin}/v1`
-    : `http://${window.location.hostname}:5005/v1`;
+const API_BASE_URL = `${window.location.origin}/v1`;
+const GQL_BASE_URL = API_BASE_URL;
 
-const GQL_BASE_URL =
-  process.env.REACT_APP_ENV === 'production'
-    ? `${window.location.origin}/v1`
-    : `http://${window.location.hostname}:5003/v1`;
+console.info('API base url:', API_BASE_URL);
 //------------------------------------------------------------------------------
 
 if (DEBUG) {
