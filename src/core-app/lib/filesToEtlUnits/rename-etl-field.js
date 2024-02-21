@@ -244,8 +244,8 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
 
     // for each hv, compute which of the three cases...
     let hvType = 'RAW';
-    if (Object.keys(hv).includes('wideToLongFields')) hvType = 'WIDE';
-    if (Object.keys(hv).includes('implied-mvalue')) hvType = 'IMPLIED';
+    if (Object.keys(hv).includes('wideToLongFields')) {hvType = 'WIDE'}
+    else if (Object.keys(hv).includes('implied-mvalue')) {hvType = 'IMPLIED'}
 
     // define the field search predicate give the case
     const rawFieldPredicate = (field) => {
