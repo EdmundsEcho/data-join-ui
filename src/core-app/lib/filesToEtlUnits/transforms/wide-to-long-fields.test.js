@@ -12,11 +12,11 @@ import {
 } from './wide-to-long-fields';
 import { headerViewsThree } from '../filesToEtlUnits-test-data';
 
-const mvalues = headerViewsThree['savaysa.csv'].fields.filter(
+const mvalues = headerViewsThree['brand_sales.csv'].fields.filter(
   (field) => field.purpose === 'mvalue',
 );
 
-const { nrows } = headerViewsThree['savaysa.csv'];
+const { nrows } = headerViewsThree['brand_sales.csv'];
 
 const testUI = {
   factors: [

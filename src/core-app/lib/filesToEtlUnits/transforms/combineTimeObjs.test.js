@@ -83,7 +83,7 @@ const resultOfPivot = {
         },
         format: 'DD-MM-YY',
         levels: [Array],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -109,7 +109,7 @@ const arrayOfFiles = [
     levels: [],
   },
   {
-    filename: 'savaysa.csv',
+    filename: 'brand_sales.csv',
     'header-idx': 1,
     time: {
       reference: {

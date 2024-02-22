@@ -45,7 +45,7 @@ const resultOfPivot = {
         format: null,
         'map-symbols': { that: 'three', other: 'four' },
         levels: [Array],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
