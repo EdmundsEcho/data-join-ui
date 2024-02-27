@@ -89,7 +89,7 @@ export const fileFields = {
       ],
     },
     {
-      filename: 'savaysa.csv',
+      filename: 'brand_sales.csv',
       delimiter: ',',
       nrows: 100,
       header: ['npi', 'specialty', 'nrx', 'date'],
@@ -377,8 +377,8 @@ export const headerViews = {
       },
     ],
   },
-  'savaysa.csv': {
-    filename: 'savaysa.csv',
+  'brand_sales.csv': {
+    filename: 'brand_sales.csv',
     header: ['npi', 'specialty', 'nrx', 'date'],
     enabled: true,
     nrows: 100,
@@ -398,7 +398,7 @@ export const headerViews = {
           ['1236', 1],
           ['More', 1],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -413,7 +413,7 @@ export const headerViews = {
           ['OBGYN', 45],
           ['SURGEON', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -429,7 +429,7 @@ export const headerViews = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -446,7 +446,7 @@ export const headerViews = {
           ['11-2014', 4],
           ['10-2014', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -570,8 +570,8 @@ export const headerViewsWinSeries = {
       },
     ],
   },
-  'savaysa.csv': {
-    filename: 'savaysa.csv',
+  'brand_sales.csv': {
+    filename: 'brand_sales.csv',
     enabled: true,
     nrows: 100,
     fields: [
@@ -591,7 +591,7 @@ export const headerViewsWinSeries = {
           ['1236', 1],
           ['More', 1],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -607,7 +607,7 @@ export const headerViewsWinSeries = {
           ['OBGYN', 45],
           ['SURGEON', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -624,7 +624,7 @@ export const headerViewsWinSeries = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -641,7 +641,7 @@ export const headerViewsWinSeries = {
           ['11-2014', 4],
           ['10-2014', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -790,8 +790,8 @@ export const headerViewsTwo = {
       },
     ],
   },
-  'savaysa.csv': {
-    filename: 'savaysa.csv',
+  'brand_sales.csv': {
+    filename: 'brand_sales.csv',
     enabled: true,
     nrows: 100,
     fields: [
@@ -810,7 +810,7 @@ export const headerViewsTwo = {
           ['1236', 1],
           ['More', 1],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -825,7 +825,7 @@ export const headerViewsTwo = {
           ['OBGYN', 45],
           ['SURGEON', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -841,7 +841,7 @@ export const headerViewsTwo = {
           ['MEDICAID', 45],
           ['CASH', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -857,7 +857,7 @@ export const headerViewsTwo = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -873,7 +873,7 @@ export const headerViewsTwo = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -889,7 +889,7 @@ export const headerViewsTwo = {
           ['11-2014', 4],
           ['10-2014', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -897,7 +897,7 @@ export const headerViewsTwo = {
 
 //------------------------------------------------------------------------------
 export const headerViewsThree = {
-  // for the wide-to-long testing (savaysa) and implied-mvalue (targetList)
+  // for the wide-to-long testing (brand_sales) and implied-mvalue (targetList)
   'targetList.csv': {
     filename: 'targetList.csv',
     enabled: true,
@@ -1055,8 +1055,8 @@ export const headerViewsThree = {
       },
     ],
   },
-  'savaysa.csv': {
-    filename: 'savaysa.csv',
+  'brand_sales.csv': {
+    filename: 'brand_sales.csv',
     enabled: true,
     nrows: 100,
     fields: [
@@ -1076,7 +1076,7 @@ export const headerViewsThree = {
           ['1236', 1],
           ['More', 1],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -1092,7 +1092,7 @@ export const headerViewsThree = {
           ['OBGYN', 45],
           ['SURGEON', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -1109,7 +1109,7 @@ export const headerViewsThree = {
           ['MEDICAID', 45],
           ['CASH', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -1126,7 +1126,7 @@ export const headerViewsThree = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -1143,7 +1143,7 @@ export const headerViewsThree = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -1160,7 +1160,7 @@ export const headerViewsThree = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
       {
         enabled: true,
@@ -1177,7 +1177,7 @@ export const headerViewsThree = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -1236,7 +1236,7 @@ export const resultOfPivot = {
           ['1236', 1],
           ['More', 1],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -1285,7 +1285,7 @@ export const resultOfPivot = {
           ['OBGYN', 45],
           ['SURGEON', 32],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -1321,7 +1321,7 @@ export const resultOfPivot = {
           ['2.1', 4],
           ['1.0', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },
@@ -1359,7 +1359,7 @@ export const resultOfPivot = {
           ['11-2014', 4],
           ['10-2014', 14],
         ],
-        filename: 'savaysa.csv',
+        filename: 'brand_sales.csv',
       },
     ],
   },

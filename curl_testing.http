@@ -1,0 +1,13 @@
+### lua: require('rest-nvim').run()
+### port forwarding destination
+GET /login HTTP/1.1
+host: http://192.168.0.9:3007
+
+### ssh -L 3007:192.168.0.9:3007 edmund@192.168.0.9
+### should work
+GET /login HTTP/1.1
+host: http://localhost:3007
+
+### relies on /etc/hosts entry
+GET /login HTTP/1.1
+host: http://local.lucivia.net:3007

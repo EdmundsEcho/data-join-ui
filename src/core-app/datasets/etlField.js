@@ -1,7 +1,7 @@
 export default {
   sources: {
     id_1: {
-      filename: 'savaysa.csv',
+      filename: 'brand_sales.csv',
       field_name: 'spec',
       idx: 2,
     },

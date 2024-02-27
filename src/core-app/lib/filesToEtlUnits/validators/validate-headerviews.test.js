@@ -164,7 +164,7 @@
 //       Notes:
 //       1. The mspan value will be set to that of the current relatable units.
 //       2. This hv has > 1 mvalues and thus will have a config prop attached`, () => {
-//   const [fieldWithNewAlias] = headerViewsTwo['savaysa.csv'].fields.filter(
+//   const [fieldWithNewAlias] = headerViewsTwo['brand_sales.csv'].fields.filter(
 //     (f) => f['field-alias'] === 'payer',
 //   );
 //
@@ -173,7 +173,7 @@
 //     headerViewsTwo,
 //   ); // headerViews
 //
-//   const hv = headerViewsTwo['savaysa.csv'];
+//   const hv = headerViewsTwo['brand_sales.csv'];
 //
 //   const { fields } = hv;
 //
@@ -191,16 +191,16 @@
 //
 // //------------------------------------------------------------------------------
 // test('Validate subject alias - When the current units = {}', () => {
-//   const [field] = headerViewsTwo['savaysa.csv'].fields.filter(
+//   const [field] = headerViewsTwo['brand_sales.csv'].fields.filter(
 //     (f) => f['field-alias'] === 'npi',
 //   );
 //
 //   const expectValue = validHvAlias(field, {
-//     'savaysa.csv': headerViewsTwo['savaysa.csv'],
+//     'brand_sales.csv': headerViewsTwo['brand_sales.csv'],
 //   });
 //   const tobeValue = {
-//     ...headerViewsTwo['savaysa.csv'],
-//     fields: headerViewsTwo['savaysa.csv'].fields.map((field) => ({
+//     ...headerViewsTwo['brand_sales.csv'],
+//     fields: headerViewsTwo['brand_sales.csv'].fields.map((field) => ({
 //       ...field,
 //       inSeries: field.purpose === 'mvalue',
 //     })),
@@ -211,16 +211,16 @@
 //
 // //------------------------------------------------------------------------------
 // test('Validate quality alias - When the current units = {}', () => {
-//   const [field] = headerViewsTwo['savaysa.csv'].fields.filter(
+//   const [field] = headerViewsTwo['brand_sales.csv'].fields.filter(
 //     (f) => f['field-alias'] === 'specialty',
 //   );
 //
 //   const expectValue = validHvAlias(field, {
-//     'savaysa.csv': headerViewsTwo['savaysa.csv'],
+//     'brand_sales.csv': headerViewsTwo['brand_sales.csv'],
 //   });
 //   const tobeValue = {
-//     ...headerViewsTwo['savaysa.csv'],
-//     fields: headerViewsTwo['savaysa.csv'].fields.map((field) => ({
+//     ...headerViewsTwo['brand_sales.csv'],
+//     fields: headerViewsTwo['brand_sales.csv'].fields.map((field) => ({
 //       ...field,
 //       inSeries: field.purpose === 'mvalue',
 //     })),
@@ -231,16 +231,16 @@
 //
 // //------------------------------------------------------------------------------
 // test('Validate mcomp alias - When the current units = {}', () => {
-//   const [field] = headerViewsTwo['savaysa.csv'].fields.filter(
+//   const [field] = headerViewsTwo['brand_sales.csv'].fields.filter(
 //     (f) => f['field-alias'] === 'payer',
 //   );
 //
 //   const expectValue = validHvAlias(field, {
-//     'savaysa.csv': headerViewsTwo['savaysa.csv'],
+//     'brand_sales.csv': headerViewsTwo['brand_sales.csv'],
 //   });
 //   const tobeValue = {
-//     ...headerViewsTwo['savaysa.csv'],
-//     fields: headerViewsTwo['savaysa.csv'].fields.map((field) => ({
+//     ...headerViewsTwo['brand_sales.csv'],
+//     fields: headerViewsTwo['brand_sales.csv'].fields.map((field) => ({
 //       ...field,
 //       inSeries: field.purpose === 'mvalue',
 //     })),
@@ -251,16 +251,16 @@
 //
 // //------------------------------------------------------------------------------
 // test('Validate mspan alias - When the current units = {}', () => {
-//   const [field] = headerViewsTwo['savaysa.csv'].fields.filter(
+//   const [field] = headerViewsTwo['brand_sales.csv'].fields.filter(
 //     (f) => f['field-alias'] === 'date',
 //   );
 //
 //   const expectValue = validHvAlias(field, {
-//     'savaysa.csv': headerViewsTwo['savaysa.csv'],
+//     'brand_sales.csv': headerViewsTwo['brand_sales.csv'],
 //   });
 //   const tobeValue = {
-//     ...headerViewsTwo['savaysa.csv'],
-//     fields: headerViewsTwo['savaysa.csv'].fields.map((field) => ({
+//     ...headerViewsTwo['brand_sales.csv'],
+//     fields: headerViewsTwo['brand_sales.csv'].fields.map((field) => ({
 //       ...field,
 //       inSeries: field.purpose === 'mvalue',
 //     })),
@@ -271,16 +271,16 @@
 //
 // //------------------------------------------------------------------------------
 // test('Validate mvalue alias - When the current units = {}', () => {
-//   const [field] = headerViewsTwo['savaysa.csv'].fields.filter(
+//   const [field] = headerViewsTwo['brand_sales.csv'].fields.filter(
 //     (f) => f['field-alias'] === 'nrx',
 //   );
 //
 //   const expectValue = validHvAlias(field, {
-//     'savaysa.csv': headerViewsTwo['savaysa.csv'],
+//     'brand_sales.csv': headerViewsTwo['brand_sales.csv'],
 //   });
 //   const tobeValue = {
-//     ...headerViewsTwo['savaysa.csv'],
-//     fields: headerViewsTwo['savaysa.csv'].fields.map((field) => ({
+//     ...headerViewsTwo['brand_sales.csv'],
+//     fields: headerViewsTwo['brand_sales.csv'].fields.map((field) => ({
 //       ...field,
 //       inSeries: field.purpose === 'mvalue',
 //     })),

@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import apiPollingMachine, { fetchAction } from './polling-machine';
 import { ServiceTypes, instantiateInspectionRequest } from '../../services/api';
 
-const filePath = '/Users/edmund/Desktop/data/savaysa_NRx_short.csv';
+const filePath = '/Users/edmund/Desktop/data/brand_sales_NRx.csv';
 
 //------------------------------------------------------------------------------
 // configure the machine to be tested

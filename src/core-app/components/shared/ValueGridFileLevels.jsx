@@ -1,6 +1,6 @@
 // src/components/Workbench/components/shared/ValueGridFileLevels.jsx
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Grid';
 // import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grow from '@mui/material/Grow';
 import IconButton from '@mui/material/IconButton';
 import ToolTip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -17,6 +19,7 @@ import LabelIcon from '@mui/icons-material/Label';
 import WeightIcon from '@mui/icons-material/FitnessCenter';
 import SeriesIcon from '@mui/icons-material/LinearScale';
 
+import { SymbolMapMaker } from '../SymbolMapMaker';
 // 📡 Note: does not use actions (levels is outside of redux scope)
 import { fetchFileLevels as fetchLevelsInner } from '../../services/api';
 
@@ -100,6 +103,12 @@ const fetchLevels =
     return fetchLevelsInner({ projectId, signal, ...filter, ...rest });
   };
 const parseRespData = (data) => data.levels;
+
+/**
+ * pre-process for tools version of levels
+ */
+const levelsForOptions = (parseRespData_) =>
+  Object.values(parseRespData_).map((item) => item.level);
 //-------------------------------------------------------------------------------
 // When data :: derivedField
 //
@@ -237,7 +246,32 @@ Title.propTypes = {
   fieldType: PropTypes.oneOf(Object.values(FIELD_TYPES)).isRequired,
 };
 
-function Tools({ purpose, fieldType }) {
+/**
+ * v0.3.11
+ * Transition for the dialog
+ */
+const CustomGrowTransition = React.forwardRef((props, ref) => {
+  return (
+    <Grow ref={ref} {...props} style={{ transformOrigin: 'bottom right' }} />
+  );
+});
+CustomGrowTransition.displayName = 'CustomGrowTransition';
+
+/**
+ * v0.3.11
+ * Tools with dialog.  Todo: consider refactoring how we access and reference
+ * this functionality.
+ *
+ */
+function Tools({ purpose, fieldType, levels = [] }) {
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Grid className={clsx('Luci-ValueGrid-actions', fieldType)} item>
       {purpose === PURPOSE_TYPES.MCOMP ? (
@@ -245,7 +279,8 @@ function Tools({ purpose, fieldType }) {
           <IconButton
             className={clsx('Luci-IconButton', 'small', 'series')}
             tabIndex={-1}
-            size='large'>
+            size='large'
+          >
             <SeriesIcon />
           </IconButton>
         </ToolTip>
@@ -254,7 +289,8 @@ function Tools({ purpose, fieldType }) {
           <IconButton
             className={clsx('Luci-IconButton', 'small', 'rollup')}
             tabIndex={-1}
-            size='large'>
+            size='large'
+          >
             <LabelIcon />
           </IconButton>
         </ToolTip>
@@ -264,24 +300,42 @@ function Tools({ purpose, fieldType }) {
           <IconButton
             className={clsx('Luci-IconButton', 'small', 'weight')}
             tabIndex={-1}
-            size='large'>
+            size='large'
+          >
             <WeightIcon />
           </IconButton>
         </ToolTip>
       ) : null}
-      <ToolTip title='Scrubb function'>
+      <ToolTip title='Scrub function'>
         <IconButton
           className={clsx('Luci-IconButton', 'small')}
           tabIndex={-1}
-          size='large'>
+          onClick={handleClickOpen}
+          size='large'
+        >
           <EditIcon />
         </IconButton>
       </ToolTip>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={CustomGrowTransition}
+        aria-labelledby='symbol-map-maker-dialog-title'
+        aria-describedby='symbol-map-maker-dialog-description'
+      >
+        <SymbolMapMaker onClose={handleClose} levels={levels} />
+      </Dialog>
     </Grid>
   );
 }
 Tools.propTypes = {
   fieldType: PropTypes.oneOf(Object.values(FIELD_TYPES)).isRequired,
   purpose: PropTypes.oneOf(Object.values(PURPOSE_TYPES)).isRequired,
+  levels: PropTypes.arrayOf(PropTypes.string),
 };
+Tools.defaultProps = {
+  levels: [],
+};
+
 export default ValueGridFileLevels;
