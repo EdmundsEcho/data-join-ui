@@ -59,10 +59,8 @@ const initialFieldValue = {
  * @return headerView
  */
 export const buildImpliedMvalue = (hv, DEBUG = GLOBAL_DEBUG) => {
-  const {
-    'implied-mvalue': currentMvalue = initialFieldValue,
-    ...readOnly
-  } = hv;
+  const { 'implied-mvalue': currentMvalue = initialFieldValue, ...readOnly } =
+    hv;
 
   // get the latest mspan value (take the first;
   // more than one mspan error is caught elsewhere)
@@ -118,6 +116,9 @@ export const buildImpliedMvalue = (hv, DEBUG = GLOBAL_DEBUG) => {
  *
  */
 export const setMvalue = (fieldName, impliedMvalueObj) => {
+  // mvalue
+  // update implied-mvalue.config.mvalue
+  // update implied-mvalue.field.field-alias
   return {
     ...impliedMvalueObj,
     config: {
@@ -147,11 +148,21 @@ export const setMvalue = (fieldName, impliedMvalueObj) => {
  *
  */
 export const setMspan = (fieldName, impliedMvalueObj) => {
+  // mspan
+  // update implied-mvalue.config.mspan
+  // update implied-mvalue.field.map-implied.domain
   return {
     ...impliedMvalueObj,
     config: {
       ...impliedMvalueObj.config,
       mspan: fieldName,
+    },
+    field: {
+      ...impliedMvalueObj.field,
+      'map-implied': {
+        ...impliedMvalueObj.field['map-implied'],
+        domain: fieldName,
+      },
     },
   };
 };

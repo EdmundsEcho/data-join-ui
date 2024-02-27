@@ -10,5 +10,6 @@
     "src/assets/index.css",
     "src/assets/dashboard.css",
     "src/assets/fonts.css"
-  ]
+  ],
+  "$schema": "http://json.schemastore.org/cosmos-config"
 }

@@ -242,12 +242,15 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
     // 3. Some RAW plus WIDE (wideToLongFields)
     // - update prop wtlf config and fields/factors, ignore mvalues in raw
 
-    // for each hv, compute which of the three cases...
+    // for each hv, compute which of the three cases applies
     let hvType = 'RAW';
-    if (Object.keys(hv).includes('wideToLongFields')) {hvType = 'WIDE'}
-    else if (Object.keys(hv).includes('implied-mvalue')) {hvType = 'IMPLIED'}
+    if (Object.keys(hv).includes('wideToLongFields')) {
+      hvType = 'WIDE';
+    } else if (Object.keys(hv).includes('implied-mvalue')) {
+      hvType = 'IMPLIED';
+    }
 
-    // define the field search predicate give the case
+    // define the field search predicate given the hvType
     const rawFieldPredicate = (field) => {
       return hvType === 'WIDE'
         ? field.enabled &&
@@ -260,7 +263,8 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
     let newHv = {};
     let hvWasUpdated = false; // avoid changing hv refs when possible
 
-    // Raw fields; always a field collection to search
+    // Raw fields; in all hv type cases we might have to update a raw field-alias
+    // from here on, use newHv with the maybe updated fields
     const maybeRawFieldIdx = hv.fields.findIndex(rawFieldPredicate);
     if (maybeRawFieldIdx !== -1) {
       const { field: updatedField } = updateRawField({
@@ -269,11 +273,14 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
         value: newValue,
         DEBUG,
       });
+      // update fields
       newHv = {
         ...hv,
         fields: deleteReplace(hv.fields, maybeRawFieldIdx, updatedField),
       };
       hvWasUpdated = true;
+    } else {
+      newHv = hv;
     }
 
     switch (hvType) {
@@ -284,14 +291,20 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
       // implied-mvalue: mvalue or its mspan
       case 'IMPLIED': {
         if (oldValue === hv['implied-mvalue'].config.mvalue) {
+          // mvalue
+          // update implied-mvalue.config.mvalue
+          // update implied-mvalue.field.field-alias
           newHv = {
-            ...hv,
+            ...newHv, // with maybe new fields
             'implied-mvalue': setMvalue(newValue, hv['implied-mvalue']),
           };
           hvWasUpdated = true;
         } else if (oldValue === hv['implied-mvalue'].config.mspan) {
+          // mspan
+          // update implied-mvalue.config.mspan
+          // update implied-mvalue.field.map-implied.domain
           newHv = {
-            ...hv,
+            ...newHv, // with maybe new fields
             'implied-mvalue': setMspan(newValue, hv['implied-mvalue']),
           };
           hvWasUpdated = true;
@@ -303,7 +316,7 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
       case 'WIDE': {
         if (hv.wideToLongFields.config.mvalue === oldValue) {
           newHv = {
-            ...hv,
+            ...newHv, // with maybe new fields
             wideToLongFields: updateMeasurementName(
               { mvalue: newValue },
               hv.wideToLongFields,
@@ -317,7 +330,7 @@ function renameFieldsInHvs(oldValue, newValue, hvs, DEBUG) {
           );
           if (typeof maybeFactor !== 'undefined') {
             newHv = {
-              ...hv,
+              ...newHv, // with maybe new fields
               wideToLongFields: updateFactorProp(
                 { factorId: maybeFactor.id, key: 'name', value: newValue },
                 hv.wideToLongFields,

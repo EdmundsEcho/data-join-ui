@@ -63,10 +63,8 @@ const ERRORS = {
   hasUniqueFieldNames: {
     key: 'hasUniqueFieldNames',
     message: 'One or more field names are not unique in this file',
-    fix:
-      'The default names in this data source might not all be unique. Use the `alias` field to provide a unique name for each field.',
-    doc:
-      'The `field-alias` property is a way to both rename fields and link/stack fields from different data sources.',
+    fix: 'The default names in this data source might not all be unique. Use the `alias` field to provide a unique name for each field.',
+    doc: 'The `field-alias` property is a way to both rename fields and link/stack fields from different data sources.',
   },
   hasUniqueFactorNames: (factorName) => ({
     key: 'hasUniqueFactorNames',
@@ -74,10 +72,8 @@ const ERRORS = {
       typeof factorName === 'undefined'
         ? `One of the factor names is already in use by another factor, or field.`
         : `The ${factorName} factor is already in use by another factor, or field.`,
-    fix:
-      'The default names in this data source might not all be unique. Use the `alias` field to provide a unique name for each field.',
-    doc:
-      'The `field-alias` property is a way to both rename fields and link/stack fields from different data sources.',
+    fix: 'The default names in this data source might not all be unique. Use the `alias` field to provide a unique name for each field.',
+    doc: 'The `field-alias` property is a way to both rename fields and link/stack fields from different data sources.',
   }),
 
   // this error is part of the valid etlUnit; this error calls out partial
@@ -111,10 +107,8 @@ const ERRORS = {
     key: 'missingMspan',
     message:
       'A file with a measurement value (V) must also have a date/time (T) field',
-    fix:
-      'Identify the field that represents time/date (T) of the measurement value (V)',
-    doc:
-      'The presence of a measurement value field (V) <=> a function mapping a subject (S), time/date (T) and any number of components (C) to a measurement value.',
+    fix: 'Identify the field that represents time/date (T) of the measurement value (V)',
+    doc: 'The presence of a measurement value field (V) <=> a function mapping a subject (S), time/date (T) and any number of components (C) to a measurement value.',
   },
 
   exactlyOneMspan: {
@@ -127,8 +121,7 @@ const ERRORS = {
     key: 'moreThanOneMspan',
     message:
       'There needs to be exactly one time/date (T) field per file/data source.',
-    fix:
-      'Select only one time/date (T) field, or combine the two fields (e.g., month & year)',
+    fix: 'Select only one time/date (T) field, or combine the two fields (e.g., month & year)',
   },
 
   // mcomp
@@ -169,8 +162,7 @@ const ERRORS = {
     key: 'hasAtLeastOneEtlUnit',
     message: `The data source must have at least one field that describes either a subject quality (Q) or a measurement value (V).`,
     fix: `Identify a field that describes either a quality (Q) or a measurement value (V).`,
-    doc:
-      'An etlUnit has a subject (S) field and either a quality (Q) or measurement value (V)',
+    doc: 'An etlUnit has a subject (S) field and either a quality (Q) or measurement value (V)',
   },
 
   //----------------------------------------------------------------------------
@@ -178,15 +170,14 @@ const ERRORS = {
   //----------------------------------------------------------------------------
   missingTimeFormatAndInterval: {
     key: 'missingTimeFormatAndInterval',
-    message: 'The date/time fields must specify the format and interval fields',
-    fix:
-      'Provide a string format for the time/date field and specify the interval size.',
+    message: 'The date/time field must specify the format and interval fields',
+    fix: 'Provide a string format for the time/date field and specify the interval size.',
     doc: 'Specifies how the value of a field should be interpreted or parsed',
   },
 
   missingTimeFormat: {
     key: 'missingTimeFormat',
-    message: 'The date/time fields must specify the format (e.g., YYYY-MM).',
+    message: 'The date/time field must specify the format (e.g., YYYY-MM).',
     fix: 'Provide a string format for the time/date field',
     doc: 'Specifies how the value of a field should be interpreted or parsed',
   },
@@ -194,8 +185,15 @@ const ERRORS = {
   missingTimeInterval: {
     key: 'missingTimeInterval',
     message:
-      'The date/time fields must have an interval unit (e.g., week, month) and count (e.g., 3 Month for quarterly data)',
+      'The date/time field must have an interval unit (e.g., week, month) and count (e.g., 3 Month for quarterly data)',
     fix: 'Complete the `Time-Interval` configuration.',
+  },
+
+  unsupportedTimeFormat: {
+    key: 'unsupportedTimeFormat',
+    message: 'The date/time format is not recognized.',
+    fix: 'Provide a format that aligns with how to parse the date/time value',
+    doc: 'Specifies how to parse the data/time value',
   },
 
   //----------------------------------------------------------------------------
@@ -333,27 +331,22 @@ const ERRORS = {
     key: 'inRelatedUnit',
     message:
       'A measurement with the same name has a different mix of components.',
-    fix:
-      'Make sure the measurement fields in each file with the same name, also have the same components.',
-    doc:
-      'A measurement is described using subject and a mix of `components` and a `date/time` field.',
+    fix: 'Make sure the measurement fields in each file with the same name, also have the same components.',
+    doc: 'A measurement is described using subject and a mix of `components` and a `date/time` field.',
   },
 
   spanWorksWithCurrentUnits: {
     key: 'spanWorksWithCurrentUnits',
     message: `A measurement with the same name has a time/date field that is different.`,
     fix: 'Change either the measurement or time/date field name.',
-    doc:
-      'Measurements in different data sources with the same name share components and time/date fields.',
+    doc: 'Measurements in different data sources with the same name share components and time/date fields.',
   },
 
   mcompWorksWithCurrentUnits: {
     key: 'mcompWorksWithCurrentUnits',
     message: 'The measurement component is not compatible with others.',
-    fix:
-      'Make sure that measurements with the same name have components with the same name.',
-    doc:
-      'Measurements in different data sources with the same name share components and time/date fields.',
+    fix: 'Make sure that measurements with the same name have components with the same name.',
+    doc: 'Measurements in different data sources with the same name share components and time/date fields.',
   },
 
   //----------------------------------------------------------------------------
@@ -369,10 +362,8 @@ const ERRORS = {
   notCompatibleWithEtl: (newName) => ({
     key: 'notCompatibleWithEtl',
     message: `The fieldname (${newName}) is already in use by a field that cannot be combined with this field.`,
-    fix:
-      'Choose a unique name, or combine the field with a quality (Q) specified in a different source.',
-    doc:
-      'Etl fieldnames must be unique.  Qualities can share the same name when specified in separate sources.',
+    fix: 'Choose a unique name, or combine the field with a quality (Q) specified in a different source.',
+    doc: 'Etl fieldnames must be unique.  Qualities can share the same name when specified in separate sources.',
   }),
 
   //----------------------------------------------------------------------------
@@ -383,8 +374,7 @@ const ERRORS = {
     key: 'noUseOfReservedWord',
     message: `The field name (${newName}) is a reserved word`,
     fix: 'Please change the name (e.g., add a unique prefix)',
-    doc:
-      'Etl fieldnames must be unique.  Qualities can share the same name when specified in separate sources.',
+    doc: 'Etl fieldnames must be unique.  Qualities can share the same name when specified in separate sources.',
   }),
 };
 

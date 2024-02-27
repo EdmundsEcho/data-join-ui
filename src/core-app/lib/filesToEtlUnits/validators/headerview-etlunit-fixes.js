@@ -153,13 +153,17 @@ function headerViewEtlUnitFixes(hv, DEBUG) {
   const mspanField = fields.find((field) => field.purpose === 'mspan');
 
   if (mspanField) {
+    // how to parse a string -> date
     if (!mspanField.format || !mspanField.time?.interval?.unit)
       fixes.push(ERRORS.missingTimeFormatAndInterval);
     else if (!mspanField?.time?.interval?.unit)
       fixes.push(ERRORS.missingTimeInterval);
-    //
+    // how to parse a string -> date
     if (!mspanField?.time?.interval.count)
       fixes.push(ERRORS.missingTimeInterval);
+    // evidence the system wasn't able to parse the string
+    if (!mspanField?.['levels-mspan']?.length > 0)
+      fixes.push(ERRORS.unsupportedTimeFormat);
   }
   // 🦀 still not integrated with interval?
   // errors.missingTimeFormat = ERRORS.missingTimeFormat;
