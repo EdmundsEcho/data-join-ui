@@ -60,6 +60,9 @@ export const RESET_FILEFIELDS = `${HEADER_VIEW} RESET_FILEFIELDS`;
 
 export const RUN_FIX_REPORT = `${HEADER_VIEW} RUN_FIX_REPORT`;
 
+// v0.3.11
+export const ADD_UPDATE_SYMBOL_ITEM = `${HEADER_VIEW} ADD_UPDATE_SYMBOL_ITEM`; // document
+export const DELETE_SYMBOL_ITEM = `${HEADER_VIEW} DELETE_SYMBOL_ITEM`; // document...
 //------------------------------------------------------------------------------
 // WIP: actions that fix errors in the fix reports
 // {feature} FIX/{error fix key}
@@ -241,4 +244,24 @@ export const resetFileFields = makeActionCreator(
   'fields', // Array<FileFields>
 );
 
+/**
+ * v0.3.11
+ * Update symbol map values
+ *
+ # const { left, right } = action.payload;
+ */
+export const addOrUpdateItem = (payload) => {
+  return {
+    type: ADD_UPDATE_SYMBOL_ITEM,
+    payload,
+  };
+};
+export const deleteMapSymbolItem = (payload) => {
+  return {
+    type: DELETE_SYMBOL_ITEM,
+    payload,
+  };
+};
+
+//
 export const runFixReport = () => ({ type: RUN_FIX_REPORT });

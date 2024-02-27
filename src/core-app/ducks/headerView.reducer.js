@@ -33,6 +33,8 @@ import {
   SET_HVS_FIXES, // document headerViewFixes
   SET_WIDE_TO_LONG_FIELDS_IN_HV,
   SET_HV_FIELD_LEVELS, // document levels (likely only mspan)
+  ADD_UPDATE_SYMBOL_ITEM,
+  DELETE_SYMBOL_ITEM,
 } from './actions/headerView.actions';
 import { RESET } from './actions/project-meta.actions';
 
@@ -794,6 +796,26 @@ const reducer = createReducer(initialState, {
     return {
       ...state,
       headerViews: payload,
+    };
+  },
+
+  // v0.3.11
+  [ADD_UPDATE_SYMBOL_ITEM]: (state, { payload }) => {
+    const { left, right } = payload;
+    state.items[left] = { left, right };
+    return {
+      ...state,
+      headerViews: null,
+    };
+  },
+  // v0.3.11
+  [DELETE_SYMBOL_ITEM]: (state, { payload }) => {
+    const { left, right } = payload;
+    const { [payload.left]: omitted, ...newItems } = state.items;
+    state.items = newItems;
+    return {
+      ...state,
+      headerViews: null,
     };
   },
 });
