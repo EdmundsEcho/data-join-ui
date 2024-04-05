@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Typography from '@mui/material/Typography';
-import Div from '../../../../components/shared/Div';
+import { Div } from '..';
 
 const Components = () => {
   return (

@@ -13,6 +13,8 @@
  *   "config": {
  *     "mvalue": "alias",
  *     "mspan": "alias"
+ *     "null-value-count": "Int",
+ *     "nrows": "Int",
  *   },
  *   "field": {
  *     "enabled": "Bool",
@@ -41,7 +43,12 @@ const COLOR = colors.green;
 const initialFieldValue = {
   field: {
     format: null,
+    filename: '',
     'field-alias': '',
+  },
+  config: {
+    mvalue: '',
+    mspan: '',
   },
 };
 
@@ -59,8 +66,7 @@ const initialFieldValue = {
  * @return headerView
  */
 export const buildImpliedMvalue = (hv, DEBUG = GLOBAL_DEBUG) => {
-  const { 'implied-mvalue': currentMvalue = initialFieldValue, ...readOnly } =
-    hv;
+  const { 'implied-mvalue': currentMvalue = initialFieldValue, ...readOnly } = hv;
 
   // get the latest mspan value (take the first;
   // more than one mspan error is caught elsewhere)
@@ -93,6 +99,8 @@ export const buildImpliedMvalue = (hv, DEBUG = GLOBAL_DEBUG) => {
       config: {
         mvalue: currentMvalue.field['field-alias'],
         mspan: mspan['field-alias'],
+        'null-value-count': mspan['null-value-count'],
+        nrows: mspan.nrows,
       },
       field: impliedMvalueField({
         mspan,
@@ -171,6 +179,9 @@ export const setMspan = (fieldName, impliedMvalueObj) => {
  * Pre-pivot processing subroutine
  * Append implied-mvalue with fields
  * :: hv -> hv
+ *
+ * see also headerview-field impliedMvalueField for how the field is
+ * initialized.
  */
 export const appendImpliedFields = (hv, DEBUG = GLOBAL_DEBUG) => {
   if (typeof hv['implied-mvalue'] === 'undefined') {

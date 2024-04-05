@@ -17,6 +17,7 @@ import clsx from 'clsx';
 import Grid from '@mui/material/Grid';
 
 import Span from '../shared/Span';
+import { Div } from '../../../luci-styled';
 import { FIELD_TYPES } from '../../lib/sum-types';
 
 /**
@@ -59,20 +60,18 @@ const LevelSpans = ({ time, spans, fieldType, format }) => {
   }
 
   return (
-    <Grid
-      container
-      className={clsx('Luci-FileField-LevelSpans', capacityState)}
-    >
+    <Grid container className={clsx('Luci-FileField-LevelSpans', capacityState)}>
       {spans.map((span, idx) => (
-        <Span
-          className='Luci-SpanLevel-Chip'
-          key={idx}
-          spanIndex={idx}
-          reference={time.reference}
-          unit={time.interval.unit}
-          span={span}
-          format={fieldType === FIELD_TYPES.ETL && format ? format : null}
-        />
+        <Div className='Luci-SpanLevel-Chip div' key={idx}>
+          <Span
+            className='chip'
+            spanIndex={idx}
+            reference={time.reference}
+            unit={time.interval.unit}
+            span={span}
+            format={fieldType === FIELD_TYPES.ETL && format ? format : null}
+          />
+        </Div>
       ))}
     </Grid>
   );

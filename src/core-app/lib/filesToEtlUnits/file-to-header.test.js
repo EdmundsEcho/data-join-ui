@@ -32,7 +32,7 @@ const customConfig = {
     newField: 'LOOK AT ME',
     enabled: true,
     'header-idx': field.idx,
-    'default-name': uniqueArray(file.header)[field.idx],
+    'header-name': uniqueArray(file.header)[field.idx],
     'field-alias': uniqueArray(file.header)[field.idx],
     purpose: field.purpose,
     'null-value': null,

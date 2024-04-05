@@ -224,14 +224,14 @@
   },
   "headerView": {
     "selected": [
-      "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
-      "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+      "/Users/edmund/Desktop/data/productA_NRx_short.csv",
+      "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
       "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv"
     ],
     "fileInspectionErrors": [],
     "headerViews": {
-      "/Users/edmund/Desktop/data/savaysa_NRx_short.csv": {
-        "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+      "/Users/edmund/Desktop/data/productA_NRx_short.csv": {
+        "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
         "header": [
           "NPI Number",
           "SPI Number",
@@ -261,7 +261,7 @@
             "levels": [],
             "nlevels": 385,
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv"
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv"
           },
           {
             "enabled": false,
@@ -279,7 +279,7 @@
             "nlevels": 385,
             "levels": [],
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -301,7 +301,7 @@
             "nlevels": 17,
             "levels": [],
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -323,7 +323,7 @@
             "levels": [],
             "nlevels": 44,
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -345,7 +345,7 @@
             "levels": [],
             "nlevels": 345,
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -367,7 +367,7 @@
             "levels": [],
             "nlevels": 3,
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "map-weights": {
               "arrows": {}
             }
@@ -386,31 +386,94 @@
               "arrows": {}
             },
             "levels": [
-              ["2015-02", 27],
-              ["2015-03", 59],
-              ["2015-04", 59],
-              ["2015-05", 79],
-              ["2015-06", 89],
-              ["2015-07", 123],
-              ["2015-08", 130],
-              ["2015-09", 132],
-              ["2015-10", 153],
-              ["2015-11", 171],
-              ["2015-12", 173],
-              ["2016-01", 178],
-              ["2016-02", 183],
-              ["2016-03", 180],
-              ["2016-04", 191],
-              ["2016-05", 188],
-              ["2016-06", 179],
-              ["2016-07", 188],
-              ["2016-08", 188],
-              ["2016-09", 172],
-              ["2016-10", 177]
+              [
+                "2015-02",
+                27
+              ],
+              [
+                "2015-03",
+                59
+              ],
+              [
+                "2015-04",
+                59
+              ],
+              [
+                "2015-05",
+                79
+              ],
+              [
+                "2015-06",
+                89
+              ],
+              [
+                "2015-07",
+                123
+              ],
+              [
+                "2015-08",
+                130
+              ],
+              [
+                "2015-09",
+                132
+              ],
+              [
+                "2015-10",
+                153
+              ],
+              [
+                "2015-11",
+                171
+              ],
+              [
+                "2015-12",
+                173
+              ],
+              [
+                "2016-01",
+                178
+              ],
+              [
+                "2016-02",
+                183
+              ],
+              [
+                "2016-03",
+                180
+              ],
+              [
+                "2016-04",
+                191
+              ],
+              [
+                "2016-05",
+                188
+              ],
+              [
+                "2016-06",
+                179
+              ],
+              [
+                "2016-07",
+                188
+              ],
+              [
+                "2016-08",
+                188
+              ],
+              [
+                "2016-09",
+                172
+              ],
+              [
+                "2016-10",
+                177
+              ]
             ],
             "nlevels": 21,
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "time": {
               "interval": {
                 "unit": "M",
@@ -446,7 +509,7 @@
             "levels": [],
             "nlevels": 10,
             "nrows": 2998,
-            "filename": "/Users/edmund/Desktop/data/savaysa_NRx_short.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_NRx_short.csv",
             "codomain-reducer": "SUM",
             "slicing-reducer": "SUM"
           }
@@ -541,8 +604,14 @@
               "arrows": {}
             },
             "levels": [
-              ["", 8],
-              ["Product_A", 116]
+              [
+                "",
+                8
+              ],
+              [
+                "Product_A",
+                116
+              ]
             ],
             "nlevels": 2,
             "nrows": 122,
@@ -705,7 +774,14 @@
               "Click2012_07",
               "Click2012_09"
             ],
-            "header-idxs": [5, 6, 7, 8, 9, 10],
+            "header-idxs": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ],
             "alias-idx-map": {
               "Send2012_05": 5,
               "Send2014_04": 6,
@@ -737,7 +813,14 @@
               "header-idx": null,
               "purpose": "mvalue",
               "format": null,
-              "header-idxs": [5, 6, 7, 8, 9, 10],
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
               "field-aliases": [
                 "Send2012_05",
                 "Send2014_04",
@@ -773,16 +856,32 @@
                 }
               },
               "levels": [
-                ["Send", 366],
-                ["Open", 122],
-                ["Click", 244]
+                [
+                  "Send",
+                  366
+                ],
+                [
+                  "Open",
+                  122
+                ],
+                [
+                  "Click",
+                  244
+                ]
               ],
               "enabled": true,
               "source-type": "WIDE",
               "field-alias": "camp-type",
               "header-idx": null,
               "purpose": "mcomp",
-              "header-idxs": [5, 6, 7, 8, 9, 10],
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
               "field-aliases": [
                 "Send2012_05",
                 "Send2014_04",
@@ -818,19 +917,44 @@
                 }
               },
               "levels": [
-                ["2012-05", 122],
-                ["2014-04", 122],
-                ["2014-05", 122],
-                ["2013-06", 122],
-                ["2012-07", 122],
-                ["2012-09", 122]
+                [
+                  "2012-05",
+                  122
+                ],
+                [
+                  "2014-04",
+                  122
+                ],
+                [
+                  "2014-05",
+                  122
+                ],
+                [
+                  "2013-06",
+                  122
+                ],
+                [
+                  "2012-07",
+                  122
+                ],
+                [
+                  "2012-09",
+                  122
+                ]
               ],
               "enabled": true,
               "source-type": "WIDE",
               "field-alias": "camp-date",
               "header-idx": null,
               "purpose": "mspan",
-              "header-idxs": [5, 6, 7, 8, 9, 10],
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
               "field-aliases": [
                 "Send2012_05",
                 "Send2014_04",
@@ -891,8 +1015,8 @@
           }
         }
       },
-      "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv": {
-        "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+      "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv": {
+        "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
         "header": [
           "spi",
           "npi",
@@ -932,7 +1056,7 @@
             "levels": [],
             "nlevels": 52524,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv"
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv"
           },
           {
             "enabled": true,
@@ -950,7 +1074,7 @@
             "levels": [],
             "nlevels": 52184,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "map-weights": {
               "arrows": {}
             }
@@ -969,36 +1093,114 @@
               "arrows": {}
             },
             "levels": [
-              ["CCM", 24],
-              ["CD", 15456],
-              ["EM", 61],
-              ["FM", 16360],
-              ["FP", 6],
-              ["FPG", 40],
-              ["GER", 2],
-              ["GP", 200],
-              ["GPM", 8],
-              ["GYN", 3],
-              ["HEM", 85],
-              ["HOS", 27],
-              ["IC", 905],
-              ["ICE", 551],
-              ["IFP", 9],
-              ["IM", 17980],
-              ["IMG", 136],
-              ["MEM", 2],
-              ["MN", 2],
-              ["N", 57],
-              ["NRP", 48],
-              ["PCC", 127],
-              ["PHA", 22],
-              ["PUD", 368],
-              ["VM", 10],
-              ["VS", 61]
+              [
+                "CCM",
+                24
+              ],
+              [
+                "CD",
+                15456
+              ],
+              [
+                "EM",
+                61
+              ],
+              [
+                "FM",
+                16360
+              ],
+              [
+                "FP",
+                6
+              ],
+              [
+                "FPG",
+                40
+              ],
+              [
+                "GER",
+                2
+              ],
+              [
+                "GP",
+                200
+              ],
+              [
+                "GPM",
+                8
+              ],
+              [
+                "GYN",
+                3
+              ],
+              [
+                "HEM",
+                85
+              ],
+              [
+                "HOS",
+                27
+              ],
+              [
+                "IC",
+                905
+              ],
+              [
+                "ICE",
+                551
+              ],
+              [
+                "IFP",
+                9
+              ],
+              [
+                "IM",
+                17980
+              ],
+              [
+                "IMG",
+                136
+              ],
+              [
+                "MEM",
+                2
+              ],
+              [
+                "MN",
+                2
+              ],
+              [
+                "N",
+                57
+              ],
+              [
+                "NRP",
+                48
+              ],
+              [
+                "PCC",
+                127
+              ],
+              [
+                "PHA",
+                22
+              ],
+              [
+                "PUD",
+                368
+              ],
+              [
+                "VM",
+                10
+              ],
+              [
+                "VS",
+                61
+              ]
             ],
             "nlevels": 26,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1018,63 +1220,222 @@
               "arrows": {}
             },
             "levels": [
-              ["", 4],
-              ["AK", 63],
-              ["AL", 958],
-              ["AR", 623],
-              ["AZ", 946],
-              ["CA", 4385],
-              ["CO", 580],
-              ["CT", 724],
-              ["DC", 112],
-              ["DE", 174],
-              ["FL", 4027],
-              ["GA", 1518],
-              ["HI", 197],
-              ["IA", 483],
-              ["ID", 225],
-              ["IL", 2130],
-              ["IN", 1266],
-              ["KS", 551],
-              ["KY", 991],
-              ["LA", 918],
-              ["MA", 654],
-              ["MD", 1035],
-              ["ME", 269],
-              ["MI", 1942],
-              ["MN", 552],
-              ["MO", 1219],
-              ["MS", 514],
-              ["MT", 171],
-              ["NC", 1709],
-              ["ND", 168],
-              ["NE", 459],
-              ["NH", 159],
-              ["NJ", 1981],
-              ["NM", 162],
-              ["NV", 415],
-              ["NY", 3621],
-              ["OH", 2171],
-              ["OK", 604],
-              ["OR", 452],
-              ["PA", 3213],
-              ["PR", 52],
-              ["RI", 211],
-              ["SC", 1026],
-              ["SD", 203],
-              ["TN", 1342],
-              ["TX", 3632],
-              ["UT", 346],
-              ["VA", 1395],
-              ["VT", 82],
-              ["WA", 652],
-              ["WI", 722],
-              ["WV", 474],
-              ["WY", 95]
+              [
+                "",
+                4
+              ],
+              [
+                "AK",
+                63
+              ],
+              [
+                "AL",
+                958
+              ],
+              [
+                "AR",
+                623
+              ],
+              [
+                "AZ",
+                946
+              ],
+              [
+                "CA",
+                4385
+              ],
+              [
+                "CO",
+                580
+              ],
+              [
+                "CT",
+                724
+              ],
+              [
+                "DC",
+                112
+              ],
+              [
+                "DE",
+                174
+              ],
+              [
+                "FL",
+                4027
+              ],
+              [
+                "GA",
+                1518
+              ],
+              [
+                "HI",
+                197
+              ],
+              [
+                "IA",
+                483
+              ],
+              [
+                "ID",
+                225
+              ],
+              [
+                "IL",
+                2130
+              ],
+              [
+                "IN",
+                1266
+              ],
+              [
+                "KS",
+                551
+              ],
+              [
+                "KY",
+                991
+              ],
+              [
+                "LA",
+                918
+              ],
+              [
+                "MA",
+                654
+              ],
+              [
+                "MD",
+                1035
+              ],
+              [
+                "ME",
+                269
+              ],
+              [
+                "MI",
+                1942
+              ],
+              [
+                "MN",
+                552
+              ],
+              [
+                "MO",
+                1219
+              ],
+              [
+                "MS",
+                514
+              ],
+              [
+                "MT",
+                171
+              ],
+              [
+                "NC",
+                1709
+              ],
+              [
+                "ND",
+                168
+              ],
+              [
+                "NE",
+                459
+              ],
+              [
+                "NH",
+                159
+              ],
+              [
+                "NJ",
+                1981
+              ],
+              [
+                "NM",
+                162
+              ],
+              [
+                "NV",
+                415
+              ],
+              [
+                "NY",
+                3621
+              ],
+              [
+                "OH",
+                2171
+              ],
+              [
+                "OK",
+                604
+              ],
+              [
+                "OR",
+                452
+              ],
+              [
+                "PA",
+                3213
+              ],
+              [
+                "PR",
+                52
+              ],
+              [
+                "RI",
+                211
+              ],
+              [
+                "SC",
+                1026
+              ],
+              [
+                "SD",
+                203
+              ],
+              [
+                "TN",
+                1342
+              ],
+              [
+                "TX",
+                3632
+              ],
+              [
+                "UT",
+                346
+              ],
+              [
+                "VA",
+                1395
+              ],
+              [
+                "VT",
+                82
+              ],
+              [
+                "WA",
+                652
+              ],
+              [
+                "WI",
+                722
+              ],
+              [
+                "WV",
+                474
+              ],
+              [
+                "WY",
+                95
+              ]
             ],
             "nlevels": 53,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1096,7 +1457,7 @@
             "levesl": [],
             "nlevels": 9742,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1116,14 +1477,26 @@
               "arrows": {}
             },
             "levels": [
-              ["HOSP", 5566],
-              ["HOSP PR", 55],
-              ["PC", 28676],
-              ["SPECIALTY", 18231]
+              [
+                "HOSP",
+                5566
+              ],
+              [
+                "HOSP PR",
+                55
+              ],
+              [
+                "PC",
+                28676
+              ],
+              [
+                "SPECIALTY",
+                18231
+              ]
             ],
             "nlevels": 4,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1143,15 +1516,30 @@
               "arrows": {}
             },
             "levels": [
-              ["EFF", 4296],
-              ["HTN", 4],
-              ["HTN FRANCHISE", 4603],
-              ["MOV", 6373],
-              ["SAV", 37253]
+              [
+                "EFF",
+                4296
+              ],
+              [
+                "HTN",
+                4
+              ],
+              [
+                "HTN FRANCHISE",
+                4603
+              ],
+              [
+                "MOV",
+                6373
+              ],
+              [
+                "SAV",
+                37253
+              ]
             ],
             "nlevels": 5,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1171,16 +1559,34 @@
               "arrows": {}
             },
             "levels": [
-              ["", 6379],
-              ["EFF", 14030],
-              ["HTN", 37],
-              ["HTN FRANCHISE", 12421],
-              ["MOV", 4390],
-              ["SAV", 15273]
+              [
+                "",
+                6379
+              ],
+              [
+                "EFF",
+                14030
+              ],
+              [
+                "HTN",
+                37
+              ],
+              [
+                "HTN FRANCHISE",
+                12421
+              ],
+              [
+                "MOV",
+                4390
+              ],
+              [
+                "SAV",
+                15273
+              ]
             ],
             "nlevels": 6,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1200,12 +1606,18 @@
               "arrows": {}
             },
             "levels": [
-              ["", 42444],
-              ["HTN FRANCHISE", 10082]
+              [
+                "",
+                42444
+              ],
+              [
+                "HTN FRANCHISE",
+                10082
+              ]
             ],
             "nlevels": 2,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1225,15 +1637,30 @@
               "arrows": {}
             },
             "levels": [
-              ["12", 5730],
-              ["15", 3581],
-              ["3", 20522],
-              ["6", 15124],
-              ["9", 7572]
+              [
+                "12",
+                5730
+              ],
+              [
+                "15",
+                3581
+              ],
+              [
+                "3",
+                20522
+              ],
+              [
+                "6",
+                15124
+              ],
+              [
+                "9",
+                7572
+              ]
             ],
             "nlevels": 5,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1253,13 +1680,22 @@
               "arrows": {}
             },
             "levels": [
-              ["BLUE", 13097],
-              ["GREEN", 17009],
-              ["YELLOW", 22421]
+              [
+                "BLUE",
+                13097
+              ],
+              [
+                "GREEN",
+                17009
+              ],
+              [
+                "YELLOW",
+                22421
+              ]
             ],
             "nlevels": 3,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1279,12 +1715,18 @@
               "arrows": {}
             },
             "levels": [
-              ["0", 36761],
-              ["1", 15765]
+              [
+                "0",
+                36761
+              ],
+              [
+                "1",
+                15765
+              ]
             ],
             "nlevels": 2,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1304,222 +1746,858 @@
               "arrows": {}
             },
             "levels": [
-              ["", 40514],
-              ["1/29/16", 72],
-              ["1/30/16", 59],
-              ["1/31/16", 70],
-              ["2/1/16", 49],
-              ["2/10/16", 79],
-              ["2/11/16", 61],
-              ["2/12/16", 66],
-              ["2/13/16", 92],
-              ["2/14/16", 88],
-              ["2/15/16", 100],
-              ["2/16/16", 102],
-              ["2/17/16", 93],
-              ["2/18/16", 74],
-              ["2/19/16", 86],
-              ["2/2/16", 55],
-              ["2/20/16", 101],
-              ["2/21/16", 115],
-              ["2/22/16", 96],
-              ["2/23/16", 116],
-              ["2/24/16", 128],
-              ["2/25/16", 99],
-              ["2/26/16", 96],
-              ["2/27/16", 77],
-              ["2/28/16", 62],
-              ["2/29/16", 88],
-              ["2/3/16", 81],
-              ["2/4/16", 57],
-              ["2/5/16", 52],
-              ["2/6/16", 65],
-              ["2/7/16", 108],
-              ["2/8/16", 95],
-              ["2/9/16", 76],
-              ["3/1/16", 93],
-              ["3/10/16", 130],
-              ["3/11/16", 82],
-              ["3/12/16", 96],
-              ["3/13/16", 117],
-              ["3/14/16", 116],
-              ["3/15/16", 103],
-              ["3/16/16", 97],
-              ["3/17/16", 89],
-              ["3/18/16", 92],
-              ["3/19/16", 112],
-              ["3/2/16", 115],
-              ["3/20/16", 108],
-              ["3/21/16", 69],
-              ["3/22/16", 88],
-              ["3/23/16", 106],
-              ["3/24/16", 88],
-              ["3/25/16", 94],
-              ["3/26/16", 113],
-              ["3/27/16", 82],
-              ["3/28/16", 79],
-              ["3/29/16", 106],
-              ["3/3/16", 120],
-              ["3/30/16", 104],
-              ["3/31/16", 95],
-              ["3/4/16", 91],
-              ["3/5/16", 86],
-              ["3/6/16", 88],
-              ["3/7/16", 127],
-              ["3/8/16", 99],
-              ["3/9/16", 115],
-              ["4/1/16", 111],
-              ["4/10/16", 86],
-              ["4/11/16", 113],
-              ["4/12/16", 115],
-              ["4/13/16", 113],
-              ["4/14/16", 89],
-              ["4/15/16", 92],
-              ["4/16/16", 84],
-              ["4/17/16", 91],
-              ["4/18/16", 68],
-              ["4/19/16", 93],
-              ["4/2/16", 90],
-              ["4/20/16", 72],
-              ["4/21/16", 88],
-              ["4/22/16", 83],
-              ["4/23/16", 79],
-              ["4/24/16", 75],
-              ["4/25/16", 98],
-              ["4/26/16", 58],
-              ["4/27/16", 76],
-              ["4/28/16", 65],
-              ["4/29/16", 73],
-              ["4/3/16", 69],
-              ["4/30/16", 75],
-              ["4/4/16", 104],
-              ["4/5/16", 99],
-              ["4/6/16", 107],
-              ["4/7/16", 122],
-              ["4/8/16", 80],
-              ["4/9/16", 114],
-              ["5/1/16", 65],
-              ["5/10/16", 55],
-              ["5/11/16", 81],
-              ["5/12/16", 75],
-              ["5/13/16", 81],
-              ["5/14/16", 85],
-              ["5/15/16", 46],
-              ["5/16/16", 77],
-              ["5/17/16", 40],
-              ["5/18/16", 62],
-              ["5/19/16", 55],
-              ["5/2/16", 67],
-              ["5/20/16", 64],
-              ["5/21/16", 66],
-              ["5/22/16", 50],
-              ["5/23/16", 40],
-              ["5/24/16", 41],
-              ["5/25/16", 46],
-              ["5/26/16", 69],
-              ["5/27/16", 82],
-              ["5/28/16", 51],
-              ["5/29/16", 53],
-              ["5/3/16", 75],
-              ["5/30/16", 37],
-              ["5/31/16", 49],
-              ["5/4/16", 60],
-              ["5/5/16", 64],
-              ["5/6/16", 79],
-              ["5/7/16", 73],
-              ["5/8/16", 53],
-              ["5/9/16", 50],
-              ["6/1/16", 61],
-              ["6/10/16", 32],
-              ["6/11/16", 55],
-              ["6/12/16", 39],
-              ["6/13/16", 53],
-              ["6/14/16", 34],
-              ["6/15/16", 41],
-              ["6/16/16", 27],
-              ["6/17/16", 28],
-              ["6/18/16", 33],
-              ["6/19/16", 47],
-              ["6/2/16", 41],
-              ["6/20/16", 25],
-              ["6/21/16", 43],
-              ["6/22/16", 24],
-              ["6/23/16", 46],
-              ["6/24/16", 41],
-              ["6/25/16", 35],
-              ["6/26/16", 33],
-              ["6/27/16", 38],
-              ["6/28/16", 31],
-              ["6/29/16", 29],
-              ["6/3/16", 46],
-              ["6/30/16", 31],
-              ["6/4/16", 37],
-              ["6/5/16", 57],
-              ["6/6/16", 41],
-              ["6/7/16", 50],
-              ["6/8/16", 57],
-              ["6/9/16", 51],
-              ["7/1/16", 40],
-              ["7/10/16", 33],
-              ["7/11/16", 25],
-              ["7/12/16", 18],
-              ["7/13/16", 10],
-              ["7/14/16", 12],
-              ["7/15/16", 13],
-              ["7/16/16", 21],
-              ["7/17/16", 11],
-              ["7/18/16", 16],
-              ["7/19/16", 17],
-              ["7/2/16", 26],
-              ["7/20/16", 12],
-              ["7/21/16", 17],
-              ["7/22/16", 11],
-              ["7/23/16", 9],
-              ["7/24/16", 7],
-              ["7/25/16", 12],
-              ["7/26/16", 16],
-              ["7/27/16", 9],
-              ["7/28/16", 11],
-              ["7/29/16", 14],
-              ["7/3/16", 42],
-              ["7/30/16", 7],
-              ["7/31/16", 6],
-              ["7/4/16", 15],
-              ["7/5/16", 35],
-              ["7/6/16", 18],
-              ["7/7/16", 25],
-              ["7/8/16", 34],
-              ["7/9/16", 10],
-              ["8/1/16", 7],
-              ["8/10/16", 4],
-              ["8/11/16", 5],
-              ["8/12/16", 9],
-              ["8/14/16", 2],
-              ["8/15/16", 4],
-              ["8/16/16", 2],
-              ["8/17/16", 5],
-              ["8/19/16", 2],
-              ["8/2/16", 15],
-              ["8/20/16", 2],
-              ["8/21/16", 3],
-              ["8/22/16", 2],
-              ["8/23/16", 2],
-              ["8/24/16", 2],
-              ["8/26/16", 2],
-              ["8/27/16", 2],
-              ["8/28/16", 2],
-              ["8/3/16", 14],
-              ["8/30/16", 2],
-              ["8/4/16", 8],
-              ["8/5/16", 15],
-              ["8/6/16", 6],
-              ["8/7/16", 11],
-              ["8/8/16", 3],
-              ["8/9/16", 2]
+              [
+                "",
+                40514
+              ],
+              [
+                "1/29/16",
+                72
+              ],
+              [
+                "1/30/16",
+                59
+              ],
+              [
+                "1/31/16",
+                70
+              ],
+              [
+                "2/1/16",
+                49
+              ],
+              [
+                "2/10/16",
+                79
+              ],
+              [
+                "2/11/16",
+                61
+              ],
+              [
+                "2/12/16",
+                66
+              ],
+              [
+                "2/13/16",
+                92
+              ],
+              [
+                "2/14/16",
+                88
+              ],
+              [
+                "2/15/16",
+                100
+              ],
+              [
+                "2/16/16",
+                102
+              ],
+              [
+                "2/17/16",
+                93
+              ],
+              [
+                "2/18/16",
+                74
+              ],
+              [
+                "2/19/16",
+                86
+              ],
+              [
+                "2/2/16",
+                55
+              ],
+              [
+                "2/20/16",
+                101
+              ],
+              [
+                "2/21/16",
+                115
+              ],
+              [
+                "2/22/16",
+                96
+              ],
+              [
+                "2/23/16",
+                116
+              ],
+              [
+                "2/24/16",
+                128
+              ],
+              [
+                "2/25/16",
+                99
+              ],
+              [
+                "2/26/16",
+                96
+              ],
+              [
+                "2/27/16",
+                77
+              ],
+              [
+                "2/28/16",
+                62
+              ],
+              [
+                "2/29/16",
+                88
+              ],
+              [
+                "2/3/16",
+                81
+              ],
+              [
+                "2/4/16",
+                57
+              ],
+              [
+                "2/5/16",
+                52
+              ],
+              [
+                "2/6/16",
+                65
+              ],
+              [
+                "2/7/16",
+                108
+              ],
+              [
+                "2/8/16",
+                95
+              ],
+              [
+                "2/9/16",
+                76
+              ],
+              [
+                "3/1/16",
+                93
+              ],
+              [
+                "3/10/16",
+                130
+              ],
+              [
+                "3/11/16",
+                82
+              ],
+              [
+                "3/12/16",
+                96
+              ],
+              [
+                "3/13/16",
+                117
+              ],
+              [
+                "3/14/16",
+                116
+              ],
+              [
+                "3/15/16",
+                103
+              ],
+              [
+                "3/16/16",
+                97
+              ],
+              [
+                "3/17/16",
+                89
+              ],
+              [
+                "3/18/16",
+                92
+              ],
+              [
+                "3/19/16",
+                112
+              ],
+              [
+                "3/2/16",
+                115
+              ],
+              [
+                "3/20/16",
+                108
+              ],
+              [
+                "3/21/16",
+                69
+              ],
+              [
+                "3/22/16",
+                88
+              ],
+              [
+                "3/23/16",
+                106
+              ],
+              [
+                "3/24/16",
+                88
+              ],
+              [
+                "3/25/16",
+                94
+              ],
+              [
+                "3/26/16",
+                113
+              ],
+              [
+                "3/27/16",
+                82
+              ],
+              [
+                "3/28/16",
+                79
+              ],
+              [
+                "3/29/16",
+                106
+              ],
+              [
+                "3/3/16",
+                120
+              ],
+              [
+                "3/30/16",
+                104
+              ],
+              [
+                "3/31/16",
+                95
+              ],
+              [
+                "3/4/16",
+                91
+              ],
+              [
+                "3/5/16",
+                86
+              ],
+              [
+                "3/6/16",
+                88
+              ],
+              [
+                "3/7/16",
+                127
+              ],
+              [
+                "3/8/16",
+                99
+              ],
+              [
+                "3/9/16",
+                115
+              ],
+              [
+                "4/1/16",
+                111
+              ],
+              [
+                "4/10/16",
+                86
+              ],
+              [
+                "4/11/16",
+                113
+              ],
+              [
+                "4/12/16",
+                115
+              ],
+              [
+                "4/13/16",
+                113
+              ],
+              [
+                "4/14/16",
+                89
+              ],
+              [
+                "4/15/16",
+                92
+              ],
+              [
+                "4/16/16",
+                84
+              ],
+              [
+                "4/17/16",
+                91
+              ],
+              [
+                "4/18/16",
+                68
+              ],
+              [
+                "4/19/16",
+                93
+              ],
+              [
+                "4/2/16",
+                90
+              ],
+              [
+                "4/20/16",
+                72
+              ],
+              [
+                "4/21/16",
+                88
+              ],
+              [
+                "4/22/16",
+                83
+              ],
+              [
+                "4/23/16",
+                79
+              ],
+              [
+                "4/24/16",
+                75
+              ],
+              [
+                "4/25/16",
+                98
+              ],
+              [
+                "4/26/16",
+                58
+              ],
+              [
+                "4/27/16",
+                76
+              ],
+              [
+                "4/28/16",
+                65
+              ],
+              [
+                "4/29/16",
+                73
+              ],
+              [
+                "4/3/16",
+                69
+              ],
+              [
+                "4/30/16",
+                75
+              ],
+              [
+                "4/4/16",
+                104
+              ],
+              [
+                "4/5/16",
+                99
+              ],
+              [
+                "4/6/16",
+                107
+              ],
+              [
+                "4/7/16",
+                122
+              ],
+              [
+                "4/8/16",
+                80
+              ],
+              [
+                "4/9/16",
+                114
+              ],
+              [
+                "5/1/16",
+                65
+              ],
+              [
+                "5/10/16",
+                55
+              ],
+              [
+                "5/11/16",
+                81
+              ],
+              [
+                "5/12/16",
+                75
+              ],
+              [
+                "5/13/16",
+                81
+              ],
+              [
+                "5/14/16",
+                85
+              ],
+              [
+                "5/15/16",
+                46
+              ],
+              [
+                "5/16/16",
+                77
+              ],
+              [
+                "5/17/16",
+                40
+              ],
+              [
+                "5/18/16",
+                62
+              ],
+              [
+                "5/19/16",
+                55
+              ],
+              [
+                "5/2/16",
+                67
+              ],
+              [
+                "5/20/16",
+                64
+              ],
+              [
+                "5/21/16",
+                66
+              ],
+              [
+                "5/22/16",
+                50
+              ],
+              [
+                "5/23/16",
+                40
+              ],
+              [
+                "5/24/16",
+                41
+              ],
+              [
+                "5/25/16",
+                46
+              ],
+              [
+                "5/26/16",
+                69
+              ],
+              [
+                "5/27/16",
+                82
+              ],
+              [
+                "5/28/16",
+                51
+              ],
+              [
+                "5/29/16",
+                53
+              ],
+              [
+                "5/3/16",
+                75
+              ],
+              [
+                "5/30/16",
+                37
+              ],
+              [
+                "5/31/16",
+                49
+              ],
+              [
+                "5/4/16",
+                60
+              ],
+              [
+                "5/5/16",
+                64
+              ],
+              [
+                "5/6/16",
+                79
+              ],
+              [
+                "5/7/16",
+                73
+              ],
+              [
+                "5/8/16",
+                53
+              ],
+              [
+                "5/9/16",
+                50
+              ],
+              [
+                "6/1/16",
+                61
+              ],
+              [
+                "6/10/16",
+                32
+              ],
+              [
+                "6/11/16",
+                55
+              ],
+              [
+                "6/12/16",
+                39
+              ],
+              [
+                "6/13/16",
+                53
+              ],
+              [
+                "6/14/16",
+                34
+              ],
+              [
+                "6/15/16",
+                41
+              ],
+              [
+                "6/16/16",
+                27
+              ],
+              [
+                "6/17/16",
+                28
+              ],
+              [
+                "6/18/16",
+                33
+              ],
+              [
+                "6/19/16",
+                47
+              ],
+              [
+                "6/2/16",
+                41
+              ],
+              [
+                "6/20/16",
+                25
+              ],
+              [
+                "6/21/16",
+                43
+              ],
+              [
+                "6/22/16",
+                24
+              ],
+              [
+                "6/23/16",
+                46
+              ],
+              [
+                "6/24/16",
+                41
+              ],
+              [
+                "6/25/16",
+                35
+              ],
+              [
+                "6/26/16",
+                33
+              ],
+              [
+                "6/27/16",
+                38
+              ],
+              [
+                "6/28/16",
+                31
+              ],
+              [
+                "6/29/16",
+                29
+              ],
+              [
+                "6/3/16",
+                46
+              ],
+              [
+                "6/30/16",
+                31
+              ],
+              [
+                "6/4/16",
+                37
+              ],
+              [
+                "6/5/16",
+                57
+              ],
+              [
+                "6/6/16",
+                41
+              ],
+              [
+                "6/7/16",
+                50
+              ],
+              [
+                "6/8/16",
+                57
+              ],
+              [
+                "6/9/16",
+                51
+              ],
+              [
+                "7/1/16",
+                40
+              ],
+              [
+                "7/10/16",
+                33
+              ],
+              [
+                "7/11/16",
+                25
+              ],
+              [
+                "7/12/16",
+                18
+              ],
+              [
+                "7/13/16",
+                10
+              ],
+              [
+                "7/14/16",
+                12
+              ],
+              [
+                "7/15/16",
+                13
+              ],
+              [
+                "7/16/16",
+                21
+              ],
+              [
+                "7/17/16",
+                11
+              ],
+              [
+                "7/18/16",
+                16
+              ],
+              [
+                "7/19/16",
+                17
+              ],
+              [
+                "7/2/16",
+                26
+              ],
+              [
+                "7/20/16",
+                12
+              ],
+              [
+                "7/21/16",
+                17
+              ],
+              [
+                "7/22/16",
+                11
+              ],
+              [
+                "7/23/16",
+                9
+              ],
+              [
+                "7/24/16",
+                7
+              ],
+              [
+                "7/25/16",
+                12
+              ],
+              [
+                "7/26/16",
+                16
+              ],
+              [
+                "7/27/16",
+                9
+              ],
+              [
+                "7/28/16",
+                11
+              ],
+              [
+                "7/29/16",
+                14
+              ],
+              [
+                "7/3/16",
+                42
+              ],
+              [
+                "7/30/16",
+                7
+              ],
+              [
+                "7/31/16",
+                6
+              ],
+              [
+                "7/4/16",
+                15
+              ],
+              [
+                "7/5/16",
+                35
+              ],
+              [
+                "7/6/16",
+                18
+              ],
+              [
+                "7/7/16",
+                25
+              ],
+              [
+                "7/8/16",
+                34
+              ],
+              [
+                "7/9/16",
+                10
+              ],
+              [
+                "8/1/16",
+                7
+              ],
+              [
+                "8/10/16",
+                4
+              ],
+              [
+                "8/11/16",
+                5
+              ],
+              [
+                "8/12/16",
+                9
+              ],
+              [
+                "8/14/16",
+                2
+              ],
+              [
+                "8/15/16",
+                4
+              ],
+              [
+                "8/16/16",
+                2
+              ],
+              [
+                "8/17/16",
+                5
+              ],
+              [
+                "8/19/16",
+                2
+              ],
+              [
+                "8/2/16",
+                15
+              ],
+              [
+                "8/20/16",
+                2
+              ],
+              [
+                "8/21/16",
+                3
+              ],
+              [
+                "8/22/16",
+                2
+              ],
+              [
+                "8/23/16",
+                2
+              ],
+              [
+                "8/24/16",
+                2
+              ],
+              [
+                "8/26/16",
+                2
+              ],
+              [
+                "8/27/16",
+                2
+              ],
+              [
+                "8/28/16",
+                2
+              ],
+              [
+                "8/3/16",
+                14
+              ],
+              [
+                "8/30/16",
+                2
+              ],
+              [
+                "8/4/16",
+                8
+              ],
+              [
+                "8/5/16",
+                15
+              ],
+              [
+                "8/6/16",
+                6
+              ],
+              [
+                "8/7/16",
+                11
+              ],
+              [
+                "8/8/16",
+                3
+              ],
+              [
+                "8/9/16",
+                2
+              ]
             ],
             "nlevels": 212,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1539,200 +2617,770 @@
               "arrows": {}
             },
             "levels": [
-              ["", 44397],
-              ["3/23/16", 35],
-              ["3/24/16", 31],
-              ["3/25/16", 39],
-              ["3/26/16", 36],
-              ["3/27/16", 51],
-              ["3/28/16", 55],
-              ["3/29/16", 33],
-              ["3/30/16", 33],
-              ["3/31/16", 52],
-              ["4/1/16", 73],
-              ["4/10/16", 69],
-              ["4/11/16", 62],
-              ["4/12/16", 78],
-              ["4/13/16", 68],
-              ["4/14/16", 73],
-              ["4/15/16", 86],
-              ["4/16/16", 98],
-              ["4/17/16", 52],
-              ["4/18/16", 75],
-              ["4/19/16", 85],
-              ["4/2/16", 84],
-              ["4/20/16", 54],
-              ["4/21/16", 65],
-              ["4/22/16", 50],
-              ["4/23/16", 73],
-              ["4/24/16", 89],
-              ["4/25/16", 84],
-              ["4/26/16", 70],
-              ["4/27/16", 75],
-              ["4/28/16", 60],
-              ["4/29/16", 57],
-              ["4/3/16", 76],
-              ["4/30/16", 86],
-              ["4/4/16", 70],
-              ["4/5/16", 51],
-              ["4/6/16", 65],
-              ["4/7/16", 73],
-              ["4/8/16", 47],
-              ["4/9/16", 81],
-              ["5/1/16", 77],
-              ["5/10/16", 72],
-              ["5/11/16", 85],
-              ["5/12/16", 75],
-              ["5/13/16", 99],
-              ["5/14/16", 80],
-              ["5/15/16", 101],
-              ["5/16/16", 113],
-              ["5/17/16", 117],
-              ["5/18/16", 84],
-              ["5/19/16", 93],
-              ["5/2/16", 85],
-              ["5/20/16", 77],
-              ["5/21/16", 106],
-              ["5/22/16", 70],
-              ["5/23/16", 74],
-              ["5/24/16", 96],
-              ["5/25/16", 83],
-              ["5/26/16", 79],
-              ["5/27/16", 111],
-              ["5/28/16", 89],
-              ["5/29/16", 101],
-              ["5/3/16", 64],
-              ["5/30/16", 76],
-              ["5/31/16", 100],
-              ["5/4/16", 70],
-              ["5/5/16", 93],
-              ["5/6/16", 91],
-              ["5/7/16", 83],
-              ["5/8/16", 96],
-              ["5/9/16", 99],
-              ["6/1/16", 63],
-              ["6/10/16", 82],
-              ["6/11/16", 79],
-              ["6/12/16", 50],
-              ["6/13/16", 74],
-              ["6/14/16", 56],
-              ["6/15/16", 61],
-              ["6/16/16", 59],
-              ["6/17/16", 62],
-              ["6/18/16", 50],
-              ["6/19/16", 47],
-              ["6/2/16", 57],
-              ["6/20/16", 43],
-              ["6/21/16", 45],
-              ["6/22/16", 50],
-              ["6/23/16", 66],
-              ["6/24/16", 47],
-              ["6/25/16", 55],
-              ["6/26/16", 51],
-              ["6/27/16", 33],
-              ["6/28/16", 50],
-              ["6/29/16", 50],
-              ["6/3/16", 73],
-              ["6/30/16", 28],
-              ["6/4/16", 76],
-              ["6/5/16", 82],
-              ["6/6/16", 70],
-              ["6/7/16", 57],
-              ["6/8/16", 78],
-              ["6/9/16", 76],
-              ["7/1/16", 38],
-              ["7/10/16", 31],
-              ["7/11/16", 22],
-              ["7/12/16", 24],
-              ["7/13/16", 28],
-              ["7/14/16", 29],
-              ["7/15/16", 26],
-              ["7/16/16", 17],
-              ["7/17/16", 10],
-              ["7/18/16", 27],
-              ["7/19/16", 19],
-              ["7/2/16", 44],
-              ["7/20/16", 30],
-              ["7/21/16", 29],
-              ["7/22/16", 22],
-              ["7/23/16", 16],
-              ["7/24/16", 26],
-              ["7/25/16", 20],
-              ["7/26/16", 22],
-              ["7/27/16", 18],
-              ["7/28/16", 18],
-              ["7/29/16", 20],
-              ["7/3/16", 32],
-              ["7/30/16", 20],
-              ["7/31/16", 19],
-              ["7/4/16", 30],
-              ["7/5/16", 30],
-              ["7/6/16", 33],
-              ["7/7/16", 39],
-              ["7/8/16", 53],
-              ["7/9/16", 27],
-              ["8/1/16", 11],
-              ["8/10/16", 10],
-              ["8/11/16", 18],
-              ["8/12/16", 16],
-              ["8/13/16", 11],
-              ["8/14/16", 2],
-              ["8/15/16", 7],
-              ["8/16/16", 12],
-              ["8/17/16", 12],
-              ["8/18/16", 12],
-              ["8/19/16", 8],
-              ["8/2/16", 22],
-              ["8/20/16", 11],
-              ["8/21/16", 13],
-              ["8/22/16", 12],
-              ["8/23/16", 12],
-              ["8/24/16", 4],
-              ["8/25/16", 14],
-              ["8/26/16", 5],
-              ["8/27/16", 3],
-              ["8/28/16", 4],
-              ["8/29/16", 7],
-              ["8/3/16", 24],
-              ["8/30/16", 2],
-              ["8/31/16", 8],
-              ["8/4/16", 13],
-              ["8/5/16", 19],
-              ["8/6/16", 15],
-              ["8/7/16", 12],
-              ["8/8/16", 15],
-              ["8/9/16", 19],
-              ["9/1/16", 9],
-              ["9/10/16", 2],
-              ["9/11/16", 6],
-              ["9/12/16", 5],
-              ["9/13/16", 6],
-              ["9/15/16", 7],
-              ["9/16/16", 4],
-              ["9/17/16", 2],
-              ["9/19/16", 3],
-              ["9/2/16", 7],
-              ["9/20/16", 2],
-              ["9/21/16", 5],
-              ["9/22/16", 2],
-              ["9/23/16", 2],
-              ["9/24/16", 3],
-              ["9/25/16", 3],
-              ["9/26/16", 2],
-              ["9/27/16", 4],
-              ["9/28/16", 2],
-              ["9/29/16", 2],
-              ["9/3/16", 15],
-              ["9/4/16", 7],
-              ["9/5/16", 7],
-              ["9/6/16", 10],
-              ["9/7/16", 5],
-              ["9/8/16", 9],
-              ["9/9/16", 11]
+              [
+                "",
+                44397
+              ],
+              [
+                "3/23/16",
+                35
+              ],
+              [
+                "3/24/16",
+                31
+              ],
+              [
+                "3/25/16",
+                39
+              ],
+              [
+                "3/26/16",
+                36
+              ],
+              [
+                "3/27/16",
+                51
+              ],
+              [
+                "3/28/16",
+                55
+              ],
+              [
+                "3/29/16",
+                33
+              ],
+              [
+                "3/30/16",
+                33
+              ],
+              [
+                "3/31/16",
+                52
+              ],
+              [
+                "4/1/16",
+                73
+              ],
+              [
+                "4/10/16",
+                69
+              ],
+              [
+                "4/11/16",
+                62
+              ],
+              [
+                "4/12/16",
+                78
+              ],
+              [
+                "4/13/16",
+                68
+              ],
+              [
+                "4/14/16",
+                73
+              ],
+              [
+                "4/15/16",
+                86
+              ],
+              [
+                "4/16/16",
+                98
+              ],
+              [
+                "4/17/16",
+                52
+              ],
+              [
+                "4/18/16",
+                75
+              ],
+              [
+                "4/19/16",
+                85
+              ],
+              [
+                "4/2/16",
+                84
+              ],
+              [
+                "4/20/16",
+                54
+              ],
+              [
+                "4/21/16",
+                65
+              ],
+              [
+                "4/22/16",
+                50
+              ],
+              [
+                "4/23/16",
+                73
+              ],
+              [
+                "4/24/16",
+                89
+              ],
+              [
+                "4/25/16",
+                84
+              ],
+              [
+                "4/26/16",
+                70
+              ],
+              [
+                "4/27/16",
+                75
+              ],
+              [
+                "4/28/16",
+                60
+              ],
+              [
+                "4/29/16",
+                57
+              ],
+              [
+                "4/3/16",
+                76
+              ],
+              [
+                "4/30/16",
+                86
+              ],
+              [
+                "4/4/16",
+                70
+              ],
+              [
+                "4/5/16",
+                51
+              ],
+              [
+                "4/6/16",
+                65
+              ],
+              [
+                "4/7/16",
+                73
+              ],
+              [
+                "4/8/16",
+                47
+              ],
+              [
+                "4/9/16",
+                81
+              ],
+              [
+                "5/1/16",
+                77
+              ],
+              [
+                "5/10/16",
+                72
+              ],
+              [
+                "5/11/16",
+                85
+              ],
+              [
+                "5/12/16",
+                75
+              ],
+              [
+                "5/13/16",
+                99
+              ],
+              [
+                "5/14/16",
+                80
+              ],
+              [
+                "5/15/16",
+                101
+              ],
+              [
+                "5/16/16",
+                113
+              ],
+              [
+                "5/17/16",
+                117
+              ],
+              [
+                "5/18/16",
+                84
+              ],
+              [
+                "5/19/16",
+                93
+              ],
+              [
+                "5/2/16",
+                85
+              ],
+              [
+                "5/20/16",
+                77
+              ],
+              [
+                "5/21/16",
+                106
+              ],
+              [
+                "5/22/16",
+                70
+              ],
+              [
+                "5/23/16",
+                74
+              ],
+              [
+                "5/24/16",
+                96
+              ],
+              [
+                "5/25/16",
+                83
+              ],
+              [
+                "5/26/16",
+                79
+              ],
+              [
+                "5/27/16",
+                111
+              ],
+              [
+                "5/28/16",
+                89
+              ],
+              [
+                "5/29/16",
+                101
+              ],
+              [
+                "5/3/16",
+                64
+              ],
+              [
+                "5/30/16",
+                76
+              ],
+              [
+                "5/31/16",
+                100
+              ],
+              [
+                "5/4/16",
+                70
+              ],
+              [
+                "5/5/16",
+                93
+              ],
+              [
+                "5/6/16",
+                91
+              ],
+              [
+                "5/7/16",
+                83
+              ],
+              [
+                "5/8/16",
+                96
+              ],
+              [
+                "5/9/16",
+                99
+              ],
+              [
+                "6/1/16",
+                63
+              ],
+              [
+                "6/10/16",
+                82
+              ],
+              [
+                "6/11/16",
+                79
+              ],
+              [
+                "6/12/16",
+                50
+              ],
+              [
+                "6/13/16",
+                74
+              ],
+              [
+                "6/14/16",
+                56
+              ],
+              [
+                "6/15/16",
+                61
+              ],
+              [
+                "6/16/16",
+                59
+              ],
+              [
+                "6/17/16",
+                62
+              ],
+              [
+                "6/18/16",
+                50
+              ],
+              [
+                "6/19/16",
+                47
+              ],
+              [
+                "6/2/16",
+                57
+              ],
+              [
+                "6/20/16",
+                43
+              ],
+              [
+                "6/21/16",
+                45
+              ],
+              [
+                "6/22/16",
+                50
+              ],
+              [
+                "6/23/16",
+                66
+              ],
+              [
+                "6/24/16",
+                47
+              ],
+              [
+                "6/25/16",
+                55
+              ],
+              [
+                "6/26/16",
+                51
+              ],
+              [
+                "6/27/16",
+                33
+              ],
+              [
+                "6/28/16",
+                50
+              ],
+              [
+                "6/29/16",
+                50
+              ],
+              [
+                "6/3/16",
+                73
+              ],
+              [
+                "6/30/16",
+                28
+              ],
+              [
+                "6/4/16",
+                76
+              ],
+              [
+                "6/5/16",
+                82
+              ],
+              [
+                "6/6/16",
+                70
+              ],
+              [
+                "6/7/16",
+                57
+              ],
+              [
+                "6/8/16",
+                78
+              ],
+              [
+                "6/9/16",
+                76
+              ],
+              [
+                "7/1/16",
+                38
+              ],
+              [
+                "7/10/16",
+                31
+              ],
+              [
+                "7/11/16",
+                22
+              ],
+              [
+                "7/12/16",
+                24
+              ],
+              [
+                "7/13/16",
+                28
+              ],
+              [
+                "7/14/16",
+                29
+              ],
+              [
+                "7/15/16",
+                26
+              ],
+              [
+                "7/16/16",
+                17
+              ],
+              [
+                "7/17/16",
+                10
+              ],
+              [
+                "7/18/16",
+                27
+              ],
+              [
+                "7/19/16",
+                19
+              ],
+              [
+                "7/2/16",
+                44
+              ],
+              [
+                "7/20/16",
+                30
+              ],
+              [
+                "7/21/16",
+                29
+              ],
+              [
+                "7/22/16",
+                22
+              ],
+              [
+                "7/23/16",
+                16
+              ],
+              [
+                "7/24/16",
+                26
+              ],
+              [
+                "7/25/16",
+                20
+              ],
+              [
+                "7/26/16",
+                22
+              ],
+              [
+                "7/27/16",
+                18
+              ],
+              [
+                "7/28/16",
+                18
+              ],
+              [
+                "7/29/16",
+                20
+              ],
+              [
+                "7/3/16",
+                32
+              ],
+              [
+                "7/30/16",
+                20
+              ],
+              [
+                "7/31/16",
+                19
+              ],
+              [
+                "7/4/16",
+                30
+              ],
+              [
+                "7/5/16",
+                30
+              ],
+              [
+                "7/6/16",
+                33
+              ],
+              [
+                "7/7/16",
+                39
+              ],
+              [
+                "7/8/16",
+                53
+              ],
+              [
+                "7/9/16",
+                27
+              ],
+              [
+                "8/1/16",
+                11
+              ],
+              [
+                "8/10/16",
+                10
+              ],
+              [
+                "8/11/16",
+                18
+              ],
+              [
+                "8/12/16",
+                16
+              ],
+              [
+                "8/13/16",
+                11
+              ],
+              [
+                "8/14/16",
+                2
+              ],
+              [
+                "8/15/16",
+                7
+              ],
+              [
+                "8/16/16",
+                12
+              ],
+              [
+                "8/17/16",
+                12
+              ],
+              [
+                "8/18/16",
+                12
+              ],
+              [
+                "8/19/16",
+                8
+              ],
+              [
+                "8/2/16",
+                22
+              ],
+              [
+                "8/20/16",
+                11
+              ],
+              [
+                "8/21/16",
+                13
+              ],
+              [
+                "8/22/16",
+                12
+              ],
+              [
+                "8/23/16",
+                12
+              ],
+              [
+                "8/24/16",
+                4
+              ],
+              [
+                "8/25/16",
+                14
+              ],
+              [
+                "8/26/16",
+                5
+              ],
+              [
+                "8/27/16",
+                3
+              ],
+              [
+                "8/28/16",
+                4
+              ],
+              [
+                "8/29/16",
+                7
+              ],
+              [
+                "8/3/16",
+                24
+              ],
+              [
+                "8/30/16",
+                2
+              ],
+              [
+                "8/31/16",
+                8
+              ],
+              [
+                "8/4/16",
+                13
+              ],
+              [
+                "8/5/16",
+                19
+              ],
+              [
+                "8/6/16",
+                15
+              ],
+              [
+                "8/7/16",
+                12
+              ],
+              [
+                "8/8/16",
+                15
+              ],
+              [
+                "8/9/16",
+                19
+              ],
+              [
+                "9/1/16",
+                9
+              ],
+              [
+                "9/10/16",
+                2
+              ],
+              [
+                "9/11/16",
+                6
+              ],
+              [
+                "9/12/16",
+                5
+              ],
+              [
+                "9/13/16",
+                6
+              ],
+              [
+                "9/15/16",
+                7
+              ],
+              [
+                "9/16/16",
+                4
+              ],
+              [
+                "9/17/16",
+                2
+              ],
+              [
+                "9/19/16",
+                3
+              ],
+              [
+                "9/2/16",
+                7
+              ],
+              [
+                "9/20/16",
+                2
+              ],
+              [
+                "9/21/16",
+                5
+              ],
+              [
+                "9/22/16",
+                2
+              ],
+              [
+                "9/23/16",
+                2
+              ],
+              [
+                "9/24/16",
+                3
+              ],
+              [
+                "9/25/16",
+                3
+              ],
+              [
+                "9/26/16",
+                2
+              ],
+              [
+                "9/27/16",
+                4
+              ],
+              [
+                "9/28/16",
+                2
+              ],
+              [
+                "9/29/16",
+                2
+              ],
+              [
+                "9/3/16",
+                15
+              ],
+              [
+                "9/4/16",
+                7
+              ],
+              [
+                "9/5/16",
+                7
+              ],
+              [
+                "9/6/16",
+                10
+              ],
+              [
+                "9/7/16",
+                5
+              ],
+              [
+                "9/8/16",
+                9
+              ],
+              [
+                "9/9/16",
+                11
+              ]
             ],
             "nlevels": 190,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1752,19 +3400,46 @@
               "arrows": {}
             },
             "levels": [
-              ["", 40514],
-              ["01-2016", 199],
-              ["02-2016", 2429],
-              ["03-2016", 3070],
-              ["04-2016", 2653],
-              ["05-2016", 1861],
-              ["06-2016", 1177],
-              ["07-2016", 522],
-              ["08-2016", 108]
+              [
+                "",
+                40514
+              ],
+              [
+                "01-2016",
+                199
+              ],
+              [
+                "02-2016",
+                2429
+              ],
+              [
+                "03-2016",
+                3070
+              ],
+              [
+                "04-2016",
+                2653
+              ],
+              [
+                "05-2016",
+                1861
+              ],
+              [
+                "06-2016",
+                1177
+              ],
+              [
+                "07-2016",
+                522
+              ],
+              [
+                "08-2016",
+                108
+              ]
             ],
             "nlevels": 9,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "time": {
               "interval": {
                 "unit": "M",
@@ -1798,19 +3473,46 @@
               "arrows": {}
             },
             "levels": [
-              ["", 40514],
-              ["Apr-16", 2653],
-              ["Aug-16", 108],
-              ["Feb-16", 2429],
-              ["Jan-16", 199],
-              ["Jul-16", 522],
-              ["Jun-16", 1177],
-              ["Mar-16", 3070],
-              ["May-16", 1861]
+              [
+                "",
+                40514
+              ],
+              [
+                "Apr-16",
+                2653
+              ],
+              [
+                "Aug-16",
+                108
+              ],
+              [
+                "Feb-16",
+                2429
+              ],
+              [
+                "Jan-16",
+                199
+              ],
+              [
+                "Jul-16",
+                522
+              ],
+              [
+                "Jun-16",
+                1177
+              ],
+              [
+                "Mar-16",
+                3070
+              ],
+              [
+                "May-16",
+                1861
+              ]
             ],
             "nlevels": 9,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1830,18 +3532,42 @@
               "arrows": {}
             },
             "levels": [
-              ["01", 40712],
-              ["02", 2429],
-              ["03", 3070],
-              ["04", 2653],
-              ["05", 1861],
-              ["06", 1177],
-              ["07", 522],
-              ["08", 108]
+              [
+                "01",
+                40712
+              ],
+              [
+                "02",
+                2429
+              ],
+              [
+                "03",
+                3070
+              ],
+              [
+                "04",
+                2653
+              ],
+              [
+                "05",
+                1861
+              ],
+              [
+                "06",
+                1177
+              ],
+              [
+                "07",
+                522
+              ],
+              [
+                "08",
+                108
+              ]
             ],
             "nlevels": 8,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1861,19 +3587,46 @@
               "arrows": {}
             },
             "levels": [
-              ["", 40514],
-              ["01-2016", 199],
-              ["02-2016", 2429],
-              ["03-2016", 3070],
-              ["04-2016", 2653],
-              ["05-2016", 1861],
-              ["06-2016", 1177],
-              ["07-2016", 522],
-              ["08-2016", 108]
+              [
+                "",
+                40514
+              ],
+              [
+                "01-2016",
+                199
+              ],
+              [
+                "02-2016",
+                2429
+              ],
+              [
+                "03-2016",
+                3070
+              ],
+              [
+                "04-2016",
+                2653
+              ],
+              [
+                "05-2016",
+                1861
+              ],
+              [
+                "06-2016",
+                1177
+              ],
+              [
+                "07-2016",
+                522
+              ],
+              [
+                "08-2016",
+                108
+              ]
             ],
             "nlevels": 9,
             "nrows": 52524,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "FIRST",
             "map-weights": {
               "arrows": {}
@@ -1899,7 +3652,7 @@
             },
             "levels": [],
             "nlevels": 1,
-            "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+            "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
             "codomain-reducer": "SUM",
             "slicing-reducer": "SUM"
           }
@@ -1908,9 +3661,9 @@
     },
     "headerViewFixes": {
       "RAW": {
-        "/Users/edmund/Desktop/data/savaysa_NRx_short.csv": [],
+        "/Users/edmund/Desktop/data/productA_NRx_short.csv": [],
         "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv": [],
-        "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv": []
+        "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv": []
       },
       "WIDE": {
         "/Users/edmund/Desktop/data/fat_campaign_activity_vDateNull.csv": []
@@ -1942,7 +3695,9 @@
           "type": "mvalue",
           "subject": "npi",
           "mspan": "rx-date",
-          "mcomps": ["rx-payer"],
+          "mcomps": [
+            "rx-payer"
+          ],
           "codomain": "rx-activity",
           "codomain-reducer": "SUM",
           "slicing-reducer": "SUM"
@@ -1960,7 +3715,9 @@
           "type": "mvalue",
           "subject": "npi",
           "mspan": "click-date",
-          "mcomps": ["click-type"],
+          "mcomps": [
+            "click-type"
+          ],
           "codomain": "click-rate",
           "codomain-reducer": "SUM",
           "slicing-reducer": "SUM"
@@ -1995,7 +3752,7 @@
               "levels": [],
               "nlevels": 6709,
               "nrows": 51255,
-              "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv"
+              "filename": "/Users/edmund/Desktop/data/productA_NRx.csv"
             },
             {
               "enabled": true,
@@ -2012,7 +3769,7 @@
               "levels": [],
               "nlevels": 52184,
               "nrows": 52524,
-              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
               "null-value-count": 315,
               "map-weights": {
                 "arrows": {}
@@ -2064,44 +3821,146 @@
                 "arrows": {}
               },
               "levels": [
-                ["CARDIOVASCULAR DISEASES", 34332],
-                ["CRITICAL CARE MEDICINE", 60],
-                ["EMERGENCY MEDICINE", 92],
-                ["ENDOCRINOLOGY", 3],
-                ["FAMILY MEDICINE", 142],
-                ["FAMILY PRACTICE", 4939],
-                ["FAMILY PRACTICE, GERIATRIC MEDICINE", 505],
-                ["FAMILY PRACTICE, SPORTS MEDICINE", 26],
-                ["GASTROENTEROLOGY", 53],
-                ["GENERAL PRACTICE", 89],
-                ["GENERAL PREVENTIVE MEDICINE", 17],
-                ["HEMATOLOGY", 2],
-                ["HEMATOLOGY/ONCOLOGY", 89],
-                ["HOSPITALIST", 45],
-                ["INFECTIOUS DISEASES", 16],
-                ["INTERNAL MED, CARD. ELECTROPHYSIOLOGY", 2922],
-                ["INTERNAL MEDICINE", 5661],
-                ["NEPHROLOGY", 3],
-                ["NUCLEAR CARDIOLOGY", 26],
-                ["NUCLEAR MEDICINE", 17],
-                ["NURSE PRACTITIONER", 877],
-                ["OBSTETRICS AND GYNECOLOGY", 11],
-                ["ONCOLOGY MEDICAL", 2],
-                ["PAIN MEDICINE", 3],
-                ["PATHOLOGY, ANATOMIC/CLINICAL", 3],
-                ["PEDIATRICS", 63],
-                ["PHYSICAL MEDICINE & REHABILITATION", 21],
-                ["PHYSICIAN ASSISTANT", 981],
-                ["PUBLIC HEALTH", 13],
-                ["PULMONARY DISEASES", 123],
-                ["RHEUMATOLOGY", 20],
-                ["THORACIC SURGERY", 6],
-                ["UNSPECIFIED", 81],
-                ["VASCULAR SURGERY", 46]
+                [
+                  "CARDIOVASCULAR DISEASES",
+                  34332
+                ],
+                [
+                  "CRITICAL CARE MEDICINE",
+                  60
+                ],
+                [
+                  "EMERGENCY MEDICINE",
+                  92
+                ],
+                [
+                  "ENDOCRINOLOGY",
+                  3
+                ],
+                [
+                  "FAMILY MEDICINE",
+                  142
+                ],
+                [
+                  "FAMILY PRACTICE",
+                  4939
+                ],
+                [
+                  "FAMILY PRACTICE, GERIATRIC MEDICINE",
+                  505
+                ],
+                [
+                  "FAMILY PRACTICE, SPORTS MEDICINE",
+                  26
+                ],
+                [
+                  "GASTROENTEROLOGY",
+                  53
+                ],
+                [
+                  "GENERAL PRACTICE",
+                  89
+                ],
+                [
+                  "GENERAL PREVENTIVE MEDICINE",
+                  17
+                ],
+                [
+                  "HEMATOLOGY",
+                  2
+                ],
+                [
+                  "HEMATOLOGY/ONCOLOGY",
+                  89
+                ],
+                [
+                  "HOSPITALIST",
+                  45
+                ],
+                [
+                  "INFECTIOUS DISEASES",
+                  16
+                ],
+                [
+                  "INTERNAL MED, CARD. ELECTROPHYSIOLOGY",
+                  2922
+                ],
+                [
+                  "INTERNAL MEDICINE",
+                  5661
+                ],
+                [
+                  "NEPHROLOGY",
+                  3
+                ],
+                [
+                  "NUCLEAR CARDIOLOGY",
+                  26
+                ],
+                [
+                  "NUCLEAR MEDICINE",
+                  17
+                ],
+                [
+                  "NURSE PRACTITIONER",
+                  877
+                ],
+                [
+                  "OBSTETRICS AND GYNECOLOGY",
+                  11
+                ],
+                [
+                  "ONCOLOGY MEDICAL",
+                  2
+                ],
+                [
+                  "PAIN MEDICINE",
+                  3
+                ],
+                [
+                  "PATHOLOGY, ANATOMIC/CLINICAL",
+                  3
+                ],
+                [
+                  "PEDIATRICS",
+                  63
+                ],
+                [
+                  "PHYSICAL MEDICINE & REHABILITATION",
+                  21
+                ],
+                [
+                  "PHYSICIAN ASSISTANT",
+                  981
+                ],
+                [
+                  "PUBLIC HEALTH",
+                  13
+                ],
+                [
+                  "PULMONARY DISEASES",
+                  123
+                ],
+                [
+                  "RHEUMATOLOGY",
+                  20
+                ],
+                [
+                  "THORACIC SURGERY",
+                  6
+                ],
+                [
+                  "UNSPECIFIED",
+                  81
+                ],
+                [
+                  "VASCULAR SURGERY",
+                  46
+                ]
               ],
               "nlevels": 34,
               "nrows": 51255,
-              "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_NRx.csv",
               "codomain-reducer": "FIRST",
               "map-weights": {
                 "arrows": {}
@@ -2120,36 +3979,114 @@
                 "arrows": {}
               },
               "levels": [
-                ["CCM", 24],
-                ["CD", 15456],
-                ["EM", 61],
-                ["FM", 16360],
-                ["FP", 6],
-                ["FPG", 40],
-                ["GER", 2],
-                ["GP", 200],
-                ["GPM", 8],
-                ["GYN", 3],
-                ["HEM", 85],
-                ["HOS", 27],
-                ["IC", 905],
-                ["ICE", 551],
-                ["IFP", 9],
-                ["IM", 17980],
-                ["IMG", 136],
-                ["MEM", 2],
-                ["MN", 2],
-                ["N", 57],
-                ["NRP", 48],
-                ["PCC", 127],
-                ["PHA", 22],
-                ["PUD", 368],
-                ["VM", 10],
-                ["VS", 61]
+                [
+                  "CCM",
+                  24
+                ],
+                [
+                  "CD",
+                  15456
+                ],
+                [
+                  "EM",
+                  61
+                ],
+                [
+                  "FM",
+                  16360
+                ],
+                [
+                  "FP",
+                  6
+                ],
+                [
+                  "FPG",
+                  40
+                ],
+                [
+                  "GER",
+                  2
+                ],
+                [
+                  "GP",
+                  200
+                ],
+                [
+                  "GPM",
+                  8
+                ],
+                [
+                  "GYN",
+                  3
+                ],
+                [
+                  "HEM",
+                  85
+                ],
+                [
+                  "HOS",
+                  27
+                ],
+                [
+                  "IC",
+                  905
+                ],
+                [
+                  "ICE",
+                  551
+                ],
+                [
+                  "IFP",
+                  9
+                ],
+                [
+                  "IM",
+                  17980
+                ],
+                [
+                  "IMG",
+                  136
+                ],
+                [
+                  "MEM",
+                  2
+                ],
+                [
+                  "MN",
+                  2
+                ],
+                [
+                  "N",
+                  57
+                ],
+                [
+                  "NRP",
+                  48
+                ],
+                [
+                  "PCC",
+                  127
+                ],
+                [
+                  "PHA",
+                  22
+                ],
+                [
+                  "PUD",
+                  368
+                ],
+                [
+                  "VM",
+                  10
+                ],
+                [
+                  "VS",
+                  61
+                ]
               ],
               "nlevels": 26,
               "nrows": 52524,
-              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
               "null-value-count": 0,
               "codomain-reducer": "FIRST",
               "map-weights": {
@@ -2188,62 +4125,218 @@
                 "arrows": {}
               },
               "levels": [
-                ["AK", 33],
-                ["AL", 1145],
-                ["AR", 372],
-                ["AZ", 1474],
-                ["CA", 5689],
-                ["CO", 558],
-                ["CT", 786],
-                ["DC", 78],
-                ["DE", 197],
-                ["FL", 4476],
-                ["GA", 1960],
-                ["HI", 223],
-                ["IA", 162],
-                ["ID", 182],
-                ["IL", 1287],
-                ["IN", 1300],
-                ["KS", 548],
-                ["KY", 783],
-                ["LA", 1294],
-                ["MA", 327],
-                ["MD", 955],
-                ["ME", 107],
-                ["MI", 1884],
-                ["MN", 108],
-                ["MO", 1241],
-                ["MS", 657],
-                ["MT", 173],
-                ["NC", 1948],
-                ["ND", 71],
-                ["NE", 315],
-                ["NH", 116],
-                ["NJ", 2298],
-                ["NM", 157],
-                ["NV", 541],
-                ["NY", 3032],
-                ["OH", 1772],
-                ["OK", 648],
-                ["OR", 242],
-                ["PA", 1510],
-                ["PR", 59],
-                ["RI", 148],
-                ["SC", 950],
-                ["SD", 255],
-                ["TN", 1754],
-                ["TX", 5084],
-                ["UT", 376],
-                ["VA", 1148],
-                ["VT", 24],
-                ["WA", 283],
-                ["WI", 164],
-                ["WV", 314],
-                ["WY", 99]
+                [
+                  "AK",
+                  33
+                ],
+                [
+                  "AL",
+                  1145
+                ],
+                [
+                  "AR",
+                  372
+                ],
+                [
+                  "AZ",
+                  1474
+                ],
+                [
+                  "CA",
+                  5689
+                ],
+                [
+                  "CO",
+                  558
+                ],
+                [
+                  "CT",
+                  786
+                ],
+                [
+                  "DC",
+                  78
+                ],
+                [
+                  "DE",
+                  197
+                ],
+                [
+                  "FL",
+                  4476
+                ],
+                [
+                  "GA",
+                  1960
+                ],
+                [
+                  "HI",
+                  223
+                ],
+                [
+                  "IA",
+                  162
+                ],
+                [
+                  "ID",
+                  182
+                ],
+                [
+                  "IL",
+                  1287
+                ],
+                [
+                  "IN",
+                  1300
+                ],
+                [
+                  "KS",
+                  548
+                ],
+                [
+                  "KY",
+                  783
+                ],
+                [
+                  "LA",
+                  1294
+                ],
+                [
+                  "MA",
+                  327
+                ],
+                [
+                  "MD",
+                  955
+                ],
+                [
+                  "ME",
+                  107
+                ],
+                [
+                  "MI",
+                  1884
+                ],
+                [
+                  "MN",
+                  108
+                ],
+                [
+                  "MO",
+                  1241
+                ],
+                [
+                  "MS",
+                  657
+                ],
+                [
+                  "MT",
+                  173
+                ],
+                [
+                  "NC",
+                  1948
+                ],
+                [
+                  "ND",
+                  71
+                ],
+                [
+                  "NE",
+                  315
+                ],
+                [
+                  "NH",
+                  116
+                ],
+                [
+                  "NJ",
+                  2298
+                ],
+                [
+                  "NM",
+                  157
+                ],
+                [
+                  "NV",
+                  541
+                ],
+                [
+                  "NY",
+                  3032
+                ],
+                [
+                  "OH",
+                  1772
+                ],
+                [
+                  "OK",
+                  648
+                ],
+                [
+                  "OR",
+                  242
+                ],
+                [
+                  "PA",
+                  1510
+                ],
+                [
+                  "PR",
+                  59
+                ],
+                [
+                  "RI",
+                  148
+                ],
+                [
+                  "SC",
+                  950
+                ],
+                [
+                  "SD",
+                  255
+                ],
+                [
+                  "TN",
+                  1754
+                ],
+                [
+                  "TX",
+                  5084
+                ],
+                [
+                  "UT",
+                  376
+                ],
+                [
+                  "VA",
+                  1148
+                ],
+                [
+                  "VT",
+                  24
+                ],
+                [
+                  "WA",
+                  283
+                ],
+                [
+                  "WI",
+                  164
+                ],
+                [
+                  "WV",
+                  314
+                ],
+                [
+                  "WY",
+                  99
+                ]
               ],
               "nlevels": 52,
               "nrows": 51255,
-              "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_NRx.csv",
               "codomain-reducer": "FIRST",
               "map-weights": {
                 "arrows": {}
@@ -2262,63 +4355,222 @@
                 "arrows": {}
               },
               "levels": [
-                ["", 4],
-                ["AK", 63],
-                ["AL", 958],
-                ["AR", 623],
-                ["AZ", 946],
-                ["CA", 4385],
-                ["CO", 580],
-                ["CT", 724],
-                ["DC", 112],
-                ["DE", 174],
-                ["FL", 4027],
-                ["GA", 1518],
-                ["HI", 197],
-                ["IA", 483],
-                ["ID", 225],
-                ["IL", 2130],
-                ["IN", 1266],
-                ["KS", 551],
-                ["KY", 991],
-                ["LA", 918],
-                ["MA", 654],
-                ["MD", 1035],
-                ["ME", 269],
-                ["MI", 1942],
-                ["MN", 552],
-                ["MO", 1219],
-                ["MS", 514],
-                ["MT", 171],
-                ["NC", 1709],
-                ["ND", 168],
-                ["NE", 459],
-                ["NH", 159],
-                ["NJ", 1981],
-                ["NM", 162],
-                ["NV", 415],
-                ["NY", 3621],
-                ["OH", 2171],
-                ["OK", 604],
-                ["OR", 452],
-                ["PA", 3213],
-                ["PR", 52],
-                ["RI", 211],
-                ["SC", 1026],
-                ["SD", 203],
-                ["TN", 1342],
-                ["TX", 3632],
-                ["UT", 346],
-                ["VA", 1395],
-                ["VT", 82],
-                ["WA", 652],
-                ["WI", 722],
-                ["WV", 474],
-                ["WY", 95]
+                [
+                  "",
+                  4
+                ],
+                [
+                  "AK",
+                  63
+                ],
+                [
+                  "AL",
+                  958
+                ],
+                [
+                  "AR",
+                  623
+                ],
+                [
+                  "AZ",
+                  946
+                ],
+                [
+                  "CA",
+                  4385
+                ],
+                [
+                  "CO",
+                  580
+                ],
+                [
+                  "CT",
+                  724
+                ],
+                [
+                  "DC",
+                  112
+                ],
+                [
+                  "DE",
+                  174
+                ],
+                [
+                  "FL",
+                  4027
+                ],
+                [
+                  "GA",
+                  1518
+                ],
+                [
+                  "HI",
+                  197
+                ],
+                [
+                  "IA",
+                  483
+                ],
+                [
+                  "ID",
+                  225
+                ],
+                [
+                  "IL",
+                  2130
+                ],
+                [
+                  "IN",
+                  1266
+                ],
+                [
+                  "KS",
+                  551
+                ],
+                [
+                  "KY",
+                  991
+                ],
+                [
+                  "LA",
+                  918
+                ],
+                [
+                  "MA",
+                  654
+                ],
+                [
+                  "MD",
+                  1035
+                ],
+                [
+                  "ME",
+                  269
+                ],
+                [
+                  "MI",
+                  1942
+                ],
+                [
+                  "MN",
+                  552
+                ],
+                [
+                  "MO",
+                  1219
+                ],
+                [
+                  "MS",
+                  514
+                ],
+                [
+                  "MT",
+                  171
+                ],
+                [
+                  "NC",
+                  1709
+                ],
+                [
+                  "ND",
+                  168
+                ],
+                [
+                  "NE",
+                  459
+                ],
+                [
+                  "NH",
+                  159
+                ],
+                [
+                  "NJ",
+                  1981
+                ],
+                [
+                  "NM",
+                  162
+                ],
+                [
+                  "NV",
+                  415
+                ],
+                [
+                  "NY",
+                  3621
+                ],
+                [
+                  "OH",
+                  2171
+                ],
+                [
+                  "OK",
+                  604
+                ],
+                [
+                  "OR",
+                  452
+                ],
+                [
+                  "PA",
+                  3213
+                ],
+                [
+                  "PR",
+                  52
+                ],
+                [
+                  "RI",
+                  211
+                ],
+                [
+                  "SC",
+                  1026
+                ],
+                [
+                  "SD",
+                  203
+                ],
+                [
+                  "TN",
+                  1342
+                ],
+                [
+                  "TX",
+                  3632
+                ],
+                [
+                  "UT",
+                  346
+                ],
+                [
+                  "VA",
+                  1395
+                ],
+                [
+                  "VT",
+                  82
+                ],
+                [
+                  "WA",
+                  652
+                ],
+                [
+                  "WI",
+                  722
+                ],
+                [
+                  "WV",
+                  474
+                ],
+                [
+                  "WY",
+                  95
+                ]
               ],
               "nlevels": 53,
               "nrows": 52524,
-              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
               "null-value-count": 4,
               "codomain-reducer": "FIRST",
               "map-weights": {
@@ -2357,13 +4609,22 @@
                 "arrows": {}
               },
               "levels": [
-                ["CASH", 2583],
-                ["MEDICAID", 822],
-                ["TOTAL THIRD PARTY", 47853]
+                [
+                  "CASH",
+                  2583
+                ],
+                [
+                  "MEDICAID",
+                  822
+                ],
+                [
+                  "TOTAL THIRD PARTY",
+                  47853
+                ]
               ],
               "nlevels": 3,
               "nrows": 51255,
-              "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_NRx.csv",
               "map-weights": {
                 "arrows": {}
               }
@@ -2378,27 +4639,90 @@
           "name": "rx-date",
           "purpose": "mspan",
           "levels": [
-            ["2015-02", 290],
-            ["2015-03", 919],
-            ["2015-04", 1181],
-            ["2015-05", 1441],
-            ["2015-06", 1732],
-            ["2015-07", 2055],
-            ["2015-08", 2289],
-            ["2015-09", 2490],
-            ["2015-10", 2802],
-            ["2015-11", 2854],
-            ["2015-12", 3084],
-            ["2016-01", 2992],
-            ["2016-02", 2980],
-            ["2016-03", 3065],
-            ["2016-04", 3023],
-            ["2016-05", 3064],
-            ["2016-06", 3117],
-            ["2016-07", 3023],
-            ["2016-08", 3071],
-            ["2016-09", 2862],
-            ["2016-10", 2942]
+            [
+              "2015-02",
+              290
+            ],
+            [
+              "2015-03",
+              919
+            ],
+            [
+              "2015-04",
+              1181
+            ],
+            [
+              "2015-05",
+              1441
+            ],
+            [
+              "2015-06",
+              1732
+            ],
+            [
+              "2015-07",
+              2055
+            ],
+            [
+              "2015-08",
+              2289
+            ],
+            [
+              "2015-09",
+              2490
+            ],
+            [
+              "2015-10",
+              2802
+            ],
+            [
+              "2015-11",
+              2854
+            ],
+            [
+              "2015-12",
+              3084
+            ],
+            [
+              "2016-01",
+              2992
+            ],
+            [
+              "2016-02",
+              2980
+            ],
+            [
+              "2016-03",
+              3065
+            ],
+            [
+              "2016-04",
+              3023
+            ],
+            [
+              "2016-05",
+              3064
+            ],
+            [
+              "2016-06",
+              3117
+            ],
+            [
+              "2016-07",
+              3023
+            ],
+            [
+              "2016-08",
+              3071
+            ],
+            [
+              "2016-09",
+              2862
+            ],
+            [
+              "2016-10",
+              2942
+            ]
           ],
           "map-symbols": {
             "arrows": {}
@@ -2421,31 +4745,94 @@
                 "arrows": {}
               },
               "levels": [
-                ["2015-02", 290],
-                ["2015-03", 919],
-                ["2015-04", 1181],
-                ["2015-05", 1441],
-                ["2015-06", 1732],
-                ["2015-07", 2055],
-                ["2015-08", 2289],
-                ["2015-09", 2490],
-                ["2015-10", 2802],
-                ["2015-11", 2854],
-                ["2015-12", 3084],
-                ["2016-01", 2992],
-                ["2016-02", 2980],
-                ["2016-03", 3065],
-                ["2016-04", 3023],
-                ["2016-05", 3064],
-                ["2016-06", 3117],
-                ["2016-07", 3023],
-                ["2016-08", 3071],
-                ["2016-09", 2862],
-                ["2016-10", 2942]
+                [
+                  "2015-02",
+                  290
+                ],
+                [
+                  "2015-03",
+                  919
+                ],
+                [
+                  "2015-04",
+                  1181
+                ],
+                [
+                  "2015-05",
+                  1441
+                ],
+                [
+                  "2015-06",
+                  1732
+                ],
+                [
+                  "2015-07",
+                  2055
+                ],
+                [
+                  "2015-08",
+                  2289
+                ],
+                [
+                  "2015-09",
+                  2490
+                ],
+                [
+                  "2015-10",
+                  2802
+                ],
+                [
+                  "2015-11",
+                  2854
+                ],
+                [
+                  "2015-12",
+                  3084
+                ],
+                [
+                  "2016-01",
+                  2992
+                ],
+                [
+                  "2016-02",
+                  2980
+                ],
+                [
+                  "2016-03",
+                  3065
+                ],
+                [
+                  "2016-04",
+                  3023
+                ],
+                [
+                  "2016-05",
+                  3064
+                ],
+                [
+                  "2016-06",
+                  3117
+                ],
+                [
+                  "2016-07",
+                  3023
+                ],
+                [
+                  "2016-08",
+                  3071
+                ],
+                [
+                  "2016-09",
+                  2862
+                ],
+                [
+                  "2016-10",
+                  2942
+                ]
               ],
               "nlevels": 21,
               "nrows": 51255,
-              "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_NRx.csv",
               "time": {
                 "interval": {
                   "unit": "M",
@@ -2513,7 +4900,7 @@
               "levels": [],
               "nlevels": 16,
               "nrows": 51255,
-              "filename": "/Users/edmund/Desktop/data/savaysa_NRx.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_NRx.csv",
               "codomain-reducer": "SUM",
               "slicing-reducer": "SUM"
             }
@@ -2526,15 +4913,42 @@
           "name": "MM-YYYY",
           "purpose": "mspan",
           "levels": [
-            ["", 40514],
-            ["Apr-16", 2653],
-            ["Aug-16", 108],
-            ["Feb-16", 2429],
-            ["Jan-16", 199],
-            ["Jul-16", 522],
-            ["Jun-16", 1177],
-            ["Mar-16", 3070],
-            ["May-16", 1861]
+            [
+              "",
+              40514
+            ],
+            [
+              "Apr-16",
+              2653
+            ],
+            [
+              "Aug-16",
+              108
+            ],
+            [
+              "Feb-16",
+              2429
+            ],
+            [
+              "Jan-16",
+              199
+            ],
+            [
+              "Jul-16",
+              522
+            ],
+            [
+              "Jun-16",
+              1177
+            ],
+            [
+              "Mar-16",
+              3070
+            ],
+            [
+              "May-16",
+              1861
+            ]
           ],
           "map-symbols": {
             "arrows": {}
@@ -2557,19 +4971,46 @@
                 "arrows": {}
               },
               "levels": [
-                ["", 40514],
-                ["Apr-16", 2653],
-                ["Aug-16", 108],
-                ["Feb-16", 2429],
-                ["Jan-16", 199],
-                ["Jul-16", 522],
-                ["Jun-16", 1177],
-                ["Mar-16", 3070],
-                ["May-16", 1861]
+                [
+                  "",
+                  40514
+                ],
+                [
+                  "Apr-16",
+                  2653
+                ],
+                [
+                  "Aug-16",
+                  108
+                ],
+                [
+                  "Feb-16",
+                  2429
+                ],
+                [
+                  "Jan-16",
+                  199
+                ],
+                [
+                  "Jul-16",
+                  522
+                ],
+                [
+                  "Jun-16",
+                  1177
+                ],
+                [
+                  "Mar-16",
+                  3070
+                ],
+                [
+                  "May-16",
+                  1861
+                ]
               ],
               "nlevels": 9,
               "nrows": 52524,
-              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
               "null-value-count": 40514,
               "time": {
                 "interval": {
@@ -2635,7 +5076,7 @@
               },
               "levels": [],
               "nlevels": 1,
-              "filename": "/Users/edmund/Desktop/data/savaysa_target_list_vSmall.csv",
+              "filename": "/Users/edmund/Desktop/data/productA_target_list_vSmall.csv",
               "codomain-reducer": "SUM",
               "slicing-reducer": "SUM"
             }
@@ -2661,7 +5102,14 @@
               "header-idx": null,
               "purpose": "mvalue",
               "format": null,
-              "header-idxs": [5, 6, 7, 8, 9, 10],
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
               "field-aliases": [
                 "Send2012_05",
                 "Send2014_04",
@@ -2712,16 +5160,32 @@
                 }
               },
               "levels": [
-                ["Send", 366],
-                ["Open", 122],
-                ["Click", 244]
+                [
+                  "Send",
+                  366
+                ],
+                [
+                  "Open",
+                  122
+                ],
+                [
+                  "Click",
+                  244
+                ]
               ],
               "enabled": true,
               "source-type": "WIDE",
               "field-alias": "click-type",
               "header-idx": null,
               "purpose": "mcomp",
-              "header-idxs": [5, 6, 7, 8, 9, 10],
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
               "field-aliases": [
                 "Send2012_05",
                 "Send2014_04",
@@ -2754,12 +5218,30 @@
           "name": "click-date",
           "purpose": "mspan",
           "levels": [
-            ["2012-05", 122],
-            ["2014-04", 122],
-            ["2014-05", 122],
-            ["2013-06", 122],
-            ["2012-07", 122],
-            ["2012-09", 122]
+            [
+              "2012-05",
+              122
+            ],
+            [
+              "2014-04",
+              122
+            ],
+            [
+              "2014-05",
+              122
+            ],
+            [
+              "2013-06",
+              122
+            ],
+            [
+              "2012-07",
+              122
+            ],
+            [
+              "2012-09",
+              122
+            ]
           ],
           "map-symbols": {},
           "etl-unit": "click-rate",
@@ -2780,19 +5262,44 @@
                 }
               },
               "levels": [
-                ["2012-05", 122],
-                ["2014-04", 122],
-                ["2014-05", 122],
-                ["2013-06", 122],
-                ["2012-07", 122],
-                ["2012-09", 122]
+                [
+                  "2012-05",
+                  122
+                ],
+                [
+                  "2014-04",
+                  122
+                ],
+                [
+                  "2014-05",
+                  122
+                ],
+                [
+                  "2013-06",
+                  122
+                ],
+                [
+                  "2012-07",
+                  122
+                ],
+                [
+                  "2012-09",
+                  122
+                ]
               ],
               "enabled": true,
               "source-type": "WIDE",
               "field-alias": "click-date",
               "header-idx": null,
               "purpose": "mspan",
-              "header-idxs": [5, 6, 7, 8, 9, 10],
+              "header-idxs": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ],
               "field-aliases": [
                 "Send2012_05",
                 "Send2014_04",
@@ -2902,7 +5409,10 @@
         "parent": null,
         "data": {},
         "index": null,
-        "childIds": [1, 2],
+        "childIds": [
+          1,
+          2
+        ],
         "listeners": []
       },
       "1": {
@@ -2912,7 +5422,9 @@
         "parent": 0,
         "data": {},
         "index": 0,
-        "childIds": [3],
+        "childIds": [
+          3
+        ],
         "listeners": []
       },
       "2": {
@@ -2922,7 +5434,11 @@
         "parent": 0,
         "data": {},
         "index": 1,
-        "childIds": [16, 17, 18],
+        "childIds": [
+          16,
+          17,
+          18
+        ],
         "listeners": []
       },
       "3": {
@@ -2932,7 +5448,14 @@
         "parent": 1,
         "data": {},
         "index": 0,
-        "childIds": [4, 6, 8, 10, 12, 14],
+        "childIds": [
+          4,
+          6,
+          8,
+          10,
+          12,
+          14
+        ],
         "listeners": []
       },
       "4": {
@@ -2948,7 +5471,9 @@
           "groupTag": "q_specialty"
         },
         "index": 0,
-        "childIds": [5],
+        "childIds": [
+          5
+        ],
         "listeners": []
       },
       "5": {
@@ -2966,7 +5491,12 @@
             "canvas-alias": "specialty",
             "tag": "txtValues",
             "count": 37,
-            "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
           }
         },
         "index": 0,
@@ -2986,7 +5516,9 @@
           "groupTag": "q_state"
         },
         "index": 1,
-        "childIds": [7],
+        "childIds": [
+          7
+        ],
         "listeners": []
       },
       "7": {
@@ -3004,7 +5536,12 @@
             "canvas-alias": "state",
             "tag": "txtValues",
             "count": 52,
-            "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
           }
         },
         "index": 0,
@@ -3024,7 +5561,9 @@
           "groupTag": "q_zip"
         },
         "index": 2,
-        "childIds": [9],
+        "childIds": [
+          9
+        ],
         "listeners": []
       },
       "10": {
@@ -3040,8 +5579,13 @@
           "groupTag": "m_campreach"
         },
         "index": 3,
-        "childIds": [11],
-        "listeners": [23, 23]
+        "childIds": [
+          11
+        ],
+        "listeners": [
+          23,
+          23
+        ]
       },
       "11": {
         "id": 11,
@@ -3108,7 +5652,9 @@
           "groupTag": "m_clickrate"
         },
         "index": 4,
-        "childIds": [13],
+        "childIds": [
+          13
+        ],
         "listeners": []
       },
       "13": {
@@ -3134,7 +5680,12 @@
                 "reduced": true,
                 "tag": "txtValues",
                 "count": 3,
-                "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": true
+                  }
+                }
               },
               "1": {
                 "request": true,
@@ -3219,8 +5770,18 @@
           "groupTag": "m_rxactivity"
         },
         "index": 5,
-        "childIds": [15],
-        "listeners": [23, 23, 23, 23, 24, 24, 23]
+        "childIds": [
+          15
+        ],
+        "listeners": [
+          23,
+          23,
+          23,
+          23,
+          24,
+          24,
+          23
+        ]
       },
       "15": {
         "id": 15,
@@ -3245,7 +5806,12 @@
                 "reduced": true,
                 "tag": "txtValues",
                 "count": 3,
-                "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": true
+                  }
+                }
               },
               "1": {
                 "request": true,
@@ -3292,7 +5858,10 @@
         "parent": 2,
         "data": {},
         "index": 0,
-        "childIds": [19, 21],
+        "childIds": [
+          19,
+          21
+        ],
         "listeners": []
       },
       "17": {
@@ -3340,7 +5909,10 @@
           "identifier": "propensity"
         },
         "index": 0,
-        "childIds": [20, 23],
+        "childIds": [
+          20,
+          23
+        ],
         "listeners": []
       },
       "20": {
@@ -3366,7 +5938,12 @@
                 "reduced": true,
                 "tag": "txtValues",
                 "count": 3,
-                "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": true
+                  }
+                }
               },
               "1": {
                 "request": true,
@@ -3465,8 +6042,13 @@
           "identifier": "decile"
         },
         "index": 1,
-        "childIds": [22, 24],
-        "listeners": [23]
+        "childIds": [
+          22,
+          24
+        ],
+        "listeners": [
+          23
+        ]
       },
       "22": {
         "id": 22,
@@ -3567,7 +6149,12 @@
             "canvas-alias": "Primary Specialty Desc",
             "tag": "txtValues",
             "count": 57,
-            "values": { "__ALL__": { "value": "__ALL__", "request": true } }
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            }
           }
         },
         "index": 0,

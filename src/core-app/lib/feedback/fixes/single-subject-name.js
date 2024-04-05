@@ -77,7 +77,7 @@ export function getDefaultSubjectName(hvs, firstSelected) {
       hv.fields.find(
         (field) =>
           field.purpose === TYPES.SUBJECT &&
-          field['default-name'] !== field['field-alias'],
+          field['header-name'] !== field['field-alias'],
       ),
     )?.[0]?.['field-alias'] ??
     (firstSelected

@@ -1,0 +1,30 @@
+{
+  "payload": {
+    "withZeroValues": {
+      "max": 1,
+      "mean": 0.05283867341202923,
+      "median": 0,
+      "min": 0,
+      "mode": [
+        0
+      ],
+      "n": 14232,
+      "null-count": 13480,
+      "ser": 0.0018752977044072295
+    },
+    "withoutZeroValues": {
+      "max": 1,
+      "mean": 1.0,
+      "median": 1,
+      "min": 1,
+      "mode": [
+        1
+      ],
+      "n": 752,
+      "null-count": 0,
+      "ser": 0.0
+    }
+  },
+  "status": "Successful",
+  "type": "summary"
+}

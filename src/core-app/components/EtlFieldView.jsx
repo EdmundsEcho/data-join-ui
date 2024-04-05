@@ -146,9 +146,7 @@ function EtlFieldView() {
   const { isLoading } = useSelector(isUiLoading);
   // view version of the data
   const fileCount = useSelector(getCountSelectedFiles);
-  const fieldsKeyedOnPurpose = useSelector(
-    (state) => getFieldsKeyedOnPurpose(state, true), // useLean sources
-  );
+  const fieldsKeyedOnPurpose = useSelector(getFieldsKeyedOnPurpose);
 
   // will re-render when fieldsKeyedOnPurpose changes (useSelector)
   const numKeys = Object.keys(fieldsKeyedOnPurpose).length;
@@ -257,10 +255,7 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
         if (typeof value === 'undefined') {
           console.debug('%cSetting nextField: undefined', 'color:red');
         } else {
-          console.debug(
-            `%cSetting nextField: ${value[0]} -> ${value[1]}`,
-            'color:red',
-          );
+          console.debug(`%cSetting nextField: ${value[0]} -> ${value[1]}`, 'color:red');
         }
       }
       setNextField(value);
@@ -278,17 +273,14 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
   // new etl field related
   // ---------------------------------------------------------------------------
   const [openNewFieldDialog, setOpenNewFieldDialog] = useState(() => false);
-  const [addedDerivedFieldName, setAddedDerivedFieldName] = useState(
-    () => undefined,
-  );
+  const [addedDerivedFieldName, setAddedDerivedFieldName] = useState(() => undefined);
 
   const enableAddNewField = useCallback(
     (etlUnitName) => {
       const sources =
         typeof etlUnitName === 'undefined'
           ? subEtlField.sources
-          : meaRelatedEtlFields.find((field) => field.name === etlUnitName)
-              .sources;
+          : meaRelatedEtlFields.find((field) => field.name === etlUnitName).sources;
 
       return sources.length > 1;
     },
@@ -296,10 +288,7 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
   );
 
   const [newFieldSeedData, setNewFieldSeedData] = useState(() => dummySeedData);
-  const resetFieldSeedData = useCallback(
-    () => setNewFieldSeedData(dummySeedData),
-    [],
-  );
+  const resetFieldSeedData = useCallback(() => setNewFieldSeedData(dummySeedData), []);
 
   // ---------------------------------------------------------------------------
   // ui active field selection with initial value set to the subject field
@@ -359,12 +348,10 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
   // Utilized in a child component effect
   const selectFieldData = useCallback(
     (fieldName) => {
-      const firstTry = [
-        subEtlField,
-        ...qualEtlFields,
-        ...meaRelatedEtlFields,
-      ].find((field) => field.name === fieldName);
-      // hack
+      const firstTry = [subEtlField, ...qualEtlFields, ...meaRelatedEtlFields].find(
+        (field) => field.name === fieldName,
+      );
+      // hack - default to subject when field returns undefined
       return typeof firstTry !== 'undefined' ? firstTry : subEtlField;
     },
     [meaRelatedEtlFields, qualEtlFields, subEtlField],
@@ -460,9 +447,7 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
   //-----------------------------------------------------------------------------
   const handleNewFieldSave = useCallback(
     (validSeedData, files) => {
-      dispatch(
-        makeDerivedField({ validSeedData, files }, { startTime: new Date() }),
-      );
+      dispatch(makeDerivedField({ validSeedData, files }, { startTime: new Date() }));
       // set the selected field *once dispatch has taken effect*
       setAddedDerivedFieldName(validSeedData.name);
       resetFieldSeedData();
@@ -532,8 +517,7 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
     (etlUnitName) => {
       const sources = !etlUnitName
         ? subEtlField.sources
-        : meaRelatedEtlFields.find((field) => field.name === etlUnitName)
-            .sources;
+        : meaRelatedEtlFields.find((field) => field.name === etlUnitName).sources;
       /*
       console.log(`%ccomponent sources:`, colors.red);
       console.dir(sources);
@@ -566,16 +550,11 @@ function Top({ data: fieldsKeyedOnPurpose, nextField, setNextField }) {
     // removing field steps
     // 1 = start and finish
     const steps = [
-      typeof nextViewRef === 'undefined' &&
-        typeof removingFieldName === 'undefined',
-      typeof nextViewRef !== 'undefined' &&
-        typeof removingFieldName !== 'undefined',
-      typeof nextViewRef === 'undefined' &&
-        typeof removingFieldName !== 'undefined',
+      typeof nextViewRef === 'undefined' && typeof removingFieldName === 'undefined',
+      typeof nextViewRef !== 'undefined' && typeof removingFieldName !== 'undefined',
+      typeof nextViewRef === 'undefined' && typeof removingFieldName !== 'undefined',
     ];
-    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${
-      steps.length
-    }`;
+    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${steps.length}`;
     console.debug('%c----------------------------------------', 'color:orange');
     console.debug(`%c📋 EtlFieldView loaded state summary:`, 'color:orange', {
       listNameAndPurpose,
@@ -667,7 +646,8 @@ function Main(props) {
         pane1Style={leftPaneStyle}
         pane2Style={rightPaneStyle}
         minSize={270}
-        defaultSize={500}>
+        defaultSize={500}
+      >
         {leftPane}
         {rightPane}
       </SplitPane>
@@ -734,7 +714,8 @@ function LeftPane({
         purpose={PURPOSE_TYPES.MVALUE}
         selectedFieldName={selectedFieldName}
         handleSelectField={handleSelectField}
-        cardHeader={<MeasurementHeader />}>
+        cardHeader={<MeasurementHeader />}
+      >
         <EtlUnitMeas
           meaEtlUnits={meaEtlUnits} // 📖
           meaRelatedEtlFields={meaRelatedEtlFieldsView} // 📖
@@ -806,8 +787,7 @@ function RightPane({
 
   return (
     <Container>
-      {typeof field?.name === 'undefined' ||
-      typeof field?.data === 'undefined' ? (
+      {typeof field?.name === 'undefined' || typeof field?.data === 'undefined' ? (
         <Container>
           <Typography type='p'>
             Select a field to complete the configuration.
@@ -943,7 +923,8 @@ function EtlUnit({
 }) {
   return (
     <ErrorBoundary
-      message={`Something went wrong with EtlUnit with purpose: ${purpose}`}>
+      message={`Something went wrong with EtlUnit with purpose: ${purpose}`}
+    >
       <Card className={clsx('Luci-EtlFieldView', 'root')}>
         {cardHeader}
         <CardContent>
@@ -971,12 +952,11 @@ function EtlUnit({
                       key={field.name}
                       className={clsx(
                         'Luci-Table-Row',
-                        field.name === selectedFieldName
-                          ? 'selected'
-                          : 'active',
+                        field.name === selectedFieldName ? 'selected' : 'active',
                       )}
                       hover
-                      onClick={() => handleSelectField(field.name)}>
+                      onClick={() => handleSelectField(field.name)}
+                    >
                       <TableCell>
                         <Typography variant='body1' noWrap>
                           {field.name}
@@ -1021,10 +1001,7 @@ function SubjectHeader() {
     <CardHeader
       title={
         <>
-          <SubjectIcon
-            className={clsx('Luci-Icon', 'subject')}
-            color='secondary'
-          />
+          <SubjectIcon className={clsx('Luci-Icon', 'subject')} color='secondary' />
           <span>Subject</span>
         </>
       }
@@ -1038,16 +1015,14 @@ function QualityHeader({ enableAddNewField, onOpenNewQualDialog }) {
     <CardHeader
       title={
         <>
-          <QualityIcon
-            className={clsx('Luci-Icon', 'quality')}
-            color='secondary'
-          />
+          <QualityIcon className={clsx('Luci-Icon', 'quality')} color='secondary' />
           <span>Qualities</span>
           {enableAddNewField ? (
             <IconButton
               className={clsx('Luci-Icon', 'addQualImpliedFieldButton')}
               size='small'
-              onClick={onOpenNewQualDialog}>
+              onClick={onOpenNewQualDialog}
+            >
               <AddIcon />
             </IconButton>
           ) : null}

@@ -30,6 +30,8 @@ LicenseInfo.setLicenseKey(
  * 👉 ErrorBoundary to isolate core-app errors
  * 👉 SubApp provides isolated access to ReduxStore
  *
+ * see also SubApp
+ *
  */
 function Main() {
   const [height, setHeight] = useState(() => undefined);

@@ -17,6 +17,10 @@
  *         👉 ValueGridInner
  *            - Fixed layout (composition of custom components)
  *
+ *
+ * 🔖  The ValueGrid hosts 2 state values:
+ *     1. the data
+ *     2. the selection model
  */
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
@@ -30,6 +34,8 @@ import ValueGridInner, {
   filterOperators,
   gridHeightFn,
   ROW_HEIGHT,
+  HEADER_HEIGHT,
+  ADJUST_HEIGHT,
 } from './ValueGridInner';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -45,10 +51,13 @@ import { removeProp } from '../../utils/common';
 export { filterOperators, ROW_HEIGHT };
 
 //-----------------------------------------------------------------------------
+//
+// set DEBUG to true when REACT_APP_DEBUG_LEVELS is true
+const DEBUG_MODULE = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 /* eslint-disable no-console */
-// const DEBUG = false;
+
 //------------------------------------------------------------------------------
-const pureSelectionModel = {
+const selectAllModel = {
   __ALL__: {
     value: '__ALL__',
     request: false, // grid reverses this semantic
@@ -77,7 +86,8 @@ const ValueGridCore = ({
   normalizer, // raw api -> fodder for edgeToGridRowFn
   edgeToGridRowFn,
   edgeToIdFn,
-  rows, // when data ::derivedField
+  derivedDataRows, // when data ::derivedField
+  apiRef: apiRefProp,
   //
   // 🙂 user input (parent retrieves)
   //
@@ -98,24 +108,28 @@ const ValueGridCore = ({
   rowHeight,
   headerHeight,
   gridHeightAdjustment,
-  DEBUG,
+  DEBUG: debugProp,
   ...rest
 }) => {
   //
-  const apiRef = useGridApiRef();
+  const DEBUG = debugProp || DEBUG_MODULE;
+  const localApiRef = useGridApiRef();
+  const apiRef = apiRefProp ?? localApiRef;
+
+  // New 0.3.11
+  // deprecate apiRef.current.selectionModel related functions
+  const [selectedRows, setSelectedRows] = useState(() => []);
+
   // initialize the api edge -> grid row transformer
+  // using the function provided as props
   const toGridFn = useMemo(
     () => toGrid(edgeToIdFn, edgeToGridRowFn),
     [edgeToIdFn, edgeToGridRowFn],
   );
 
-  // derived fields (e.g., group-by-file, already have data
-  const dataPreloaded = typeof rows !== 'undefined';
-
-  if (DEBUG && typeof rows !== 'undefined') {
-    console.debug(`rows`);
-    console.dir(rows);
-  }
+  // derived fields (group-by-file or WIDE)
+  const dataPreloaded = Boolean(derivedDataRows);
+  const isDerivedData = dataPreloaded;
 
   //----------------------------------------------------------------------------
   // PAGE SIZE (size of each api response)
@@ -152,10 +166,8 @@ const ValueGridCore = ({
   // 🔑 totalCount sets the MAX_ROWS value; it may start as undefined. The second
   // source arrives onces the api returns.
   //
-  const {
-    totalCount,
-    selectionModel: storeSelectionModel = pureSelectionModel,
-  } = selectionModel;
+  const { totalCount, selectionModel: storeSelectionModel = selectAllModel } =
+    selectionModel;
   const modelType = selectionModelType(storeSelectionModel);
   const storeRowCount = Object.keys(storeSelectionModel).length;
 
@@ -172,8 +184,7 @@ const ValueGridCore = ({
   // const { switchOn /* setDisableSwitch */ } = useContext(ToolContext);
   // inSeries <-> !reduced
   //
-  const inSeriesBuildingStateStore =
-    typeof reduced === 'undefined' ? false : !reduced;
+  const inSeriesBuildingStateStore = typeof reduced === 'undefined' ? false : !reduced;
 
   // ---------------------------------------------------------------------------
   // State-machine toggles :/
@@ -184,26 +195,20 @@ const ValueGridCore = ({
   const [error, setError] = useState(() => undefined);
   // latch for one-time render when the api status = 'success'; override
   // when the rows prop is valid
-  const [readyForMore, setReadyForMore] = useState(
-    () => typeof rows === 'undefined',
-  );
+  const [readyForMore, setReadyForMore] = useState(() => typeof rows === 'undefined');
   // changes how the footer displays the record counts
   const [inFilterState, setInFilterState] = useState(() => false);
   // tracks when the paging endCursor is invalid
   const [inNewClearedState, setInNewClearedState] = useState(() => true);
   // tracks when can avoid api to retrieve a full list
   // when transition to inSeriesBuildingState
-  const [inGridHasAllValuesState, setInGridHasAllValuesState] = useState(
-    () => false,
-  );
+  const [inGridHasAllValuesState, setInGridHasAllValuesState] = useState(() => false);
   // changes the data request and how the selection model is recorded
   const [inSeriesBuildingState, setInSeriesBuildingState] = useState(
     () => inSeriesBuildingStateStore,
   );
   // inSeriesBuilding: ensures setting REQUEST model using the all of the values
-  const [inFromSelectAllState, setInFromSelectAllState] = useState(
-    () => undefined,
-  );
+  const [inFromSelectAllState, setInFromSelectAllState] = useState(() => undefined);
 
   // ---------------------------------------------------------------------------
   // 🔗 inSeriesBuildingStateStore -> inSeriesBuildingState
@@ -254,7 +259,6 @@ const ValueGridCore = ({
   // Infinite scrolling feature
   //
   const handleOnRowScrollEnd = ({ viewportPageSize }) => {
-    // if (apiRef.current.getVisibleRowModels().size < MAX_ROWS) {
     // 🦀 ?
     const gridRowCount = apiRef.current.getAllRowIds().length;
     if (gridRowCount > 0 && gridRowCount < MAX_ROWS) {
@@ -274,7 +278,7 @@ const ValueGridCore = ({
         fetchPage();
       }
 
-      setReadyForMore(() => true);
+      setReadyForMore(true);
     }
   };
   // ---------------------------------------------------------------------------
@@ -320,8 +324,9 @@ const ValueGridCore = ({
 
     handleSetAllValues(rowIdsToRequestModel(apiRef.current.getAllRowIds()));
     // grid selection model gets an empty list
-    apiRef.current.setSelectionModel([]);
-  }, [apiRef, identifier, handleSetAllValues]);
+    // apiRef.current.setSelectionModel([]);
+    setSelectedRows(() => []);
+  }, [DEBUG, apiRef, identifier, handleSetAllValues]);
 
   const deSelectAllValues = useCallback(() => {
     if (DEBUG) {
@@ -336,8 +341,9 @@ const ValueGridCore = ({
     // store gets set to a state that will accumulate values REQUEST true
     handleToggleValue({ level: [], isSelected: false });
     // grid selection model gets the full list
-    apiRef.current.setSelectionModel(apiRef.current.getAllRowIds());
-  }, [apiRef, identifier, handleToggleValue]);
+    // apiRef.current.setSelectionModel(apiRef.current.getAllRowIds());
+    setSelectedRows(() => apiRef.current.getAllRowIds());
+  }, [DEBUG, apiRef, identifier, handleToggleValue]);
 
   const handleToggleAll = useCallback(
     ({ field }) => {
@@ -368,7 +374,8 @@ const ValueGridCore = ({
           level: [], // valueIdx [] encodes ALL
           isSelected: storeSelectionModelGenerator.__ALL__.request,
         });
-        apiRef.current.setSelectionModel(
+        // apiRef.current.setSelectionModel(
+        setSelectedRows(
           makeGridSelectionModel(
             storeSelectionModelGenerator,
             apiRef.current.getAllRowIds(),
@@ -377,7 +384,7 @@ const ValueGridCore = ({
       }
     },
     [
-      // DEBUG,
+      DEBUG,
       apiRef,
       deSelectAllValues,
       inSeriesBuildingState,
@@ -417,10 +424,7 @@ const ValueGridCore = ({
         'color: green',
       );
     }
-    if (
-      inSeriesBuildingState &&
-      !modelType.seriesCompatible(inFromSelectAllState)
-    ) {
+    if (inSeriesBuildingState && !modelType.seriesCompatible(inFromSelectAllState)) {
       if (DEBUG) {
         console.debug(
           `%cChanging the filter to get series data: Effect for: ${identifier} in series: ${inSeriesBuildingState} model type: ${modelType.type}`,
@@ -477,7 +481,7 @@ const ValueGridCore = ({
       }
     }
   }, [
-    // DEBUG,
+    DEBUG,
     MAX_ROWS,
     apiRef,
     baseSelectAll,
@@ -524,9 +528,9 @@ const ValueGridCore = ({
         items: [],
       });
     }
-    apiRef.current.setRows(rows ?? []);
+    apiRef.current.setRows(isDerivedData ? derivedDataRows : []);
     initialState();
-  }, [apiRef, initialState, rows]);
+  }, [apiRef, initialState, isDerivedData, derivedDataRows]);
 
   //
   // hidden + visible -> all visible
@@ -567,12 +571,16 @@ const ValueGridCore = ({
   // ---------------------------------------------------------------------------
   useEffect(() => {
     switch (true) {
+      case isDerivedData:
+        apiRef.current.updateRows(derivedDataRows);
+        break;
+
       case status === STATUS.REJECTED:
         setError({ message: JSON.stringify(data.cache) });
         break;
 
       // ---------------------------------------------------------------------------
-      // Success scenarios
+      // 🎉 Success scenarios
       //
       // When building a series of fields, the format of the selection model
       // changes to one that describes every level (i.e., does not use ALL)
@@ -607,6 +615,7 @@ const ValueGridCore = ({
 
       //
       // otherwise...
+      // convert the data waiting in the cache to be consumed by the grid
       //
       case status === STATUS.RESOLVED && readyForMore: {
         if (DEBUG) {
@@ -629,8 +638,7 @@ const ValueGridCore = ({
 
         break;
       }
-      case status === STATUS.RESOLVED &&
-        apiRef.current.getAllRowIds().length === 0: {
+      case status === STATUS.RESOLVED && apiRef.current.getAllRowIds().length === 0: {
         // move data from the cache into the grid
         if (DEBUG) {
           console.debug(`%cEffect trying to reload empty grid`, 'color:yellow');
@@ -648,8 +656,10 @@ const ValueGridCore = ({
       /* do nothing */
     }
   }, [
+    DEBUG,
     data.cache,
-    // DEBUG,
+    derivedDataRows,
+    isDerivedData,
     handleSetAllValues,
     apiRef,
     identifier,
@@ -676,16 +686,24 @@ const ValueGridCore = ({
           : `\n⬜  inGridHasAllValuesState: ${inGridHasAllValuesState}`,
       );
     }
-    setInGridHasAllValuesState(() =>
-      hasAllRecords(apiRef, MAX_ROWS, inFilterState),
-    );
-  }, [MAX_ROWS, apiRef, inFilterState, inGridHasAllValuesState]);
+    setInGridHasAllValuesState(() => hasAllRecords(apiRef, MAX_ROWS, inFilterState));
+  }, [DEBUG, MAX_ROWS, apiRef, inFilterState, inGridHasAllValuesState]);
 
   if (DEBUG) {
     console.assert(
       inSeriesBuildingStateStore === inSeriesBuildingState,
       `${identifier}: Store does not align with component state: inSeriesBuildingStateStore: ${inSeriesBuildingStateStore} !== inSeriesBuildingState: ${inSeriesBuildingState}`,
     );
+  }
+
+  if (DEBUG) {
+    console.log('👉 grid height function inputs', {
+      rowCount: derivedDataRows?.length ?? MAX_ROWS,
+      limitGridHeight,
+      rowHeight,
+      headerHeight,
+      gridHeightAdjustment,
+    });
   }
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -696,10 +714,9 @@ const ValueGridCore = ({
       rowClassName={clsx(className, 'row')}
       columnClassName={clsx(className, 'column')}
       columns={columns}
-      rows={rows}
       MAX_ROWS={MAX_ROWS /* from api */ || totalCount /* from redux */}
       gridHeightProp={gridHeightFn(
-        rows?.length ?? MAX_ROWS,
+        derivedDataRows?.length ?? MAX_ROWS,
         limitGridHeight,
         rowHeight,
         headerHeight,
@@ -712,6 +729,7 @@ const ValueGridCore = ({
       rowBuffer={15}
       loading={data.status === 'pending' ?? true}
       // user input
+      selectedRows={selectedRows}
       checkboxSelection={checkboxSelection}
       onRowClick={handleToggleValue}
       onToggleAll={handleToggleAll}
@@ -739,8 +757,7 @@ ValueGridCore.propTypes = {
   abortController: PropTypes.shape({}),
   reduced: PropTypes.bool,
   identifier: PropTypes.string.isRequired,
-  purpose: PropTypes.oneOf([...Object.values(PURPOSE_TYPES), 'matrix'])
-    .isRequired,
+  purpose: PropTypes.oneOf([...Object.values(PURPOSE_TYPES), 'matrix']).isRequired,
   pageSize: PropTypes.number.isRequired,
   limitGridHeight: PropTypes.number.isRequired,
   headerHeight: PropTypes.number,
@@ -756,7 +773,8 @@ ValueGridCore.propTypes = {
   edgeToIdFn: PropTypes.func,
   handleSetAllValues: PropTypes.func,
   handleToggleValue: PropTypes.func,
-  rows: PropTypes.arrayOf(PropTypes.shape({})),
+  derivedDataRows: PropTypes.arrayOf(PropTypes.shape({})),
+  apiRef: PropTypes.shape({}),
   DEBUG: PropTypes.bool,
 };
 
@@ -772,12 +790,13 @@ ValueGridCore.defaultProps = {
     selectionModel: { __ALL__: { value: '__ALL__', request: true } },
   },
   abortController: undefined,
-  headerHeight: undefined,
-  gridHeightAdjustment: 0,
-  rowHeight: undefined,
+  headerHeight: HEADER_HEIGHT,
+  gridHeightAdjustment: ADJUST_HEIGHT,
+  rowHeight: ROW_HEIGHT,
   // ⬜ move this to a required prop
   edgeToIdFn: (edge) => edge.node.level,
-  rows: undefined,
+  derivedDataRows: undefined,
+  apiRef: undefined,
 };
 
 //-------------------------------------------------------------------------------
@@ -830,7 +849,7 @@ function rowIdsToRequestModel(ids) {
 }
 //-------------------------------------------------------------------------------
 /**
- * Transform the levels recieved from the api to what the valueGrid requires.
+ * Transform the levels received from the api to what the valueGrid requires.
  * Combine the api information with the user-input recorded in the
  * redux-store.
  *
@@ -842,8 +861,11 @@ function rowIdsToRequestModel(ids) {
  *    approach reflects the bias that all records are inherently selected.
  *    The exception is to not be selected.
  *
+ * data with edges prop
+ * @param {Function} edgeToIdFn
+ * @param {Function} edgeToGridRowFn
  */
-function toGrid(edgeToIdFn, edgeToGridRowFn) {
+export function toGrid(edgeToIdFn, edgeToGridRowFn) {
   return (data, requestOrNotList) => {
     const seed = { rows: [], selectedRows: [] };
     if (typeof data === 'undefined' || (data?.edges ?? null) === null) {
@@ -890,10 +912,7 @@ function toGrid(edgeToIdFn, edgeToGridRowFn) {
  * @param {Array<(string | number)>}
  * @return bool
  */
-function addToSelectionModelPredicate(
-  requestOrNotList,
-  useGlobalEmptyModel = false,
-) {
+function addToSelectionModelPredicate(requestOrNotList, useGlobalEmptyModel = false) {
   const [isAll = false, allRequested] = [
     requestOrNotList?.__ALL__,
     requestOrNotList?.__ALL__?.request, // ⚠️  reverse, for !isSelected
@@ -912,9 +931,7 @@ function addToSelectionModelPredicate(
       //
       // selectModel displays ✅ when *not* on the list
       // ...only add to the selectionModel when !request
-      return (
-        !globalEmptyModel && ((isAll && !allRequested) || !whatIsTheRequest)
-      );
+      return !globalEmptyModel && ((isAll && !allRequested) || !whatIsTheRequest);
     },
   };
 }
@@ -934,9 +951,8 @@ function addToSelectionModelPredicate(
  * @return {Array} updated selectionModel
  */
 function makeGridSelectionModel(storeRequestOrNotList, allRowIds) {
-  const { isAll, allRequested, addPredicate } = addToSelectionModelPredicate(
-    storeRequestOrNotList,
-  );
+  const { isAll, allRequested, addPredicate } =
+    addToSelectionModelPredicate(storeRequestOrNotList);
 
   if (isAll && allRequested) return [];
   if (isAll && !allRequested) return allRowIds;

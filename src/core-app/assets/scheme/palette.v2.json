@@ -4,7 +4,14 @@
     "secondary": "rgba(0, 0, 0, 0.7)",
     "disabled": "rgba(0, 0, 0, 0.5)",
     "icon": "rgba(0, 0, 0, 0.5)",
-    "hint": "rgba(0, 0, 0, 0.7)"
+    "hint": "rgba(0, 0, 0, 0.7)",
+    "bright": "rgba(0, 0, 0, 0.6)"
+  },
+  "background": {
+    "error": "rgba(0, 0, 0, 0.3)",
+    "paper": "#B2E1EC",
+    "paper-old": "rgba(178,225,236,0.4)",
+    "default": "rgba(178,225,236,0.2)"
   },
   "primary": {
     "main": "#4894a3",
@@ -13,7 +20,7 @@
     "superLight": "rgba(178,225,236,0.4)",
     "superLightHex": "#b2e1ec",
     "extremeLight": "rgba(178,225,236,0.2)",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "secondary": {
     "main": "#dd7728",
@@ -21,28 +28,28 @@
     "extraDark": "#BA5408",
     "superLight": "rgba(255,168, 104, 0.3)",
     "extremeLight": "rgba(255,168, 104, 0.1)",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "warning": {
     "main": "#914f50",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "error": {
     "main": "#FA616C",
     "light": "#e57373",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "success": {
     "main": "#FA616C",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "info": {
     "main": "#7F7E7E",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "meta": {
     "main": "#52A5B8",
-    "contrastText": "#fff"
+    "contrastText": "#f2f3f4"
   },
   "grey": {
     "50": "#fafafa",
@@ -81,7 +88,7 @@
   "boxShadow": {
     "error": "1px 3px 2px -1px rgba(209,5,20,0.2), 1px 2px 2px 1px rgba(209,5,20,0.14), 1px 2px 4px 1px rgba(209,5,20,0.12)"
   },
-  "themeToggle": {
+  "themeColors": {
     "color-background": "rgb(240, 240, 240)",
     "color-background-card": "rgb(250, 250, 250)",
     "color-background-feedback": "var(--color-background-heading)",
@@ -92,8 +99,7 @@
     "color-background-textarea": "var(--color-background)",
     "color-background-title": "rgb(250, 250, 250)",
     "color-box-border": "rgb(207, 207, 207)",
-    "color-contrast-text": "rgb(18, 18, 18)",
-    "color-icon": "rgb(250, 250, 250)",
+    "color-icon": "rgba(97, 97, 97, 0.8)",
     "color-invert": "0",
     "color-primary-contrastText": "#ffffff",
     "color-primary-dark": "#52A5B8",

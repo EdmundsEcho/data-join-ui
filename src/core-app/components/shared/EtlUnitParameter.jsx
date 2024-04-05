@@ -2,7 +2,7 @@
 
 /**
  *
- * EtlView-related
+ * EtlView-related (see EtlUnit/workbench for related but different)
  *
  * Display a quality, component or mspan in a table row format.
  *
@@ -29,7 +29,7 @@ import { PURPOSE_TYPES as TYPES } from '../../lib/sum-types';
 /**
  * Row view of an EtlUnit parameter
  */
-const EtlUnitParameter = (props) => {
+const EtlUnitParameterTbl = (props) => {
   const {
     className,
     data: { field, rowId },
@@ -45,11 +45,8 @@ const EtlUnitParameter = (props) => {
       onClick={() => handleClick(field.name)}
       hover={hover}
     >
-      <TableCell
-        align='center'
-        className={clsx('etlUnitParameter', 'iconCell')}
-      >
-        {rowId === 0 ? ( // ⬜ 🦀 fix reliance on id ~ mspan, a norm, not explicit mspan
+      <TableCell align='center' className={clsx('etlUnitParameter', 'iconCell')}>
+        {field.purpose === TYPES.MSPAN ? (
           <TimeSpanIcon
             className={clsx('Luci-Icon', 'mspan', 'small')}
             color='secondary'
@@ -72,18 +69,21 @@ const EtlUnitParameter = (props) => {
   );
 };
 
-EtlUnitParameter.propTypes = {
+EtlUnitParameterTbl.propTypes = {
   className: PropTypes.string.isRequired,
   data: PropTypes.shape({
-    field: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
+    field: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      purpose: PropTypes.oneOf(Object.values(TYPES)).isRequired,
+    }).isRequired,
     rowId: PropTypes.number.isRequired,
   }).isRequired,
   handleClick: PropTypes.func.isRequired,
   tableCellTrash: PropTypes.func.isRequired, // (fieldName, purpose)
   hover: PropTypes.bool,
 };
-EtlUnitParameter.defaultProps = {
+EtlUnitParameterTbl.defaultProps = {
   hover: false,
 };
 
-export default EtlUnitParameter;
+export default EtlUnitParameterTbl;

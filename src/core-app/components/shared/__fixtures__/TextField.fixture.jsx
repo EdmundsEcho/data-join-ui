@@ -43,7 +43,7 @@ const fixtures = [
       stateId: `${stateId}|field-alias`,
       name: 'field-alias',
       value:
-        getValue('default-name') === getValue('field-alias')
+        getValue('header-name') === getValue('field-alias')
           ? ''
           : getValue('field-alias'),
       saveChange: saveAlias,

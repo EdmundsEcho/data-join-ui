@@ -53,7 +53,6 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid'; // make sure is last
 
 import FieldDetailView from './FieldDetailView';
-
 import SummaryDetailRow from './shared/SummaryDetailRow';
 import PurposeButtons from './shared/PurposeButtons';
 import HeadingBox from './shared/HeadingBox';
@@ -63,10 +62,7 @@ import TextField from './shared/TextField';
 import RegexMenu from './Menus/RegexMenu';
 
 // 📖 data
-import {
-  selectHeaderViewFixes,
-  selectWideToLongFields,
-} from '../ducks/rootSelectors';
+import { selectHeaderViewFixes, selectWideToLongFields } from '../ducks/rootSelectors';
 import { dummyField } from '../lib/filesToEtlUnits/transforms/headerview-field';
 import { SOURCE_TYPES, FIELD_TYPES } from '../lib/sum-types';
 
@@ -119,9 +115,8 @@ const WideToLongCard = (props) => {
   const selectFactorValue = useCallback(
     (factorName, fieldAlias) => {
       return (
-        wideToLongFields.fields?.[factorName]?.['map-fieldnames']?.arrows[
-          fieldAlias
-        ] ?? ''
+        wideToLongFields.fields?.[factorName]?.['map-fieldnames']?.arrows[fieldAlias] ??
+        ''
       );
     },
     [wideToLongFields],
@@ -140,8 +135,7 @@ const WideToLongCard = (props) => {
   const getWideFieldFromId = useCallback(
     (factorId) => {
       return (
-        fields[factors.find((factor) => factor.id === factorId).name] ||
-        dummyField
+        fields[factors.find((factor) => factor.id === factorId).name] || dummyField
       );
     },
     [factors, fields],
@@ -200,11 +194,13 @@ const WideToLongCard = (props) => {
     <HeadingBox
       key={`${stateId}|wide-to-long-card`}
       stateId={`${stateId}|wide-to-long-card`}
+      className='Luci-WideToLongFileConfig'
       heading='Wide File Configuration'
       expanded
       canCollapse
       marginTop='20px' // this feels like a hack
-      marginBottom='0px'>
+      marginBottom='0px'
+    >
       <ErrorBoundary message='wideToLongFields: Something went wrong'>
         <Collapse in>
           <Grid container spacing={5}>
@@ -278,8 +274,7 @@ function AddFactorTable(props) {
     <Table className={clsx('Luci-Table', 'factorNames')}>
       {/* Heading Factor Name | Purpose | + Factors */}
       <TableHead>
-        <TableRow
-          className={clsx('Luci-FileField-Row', 'header', 'factorNames')}>
+        <TableRow className={clsx('Luci-FileField-Row', 'header', 'factorNames')}>
           <TableCell>Factor Name</TableCell>
           <TableCell align='center'>Purpose</TableCell>
 
@@ -289,7 +284,8 @@ function AddFactorTable(props) {
               tabIndex={-1}
               style={styleIconButton}
               onClick={() => addFactor()}
-              size='large'>
+              size='large'
+            >
               <AddIcon />
             </IconButton>
             Factors
@@ -305,16 +301,10 @@ function AddFactorTable(props) {
           /* detailed view  -- compatible with file-header-fields */
           <SummaryDetailRow
             key={`${stateId}|factor-${factor.id}`}
-            className={clsx(
-              'Luci-FileField-Row',
-              'Luci-Wide-Factors',
-              'header',
-            )}
+            className={clsx('Luci-FileField-Row', 'Luci-Wide-Factors', 'header')}
             stateId={`${stateId}|factor-${factor.id}`}
             isDisabled={false}
-            isExpandable={
-              factor.name.trim() !== '' && factor.purpose === 'mspan'
-            }
+            isExpandable={factor.name.trim() !== '' && factor.purpose === 'mspan'}
             viewDetail={false}
             togglerCellPosition='last' // 'first' | 'last'
             fieldType={FIELD_TYPES.WIDE}
@@ -327,8 +317,10 @@ function AddFactorTable(props) {
                 getValue={getWideFieldValue(factor.id)}
                 saveChange={changeWideFieldValue(factor.id)}
                 hasNullValues={false}
+                hasImpliedMvalue={false}
               />
-            }>
+            }
+          >
             {/* Summary view */}
             {/* Input Factor name: config[factors.factorId].name */}
             <TableCell>
@@ -337,9 +329,7 @@ function AddFactorTable(props) {
                 stateId={`${stateId}|factor-${factor.id}`}
                 name={`${factor.id}|name`} // required but not valid e
                 value={factor.name} // we are naming the name
-                saveChange={(e) =>
-                  updateFactorProp(factor.id, 'name', e.target.value)
-                }
+                saveChange={(e) => updateFactorProp(factor.id, 'name', e.target.value)}
               />
             </TableCell>
             {/* Input Purpose buttons */}
@@ -350,9 +340,7 @@ function AddFactorTable(props) {
                 stateId={`${stateId}|purpose`}
                 name='purpose'
                 value={factor.purpose}
-                onChange={(e) =>
-                  updateFactorProp(factor.id, 'purpose', e.target.value)
-                }
+                onChange={(e) => updateFactorProp(factor.id, 'purpose', e.target.value)}
                 showComponent
                 showTiming
               />
@@ -366,7 +354,8 @@ function AddFactorTable(props) {
                 disabled={factors.length === 1}
                 style={stylePaddingZero}
                 onClick={() => removeFactor(factor.id)}
-                size='large'>
+                size='large'
+              >
                 <RemoveIcon />
               </IconButton>
             </TableCell>
@@ -406,13 +395,13 @@ function SetFactorValueTable(props) {
     <Table className={clsx('Luci-Table', 'fieldNames')}>
       {/* Header: Field Name | factor-1 | factor-2 etc.. */}
       <TableHead>
-        <TableRow
-          className={clsx('Luci-FileField-Row', 'header', 'fieldNames')}>
+        <TableRow className={clsx('Luci-FileField-Row', 'header', 'fieldNames')}>
           <TableCell>Field Name</TableCell>
           {factors.map((factor) => (
             <TableCell
               className={clsx('factorName')}
-              key={`${factor.name}-${factor.id}`}>
+              key={`${factor.name}-${factor.id}`}
+            >
               <FactorWithMenu
                 text={factor.name}
                 menu={
@@ -447,11 +436,8 @@ function SetFactorValueTable(props) {
           return (
             <TableRow
               key={$rowId}
-              className={clsx(
-                'Luci-FileField-Row',
-                'Luci-Wide-FieldNames',
-                'body',
-              )}>
+              className={clsx('Luci-FileField-Row', 'Luci-Wide-FieldNames', 'body')}
+            >
               {/* fieldname/alias that contains/embeds the factor values */}
               <TableCell>
                 <Typography>{fieldAlias}</Typography>
@@ -496,7 +482,7 @@ SetFactorValueTable.propTypes = {
 
 function FactorWithMenu({ text, menu }) {
   return (
-    <div className='WideToLongCard-FactorWithMenu'>
+    <div className='Luci-WideToLongCard factorWithMenu'>
       <div className='text'>{text}</div>
       <div className='menu'>{menu}</div>
     </div>

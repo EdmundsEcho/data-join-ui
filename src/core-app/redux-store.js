@@ -36,7 +36,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 */
-import { configureStore } from '@reduxjs/toolkit'; // dev only
+import { configureStore } from '@reduxjs/toolkit';
 import { composeWithDevTools } from '@redux-devtools/extension'; // dev only
 import { createStore, applyMiddleware } from 'redux';
 
@@ -69,11 +69,11 @@ import matrixMiddleware from './ducks/middleware/feature/matrix.middleware';
 
 // the redux-persist configuration
 // import { persistConfig } from './redux-persist-cfg';
-import { options as devTools } from './redux-tools-cfg';
+import { options as devToolOptions } from './redux-tools-cfg';
 
 /* eslint-disable no-console */
-// const sagaMiddlewareWithPid = (projectId) =>
-//   createSagaMiddleware({ context: { projectId } });
+
+const APP_VERSION = process.env.REACT_APP_VERSION;
 
 /**
  * See programming with Actions
@@ -104,7 +104,7 @@ const coreMiddleware = [
 // Production
 //
 const configureStoreProd = (preloadedState) => {
-  console.info(`Loading the Prod Version (v0.2.7) of the store`);
+  console.info(`Loading the Prod Version (v${APP_VERSION}) of the store`);
 
   const sagaMiddleware = createSagaMiddleware();
 
@@ -131,7 +131,6 @@ const configureStoreProd = (preloadedState) => {
         immutableCheck: false,
       }).prepend(middlewares),
     preloadedState,
-    devTools,
   });
 
   // register as a listener
@@ -147,7 +146,7 @@ const configureStoreProd = (preloadedState) => {
 // Development
 //
 const configureStoreDev2 = (preloadedState) => {
-  console.info(`Loading the Dev Version (v0.2.7) of the store`);
+  console.info(`Loading the Dev Version (v${APP_VERSION}) of the store`);
 
   const sagaMiddleware = createSagaMiddleware();
 
@@ -163,12 +162,10 @@ const configureStoreDev2 = (preloadedState) => {
     `appReducers: ${typeof appReducers}`,
   );
 
-  const composeDevToolsWithOptions = composeWithDevTools(devTools);
-
   const store = createStore(
     appReducers,
     preloadedState,
-    composeDevToolsWithOptions(applyMiddleware(...middlewares)),
+    composeWithDevTools(devToolOptions)(applyMiddleware(...middlewares)),
   );
 
   // add loging actions
@@ -185,9 +182,7 @@ const configureStoreDev2 = (preloadedState) => {
 
 // fn (projectId) => (initialState) => {..}
 export const storeWithoutState =
-  process.env.REACT_APP_ENV === 'production'
-    ? configureStoreProd
-    : configureStoreDev2;
+  process.env.REACT_APP_ENV === 'production' ? configureStoreProd : configureStoreDev2;
 
 // export { initStore };
 

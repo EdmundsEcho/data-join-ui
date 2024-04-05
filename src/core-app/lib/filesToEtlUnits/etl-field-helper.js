@@ -56,16 +56,12 @@ export const propFromSources = (prop) => (sources) => {
   if (!Array.isArray(sources)) {
     return propFromSources(prop)(Object.values(sources));
   }
-
   try {
-    const result = sources.reduce((acc, file) => {
-      return file[prop] ? [...acc, file[prop]] : acc;
+    return sources.reduce((acc, source) => {
+      return source[prop] ? [...acc, source[prop]] : acc;
     }, []);
-
-    return result;
   } catch (e) {
-    // console.warn(e.message);
-    return [];
+    throw new Error(`propFromSources: ${e.message}`);
   }
 };
 
@@ -76,4 +72,7 @@ export const propFromSources = (prop) => (sources) => {
  * @function
  *
  */
-export const pipe = (...fns) => (x) => fns.reduce((param, fn) => fn(param), x);
+export const pipe =
+  (...fns) =>
+  (x) =>
+    fns.reduce((param, fn) => fn(param), x);

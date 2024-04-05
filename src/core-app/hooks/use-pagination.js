@@ -298,9 +298,7 @@ const usePagination = ({
       status === STATUS.PENDING,
       status === STATUS.RESOLVED,
     ];
-    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${
-      steps.length
-    }`;
+    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${steps.length}`;
     console.debug('%c----------------------------------------', colors.blue);
     console.debug(`%c📋 usePagination loaded state summary:`, colors.blue, {
       pageSize: pageSize || pageSizeProp,
@@ -327,8 +325,7 @@ const usePagination = ({
         fetchNextPage,
         fetchPreviousPage,
         setPageSize: onPageSizeChange,
-        setPageNumber: (pageNumber) =>
-          onPageChange(pageNumber, true /* isZeroIdx */),
+        setPageNumber: (pageNumber) => onPageChange(pageNumber, true /* isZeroIdx */),
       }
     : {
         // common interface

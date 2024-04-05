@@ -23,6 +23,10 @@ export const SET_ETL_FIELD_CHANGES = `${ETL_VIEW} SET/etlFieldChanges`;
 export const SET_ETL_VIEW_ERROR = `${ETL_VIEW} SET/etlViewErrors`;
 export const RESET_ETL_VIEW_ERROR = `${ETL_VIEW} RESET/etlViewErrors`;
 
+// v0.3.11
+export const ADD_UPDATE_SYMBOL_ITEM = `${ETL_VIEW} ADD_UPDATE_SYMBOL_ITEM`; // document
+export const DELETE_SYMBOL_ITEM = `${ETL_VIEW} DELETE_SYMBOL_ITEM`; // document...
+
 /**
  * @function
  * Action creator used to configure the etlObject data.
@@ -94,10 +98,7 @@ export const removeEtlField = makeActionCreator(
 );
 
 // ::document
-export const deleteDerivedField = makeActionCreator(
-  DELETE_DERIVED_FIELD,
-  'fieldName',
-);
+export const deleteDerivedField = makeActionCreator(DELETE_DERIVED_FIELD, 'fieldName');
 
 // ::command
 export const computeEtlView = (startTime) => ({
@@ -137,16 +138,35 @@ export const renameEtlField = makeActionCreator(
   'etlFieldNameAndPurposeValues',
 );
 
-export const setEtlFieldChanges = makeActionCreator(
-  SET_ETL_FIELD_CHANGES,
-  'payload',
-);
+export const setEtlFieldChanges = makeActionCreator(SET_ETL_FIELD_CHANGES, 'payload');
 
-export const setEtlViewErrors = makeActionCreator(
-  SET_ETL_VIEW_ERROR,
-  'payload',
-);
+export const setEtlViewErrors = makeActionCreator(SET_ETL_VIEW_ERROR, 'payload');
 
 export const resetEtlViewErrors = makeActionCreator(RESET_ETL_VIEW_ERROR);
+
+/**
+ * v0.3.11
+ * Update symbol map value
+ *
+ * const { filename, headerIdx, left, right } = action.payload;
+ */
+export const addOrUpdateSymbolItem = (payload) => {
+  return {
+    type: ADD_UPDATE_SYMBOL_ITEM,
+    payload,
+  };
+};
+/**
+ * v0.3.11
+ * Delete symbol map value
+ *
+ * const { filename, headerIdx, left } = action.payload;
+ */
+export const deleteSymbolItem = (payload) => {
+  return {
+    type: DELETE_SYMBOL_ITEM,
+    payload,
+  };
+};
 
 //------------------------------------------------------------------------------

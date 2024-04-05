@@ -1,6 +1,6 @@
 // src/components/Workbench/components/ToolContext.jsx
 
-import React, { useCallback, createContext } from 'react';
+import React, { useMemo, useCallback, createContext } from 'react';
 import PropTypes from 'prop-types';
 
 import usePersistedState from '../../../../hooks/use-persisted-state';
@@ -56,17 +56,30 @@ const Provider = ({
     }
   }, [setSwitchOn, switchCallback, switchOn]);
 
-  const state = {
-    showDetail,
-    toggleShowDetail,
-    switchOn,
-    toggleSwitchOn,
-    setSwitchOn,
-    setShowDetail,
-    disableSwitch,
-    setDisableSwitch,
-    showSwitch,
-  };
+  const state = useMemo(
+    () => ({
+      showDetail,
+      toggleShowDetail,
+      switchOn,
+      toggleSwitchOn,
+      setSwitchOn,
+      setShowDetail,
+      disableSwitch,
+      setDisableSwitch,
+      showSwitch,
+    }),
+    [
+      showDetail,
+      toggleShowDetail,
+      switchOn,
+      toggleSwitchOn,
+      setSwitchOn,
+      setShowDetail,
+      disableSwitch,
+      setDisableSwitch,
+      showSwitch,
+    ],
+  );
 
   return <ToolContext.Provider value={state}>{children}</ToolContext.Provider>;
 };

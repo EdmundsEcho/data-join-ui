@@ -1,28 +1,27 @@
-import React, { useCallback, useState, useContext } from 'react';
+import React, { useContext } from 'react';
+import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
-import List from '@mui/material/List';
+import clsx from 'clsx';
+
+import { styled, useTheme } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import MuiDrawer from '@mui/material/Drawer';
+import Toolbar from '@mui/material/Toolbar';
+// icons
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListSubheader from '@mui/material/ListSubheader';
-import {
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  styled,
-  Toolbar,
-  useTheme,
-} from '@mui/material';
-import MuiDrawer from '@mui/material/Drawer';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import { useLocationChange, usePageWidth, useThemeMode } from '../hooks';
-import isValidRoute from '../router/isValidRoute';
+import { usePageWidth } from '../hooks';
 import { ThemeContext } from '../contexts/ThemeContext';
 import { mainListItems } from '../router';
+import Copyright from '../components/shared/Copyright';
 
 const drawerWidth = 240;
 
@@ -50,96 +49,80 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
   },
 }));
 
-export const SideNav = ({ open, toggleDrawer }) => {
-  const theme = useTheme();
+export const SideNav = ({ open, toggleDrawer, className }) => {
   const pageWidth = usePageWidth();
   const isMobile = pageWidth < 770;
-  const [showSidenav, setShowSidenav] = useState(false);
-
-  const setSidenavState = useCallback((location) => {
-    const { pathname } = location;
-    const show = isValidRoute(pathname) && !['/login', '/'].includes(pathname);
-    setShowSidenav(show);
-  }, []);
-
-  useLocationChange(setSidenavState);
-
-  const { toggleThemeMode } = useContext(ThemeContext);
-
-  if (!showSidenav) {
-    return null;
-  }
 
   return (
     <Drawer
+      className={clsx('Luci-Drawer', className)}
       anchor='left'
-      className='luci-drawer'
       variant={isMobile ? 'temporary' : 'permanent'}
-      open={open}>
-      <Toolbar
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          px: [1],
-        }}>
+      open={open}
+    >
+      <Toolbar className='Luci-Toolbar side-nav'>
         <IconButton onClick={toggleDrawer}>
           <ChevronLeftIcon />
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component='nav' sx={{ height: 'inherit' }}>
-        {mainListItems.map((route, index) =>
-          route.url ? (
-            <Link
-              to={route.url}
-              key={`${route.text}-${index}`}
-              onClick={() => {
-                if (isMobile) toggleDrawer();
-              }}>
-              <ListItemButton>
-                <ListItemIcon>{route.icon ?? ''}</ListItemIcon>
-                <ListItemText primary={route.text} />
-              </ListItemButton>
-            </Link>
-          ) : (
-            <div key={`${route.text}-${index}`}>
-              <Divider sx={{ my: 1 }} />
-              <ListSubheader component='div' inset>
-                {route.text}
-              </ListSubheader>
-            </div>
-          ),
-        )}
-        <ListItemButton
-          onClick={() => toggleThemeMode()}
-          sx={{
-            bottom: 0,
-            position: 'absolute',
-            marginTop: 'auto',
-            marginBottom: '10px',
-            width: '100%',
-          }}>
-          <ListItemIcon>
-            {theme.palette.mode === 'dark' ? (
-              <Brightness7Icon />
-            ) : (
-              <Brightness4Icon />
-            )}
-          </ListItemIcon>
-
-          <ListItemText
-            primary={`${theme.palette.mode === 'dark' ? 'Dark' : 'Light'} mode`}
-          />
-        </ListItemButton>
+      <List className='dashboard main side-nav links' component='nav'>
+        {mainListItems.map((menuItem) => (
+          <Link
+            key={menuItem.text}
+            to={menuItem.disabled ? '/coming-soon' : menuItem.path}
+            onClick={() => {
+              if (isMobile) toggleDrawer();
+            }}
+          >
+            <ListItemButton>
+              <ListItemIcon>{menuItem.icon}</ListItemIcon>
+              <ListItemText primary={menuItem.text} />
+            </ListItemButton>
+          </Link>
+        ))}
+        <ThemeToggle />
       </List>
+      <Copyright className='copyright' />
     </Drawer>
   );
 };
 
 SideNav.propTypes = {
-  open: PropTypes.bool.isRequired,
+  open: PropTypes.bool,
   toggleDrawer: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
+};
+SideNav.defaultProps = {
+  open: true,
 };
 
+/**
+ * Toggle with absolute position bottom: 0
+ */
+function ThemeToggle() {
+  const theme = useTheme();
+  const { toggleThemeMode } = useContext(ThemeContext);
+
+  return (
+    <ListItemButton
+      className='dashboard theme-mode-toggle'
+      onClick={() => toggleThemeMode()}
+      sx={{
+        bottom: 0,
+        position: 'absolute',
+        marginTop: 'auto',
+        marginBottom: '10px',
+        width: '100%',
+      }}
+    >
+      <ListItemIcon>
+        {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+      </ListItemIcon>
+      <ListItemText
+        primary={`${theme.palette.mode === 'dark' ? 'Dark' : 'Light'} mode`}
+      />
+    </ListItemButton>
+  );
+}
 export default SideNav;

@@ -24,7 +24,7 @@
 import { maxId } from '../../utils/common';
 import * as H from './headerview-helpers';
 
-import { createSource } from './transforms/headerview-field';
+import { createImpliedSource } from './transforms/headerview-field';
 import { PURPOSE_TYPES as TYPES } from '../sum-types';
 import { InvalidStateError } from '../LuciErrors';
 import { colors } from '../../constants/variables';
@@ -39,6 +39,8 @@ const DEBUG = process.env.REACT_APP_DEBUG_ETL_FROM_PIVOT === 'true';
 
 /**
  * 📌
+ *
+ * GroupByfile implied field
  *
  * Note: mkDerivedEtlField => from form data
  *       remakeDerivedEtlField => from __derivedField config
@@ -64,7 +66,7 @@ export const mkDerivedEtlField = (validSeedData, files) => {
   } = validSeedData;
 
   if (DEBUG) {
-    console.debug('%cnewImpliedEtlField files', colors.blue);
+    console.debug('%cnewDerivedEtlField files', colors.blue);
     console.dir(files);
 
     console.debug('%cgroupByFileArrows from the dialog', colors.blue);
@@ -80,18 +82,16 @@ export const mkDerivedEtlField = (validSeedData, files) => {
     name,
     purpose,
     'etl-unit': etlUnit, // string key
-    levels: Object.entries(
-      groupByFileArrows,
-    ).map(([filename, levelFromArrow]) => [levelFromArrow, files[filename]]),
+    levels: Object.entries(groupByFileArrows).map(([filename, levelFromArrow]) => [
+      levelFromArrow,
+      files[filename],
+    ]),
     'null-value-expansion': nullExp,
     'map-files': {
-      arrows: Object.entries(groupByFileArrows).reduce(
-        (acc, [filename, value]) => {
-          acc[filename] = value;
-          return acc;
-        },
-        {},
-      ),
+      arrows: Object.entries(groupByFileArrows).reduce((acc, [filename, value]) => {
+        acc[filename] = value;
+        return acc;
+      }, {}),
     },
     'map-weights': {
       // For now we assign a default value of 1 to weights
@@ -112,9 +112,7 @@ export const mkDerivedEtlField = (validSeedData, files) => {
 export function isValidSeedData(formData) {
   const { name = '', purpose, groupByFileArrows = {} } = formData;
   return (
-    name.trim() !== '' &&
-    purpose != null &&
-    Object.keys(groupByFileArrows).length > 0
+    name.trim() !== '' && purpose != null && Object.keys(groupByFileArrows).length > 0
   );
 }
 /**
@@ -152,8 +150,8 @@ export const remakeDerivedEtlField = (
   ).name;
 
   return returnSubjectName
-    ? { field: newEtlField({ field, subjectName }), subjectName }
-    : newEtlField({ field, subjectName });
+    ? { field: newDerivedEtlField({ field, subjectName }), subjectName }
+    : newDerivedEtlField({ field, subjectName });
 };
 
 /**
@@ -188,9 +186,7 @@ export const maybeGroupByFileFilesProp = (etlFields) => {
     }
 
     // the sources the field relies on
-    const mappedFiles = new Set(
-      Object.keys(groupByFileField['map-files'].arrows),
-    );
+    const mappedFiles = new Set(Object.keys(groupByFileField['map-files'].arrows));
     // the sources that remain
     const remainingFiles = H.intersection(activeFiles, mappedFiles);
 
@@ -251,9 +247,7 @@ export const maybeGroupByFileEtlUnitProp = (etlUnits) => {
     }
 
     // Just -> Just | Nothing
-    return activeEtlUnits.has(groupByFileField['etl-unit'])
-      ? groupByFileField
-      : null;
+    return activeEtlUnits.has(groupByFileField['etl-unit']) ? groupByFileField : null;
   };
 };
 
@@ -285,7 +279,8 @@ export const setGroupByFileIdxProp = (etlFields) => {
 // Local helpers
 //------------------------------------------------------------------------------
 /**
- * Create a new or updated etlField
+ * Create a new or updated etlField (group-by-file implied field)
+ * (see also headerview-field)
  *
  * ⬜ This definition should be coordinated with how we build
  *    headerView fields.
@@ -301,19 +296,18 @@ export const setGroupByFileIdxProp = (etlFields) => {
  * @param {string} subject
  * @return {Object}
  */
-function newEtlField({ field, subjectName }) {
+function newDerivedEtlField({ field, subjectName }) {
   if (!field) {
-    throw new Error({ message: `newEtlField: wrong input type` });
+    throw new Error({ message: `newDerivedEtlField: wrong input type` });
   }
+
   const newField = {
     idx: field.idx,
     name: field.name,
     enabled: true,
     purpose: field.purpose,
     levels: field.levels,
-    'map-symbols': {
-      arrows: {},
-    },
+    'map-symbols': field?.['map-symbols'] ?? { arrows: {} }, // user input
     'etl-unit': null, // computed
     format: null, // user input
     'null-value-expansion': null, // user input
@@ -383,8 +377,7 @@ function customPurposeField(field) {
 }
 
 /**
- * Returns the sources prop
- * (? only for implied-fields from group-by-file info)
+ * Returns the sources prop for group-by-file derived field
  *
  * @param field name, purpose, levels, arrows
  * @param subject Name of the subject field
@@ -402,14 +395,13 @@ function sources(field, subject) {
 
   // for each level in the etlField level map-files
   // ... create a new source
-  const findLevel = (search, levels) =>
-    levels.find((level) => level[0] === search);
+  const findLevel = (search, levels) => levels.find((level) => level[0] === search);
 
   // how go from nlevels in subject to [value, count]
   return Object.keys(arrows).map((filename) => {
     const level = findLevel(arrows[filename], levels);
 
-    return createSource({
+    return createImpliedSource({
       filename,
       constant: arrows[filename], // constant
       alias: name,

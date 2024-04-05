@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useValue } from 'react-cosmos/fixture';
+import { useValue } from 'react-cosmos/client';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';

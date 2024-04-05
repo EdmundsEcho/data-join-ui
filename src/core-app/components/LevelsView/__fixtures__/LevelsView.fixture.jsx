@@ -10,6 +10,7 @@ import ConsoleLog from '../../shared/ConsoleLog';
 import { fetchFileLevels as getLevels } from '../../../services/api';
 import stateField from './state-field.json';
 
+/* eslint-disable react/prop-types, no-unused-vars */
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <div role='alert'>
@@ -19,6 +20,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
+/* eslint-disable no-unused-vars */
 const rxField = {
   idx: 4,
   name: 'NRx Count',
@@ -35,7 +37,7 @@ const rxField = {
       enabled: true,
       'source-type': 'RAW',
       'header-idx': 7,
-      'default-name': 'NRx Count',
+      'header-name': 'NRx Count',
       'field-alias': 'NRx Count',
       purpose: 'mcomp',
       'null-value': null,
@@ -83,8 +85,7 @@ const Components = () => {
   const sources = buildSources(field);
 
   useEffect(() => {
-    const atCapacity =
-      cacheRef.current.length >= MAX_LEVELS || page === MAX_PAGES;
+    const atCapacity = cacheRef.current.length >= MAX_LEVELS || page === MAX_PAGES;
     if (!atCapacity) {
       getLevels({
         sources,
@@ -108,11 +109,7 @@ const Components = () => {
   return (
     <div style={{ width: '300px', margin: '20px' }}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <ConsoleLog
-          value={cacheRef.current}
-          cacheSize={cacheSize}
-          advancedView
-        />
+        <ConsoleLog value={cacheRef.current} cacheSize={cacheSize} advancedView />
       </ErrorBoundary>
     </div>
   );

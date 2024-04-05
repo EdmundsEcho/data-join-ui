@@ -132,7 +132,8 @@ function HeaderView(props) {
         handleRemove={removeFile}
         hideInactive
         status={headerView ? 'success' : 'loading'}
-        activeFieldCount={activeFieldCount}>
+        activeFieldCount={activeFieldCount}
+      >
         <HeaderViewContext.Consumer>
           {({ showDetail }) => {
             return (
@@ -148,7 +149,8 @@ function HeaderView(props) {
                     <Collapse in={showDetail} timeout='auto' unmountOnExit>
                       <Main
                         filename={filename}
-                        titleRow={<HeaderViewFieldHeader />}>
+                        titleRow={<HeaderViewFieldHeader />}
+                      >
                         <HeaderViewFields key={`|${filename}|Header}`} />
                       </Main>
                       <DerivedField
@@ -228,7 +230,8 @@ function Main({ titleRow, children }) {
   return (
     <Table
       className={clsx('Luci-HeaderView', 'Luci-Table', 'headerView', 'detail')}
-      size='medium'>
+      size='medium'
+    >
       {/* Row of field titles */}
       <TableHead>{titleRow}</TableHead>
 

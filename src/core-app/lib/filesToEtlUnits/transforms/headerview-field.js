@@ -53,7 +53,7 @@ export const dummyField = {
  * Used to both initialize new file -> header fields
  * and fields derived from "group-by-file".
  *
- * Note: this is part of the journey to the back end data extraction
+ * Note: this is part of the journey to the backend data extraction
  * used to instantiate the etl-warehouse.
  *
  * ✅ file field -> header field
@@ -66,7 +66,7 @@ export const dummyField = {
  * @return {Objecet} field Field::headerview
  */
 export const fieldFromFileField = (file, field) => {
-  // field can be raw from the backend
+  // field can be raw data from the backend
   try {
     if (!Object.values(TYPES).includes(field?.purpose)) {
       throw new ApiTncError(
@@ -85,10 +85,10 @@ export const fieldFromFileField = (file, field) => {
     enabled: true,
     'source-type': SOURCE_TYPES.RAW,
     'header-idx': field.idx,
-    'default-name': uniqueFieldNames[field.idx],
+    'header-name': uniqueFieldNames[field.idx],
     'field-alias': uniqueFieldNames[field.idx],
     purpose: field.purpose,
-    'null-value': null,
+    'null-value': field.purpose === TYPES.MVALUE ? 0 : null,
     format: null,
     'map-symbols': {
       arrows: {},
@@ -107,19 +107,22 @@ export const fieldFromFileField = (file, field) => {
  * Field template for implied-mvalue
  * information source: const when mspan is not null
  *
+ * used to generate a source item in sources
+ * (see also create-etl-field, newDerivedEtlField)
+ *
  * ⚠️  Note the limited dependency on mspan
  *
  * @function
  * @param mspan Field::headerview
  * @param currentMvalue headerView["implied-mvalue"]
- * @return field Field::headerview
+ * @return field Field::headerview used in sources
  */
 export const impliedMvalueField = ({ mspan, nrows, currentMvalue }) => {
   const { filename, 'field-alias': domain } = mspan;
   const newField = {
     enabled: true,
     'source-type': SOURCE_TYPES.IMPLIED,
-    'field-alias': currentMvalue.field['field-alias'], // callback target
+    'field-alias': currentMvalue.field['field-alias'],
     'header-idx': null,
     purpose: TYPES.MVALUE,
     format: currentMvalue.field.format,
@@ -131,6 +134,11 @@ export const impliedMvalueField = ({ mspan, nrows, currentMvalue }) => {
     levels: [[1, nrows]],
     nlevels: 1,
     filename,
+
+    // to estimate mvalue statistics and project etlField value
+    'null-value-expansion': 0, // default for etlField equivalent
+    'null-value-count': mspan['null-value-count'],
+    nrows: mspan.nrows,
   };
   return mkPurposeSpecificField(newField);
 };
@@ -154,12 +162,7 @@ export const impliedMvalueField = ({ mspan, nrows, currentMvalue }) => {
  * @returns wideToLongFields headerView prop
  *
  */
-export const longFieldFromFactor = ({
-  factor,
-  config,
-  prevField = { format: null, 'map-fieldnames': null, levels: null },
-  DEBUG = false,
-}) => {
+export const longFieldFromFactor = ({ factor, config, prevField, DEBUG = false }) => {
   if (DEBUG) {
     console.group(
       `%cApplying: longFieldFromFactor with alias: ${factor.name || 'empty'} `,
@@ -167,26 +170,35 @@ export const longFieldFromFactor = ({
     );
   }
 
-  const newField = {
-    enabled: true, // fixed when included in wideToLongFields config
-    'source-type': SOURCE_TYPES.WIDE,
-    'field-alias': factor.name, // ui using this config
-    'header-idx': null, // fixed
-    purpose: factor.purpose, // wideToLongFields config mcomp | mspan
-    format: prevField.format || null, // ui
-    'header-idxs': config['header-idxs'], // fixed
-    'field-aliases': config['field-aliases'], // fixed
-    'alias-idx-map': config['alias-idx-map'], // fixed
-    'map-fieldnames': prevField['map-fieldnames'] || {
+  const {
+    format = null,
+    'map-fieldnames': mapFieldnames = {
       // ui or regex (parser)
       arrows: arrows({
         mvalues: config['field-aliases'],
         values: [],
       }),
     },
-    levels: prevField.levels || [], // set when update arrows
-    nlevels: config['field-aliases'].length, // set when update arrows
+    levels = [],
+    'map-symbols': mapSymbols = { arrows: {} },
+  } = prevField || {};
+
+  const newField = {
+    enabled: true, // fixed when included in wideToLongFields config
+    'source-type': SOURCE_TYPES.WIDE,
+    'field-alias': factor.name, // ui using this config
+    'header-idx': null, // fixed
+    purpose: factor.purpose, // wideToLongFields config mcomp | mspan
+    'header-idxs': config['header-idxs'], // fixed
+    'field-aliases': config['field-aliases'], // fixed
+    'alias-idx-map': config['alias-idx-map'], // fixed
     filename: config.filename, // fixed
+    nlevels: config['field-aliases'].length, // set when update arrows
+
+    format, // ui
+    levels, // set when update arrows
+    'map-symbols': mapSymbols,
+    'map-fieldnames': mapFieldnames,
   };
   if (DEBUG) {
     console.debug('prevField');
@@ -209,8 +221,8 @@ export const longFieldFromFactor = ({
  * @param {Bool} DEBUG
  * @return {EtlField}
  */
-export function meaFieldFromConfig({ config, prevField = {}, DEBUG = false }) {
-  if (DEBUG) console.groupCollapsed(`%capplying: meaFieldFromConfig`, COLOR);
+export function meaFieldFromWideConfig({ config, prevField = {}, DEBUG = false }) {
+  if (DEBUG) console.groupCollapsed(`%capplying: meaFieldFromWideConfig`, COLOR);
 
   const newField = {
     enabled: true, // ui
@@ -263,7 +275,7 @@ type argsForCreateSource = {
  * @return {Object} source prop
  *
  */
-export const createSource = (args) => {
+export const createImpliedSource = (args) => {
   const {
     alias,
     codomainReducer,
@@ -334,9 +346,7 @@ export const createSource = (args) => {
 export function mkPurposeSpecificField(field, DEBUG = false) {
   if (DEBUG) {
     console.debug(
-      `headerview-field is customizing the field: ${
-        field['field-alias'] || 'empty'
-      }`,
+      `headerview-field is customizing the field: ${field['field-alias'] || 'empty'}`,
     );
   }
 

@@ -26,8 +26,16 @@ import {
   resetEtlViewErrors, // document
   deleteDerivedField,
   UPDATE_ETL_FIELD, // document
+  updateEtlField,
+  ADD_UPDATE_SYMBOL_ITEM, // document
+  DELETE_SYMBOL_ITEM, // document
 } from '../../actions/etlView.actions';
-import { setHeaderViews as setHeaderViewsAction } from '../../actions/headerView.actions';
+import {
+  ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG, // document
+  DELETE_SYMBOL_ITEM_WIDE_CONFIG, // document
+  setHeaderViews as setHeaderViewsAction,
+  addOrUpdateSymbolItemWideConfig, // document that triggers a pivot
+} from '../../actions/headerView.actions';
 import { setUiLoadingState } from '../../actions/ui.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import {
@@ -45,6 +53,7 @@ import {
   getEtlFieldChanges,
   isEtlFieldDerived,
   etlFieldExists,
+  selectEtlField,
 } from '../../rootSelectors';
 import { renameEtlField } from '../../../lib/filesToEtlUnits/rename-etl-field';
 import {
@@ -162,6 +171,7 @@ const middleware =
             'sources',
             'codomain-reducer',
             'null-value-expansion',
+            'map-symbols',
           ].includes(action.key)
         ) {
           next(tagWarehouseState('STALE'));
@@ -270,6 +280,7 @@ const middleware =
             state,
           });
 
+          // what happens next depends on what was returned from renameEtlField
           // when to call pivot(hvs) && applyFieldChanges(computedValue)
           if (typeof headerViews !== 'undefined') {
             next([
@@ -322,6 +333,45 @@ const middleware =
         }
         break;
       }
+      // v0.3.11
+      // WIP: consider need to backtrack and re-run the pivot
+      case ADD_UPDATE_SYMBOL_ITEM:
+        {
+          const { left, right, fieldName } = action.payload;
+          // build a new map-symbols object, update with new left, right value
+          const prevMapSymbols = selectEtlField(getState(), fieldName)[
+            'map-symbols'
+          ] || {
+            arrows: {},
+          };
+          const newMapSymbols = {
+            ...prevMapSymbols,
+            arrows: {
+              ...prevMapSymbols.arrows,
+              [left]: right,
+            },
+          };
+          next(updateEtlField(fieldName, 'map-symbols', newMapSymbols));
+        }
+        break;
+      // v0.3.11
+      case DELETE_SYMBOL_ITEM:
+        {
+          const { left, fieldName } = action.payload;
+          // build a new map-symbols object, update with new left, right value
+          const prevMapSymbols = selectEtlField(getState(), fieldName)[
+            'map-symbols'
+          ] || {
+            arrows: {},
+          };
+          const { [left]: _, ...arrows } = prevMapSymbols.arrows;
+          const newMapSymbols = {
+            ...prevMapSymbols,
+            arrows,
+          };
+          next(updateEtlField(fieldName, 'map-symbols', newMapSymbols));
+        }
+        break;
       default:
         break;
     }

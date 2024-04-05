@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import TextField from '@mui/material/TextField';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 
-import { DeleteButton, ForwardArrow } from "./SymbolMapShared";
+import { DeleteButton, ForwardArrow } from './SymbolMapShared';
 
 const SymbolMapItem = ({
   leftValue,
@@ -18,6 +16,7 @@ const SymbolMapItem = ({
   rightWidth,
   onUpdateStart,
   onUpdateEnd,
+  disabled,
   ...fieldProps
 }) => {
   const [rightValue, setRightValue] = useState(rightValueProp);
@@ -27,63 +26,49 @@ const SymbolMapItem = ({
     onUpdateEnd();
   };
   return (
-    <TableRow className="Luci-SymbolMapItem">
-      <TableCell
-        sx={{ width: leftWidth }}
-        component="th"
-        scope="row"
-      >
+    <TableRow className='Luci-SymbolMapItem'>
+      <TableCell size='small' sx={{ width: leftWidth }}>
         <TextField
+          className='field left'
           {...fieldProps}
+          disabled={disabled}
+          align='left'
           required
           fullWidth
-          variant="standard"
+          variant='standard'
           value={leftValue}
           InputProps={{
             readOnly: true,
           }}
-          sx={{
-            // Targeting the input element directly
-            "& .MuiInputBase-input": {
-              height: "20px",
-            },
-          }}
         />
       </TableCell>
-      <TableCell>
+      <TableCell align='center'>
         <ForwardArrow />
       </TableCell>
       <TableCell sx={{ width: rightWidth }}>
         <TextField
+          className='field right'
           {...fieldProps}
+          disabled={disabled}
           required
+          align='left'
           fullWidth
-          variant="standard"
+          variant='standard'
           value={rightValue}
           onFocus={onUpdateStart}
           onChange={(e) => {
-            console.log("onChange: ", e.target.value);
             setRightValue(e.target.value);
           }}
           onBlur={handleUpdate}
           onKeyUp={(e) => {
-            if (e.key === "Enter") {
+            if (e.key === 'Enter') {
               handleUpdate();
             }
-          }}
-          sx={{
-            // Targeting the input element directly
-            "& .MuiInputBase-input": {
-              height: "20px",
-            },
           }}
         />
       </TableCell>
       <TableCell>
-        <DeleteButton
-          hide={hideDelete}
-          onDelete={onDelete}
-        />
+        <DeleteButton hide={hideDelete} onDelete={onDelete} disabled={disabled} />
       </TableCell>
     </TableRow>
   );
@@ -99,14 +84,17 @@ SymbolMapItem.propTypes = {
   rightWidth: PropTypes.string.isRequired,
   onUpdateStart: PropTypes.func,
   onUpdateEnd: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
+/* eslint-disable no-console */
 SymbolMapItem.defaultProps = {
-  hideDelete: false, // By default, the delete icon is shown
-  onUpdate: () => console.error("onUpdate not configured"),
-  onDelete: () => console.error("onDelete not configured"),
-  onUpdateStart: () => console.error("onUpdateStart not configured"),
-  onUpdateEnd: () => console.error("onUpdateEnd not configured"),
+  hideDelete: false,
+  onUpdate: () => console.error('onUpdate not configured'),
+  onDelete: () => console.error('onDelete not configured'),
+  onUpdateStart: () => console.error('onUpdateStart not configured'),
+  onUpdateEnd: () => console.error('onUpdateEnd not configured'),
+  disabled: false,
 };
 
 export default SymbolMapItem;

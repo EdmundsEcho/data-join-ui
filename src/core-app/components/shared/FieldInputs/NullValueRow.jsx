@@ -62,7 +62,7 @@ const NullValueRow = (props) => {
       stateId={`${stateId}|null-row`}
       name={name}
       label='Null value'
-      value={value || ''}
+      value={value}
       saveChange={saveChange}
       onChange={onChange}
       onBlur={onBlur}
@@ -78,7 +78,7 @@ const NullValueRow = (props) => {
       stateId={`${stateId}|null-ext-row`}
       name={name}
       label='Null value expansion'
-      value={value || ''}
+      value={value}
       saveChange={saveChange}
       onChange={onChange}
       onBlur={onBlur}
@@ -94,7 +94,7 @@ NullValueRow.propTypes = {
   stateId: PropTypes.string.isRequired,
   name: PropTypes.oneOf(['null-value', 'null-value-expansion']).isRequired,
   fieldType: PropTypes.oneOf(Object.values(FIELD_TYPES)).isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   saveChange: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onBlur: PropTypes.func,

@@ -49,13 +49,17 @@ export const options = {
     switch (true) {
       // case action.type.includes('persist/REHYDRATE'):
 
+      // 🦀 without this it sanitizes the action
+      case action.type.includes('[HeaderView] ADD_UPDATE_SYMBOL_ITEM'):
+        return action;
+
       case action.type.includes(SET_TREE):
         // case action.type.includes(SET_MATRIX):
         return { ...action, payload: '<<LONG_BLOB>>' };
 
       case action.type.includes(POLLING_RESOLVED):
       case action.type.includes(REMOVE_PENDING_REQUEST):
-        return scrubbDown(action);
+        return scrubDown(action);
 
       case action.type.includes(ADD_HEADER_VIEW):
         return {
@@ -73,7 +77,7 @@ export const options = {
       : state,
 };
 
-function scrubbDown(action) {
+function scrubDown(action) {
   return {
     ...action,
     event: {

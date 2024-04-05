@@ -140,6 +140,15 @@ module.exports = {
    *    template when making adjustments.
    */
   rules: {
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+        optionalDependencies: false,
+        peerDependencies: false,
+        // packageDir: './',
+      },
+    ],
     // eslint
     'no-ternary': 'off',
     // get to compile
@@ -219,13 +228,4 @@ module.exports = {
 
     // see .prettierrc for prettier rule changes
   },
-
-  // only use overrides to manage subsets of files in different ways.
-  // This means, an override must include a regex to id the subset(s).
-  //overrides: [
-  //  {
-  //    files: ['**/*.jsx'],
-  //    rules: {},
-  //  },
-  //],
 };

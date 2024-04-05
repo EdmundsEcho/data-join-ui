@@ -17,9 +17,7 @@ export const SinglePageWithMarkdown = ({ markdownFile, className }) => {
   return (
     <div className={`main-page with-markdown root ${className}`}>
       <div className='markdown'>
-        <ReactMarkdown source={markdown} remarkPlugins={[remarkGfm]}>
-          {markdown}
-        </ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
       </div>
 
       <div className='footer'>

@@ -10,6 +10,7 @@ import './assets/index.css';
 import './assets/fonts.css';
 import './assets/dashboard.css';
 import './assets/core-app-sizing.css';
+import './assets/sliding-popups.css';
 
 import Root from './Root';
 

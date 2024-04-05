@@ -1,21 +1,21 @@
+/**
+ * This does not work in the latest cosmos
+ * Cosmos expects something different it seems.
+ */
+
 import React from 'react';
-import { ReduxMock as ReduxMockInternal } from 'react-cosmos-redux';
-import { createStore } from 'redux';
 import PropTypes from 'prop-types';
 
-import combinedReducer from './core-app/combinedReducer';
-import defaultStore from './core-app/datasets/store_v4.json';
+import { Provider } from 'react-redux';
+
+Provider.displayName = 'MockReduxStore-Provider';
 
 /**
  * ReduxMock
  * Creates a mock store using defaultStore
  */
 const ReduxMock = ({ children, initialState }) => (
-  <ReduxMockInternal
-    configureStore={(state) => createStore(combinedReducer, state)}
-    initialState={initialState}>
-    {children}
-  </ReduxMockInternal>
+  <Provider store={initialState}>{children}</Provider>
 );
 
 ReduxMock.propTypes = {
@@ -24,7 +24,7 @@ ReduxMock.propTypes = {
 };
 
 ReduxMock.defaultProps = {
-  initialState: defaultStore,
+  initialState: undefined,
 };
 
 export default ReduxMock;

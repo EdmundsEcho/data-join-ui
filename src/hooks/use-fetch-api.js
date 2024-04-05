@@ -11,11 +11,7 @@ import {
   SET_FETCH_ARGS,
 } from './shared-action-types';
 
-import {
-  colors,
-  areSimilarObjects,
-  equal,
-} from '../core-app/constants/variables';
+import { colors, areSimilarObjects, equal } from '../core-app/constants/variables';
 import { DesignError } from '../core-app/lib/LuciErrors';
 
 import useAbortController from './use-abort-controller';
@@ -94,10 +90,7 @@ const useFetchApi = ({
   if (DEBUG) {
     const { aborted } = abortController.signal;
     const color = aborted ? colors.purpleDarkGrey : colors.purpleGrey;
-    console.debug(
-      `%cuseFetchApi loading: ${caller}      Aborted: ${aborted}`,
-      color,
-    );
+    console.debug(`%cuseFetchApi loading: ${caller}      Aborted: ${aborted}`, color);
   }
   // -----------------------------------------------------------------------------
   // 🟢 entry-point: useEffect listens for changes to args
@@ -227,7 +220,7 @@ const useFetchApi = ({
     if (DEBUG) {
       console.debug(
         `%cuseFetchApi status: ${caller} - ${state.status}`,
-        'color:orangered',
+        'color:lightblue',
       );
     }
   }, [DEBUG, state.status, caller]);
@@ -333,8 +326,7 @@ function compare(cacheRef, response_, equalityFnName) {
         break;
 
       case equalityFnName === 'length': {
-        isEqual =
-          equalityFns.length(cache) === equalityFns.length(response.data);
+        isEqual = equalityFns.length(cache) === equalityFns.length(response.data);
         break;
       }
 

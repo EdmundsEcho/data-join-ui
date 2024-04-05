@@ -26,6 +26,7 @@ import {
 
 // -----------------------------------------------------------------------------
 // const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
+const APP_VERSION = process.env.REACT_APP_VERSION;
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -61,7 +62,7 @@ export const loadStore = (serverResponse) => {
   const newStore = {
     $_projectMeta: {
       projectId,
-      version: '0.3.6',
+      version: APP_VERSION,
       meta: {
         loadingStatus: LOAD_STATUS.EMPTY,
         lastSavedOn: undefined,
@@ -79,7 +80,7 @@ export const loadStore = (serverResponse) => {
 //------------------------------------------------------------------------------
 const resetState = {
   projectId: null,
-  version: '0.3.6',
+  version: APP_VERSION,
   meta: { loadingStatus: LOAD_STATUS.UNINITIALIZED },
 };
 //------------------------------------------------------------------------------
@@ -110,6 +111,22 @@ const reducer = createReducer(resetState, {
       loadingStatus: payload,
     },
   }),
+  // temp non-core functionality
+  ADD_UPDATE_HISTORY: (state, action) => ({
+    ...state,
+    updateHistory: [...(state.updateHistory || []), action.payload],
+  }),
 });
+/*
+  store.dispatch({
+  type: 'ADD_UPDATE_HISTORY',
+  payload: {
+    from: '0.3.6',
+    to: '0.3.11',
+    timestamp: new Date().toISOString(),
+    description: `Migration applied from 0.3.6 to 0.3.11`,
+  },
+});
+*/
 
 export default reducer;

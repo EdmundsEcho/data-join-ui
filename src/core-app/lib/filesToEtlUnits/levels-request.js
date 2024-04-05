@@ -21,6 +21,29 @@ import { InvalidStateError } from '../LuciErrors';
 /* eslint-disable no-console */
 
 /**
+ * local utility functions
+ */
+const sourcePropsForRequest = ['filename', 'header-idx', 'map-symbols', 'null-value'];
+/**
+ * @function
+ * @param {function | object} source
+ * @returns {Object} source
+ */
+const sourceForRequest = (source) => {
+  const getValue = typeof source === 'function' ? source : (prop) => source[prop];
+
+  const result = sourcePropsForRequest.reduce((acc, prop) => {
+    acc[prop] = getValue(prop);
+    return acc;
+  }, {});
+  return result;
+};
+/**
+ * 🦀 in the design: field types from the headerView can include impliedMvalue.
+ * This request type does not hit the Levels request machinary so it works.
+ * Nonetheless, to unify the process, we should add add ImpliedMvalue (separate
+ * from another implied field that reside in the ETL domain: group-by-file)
+ *
  * @function
  * @param {function} getValue
  * @param {('ETL' | 'FILE' | 'WIDE')} fieldType
@@ -28,48 +51,44 @@ import { InvalidStateError } from '../LuciErrors';
  */
 export const fileLevelsRequest = (getValue, fieldType) => {
   switch (fieldType) {
+    // call from headerView
     case FIELD_TYPES.FILE:
       return {
         purpose: getValue('purpose'),
-        sources: [
-          {
-            filename: getValue('filename'),
-            'header-index': getValue('header-idx'),
-          },
-        ],
-        arrows: getValue('map-symbols')?.arrows ?? {},
+        sources: [sourceForRequest(getValue)],
       };
-    case FIELD_TYPES.ETL:
-      return {
-        purpose: getValue('purpose'),
-        sources: buildSources(getValue('sources')),
-        arrows: getValue('map-symbols')?.arrows ?? {},
-      };
+    // called from the headerView.
     case FIELD_TYPES.WIDE:
       return {
         purpose: getValue('purpose'),
-        sources: makeFromWide(getValue('header-idxs'), getValue('filename')),
-        arrows: {},
+        sources: makeSourcesFromWide(getValue),
+      };
+    // etl fields have a range of source types including WIDE
+    // TODO: see how null-value-expansion is set for WIDE and other mvalue
+    // sources
+    case FIELD_TYPES.ETL:
+      return {
+        purpose: getValue('purpose'),
+        sources: buildEtlSources(getValue('sources')),
+        'map-symbols': getValue('map-symbols'),
+        'null-value-expansion': getValue('null-value-expansion') ?? null,
       };
     default:
       throw new InvalidStateError(`Unreachable`);
   }
 };
 
-function buildSources(sources) {
+function buildEtlSources(sources) {
   //
-  // Unify source types: RAW, WIDE, IMPLIED
+  // Universal processing of source types: RAW, WIDE, IMPLIED
   //
   const result = sources.flatMap((source) => {
     switch (source['source-type']) {
       case SOURCE_TYPES.RAW:
-        return {
-          filename: source.filename,
-          'header-index': source['header-idx'],
-        };
+        return sourceForRequest(source);
 
       case SOURCE_TYPES.WIDE:
-        return makeFromWide(source['header-idxs'], source.filename);
+        return makeSourcesFromWide((prop) => source[prop]);
 
       case SOURCE_TYPES.IMPLIED:
         return { flag: 'NA' };
@@ -82,8 +101,27 @@ function buildSources(sources) {
   return result;
 }
 /**
- * task: use the same filename across each of the header-idx in header-idxs
+ * Task: Use the same source (filename and other props for the request) for each idx in
+ * the wide header-idxs prop to create an array of sources.
+ *
+ * Note: source is from the sources prop of the ETL field where the source-type =
+ * WIDE
+ *
+ * TODO: Need to include a null-value user-input for the wide-to-long
+ * configuration. For now, assume mvalue is zero.  Note: this is only relevant
+ * for mvalue (the factor/fields are derived from the fieldnames).
+ *
+ * @function
+ * @param {function} getValue // a field in the wide-to-long configuration
+ * @return {Array<Object>} sources // for the request
  */
-function makeFromWide(idxs, filename) {
-  return idxs.map((idx) => ({ filename, 'header-index': idx }));
+function makeSourcesFromWide(getValue) {
+  return getValue('header-idxs').map((idx) =>
+    sourceForRequest((prop) => {
+      if (prop === 'header-idx') {
+        return idx;
+      }
+      return getValue(prop);
+    }),
+  );
 }

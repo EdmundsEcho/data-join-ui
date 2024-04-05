@@ -27,6 +27,10 @@ import { FIELD_TYPES, PURPOSE_TYPES } from './lib/sum-types';
  *    const { absolute, children, classes,
  *            flexItem, light, orientation, textAlign, variant
  *    } = ownerState;
+ *
+ *    Colors that depend on theme mode
+ *    - mui primary, secondary, error, warning, info, success
+ *    - palette.themeColors
  */
 
 const spacing = [0, 2, 4, 6, 10, 14, 20, 26, 32, 38, 48, 58, 64];
@@ -53,6 +57,7 @@ export default (mode) => {
   const palette = isLightMode ? paletteLight : paletteDark;
 
   return createTheme({
+    spacing,
     spacingFn,
 
     palette: {
@@ -64,14 +69,9 @@ export default (mode) => {
       htmlFontSize: 14,
       fontSize: 14,
       // rem font-size set in index.css
-      fontFamily: [
-        'Rubik',
-        'Lato',
-        'Raleway',
-        'Helvetica',
-        'Arial',
-        'sans-serif',
-      ].join(','),
+      fontFamily: ['Rubik', 'Lato', 'Raleway', 'Helvetica', 'Arial', 'sans-serif'].join(
+        ',',
+      ),
 
       h1: {
         fontSize: '5rem',
@@ -139,8 +139,6 @@ export default (mode) => {
     shape: {
       borderRadius: 16,
     },
-    // specified up-top
-    spacing,
 
     components: {
       //--------------------------------------------------------------------------
@@ -149,7 +147,8 @@ export default (mode) => {
       MuiAppBar: {
         styleOverrides: {
           root: ({ theme }) => ({
-            backgroundColor: theme.palette.themeToggle['color-primary-dark'],
+            height: 'var(--app-bar-height)',
+            backgroundColor: theme.palette.primary.main,
           }),
         },
       },
@@ -226,6 +225,49 @@ export default (mode) => {
             //--------------------------------------------------------------------
             '&.Luci-Table': {
               //--------------------------------------------------------------------
+              // SymbolMapMaker
+              //--------------------------------------------------------------------
+              '&.symbolMapMaker': {
+                '& th': {
+                  whiteSpace: 'nowrap',
+                },
+                '& th:last-child, & td:last-child': {
+                  paddingRight: 'unset',
+                },
+                '& > tbody > tr.Luci-SymbolMapItem > td': {
+                  border: 'none',
+                  paddingTop: '0',
+                  paddingBottom: '0',
+                },
+                '& > thead > tr > th:first-of-type, & > tbody > tr > td:first-of-type, & > tfoot > tr > td:first-of-type':
+                  {
+                    paddingLeft: '1.0em',
+                  },
+                '& > thead > tr > th': {
+                  paddingTop: '0.5em',
+                  paddingBottom: '0.1em',
+                },
+                '& th > p': {
+                  textAlign: 'left',
+                },
+              },
+              '& .symbolMapMaker.footer-cell': {
+                borderBottom: 'none',
+              },
+              '& .Luci-AutocompleteNewPair td': {
+                paddingTop: '1.5em',
+                borderBottom: 'none',
+                paddingLeft: '0.5em',
+              },
+              '& .Luci-SymbolMapItem': {
+                '& .MuiInputBase-input': {
+                  height: '20px',
+                },
+                '& .MuiSvgIcon-root': {
+                  color: theme.palette.themeColors['color-icon'],
+                },
+              },
+              //--------------------------------------------------------------------
               // HeaderView fields
               //--------------------------------------------------------------------
               '&.headerView': {
@@ -244,49 +286,6 @@ export default (mode) => {
               },
               '&.headerView, &.factorNames': {
                 '& .MuiTableCell-head': {},
-              },
-              //--------------------------------------------------------------------
-              // wide-to-long configuration
-              //--------------------------------------------------------------------
-              '&.factorNames': {
-                width: '100%',
-                tableLayout: 'fixed',
-                '& .MuiTableCell-head': {},
-                '& thead tr th:first-of-type': {
-                  width: '170px',
-                },
-                '& tbody tr td': {
-                  border: 'none',
-                },
-                '& tbody tr[class*=nowInView] td': {
-                  borderBottom: `1.5px solid ${theme.palette.grey[300]}`,
-                },
-                '& thead tr th:last-child': {
-                  width: '50px',
-                },
-                '& tr[class*=summaryView] .MuiTableCell-body': {
-                  '& .MuiInputBase-root': {
-                    color: theme.palette.primary.main,
-                    fontStyle: 'italic',
-                  },
-                },
-              },
-              '&.fieldNames': {
-                '& .MuiTableCell-head.factorName': {
-                  color: theme.palette.primary.main,
-                  fontStyle: 'italic',
-                  fontSize: '1.2rem',
-                  '& div[class*=WideToLongCard]': {
-                    maxWidth: '194px', // input + 50% menu button
-                  },
-                },
-                '& .MuiTableCell-body': {
-                  border: 'none',
-                },
-                '& tbody tr:last-child td': {
-                  paddingBottom: spacingFn(7),
-                  borderBottom: `2px solid ${theme.palette.grey[300]}`,
-                },
               },
               //--------------------------------------------------------------------
               // Etl fields
@@ -393,11 +392,10 @@ export default (mode) => {
                 // marginBottom: '100px',
               },
               // max-out space for filename
-              "& thead tr th[class*='filename'], & tbody tr td[class*='filename']":
-                {
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                },
+              "& thead tr th[class*='filename'], & tbody tr td[class*='filename']": {
+                paddingLeft: 0,
+                paddingRight: 0,
+              },
               '& .filesize': {
                 whiteSpace: 'nowrap',
               },
@@ -520,13 +518,21 @@ export default (mode) => {
           }),
         },
       },
+      // outlined input
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: (/* { theme } */) => ({
+            borderRadius: '0.5em',
+          }),
+        },
+      },
       MuiFormControl: {
         defaultProps: {
           variant: 'standard',
         },
         styleOverrides: {
           root: ({ theme }) => ({
-            '&.LuciSelectMenu': {
+            '&.Luci-SelectMenu': {
               minWidth: '36px',
               '&.derivedField': {
                 minWidth: '80px',
@@ -608,8 +614,8 @@ export default (mode) => {
             backgroundColor: isLightMode
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
-            borderTopLeftRadius: spacingFn(5),
-            borderTopRightRadius: spacingFn(5),
+            borderTopLeftRadius: '0.5em',
+            borderTopRightRadius: '0.5em',
           }),
           columnHeader: ({ theme }) => ({
             padding: `0 ${theme.spacingFn(4)}`,
@@ -665,7 +671,7 @@ export default (mode) => {
               opacity: 0.5,
               backgroundColor: isLightMode
                 ? theme.palette.grey[100]
-                : theme.palette.grey[800],
+                : theme.palette.grey[600],
               '&:hover': {
                 opacity: 1,
                 backgroundColor: isLightMode
@@ -682,119 +688,13 @@ export default (mode) => {
             border: `none`,
             padding: '0',
             margin: '0',
-            '&.Luci-ValueGrid-fileLevels': {
-              '& .MuiDataGrid-columnHeaders': {
-                borderTopLeftRadius: spacingFn(2),
-                borderTopRightRadius: spacingFn(2),
-              },
-            },
-            '&.EtlUnit-ValueGrid': {
-              '& .MuiDataGrid-footer': {
-                backgroundColor:
-                  theme.palette.themeToggle['color-background-footer'],
-                filter: 'brightness(1.1)',
-                borderTopLeftRadius: spacingFn(2),
-                borderTopRightRadius: spacingFn(2),
-              },
-              '& .MuiDataGrid-columnHeaders': {
-                borderTopLeftRadius: spacingFn(2),
-                borderTopRightRadius: spacingFn(2),
-              },
-              '& .MuiDataGrid-columnHeader': {
-                paddingTop: 0,
-                paddingBottom: 0,
-              },
-              '& .MuiDataGrid-columnHeaderTitleContainer': {
-                padding: 0,
-                alignItems: 'center',
-              },
-              '& .MuiDataGrid-columnSeparator': {
-                visibility: 'hidden',
-              },
-              '& .MuiDataGrid-columnHeaderCheckbox svg': {
-                height: '0.9em',
-                width: '0.9em',
-              },
-            },
-            '&.Luci-ValueGrid-matrix': {
-              '& .fieldname': {
-                '& .MuiDataGrid-iconButtonContainer': {
-                  marginRight: '-7px',
-                },
-              },
-            },
-            '&.EtlUnit-ValueGrid.MuiDataGrid-row.Mui-selected': {
-              opacity: '0.5',
-            },
-            // DataGrid className
-            '&.EtlUnit-ValueGrid, &.Luci-ValueGrid-fileLevels, &.Luci-ValueGrid-matrix':
-              {
-                '& .record-counts': {
-                  marginRight: theme.spacingFn(3),
-                },
-                // root and another class
-                '& .MuiDataGrid-checkboxInput': {
-                  '& .MuiSvgIcon-root': {
-                    width: '1.0rem',
-                    height: '1.0rem',
-                  },
-                },
-                // root and another class
-                '& .MuiDataGrid-footer': {
-                  minHeight: '20px',
-                  maxHeight: '25px',
-                  padding: `${spacingFn(0)}`,
-                  margin: `${spacingFn(2)} 0`,
-                  justifyContent: 'space-between',
-                  backgroundColor: isLightMode
-                    ? theme.palette.grey[200]
-                    : 'rgb(56, 56, 56)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  '& .tools': {
-                    '& .MuiIconButton-sizeSmall': {
-                      color: theme.palette.primary.main,
-                      '&.Mui-disabled': {
-                        color: 'inherit',
-                      },
-                      '& > *:first-of-type': {
-                        '& > *:first-of-type': {
-                          // svg-icon
-                          fontSize: '1.1rem',
-                        },
-                      },
-                    },
-                  },
-                  '& .MuiTablePagination-root': {
-                    '& .MuiTablePagination-toolbar': {
-                      minHeight: '20px',
-                    },
-                    '& .MuiToolbar-root': {
-                      '& .MuiTypography-body2': {
-                        fontSize: '0.7rem',
-                        lineHeight: '0.7rem',
-                      },
-                      '& .MuiTablePagination-actions': {
-                        '& .MuiButtonBase-root': {
-                          fontSize: '0.8rem',
-                          lineHeight: '0.8rem',
-                          padding: '3px',
-                          '& .MuiIconButton-label': {
-                            '& .MuiSvgIcon-root': {
-                              fontSize: '1.2rem',
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
           }),
         },
       },
       //--------------------------------------------------------------------------
-      /* Toolbar */
+      /* Toolbar
+       * Coordinate with AppBar
+       */
       MuiToolbar: {
         styleOverrides: {
           dense: {
@@ -802,11 +702,34 @@ export default (mode) => {
               minHeight: 'min-content',
             },
           },
-          root: {
+          root: ({ theme }) => ({
+            '&.Luci-Toolbar': {
+              minHeight: 'unset',
+            },
+            '&.Luci-Toolbar.app-bar': {
+              marginTop: 'auto',
+              marginBottom: 'auto',
+            },
+            '&.Luci-Toolbar.side-nav': {
+              height: 'var(--app-bar-height)',
+              backgroundColor: theme.palette.primary.main,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              px: [1],
+            },
+            '& .MuiSvgIcon-root': {
+              color: theme.palette.primary.contrastText,
+            },
             '&.Luci-DirectoryView': {
               width: '100%',
             },
-          },
+            '&.Luci-Toolbar.Drive-Providers': {
+              '& .MuiSvgIcon-root': {
+                color: theme.palette.primary.contrastText,
+              },
+            },
+          }),
         },
       },
       //--------------------------------------------------------------------------
@@ -814,6 +737,26 @@ export default (mode) => {
       MuiGrid: {
         styleOverrides: {
           root: ({ theme }) => ({
+            //------------------------------------------------------------------
+            // mspan chips
+            //------------------------------------------------------------------
+            '&.Luci-FileField-LevelSpans': {
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignContent: 'center',
+
+              '&.singleton, &.belowCapacity': {},
+              '&.atCapacity, &.aboveCapacity': {
+                overflowY: 'scroll',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                alignContent: 'center',
+              },
+            },
             //----------------------------------------------------------------------
             // Overview-steps
             //----------------------------------------------------------------------
@@ -859,10 +802,10 @@ export default (mode) => {
               marginBottom: '11px',
             },
             '&.Luci-ValueGrid-actions': {
+              display: 'flex',
               marginLeft: 'auto',
-              [`&.${FIELD_TYPES.ETL}`]: {
-                marginTop: '-5px',
-              },
+              marginRight: '1ch',
+              [`&.${FIELD_TYPES.ETL}`]: {},
             },
             //----------------------------------------------------------------------
             // HeaderView-summary
@@ -991,55 +934,6 @@ export default (mode) => {
                   '& .title': {},
                   '& .left': {},
                   '& .right': {},
-                },
-                //------------------------------------------------------------------
-                // mspan chips
-                //------------------------------------------------------------------
-                '& .Luci-FileField-LevelSpans': {
-                  height: '100%',
-                  width: '100%',
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignContent: 'center',
-
-                  '&.singleton, &.belowCapacity': {},
-                  '&.atCapacity, &.aboveCapacity': {
-                    overflowY: 'scroll',
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    alignContent: 'center',
-                  },
-                  //----------------------------------------------------------------------
-                  // mspan chip
-                  //----------------------------------------------------------------------
-                  '& .Luci-SpanLevel-Chip': {
-                    borderRadius: 4,
-                    display: 'flex',
-                    boxShadow: theme.shadows[1],
-                    paddingTop: spacingFn(3),
-                    paddingRight: spacingFn(5),
-                    paddingBottom: spacingFn(3),
-                    paddingLeft: spacingFn(3),
-                    backgroundColor:
-                      theme.palette.themeToggle['color-secondary-dark'],
-                    margin: `${theme.spacingFn(3)} ${theme.spacingFn(3)}`,
-                    height: 'min-content',
-                    width: 'max-content',
-                    '& .title': {
-                      color: theme.palette.grey['700'],
-                      lineHeight: '1.0',
-                    },
-                    '& .subtitle': {
-                      color: theme.palette.grey['500'],
-                    },
-                    '& .icon': {
-                      flex: 0,
-                      marginTop: 6,
-                      marginRight: 10,
-                    },
-                  },
                 },
               },
             },
@@ -1564,6 +1458,13 @@ export default (mode) => {
                 },
               },
             },
+            '&.Luci-AutocompleteNewPair.Luci-PopperPaper': {
+              backgroundColor: theme.palette.themeColors['color-background-paper'],
+              borderRadius: '0.2em',
+              '& li': {
+                color: theme.palette.text.primary,
+              },
+            },
           }),
         },
       },
@@ -1610,6 +1511,12 @@ export default (mode) => {
       MuiSvgIcon: {
         styleOverrides: {
           root: ({ theme }) => ({
+            '& text': {
+              fill: theme.palette.primary.contrastText,
+            },
+            '&.provider-icon': {
+              fill: theme.palette.text.bright,
+            },
             '&.Luci-Icon': {
               width: '40px',
               height: '40px',
@@ -1657,23 +1564,14 @@ export default (mode) => {
               fontSize: 'inherit',
               color: theme.palette.primary.contrastText,
             },
-            '&.MuiSvgIcon-span-01': {
-              width: '1.1em',
-              height: '1.1em',
-              marginRight: `${theme.spacingFn(2)}`,
-              color: theme.palette.secondary.main,
-            },
-            '&.MuiSvgIcon-span-02': {
+            '&.span-icon': {
               width: '0.9em',
               height: '0.9em',
-              marginRight: `${theme.spacingFn(1)}`,
-              color: theme.palette.secondary.main,
-            },
-            '&.MuiSvgIcon-span-01-disabled': {
-              color: theme.palette.grey['400'],
-            },
-            '&.MuiSvgIcon-span-02-disabled': {
-              color: theme.palette.grey['400'],
+              marginLeft: `${theme.spacingFn(1)}`,
+              color: theme.palette.secondary.contrastText,
+              '&.disabled': {
+                color: theme.palette.grey['400'],
+              },
             },
           }),
         },
@@ -1695,7 +1593,7 @@ export default (mode) => {
         },
       },
       //--------------------------------------------------------------------------
-      /* CardHeader */
+      /* MuiCard related */
       MuiCardHeader: {
         styleOverrides: {
           root: {
@@ -1704,8 +1602,14 @@ export default (mode) => {
             paddingTop: '8px',
             paddingBottom: '4px',
           },
+          action: ({ theme }) => ({
+            '& > .Luci-HeaderView-Actions > div .MuiSvgIcon-root': {
+              color: theme.palette.themeColors['icon-color'],
+            },
+          }),
         },
       },
+      //--------------------------------------------------------------------------
       MuiCardContent: {
         styleOverrides: {
           root: ({ theme }) => ({
@@ -1851,14 +1755,13 @@ export default (mode) => {
             //
             // 1/2 major style sections
             // 👉 EtlUnitBase, EtlUnitGroupBase; extends MuiCard
-            // 👉 Node-root for superGroup, group and unit; extends MuiContainer
+            // �������� Node-root for superGroup, group and unit; extends MuiContainer
             //---------------------------------------------------------------------
             '&.EtlUnitBase-root': {
               borderRadius: '4px',
               border: `1px solid ${theme.palette.primary.light}`,
               boxShadow: 'none',
-              backgroundColor:
-                theme.palette.themeToggle['color-background-title'],
+              backgroundColor: theme.palette.themeColors['color-background-title'],
               display: 'block',
               '&.canvas': {
                 margin: '0',
@@ -1903,8 +1806,7 @@ export default (mode) => {
               margin: 0,
               padding: 0,
               borderRadius: GROUP_BORDER_RADIUS,
-              backgroundColor:
-                theme.palette.themeToggle['color-background-heading'],
+              backgroundColor: theme.palette.themeColors['color-background-heading'],
               border: `1px solid ${theme.palette.primary.main}`,
               '& .units > .dropZone': {
                 display: 'flex',
@@ -1923,10 +1825,9 @@ export default (mode) => {
                 '& > .header': {
                   padding: theme.spacingFn(3),
                   textAlign: 'center',
-                  backgroundColor:
-                    theme.palette.themeToggle['color-primary-dark'],
+                  backgroundColor: theme.palette.themeColors['color-primary-dark'],
+                  color: theme.palette.primary.contrastText,
                   filter: 'brightness(1.1)',
-                  color: theme.palette.text.secondary,
                   display: 'flex',
                   justifyContent: 'space-between',
                   paddingTop: theme.spacingFn(1),
@@ -1946,10 +1847,11 @@ export default (mode) => {
                     '& > .text': {
                       fontSize: '0.8rem',
                       lineHeight: '0.9rem',
-                      color: isLightMode
-                        ? theme.palette.grey[100]
-                        : theme.palette.grey[200],
+                      color: 'inherit',
                     },
+                  },
+                  '& button': {
+                    color: 'inherit',
                   },
                 },
               },
@@ -1962,9 +1864,6 @@ export default (mode) => {
                   justifyContent: 'flex-end',
                 },
                 '& .tool': {
-                  color: isLightMode
-                    ? theme.palette.primary.contrastText
-                    : theme.palette.primary.main,
                   padding: 0,
                 },
                 '& .icon': {
@@ -2002,71 +1901,6 @@ export default (mode) => {
               padding: theme.spacingFn(3),
               textAlign: 'center',
               color: theme.palette.text.secondary,
-            },
-            //---------------------------------------------------------------------
-            // SpanInput Card
-            //---------------------------------------------------------------------
-            '&.MuiSpanInput--01': {
-              borderRadius: 6,
-              backgroundColor:
-                theme.palette.themeToggle['color-secondary-dark'],
-              margin: theme.spacing[2],
-              marginBottom: theme.spacing[3],
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              minWidth: '200px',
-              maxWidth: '400px',
-              maxHeight: '40px',
-              paddingTop: theme.spacing[3],
-              paddingRight: theme.spacing[3],
-              paddingBottom: theme.spacing[4],
-              paddingLeft: theme.spacing[3],
-              // form control
-              '&.list': {
-                backgroundColor: 'transparent',
-                boxShadow: 'none',
-                paddingTop: theme.spacing[0],
-                paddingBottom: theme.spacing[2],
-                paddingLeft: theme.spacing[2],
-              },
-              '& > .switch': {
-                marginRight: '3px',
-                marginLeft: '5px',
-              },
-              // form control
-              '& .MuiFormControl-root': {
-                fontSize: '0.7rem',
-              },
-              // switch series label
-              '& .MuiFormControlLabel-root': {
-                margin: theme.spacing[0],
-              },
-              '& .MuiInputLabel-root': {
-                fontSize: '0.75rem',
-                marginTop: theme.spacing[0],
-                marginBottom: theme.spacing[0],
-              },
-              '& .MuiInput-formControl': {
-                marginTop: theme.spacing[3],
-                marginBottom: theme.spacing[0],
-              },
-              // input
-              '& .MuiInputBase-root': {
-                fontSize: 'inherit',
-              },
-              '& .MuiInputBase-input': {
-                paddingTop: theme.spacing[3],
-                paddingBottom: theme.spacing[2],
-              },
-              // typography for switch
-              '& .MuiTypography-body1': {
-                fontSize: '0.6rem',
-              },
-              // divider
-              '& .MuiDivider-root': {
-                margin: `${theme.spacing(0)} 0`,
-              },
             },
           }),
         },
@@ -2214,6 +2048,9 @@ export default (mode) => {
         },
         styleOverrides: {
           root: ({ theme }) => ({
+            '&:hover': {
+              backgroundColor: 'inherit',
+            },
             '&.MuiFab-root': {},
             '&.Luci-button.error-flag': {
               marginTop: theme.spacing(5),
@@ -2312,13 +2149,263 @@ export default (mode) => {
         },
       },
       //----------------------------------------------------------------------------
-      /* MuiDiv */
-      MuiDiv: {
+      //----------------------------------------------------------------------------
+      /* Luci custom style components */
+      //----------------------------------------------------------------------------
+      LuciDiv: {
         styleOverrides: {
           root: ({ theme }) => ({
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'flex-start',
+            //--------------------------------------------------------------------
+            // main-app-view
+            //--------------------------------------------------------------------
+            '&.main-app-view': {
+              backgroundColor:
+                theme.palette.mode === 'light'
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: 'calc(100vh - var(--app-bar-height))',
+              overflow: 'auto',
+              marginTop: 'var(--app-bar-height)',
+            },
+
+            //--------------------------------------------------------------------
+            // wide-to-long configuration
+            //--------------------------------------------------------------------
+            '&.Luci-WideToLongFileConfig': {
+              '& .config-root': {
+                '& .Luci-Table.factorNames': {
+                  width: '100%',
+                  tableLayout: 'fixed',
+                  '& .MuiTableCell-head': {},
+                  '& thead tr th:first-of-type': {
+                    width: '170px',
+                  },
+                  '& tbody tr td': {
+                    border: 'none',
+                  },
+                  '& tbody tr[class*=nowInView] td': {
+                    borderBottom: `1.5px solid ${theme.palette.grey[300]}`,
+                  },
+                  '& thead tr th:last-child': {
+                    width: '50px',
+                  },
+                  '& tr[class*=summaryView] .MuiTableCell-body': {
+                    '& .MuiInputBase-root': {
+                      color: theme.palette.primary.main,
+                      fontStyle: 'italic',
+                    },
+                  },
+                },
+                '& .Luci-Table.fieldNames': {
+                  '& .MuiTableCell-body': {
+                    border: 'none',
+                  },
+                  '& tbody tr:last-child td': {
+                    paddingBottom: spacingFn(7),
+                    borderBottom: `2px solid ${theme.palette.grey[300]}`,
+                  },
+                },
+              },
+              '& .Luci-Wide-Factors .Luci-TextField, & .factorWithMenu': {
+                color: theme.palette.primary.main,
+                '& > div': {
+                  color: 'inherit',
+                },
+              },
+              '& .factorWithMenu': {
+                fontStyle: 'italic',
+                fontSize: '1.2rem',
+                maxWidth: '194px', // input + 50% menu button
+                display: 'flex',
+                justifyContent: 'space-between',
+                '& >.menu, & >.text': {
+                  marginTop: 'auto',
+                },
+                '& >.menu': {
+                  transform: 'translateX(20px)',
+                },
+              },
+            },
+            //---------------------------------------------------------------------
+            // SpanInput Div
+            //---------------------------------------------------------------------
+            '&.Luci-SpanLevel-Chip, &.Luci-SpanInput': {
+              display: 'flex',
+              borderRadius: 6,
+              alignItems: 'center',
+              backgroundColor: isLightMode
+                ? theme.palette.primary.extraLight
+                : theme.palette.themeColors['color-secondary-dark'],
+              '& .title, & .subtitle': {
+                color: isLightMode
+                  ? theme.palette.primary.extraDark
+                  : theme.palette.secondary.contrastText,
+              },
+              '& .subtitle': {
+                filter: 'brightness(1.2)',
+              },
+              '& .icon': {
+                display: 'flex',
+                '& > svg': {
+                  margin: 'auto',
+                },
+              },
+            },
+            '&.Luci-SpanInput': {
+              justifyContent: 'space-between',
+              minWidth: '200px',
+              maxWidth: '400px',
+              maxHeight: '40px',
+              // select
+              '& > .Luci-SelectMenu': {
+                '& .MuiSelect-select': {
+                  select: {
+                    '&:before': {
+                      borderBottom: 'none',
+                    },
+                    '&:after': {
+                      borderBottom: 'none',
+                    },
+                  },
+                },
+              },
+              // form control
+              '&.list': {
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                paddingTop: theme.spacing[0],
+                paddingBottom: theme.spacing[2],
+                paddingLeft: theme.spacing[2],
+              },
+              '& > .switch': {
+                marginRight: '3px',
+                marginLeft: '5px',
+              },
+              // form control
+              '& .MuiFormControl-root': {
+                fontSize: '0.7rem',
+              },
+              // switch series label
+              '& .MuiFormControlLabel-root': {
+                margin: theme.spacing[0],
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.75rem',
+                marginTop: theme.spacing[0],
+                marginBottom: theme.spacing[0],
+              },
+              '& .MuiInput-formControl': {
+                marginTop: theme.spacing[3],
+                marginBottom: theme.spacing[0],
+              },
+              // input
+              '& .MuiInputBase-root': {
+                fontSize: 'inherit',
+              },
+              '& .MuiInputBase-input': {
+                paddingTop: spacingFn(3),
+                paddingBottom: spacingFn(2),
+              },
+              // typography for switch
+              '& .MuiTypography-body1': {
+                fontSize: '0.6rem',
+              },
+              // divider
+              '& .MuiDivider-root': {
+                margin: `${spacingFn(0)} 0`,
+              },
+            },
+            //----------------------------------------------------------------------
+            // mspan chip Div
+            //----------------------------------------------------------------------
+            '&.Luci-SpanLevel-Chip': {
+              boxShadow: theme.shadows[1],
+              paddingTop: spacingFn(3),
+              paddingRight: spacingFn(5),
+              paddingBottom: spacingFn(3),
+              paddingLeft: spacingFn(3),
+              margin: `${spacingFn(3)} ${spacingFn(3)}`,
+              height: 'min-content',
+              width: 'max-content',
+              '& .title': {},
+              '& .icon': {
+                flex: 0,
+                marginTop: 6,
+                marginRight: 10,
+              },
+            },
+            //--------------------------------------------------------------------
+            // SymbolMapMaker Div
+            //--------------------------------------------------------------------
+            '&.Luci-SymbolMapMaker': {
+              padding: '0.2em',
+              borderRadius: '0.5em',
+              backgroundColor: isLightMode
+                ? theme.palette.primary.extraLight
+                : theme.palette.primary.main,
+              '& >.layout': {
+                flex: '1',
+                overflow: 'hidden',
+              },
+              '& >.layout >.body, & .footer': {
+                backgroundColor: theme.palette.themeColors['color-background-card'],
+              },
+              '& .body': {
+                borderRadius: '6px 6px 6px 6px',
+                maxHeight: '50vh',
+                overflow: 'auto',
+              },
+              '& .stack': {
+                display: 'flex',
+                flexDirection: 'column',
+              },
+              '& .MuiAutocomplete-clearIndicator': {
+                '& svg': {
+                  fontSize: '0.8em',
+                  fill: theme.palette.themeColors['color-icon'],
+                },
+              },
+              // handle for the popper
+              '& table > thead:hover': {
+                cursor: 'pointer',
+              },
+              '& table > tbody': {
+                maxHeight: '40vh',
+                overflow: 'auto',
+              },
+              '& table > tfoot > tr > td': {
+                paddingLeft: '0px',
+                '& .Luci-ErrorCard': {
+                  padding: '0.5em',
+                  marginLeft: '0.5em',
+                  borderRadius: '0.5em',
+                  color: theme.palette.error.main,
+                  backgroundColor: theme.palette.background.error,
+                  minHeight: '65px',
+                },
+              },
+            },
+            '&.Luci-ErrorCard.symbolMapMaker': {
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              maxWidth: '95%',
+              minHeight: '3.5em',
+              '& .error-icon': {
+                width: '30px',
+                height: '30px',
+              },
+              '& .error-item': {
+                margin: 'auto auto auto 1.0em',
+                // width: '300px',
+              },
+              '& .hidden': {
+                visibility: 'hidden',
+              },
+            },
             //----------------------------------------------------------------------------
             // AppBarSearchInput
             // force specialization
@@ -2357,8 +2444,7 @@ export default (mode) => {
                 padding: `0px 0px 8px 0px`,
                 margin: '0px',
               },
-              backgroundColor:
-                theme.palette.themeToggle['color-background-title'],
+              backgroundColor: theme.palette.themeColors['color-background-title'],
             },
             '& .EtlUnit-CardHeader-IconWrap': {
               display: 'flex',
@@ -2383,8 +2469,66 @@ export default (mode) => {
             //----------------------------------------------------------------------------
             // testing Div
             '&.test': {
-              backgroundColor:
-                theme.palette.themeToggle['color-background-title'],
+              backgroundColor: theme.palette.themeColors['color-background-title'],
+            },
+            '& .MuiDataGrid-main': {
+              borderTopLeftRadius: '0.5em',
+              borderTopRightRadius: '0.5em',
+            },
+            '& .Luci-ValueGrid-fileLevels': {
+              '& button': {
+                padding: 0,
+                marginRight: '0.5em',
+                marginLeft: '0.5em',
+              },
+            },
+            '& .Luci-Datagrid-footer': {
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0.1em 0.5em',
+              margin: `${spacingFn(2)} 0`,
+              borderBottomLeftRadius: '0.5em',
+              borderBottomRightRadius: '0.5em',
+              backgroundColor: theme.palette.themeColors['color-background-footer'],
+              filter: 'brightness(1.1)',
+              '& .tools': {
+                '& .MuiIconButton-sizeSmall': {
+                  color: theme.palette.primary.main,
+                  '&.Mui-disabled': {
+                    color: 'inherit',
+                  },
+                  '& > *:first-of-type': {
+                    '& > *:first-of-type': {
+                      // svg-icon
+                      fontSize: '1em',
+                    },
+                  },
+                },
+              },
+              '& .MuiTablePagination-root': {
+                '& .MuiTablePagination-toolbar': {
+                  minHeight: '20px',
+                },
+                '& .MuiToolbar-root': {
+                  '& .MuiTypography-body2': {
+                    fontSize: '0.7rem',
+                    lineHeight: '0.7rem',
+                  },
+                  '& .MuiTablePagination-actions': {
+                    '& .MuiButtonBase-root': {
+                      fontSize: '0.8rem',
+                      lineHeight: '0.8rem',
+                      padding: '3px',
+                      '& .MuiIconButton-label': {
+                        '& .MuiSvgIcon-root': {
+                          fontSize: '1.2rem',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           }),
         },

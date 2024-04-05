@@ -7,50 +7,60 @@
 import { propFromSources } from '../etl-field-helper';
 
 /**
- * Arrows { domain: codomain }
+ * 'map-symbols' { arrows: { domain: codomain } }
+ *
+ * 'OBJECT' | 'ARRAY'
+ *  OBJECT: a combination of key value pairs. Ovewrites duplicate key values.
+ *  ARRAY: returns an array of map-symbols that maintains the array sequence.
  *
  * @function
- *
- * @todo The computation needs to consider arrow as a prop.
- *       The output as is likely fails.
+ * @param {Array} sources - array of objects
+ * @param {String} propName - property name to combine
+ * @param {String} firstOrLast - 'FIRST' | 'LAST'
+ * @param {String} returnType - 'OBJECT' | 'ARRAY'
+ * @returns {Object} { arrows: { domain: codomain } }}
  *
  */
-const combineSymbols = (sources) => {
-  try {
-    return combine(propFromSources('map-symbols')(sources));
-  } catch (e) {
-    return {
-      arrows: {},
-    };
-  }
+export const combineSymbols = (sources, propName, returnType = 'OBJECT') => {
+  return returnType === 'OBJECT' ? { arrows: {} } : returnArray(propName, sources);
 };
 
-function combine(arrayMaps) {
-  if (arrayMaps) {
-    return arrayMaps.reduce((accObj, arrows) => {
-      if (arrows) {
-        return Object.keys(arrows).reduce((acc, key) => {
-          acc[key] = arrows[key];
-          return acc;
-        }, accObj);
-      }
-      return {};
-    }, {});
-  }
-  return {};
+function returnArray(prop, sources) {
+  return sources.map((source) => source?.[prop] ?? { arrows: {} });
 }
 
-export default combineSymbols;
+/*
+function returnObject(prop, sources, firstOrLast) {
+  try {
+    const values = sources
+      .filter((source) => source[prop] !== undefined && source[prop] !== null)
+      .map((source) => source[prop]);
+    const arrows = combine(values, firstOrLast);
+    return { arrows };
+  } catch (e) {
+    return { arrows: {} };
+  }
+} */
 
 /**
- * [
- *   {
- *    domain:codomain,
- *    domain:codomain
- *   },
- *   {
- *    domain:codomain,
- *    domain:codomain
- *   }
- * ]
+ * [{ arrows: { domain: codomain } }]
  */
+/*
+function combine(arrayMaps, firstOrLast) {
+  // have the first be the version that over-writes by processing it last.
+  if (firstOrLast === 'FIRST') {
+    arrayMaps.reverse();
+  }
+  return arrayMaps.reduce((accObj, currentMap) => {
+    const arrows = currentMap?.arrows;
+    if (arrows) {
+      Object.keys(arrows).forEach((key) => {
+        accObj[key] = arrows[key];
+      });
+    }
+    return accObj;
+  }, {});
+} */
+/* eslint-disable no-param-reassign */
+
+export default combineSymbols;

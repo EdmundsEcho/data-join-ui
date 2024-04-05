@@ -84,13 +84,7 @@ EtlUnitBase.defaultProps = {};
  * 📖 selectEtlUnitDisplayConfig
  *
  */
-function EtlUnitInner({
-  nodeId,
-  palette,
-  etlUnitType,
-  identifier,
-  displayType,
-}) {
+function EtlUnitInner({ nodeId, palette, etlUnitType, identifier, displayType }) {
   const configs = useSelector(
     (state) =>
       selectEtlUnitDisplayConfig(
@@ -174,27 +168,29 @@ export function EtlUnitParameter({
   */
 
   return configs.map((config, valueIdx) => {
-    const { instanceOf, parameterOrMeasurement } =
-      etlUnitParameterInstance(config);
+    const { instanceOf, parameterOrMeasurement } = etlUnitParameterInstance(config);
     return (
       <ToolContextProvider
         switchCallback={handleReducedToggle(config, valueIdx)}
         switchOn={!isCompReduced?.[config.identifier] ?? false}
         showSwitch={showSwitch(config.tag)}
         stateId={`EtlUnitBase-${nodeId}-${config.identifier}`}
-        key={`ValueGrid-${nodeId}-${config.identifier}`}>
+        key={`ValueGrid-${nodeId}-${config.identifier}`}
+        showDetail={config.tag === 'spanValues'} // show detail when date
+      >
         <ToolContext.Consumer>
+          {/* function called using the showDetail value in the ToolContext */}
           {({ showDetail }) => {
             return (
               <CardContent
                 className={clsx({
                   'EtlUnit-parameter': parameterOrMeasurement === 'parameter',
-                  'EtlUnit-measurement':
-                    parameterOrMeasurement === 'measurement',
+                  'EtlUnit-measurement': parameterOrMeasurement === 'measurement',
                   quality: config.etlUnitType === 'quality',
                   measurement: config.etlUnitType !== 'quality',
                   'no-border': config.tag === 'measurement',
-                })}>
+                })}
+              >
                 <EtlUnitCardHeader
                   className='EtlUnit-CardHeader'
                   title={config.title}
@@ -211,7 +207,8 @@ export function EtlUnitParameter({
                   in={showDetail}
                   className={clsx('EtlUnit-ValueGrid-Collapse', config.tag)}
                   timeout='auto'
-                  unmountOnExit>
+                  unmountOnExit
+                >
                   {displayType !== 'alias' ? (
                     <DetailView
                       nodeId={nodeId}
@@ -302,16 +299,13 @@ EtlUnitParameter.defaultProps = {
  * - mspan (a version of component)
  */
 function DetailView(props) {
-  const { nodeId, palette, measurementType, identifier, tag, instanceOf } =
-    props;
+  const { nodeId, palette, measurementType, identifier, tag, instanceOf } = props;
   useTraceUpdate(props);
 
   switch (true) {
     case instanceOf === 'measurement':
       // expand measurement to components
-      return (
-        <Components nodeId={nodeId} palette={palette} identifier={identifier} />
-      );
+      return <Components nodeId={nodeId} palette={palette} identifier={identifier} />;
 
     case ['quality', 'component'].includes(instanceOf):
       return (

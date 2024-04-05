@@ -91,7 +91,7 @@ const ProjectMeta = () => {
       <ProjectForm data={projectMeta} />
       <Divider sx={{ m: 2, mt: 4, mb: 8 }} />
       <h5>Artifacts</h5>
-      <div>Dowloadable files</div>
+      <div>Downloadable files</div>
       <List className='project-artifacts root'>
         {artifacts.map(({ name, description, endpoint, isReady }) => {
           // console.debug(endpoint);
@@ -100,7 +100,8 @@ const ProjectMeta = () => {
               key={name}
               className={clsx('project-artifact root', {
                 disabled: !isReady(appStatus),
-              })}>
+              })}
+            >
               <a className='link' href={endpoint} download>
                 <ListItem className='project-artifact item'>
                   <ListItemAvatar className='artifact avatar'>

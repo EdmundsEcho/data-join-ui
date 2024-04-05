@@ -56,7 +56,8 @@ const Dragger = (props) => {
       key={`dnd-draggable-${config.id}`}
       draggableId={config.id}
       index={config.index}
-      isDragDisabled={config?.isDragDisabled ?? false}>
+      isDragDisabled={config?.isDragDisabled ?? false}
+    >
       {(provided, snapshot) => {
         return (
           <>
@@ -72,7 +73,8 @@ const Dragger = (props) => {
                 {
                   dragging: snapshot.isDragging,
                 },
-              )}>
+              )}
+            >
               {/* children = Node */}
               {children}
             </Container>

@@ -32,11 +32,7 @@ import {
   SET_ETL_FIELD_CHANGES,
   UPDATE_ETL_FIELD,
 } from '../../actions/etlView.actions';
-import {
-  SET_TREE,
-  TOGGLE_VALUE,
-  TOGGLE_REDUCED,
-} from '../../actions/workbench.actions';
+import { SET_TREE, TAG_WAREHOUSE_STATE } from '../../actions/workbench.actions';
 import { TAG_MATRIX_STATE, SET_MATRIX } from '../../actions/matrix.actions';
 import { setNotification } from '../../actions/notifications.actions';
 // import { redirect } from '../../actions/ui.actions';
@@ -94,14 +90,12 @@ const middleware =
       if (SAVE_PROJECT_ON) {
         switch (true) {
           //
-          case typeof saveManager !== 'undefined' &&
-            action.type !== SAVE_PROJECT:
+          case typeof saveManager !== 'undefined' && action.type !== SAVE_PROJECT:
             saveManager(action);
             break;
 
           // dispatched by the saveManager (and StepBar)
-          case typeof saveManager !== 'undefined' &&
-            action.type === SAVE_PROJECT: {
+          case typeof saveManager !== 'undefined' && action.type === SAVE_PROJECT: {
             const state = getState();
             try {
               if (DEBUG) {
@@ -189,6 +183,7 @@ const WHITE_LIST = [
   // TOGGLE_REDUCED, // building the request
   TAG_MATRIX_STATE,
   SET_MATRIX,
+  TAG_WAREHOUSE_STATE,
 ];
 const BLACK_LIST = [...Object.values(MetaActions), '@@INIT'];
 const PREFIX = [];
@@ -208,10 +203,7 @@ function saveAction(actionType) {
     const color = guard
       ? `${colors.green}; font-weight: bold`
       : `${colors.red}; font-weight: bold`;
-    console.debug(
-      `%c 📋 About to save: ${actionType} -> save: ${guard}`,
-      color,
-    );
+    console.debug(`%c 📋 About to save: ${actionType} -> save: ${guard}`, color);
   }
 
   return guard;

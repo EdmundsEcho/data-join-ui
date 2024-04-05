@@ -4,7 +4,7 @@
  */
 import React, { useMemo, useCallback } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline'; // fixes some html
 import { DragDropContext } from '@hello-pangea/dnd';
 import { SnackbarProvider } from 'notistack';
@@ -16,13 +16,20 @@ import { ThemeContext } from './contexts/ThemeContext';
 // configured and ready to go
 import ReduxMock from './cosmos.mock-store';
 
+import { storeWithoutState /* persistor */ } from './core-app/redux-store';
+import storeData from './core-app/datasets/store_s3_v7.json';
+
 // css that works in addition to mui-theme
 import './assets/index.css';
 import './assets/fonts.css';
 import './assets/dashboard.css';
 import './assets/core-app-sizing.css';
+import './assets/sliding-popups.css';
 
 /* eslint-disable react/prop-types, react/display-name, import/no-anonymous-default-export */
+
+// fire up the store
+const { store } = storeWithoutState(storeData);
 
 export default ({ children }) => {
   const [themeMode, setThemeMode] = useThemeMode();
@@ -38,7 +45,7 @@ export default ({ children }) => {
 
   return (
     <div className={`${themeMode}-theme-context`}>
-      <ReduxMock>
+      <ReduxMock initialState={store}>
         <ThemeContext.Provider value={contextValue}>
           <ThemeProvider theme={theme}>
             <BrowserRouter>

@@ -10,6 +10,9 @@ import invariant from 'invariant';
 
 // api
 import { fetchLevels as fetchLevelsInner } from '../../../../services/api';
+import LevelsContextProvider, {
+  CONTEXTS,
+} from '../../../../contexts/LevelsDataContext';
 
 // import { SearchField } from './ValueSearchToolbar';
 // ☎️  Update state
@@ -33,7 +36,7 @@ import ValueGridCore, {
 import { PURPOSE_TYPES } from '../../../../lib/sum-types';
 
 //------------------------------------------------------------------------------
-const DEBUG = false;
+const DEBUG = true;
 //-----------------------------------------------------------------------------
 const PAGE_SIZE =
   parseInt(process.env.REACT_APP_DEFAULT_VALUE_GRID_PAGE_SIZE, 10) || 90;
@@ -46,11 +49,19 @@ const columns = [
   { field: 'id', headerName: 'ID', hide: true },
   {
     field: 'level',
+    headerName: 'Level',
     className: ['level'],
     sortable: true,
     filterOperators,
     flex: 0.5,
-    // renderHeader: () => <SearchField />,
+    disableColumnMenu: true,
+    hide: false,
+  },
+];
+const sortModel = [
+  {
+    field: 'level',
+    sort: 'asc',
   },
 ];
 
@@ -115,9 +126,7 @@ function ValueGridWorkbench(props) {
   const { projectId } = useParams();
 
   if (!['txtValues', 'intValues'].includes(type)) {
-    throw new InputTypeError(
-      `EtlUnitValueGrid received the wrong data type: ${type}`,
-    );
+    throw new InputTypeError(`EtlUnitValueGrid received the wrong data type: ${type}`);
   }
 
   useTraceUpdate(props);
@@ -137,6 +146,7 @@ function ValueGridWorkbench(props) {
   const selectionModel = useSelector((state) =>
     getSelectionModel(state, nodeId, identifier),
   );
+  console.debug('🦀 selectionModel __ALL does it trigger a render: ', selectionModel);
 
   const reduced = useSelector((state) =>
     getIsCompReducedMap(state, nodeId, identifier),
@@ -168,6 +178,7 @@ function ValueGridWorkbench(props) {
     <ValueGridCore
       className={clsx('EtlUnit-ValueGrid', type)}
       columns={columns}
+      sortModel={sortModel}
       // 📖
       identifier={identifier}
       purpose={isQuality ? PURPOSE_TYPES.QUALITY : PURPOSE_TYPES.MCOMP}
@@ -227,4 +238,14 @@ function edgeToGridRowFn(edge) {
 
 //------------------------------------------------------------------------------
 //
-export default ValueGridWorkbench;
+export default function ValueGridWorkbenchWithContext(props) {
+  return (
+    <LevelsContextProvider
+      context={CONTEXTS.WORKBENCH}
+      purpose={props.purpose}
+      fieldType='etl-field'
+    >
+      <ValueGridWorkbench {...props} />
+    </LevelsContextProvider>
+  );
+}

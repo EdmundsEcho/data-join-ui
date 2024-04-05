@@ -60,9 +60,11 @@ export const RESET_FILEFIELDS = `${HEADER_VIEW} RESET_FILEFIELDS`;
 
 export const RUN_FIX_REPORT = `${HEADER_VIEW} RUN_FIX_REPORT`;
 
-// v0.3.11
-export const ADD_UPDATE_SYMBOL_ITEM = `${HEADER_VIEW} ADD_UPDATE_SYMBOL_ITEM`; // document
-export const DELETE_SYMBOL_ITEM = `${HEADER_VIEW} DELETE_SYMBOL_ITEM`; // document...
+// v0.3.11 -- actions::document
+export const ADD_UPDATE_SYMBOL_ITEM = `${HEADER_VIEW} ADD_UPDATE_SYMBOL_ITEM`;
+export const DELETE_SYMBOL_ITEM = `${HEADER_VIEW} DELETE_SYMBOL_ITEM`;
+export const ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG = `${HEADER_VIEW} ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG`;
+export const DELETE_SYMBOL_ITEM_WIDE_CONFIG = `${HEADER_VIEW} DELETE_SYMBOL_ITEM_WIDE_CONFIG`;
 //------------------------------------------------------------------------------
 // WIP: actions that fix errors in the fix reports
 // {feature} FIX/{error fix key}
@@ -107,8 +109,7 @@ export const fetchHeaderView = (action) => create(FETCH_HEADER_VIEW, action);
 export const cancelHeaderView = (action) => create(CANCEL_HEADER_VIEW, action);
 export const removeHeaderView = (action) => create(REMOVE_HEADER_VIEW, action);
 export const addToSelectedList = (action) => create(ADD_SELECTED, action);
-export const removeFromSelectedList = (action) =>
-  create(REMOVE_SELECTED, action);
+export const removeFromSelectedList = (action) => create(REMOVE_SELECTED, action);
 
 /**
  * action kind :: document
@@ -246,19 +247,49 @@ export const resetFileFields = makeActionCreator(
 
 /**
  * v0.3.11
- * Update symbol map values
+ * Update symbol map value
  *
- # const { left, right } = action.payload;
+ * const { filename, headerIdx, left, right } = action.payload;
  */
-export const addOrUpdateItem = (payload) => {
+export const addOrUpdateSymbolItem = (payload) => {
   return {
     type: ADD_UPDATE_SYMBOL_ITEM,
     payload,
   };
 };
-export const deleteMapSymbolItem = (payload) => {
+/**
+ * v0.3.11
+ * Delete symbol map value
+ *
+ * const { filename, headerIdx, left } = action.payload;
+ */
+export const deleteSymbolItem = (payload) => {
   return {
     type: DELETE_SYMBOL_ITEM,
+    payload,
+  };
+};
+/**
+ * v0.3.11
+ * Update symbol map value for a field in wideToLongFields config
+ *
+ * const { filename, fieldAlias, left, right } = action.payload;
+ */
+export const addOrUpdateSymbolItemWideConfig = (payload) => {
+  return {
+    type: ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG,
+    payload,
+  };
+};
+/**
+ * v0.3.11
+ * Delete symbol map value for a field in wideToLongFields config
+ *
+ * const { filename, headerIdx, left } = action.payload;
+ */
+export const deleteSymbolItemWideConfig = (payload) => {
+  return {
+    type: DELETE_SYMBOL_ITEM_WIDE_CONFIG,
     payload,
   };
 };

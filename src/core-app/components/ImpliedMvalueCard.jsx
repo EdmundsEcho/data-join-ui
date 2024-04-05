@@ -45,14 +45,10 @@ function ImpliedMvalueCard(props) {
     throw new Error(`ImpliedMvalueCard does not have a valid configuration`);
   }
   if (typeof impliedMvalueConfig.field === 'undefined') {
-    throw new Error(
-      `ImpliedMvalueCard does not have a valid config.field prop`,
-    );
+    throw new Error(`ImpliedMvalueCard does not have a valid config.field prop`);
   }
   if (typeof impliedMvalueConfig.config === 'undefined') {
-    throw new Error(
-      `ImpliedMvalueCard does not have a valid config.config prop`,
-    );
+    throw new Error(`ImpliedMvalueCard does not have a valid config.config prop`);
   }
 
   const dispatch = useDispatch();
@@ -70,9 +66,12 @@ function ImpliedMvalueCard(props) {
     <HeadingBox
       key={`${stateId}|implied-mvalue`}
       stateId={`${stateId}|implied-mvalue`}
+      className='Luci-ImpliedMeasurementConfig'
       expanded
       heading='Implied Value'
-      canCollapse>
+      canCollapse
+      width='100%'
+    >
       {valueName === '' ? (
         <Typography>{ERRORS.impliedMvalueConfig.doc}</Typography>
       ) : null}

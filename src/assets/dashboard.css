@@ -2,145 +2,153 @@
 @import "luci-theme.css";
 
 :root {
-  /* MuiToolbar min-height */
-  --main-view-top: 3rem;
-  --app-bar-height: var(--main-view-top);
-  --main-view-bottom: 0px;
+    /* MuiToolbar min-height */
+    --main-view-top: 3rem;
+    --app-bar-height: var(--main-view-top);
+    --main-view-bottom: 0px;
 
+    --main-margin: 0px;
+    --main-padding: 0px;
+    --page-margin: 2rem;
 
-  --main-margin: 0px;
-  --main-padding: 0px;
-  --page-margin: 2rem;
+    --default-stack-gap: 0.75rem;
+    --default-margin: 1.5rem;
+    --default-padding: 1rem;
+    --default-radius: 1rem;
+    --input-radius: 0.3rem;
 
-  --default-stack-gap: 0.75rem;
-  --default-margin: 1.5rem;
-  --default-padding: 1rem;
-  --default-radius: 1rem;
-  --input-radius: 0.3rem;
+    /* flexbox - main menu & viewport */
+    /* WIP */
+    --main-menu-flex: 1 3 0%;
+    --main-view-flex: 6 1 0%;
 
-  /* flexbox - main menu & viewport */
-  /* WIP */
-  --main-menu-flex: 1 3 0%;
-  --main-view-flex: 6 1 0%;
+    /* controller main & outlet */
+    /* flex-handles */
+    --controller-main-flex-handle: 1 3 0%;
+    --controller-outlet-flex-handle: 5 1 0%;
+    /* gap between  */
+    --controller-outlet-gap: 2px;
+    --controller-outlet-radius: 1rem;
+    /* margins and padding */
+    --controller-margin: 0.5rem;
+    --controller-padding: var(--default-stack-gap);
 
-  /* controller main & outlet */
-  /* flex-handles */
-  --controller-main-flex-handle: 1 3 0%;
-  --controller-outlet-flex-handle: 5 1 0%;
-  /* gap between  */
-  --controller-outlet-gap: 2px;
-  --controller-outlet-radius: 1rem;
-  /* margins and padding */
-  --controller-margin: 0.5rem;
-  --controller-padding: var(--default-stack-gap);
+    /* fixed width values */
+    --main-view-min-width: 400px;
+    --controller-main-mini-width: 80px;
+    --controller-main-max-width: 350px;
+    --stepbar-height: 100px;
+    --stepbar-nav-width: 100px;
 
-  /* fixed width values */
-  --main-view-min-width: 400px;
-  --controller-main-mini-width: 80px;
-  --controller-main-max-width: 350px;
-  --stepbar-height: 100px;
-  --stepbar-nav-width: 100px;
-
-  /* computed value to set the height of main-view */
-  --main-view-height: calc(
-    100vh
-    - var(--app-bar-height)
-    - var(--controller-margin) * 2
-  );
-  --core-app-outlet-height: calc(
-    var(--main-view-height)
-    - var(--stepbar-height)
-    - var(--controller-margin) * 4
-    - 4px
-  );
+    /* computed value to set the height of main-view */
+    --main-view-height: calc(100vh - var(--app-bar-height) - var(--controller-margin) * 2);
+    --core-app-outlet-height: calc(var(--main-view-height) - var(--stepbar-height) - var(--controller-margin) * 4 - 4px);
 }
 
 .test-outside-mui {
     background-color: blue
 }
+
 /*
 ============================================================================== */
 /* box for debugging */
 .box.no-border {
-  margin: 10px;
-  padding: 0px;
-  border: none;
-  box-sizing: border-box;
+    margin: 10px;
+    padding: 0px;
+    border: none;
+    box-sizing: border-box;
 }
 
 .box {
-  margin: 10px;
-  padding: 10px;
-  border: solid 1px;
-  box-sizing: border-box;
+    margin: 10px;
+    padding: 10px;
+    border: solid 1px;
+    box-sizing: border-box;
 }
 
 /*
 ============================================================================== */
 /* generic formating */
 .stack {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  box-sizing: border-box;
-  gap: var(--default-stack-gap);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: var(--default-stack-gap);
 }
+
 /* can sometimes be substituted with display: block */
 .nostack {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  gap: var(--default-stack-gap);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: var(--default-stack-gap);
 }
+
 .nogap {
-  gap: 0;
+    gap: 0;
 }
+
 .noradius {
-  border-radius: 0;
+    border-radius: 0;
 }
+
 .justify-right {
     justify-content: right;
 }
+
 .justify-center {
     justify-content: center;
 }
+
 .space-between {
-  justify-content: space-between;
+    justify-content: space-between;
 }
+
 .align-items-center {
     align-items: center;
 }
+
 .nostack.center {
     justify-content: center;
 }
+
 .nowrap {
-  flex-wrap: nowrap;
+    flex-wrap: nowrap;
 }
+
 .hidden {
-  visibility: hidden;
+    visibility: hidden;
 }
+
 .hidden-o {
-  opacity: 0;
+    opacity: 0;
 }
+
 .hidden-n {
-  display: none;
+    display: none;
 }
+
 .relative {
-  position: relative;
+    position: relative;
 }
+
 .large-svg {
-  transform: scale(2);
-  margin: 0.5rem;
+    transform: scale(2);
+    margin: 0.5rem;
 }
+
 .regular-svg {
-  transform: scale(1.3);
+    transform: scale(1.3);
 }
+
 .button-w-text {
-  cursor: pointer;
+    cursor: pointer;
 }
-.button-w-text.regular > span > svg {
-  transform: scale(1.3);
-  margin: 0.3rem;
+
+.button-w-text.regular>span>svg {
+    transform: scale(1.3);
+    margin: 0.3rem;
 }
 
 /*
@@ -150,12 +158,14 @@
     position: fixed;
     width: 100%;
 }
+
 .copyright {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
     color: var(--color-primary-dark);
     font-size: 0.8rem;
 }
+
 /* user-profile */
 .main-page.root,
 .project-form.root,
@@ -166,16 +176,20 @@
     border-radius: 1rem;
     background-color: var(--color-background-paper);
 }
-.main-page.root > :is(h5, p) {
+
+.main-page.root> :is(h5, p) {
     margin: 1rem;
 }
-.main-page.root > img {
+
+.main-page.root>img {
     width: 140px
 }
+
 .project-form.root {
     margin: 0;
     padding: 0;
 }
+
 .error-page.root {
     height: calc(100vh - 100px);
     align-items: center;
@@ -183,6 +197,7 @@
     display: grid;
     text-align: center;
 }
+
 .single-page-dialog {
     width: 300px;
     border-radius: var(--default-radius);
@@ -191,11 +206,8 @@
     z-index: 2;
 }
 
-/* .new-project.center { */
-    /* margin: 16px auto 8px auto; */
-/* } */
-.new-project > button,
-.upload-files > button,
+.new-project>button,
+.upload-files>button,
 .project-form.root button,
 .error-page.root button,
 .user-profile.root button {
@@ -203,17 +215,28 @@
     background-color: var(--color-primary-main);
     font-family: "Rubik", sans-serif;
 }
+
+/* ---------------------------------------- */
+/* error boundary */
+.Luci-error-boundary>details {
+    color: var(--color-text-primary);
+    white-space: pre-wrap;
+    font-family: 'Lato';
+}
+
 /* ---------------------------------------- */
 /* upload progress */
 .Luci-Circular-Progress {
-     display: inline-flex;
-     position: relative;
+    display: inline-flex;
+    position: relative;
 }
-.Luci-Circular-Progress > * + * {
-     width: 100%;
-     height: 100%;
+
+.Luci-Circular-Progress>*+* {
+    width: 100%;
+    height: 100%;
 }
-.Luci-Circular-Progress > .label {
+
+.Luci-Circular-Progress>.label {
     top: 0;
     left: 0;
     bottom: 0;
@@ -223,9 +246,11 @@
     align-items: center;
     justify-content: center;
 }
-.Luci-Circular-Progress > .label > * {
+
+.Luci-Circular-Progress>.label>* {
     font-size: 0.7rem;
 }
+
 /* ---------------------------------------- */
 
 /* mini version of new-project button */
@@ -233,43 +258,69 @@ button.new-project.mini {
     height: 34px;
     width: 34px;
 }
+
 button.cancel {
     margin-top: 1.5rem;
 }
+
 .main {
     background-color: var(--color-background);
 }
+
 .main.side-nav {
     background-color: var(--color-background-sideNav);
 }
+
+.main.side-nav .MuiSvgIcon-root {
+    color: var(--color-icon);
+}
+
+.Luci-Drawer.side-nav>div {
+    padding-bottom: 1em;
+}
+
+.Luci-Drawer.side-nav.hidden {
+    visibility: collapse;
+}
+
 .main-view,
 .controller,
 .horizontal-layout {
-  height: inherit;
+    height: inherit;
 }
+
 .main,
 .main-view {
-  margin: var(--main-margin);
-  padding-top: var(--main-padding);
-  width: 100%;
+    margin: var(--main-margin);
+    padding-top: var(--main-padding);
+    width: 100%;
 }
+
 .main-view.sizing {
-  max-width: unset;
-  height: var(--main-view-height);
+    max-width: unset;
+    height: var(--main-view-height);
 }
+
 /* item exposed to container dynamics */
 /* complement with controller.main flex-handle */
 .controller.outlet.flex-handle {
     flex: var(--controller-outlet-flex-handle);
     min-width: var(--main-view-min-width);
 }
+
 .controller.main.flex-handle {
-  flex: var(--controller-main-flex-handle);
+    flex: var(--controller-main-flex-handle);
 }
+
 .controller.main.flex-handle.mini {
-  flex: unset;
-  width: var(--controller-main-mini-width);
+    flex: unset;
+    width: var(--controller-main-mini-width);
 }
+
+.controller.main.projects .list.toggle svg {
+    color: var(--color-icon);
+}
+
 .controller-mini-overlay {
     position: absolute;
     background: var(--gradient-controller-overlay);
@@ -279,18 +330,22 @@ button.cancel {
     pointer-events: none;
     z-index: 1;
 }
+
 /* controller hand-off to core-app */
 .project-view,
 .app-paging-view {
-  flex-grow: 1;
+    flex-grow: 1;
 }
+
 .app-paging-view {
-  max-height: var(--core-app-outlet-height);
-  overflow: scroll;
+    max-height: var(--core-app-outlet-height);
+    overflow: scroll;
 }
-.app-paging-view > div {
-  height: 100%;
+
+.app-paging-view>div {
+    height: 100%;
 }
+
 /* ---------------------------------------- */
 /* AppBar and SideNav formatting */
 /* MuiPaper-root
@@ -299,103 +354,120 @@ button.cancel {
 *  MuiAppBar-root
 *  MuiAppBar-colorPrimary
 *  MuiAppBar-positionAbsolute
-*  luci-toolbar app-bar dark-toolbar appbar-show-hide
-*  css-y0uuxo
+*  Luci-Toolbar Luci-AppBar dark-toolbar show-hide
 */
-.dark-toolbar {
-  background-color: var(--color-primary-dark);
-}
-.light-toolbar {
-  background-color: var(--color-primary-dark);
-}
-.luci-toolbar a,
-.links a {
+
+.Luci-Toolbar a,
+.links a,
+.link {
     text-decoration: none;
     color: unset;
 }
+
 /* coordinated height of topbar and left side toggle */
-.appbar-toolbar,
-.app-bar > .tool-bar,
-.dashboard-layout-root > .side-nav > div > .MuiToolbar-regular {
+.dashboard-layout-root>.side-nav>div>.MuiToolbar-regular {
     min-height: var(--app-bar-height)
 }
-.app-bar > .tool-bar > .button-group {
+
+.Luci-AppBar>.Luci-Toolbar>.button-group {
     column-gap: 1.5rem;
-    font-size: 1.5rem;
 }
-.app-bar > .tool-bar > .button-group > button {
+
+.Luci-AppBar>.Luci-Toolbar>.button-group>button {
     font-size: 1.0rem;
     padding: 3px;
     border-radius: 3px;
+    color: var(--color-primary-contrastText);
 }
-.app-bar > .tool-bar > .button-group > button svg {
+
+.Luci-AppBar>.Luci-Toolbar>.button-group>button svg {
     width: 1.0rem;
     height: 1.0rem;
 }
+
+.Luci-LinearProgress.root {
+    position: 'absolute';
+    top: 0;
+    width: '100%';
+}
+
 .side-nav {
     height: inherit;
 }
-/* show hide based on display type */
-.luci-drawer.side-nav.hidden {
+
+/* 🦀 ?  */
+.Luci-AppBar.show-hide.hidden {
     display: none;
 }
-.appbar-show-hide.hidden {
-    display: none;
-}
-.appbar-show-hide .horizontal-layout.primary-main {
+
+.Luci-AppBar.show-hide .horizontal-layout.primary-main {
     background-color: transparent;
 }
+
 /* project */
-.project-summary-view > .short-id {
+.project-summary-view>.short-id {
     font-size: 1em;
 }
-.project-summary-view.mini > .short-id {
+
+.project-summary-view.mini>.short-id {
     font-size: 0.8em;
 }
+
 /* hide when in mini mode */
-.project-summary-view.mini .short-id > .label,
-.project-summary-view.mini .delete-button  {
+.project-summary-view.mini .short-id>.label,
+.project-summary-view.mini .delete-button {
     display: none;
 }
+
 .project-summary-view {
     flex: 1;
 }
+
 /* projects list (heading, nav and items) */
 .controller.main.projects {
     --padding: 7px;
     overflow: hidden;
     position: relative;
 }
-.controller.main.projects > .header {
+
+.controller.main.projects>.header {
     /* follow nav */
     margin: 0;
 }
-.controller.main.projects > .header > .heading {
+
+.controller.main.projects>.header>.heading {
     /* aka title match list item */
     margin: 0;
     padding: var(--padding);
 }
+
 /* adjust toggle */
-.controller.main.projects > .header > .toggle,
-.controller.main.projects > .header > .toggle > button {
+.controller.main.projects>.header>.toggle,
+.controller.main.projects>.header>.toggle>button {
     margin: 0;
     padding: 0;
 }
-.controller.main.projects.mini > .header > .toggle {
+
+.controller.main.projects.mini>.header>.toggle {
     margin: 0 auto;
 }
-.list.projects > .item {
+
+.list.projects>.item {
     opacity: 0.5;
     cursor: pointer;
     padding: var(--padding);
+    font-family: "Lato";
+    color: var(--color-text-primary);
 }
-.list.projects > .item:hover {
+
+.list.projects>.item:hover {
     background-color: rgba(0, 0, 0, 0.04);
     opacity: 1;
 }
-.list.projects > .item.enable { }
 
-.list.projects > .item.Mui-selected {
+.list.projects>.item.enable {}
+
+.list.projects>.item.Mui-selected {
     background-color: var(--color-primary-superLight);
     opacity: 1;
 }
@@ -404,15 +476,18 @@ button.cancel {
 /* controller formatting: main & outlet     */
 .controller.main,
 .controller.outlet {
-  margin: var(--controller-margin);
-  padding: var(--controller-padding);
+    margin: var(--controller-margin);
+    padding: var(--controller-padding);
 }
+
 .controller.main {
-  max-width: var(--controller-main-max-width);
+    max-width: var(--controller-main-max-width);
 }
+
 .controller.root {
     gap: 0;
 }
+
 .controller.main {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -421,6 +496,7 @@ button.cancel {
     margin-right: var(--controller-outlet-gap);
     background-color: var(--color-background-paper);
 }
+
 .controller.outlet {
     border-top-right-radius: var(--controller-outlet-radius);
     border-bottom-right-radius: var(--controller-outlet-radius);
@@ -429,6 +505,7 @@ button.cancel {
     margin-left: var(--controller-outlet-gap);
     background-color: var(--color-background-paper);
 }
+
 /* --------------------------------------------------------------------------- */
 /* core-app
 /* --------------------------------------------------------------------------- */
@@ -436,6 +513,7 @@ button.cancel {
 .stepbar.root {
     height: var(--stepbar-height);
 }
+
 .stepbar.stepper-root {
     padding: var(--default-stack-gap) calc(var(--default-stack-gap)*2);
     border: solid 2px var(--color-primary-superLight);
@@ -444,58 +522,60 @@ button.cancel {
     margin: 0 auto;
     border-radius: 30px;
 }
+
 .stepbar.nav-root {
     margin-top: var(--default-stack-gap);
 }
+
 .stepbar.nav {
     width: var(--stepbar-nav-width);
 }
-.Luci-Stepper .Mui-completed svg {
-    fill: var(--color-primary-main);
-}
-.Luci-Stepper .Mui-active > text {
-    fill: var(--color-primary-dark);
-}
-.Luci-Stepper .Mui-disabled text {
-    fill: var(--color-text-secondary);
-}
+
 /* stepbar & modal dialog */
 .stepbar.nav,
-.Luci-Dialog.root .actions > button {
+.Luci-Dialog.root .actions>button {
     padding: 5px var(--default-stack-gap);
     border-radius: 30px;
     box-sizing: border-box;
     border: 1px solid transparent;
 }
-.Luci-Dialog.root .actions > button.cancel,
+
+.Luci-Dialog.root .actions>button.cancel,
 button.stepbar.nav.previous {
     margin: 0;
     margin-left: auto;
     margin-right: var(--default-stack-gap);
 }
+
 button.stepbar.nav.next,
-.Luci-Dialog.root .actions > button.proceed {
+.Luci-Dialog.root .actions>button.proceed {
     margin: 0;
     margin-right: auto;
     margin-left: var(--default-stack-gap);
 }
-.Luci-Dialog.root .actions > button.cancel:hover {
+
+.Luci-Dialog.root .actions>button.cancel:hover {
     border: 1px solid var(--color-custom-red);
 }
-.Luci-Dialog.root .actions > button.save:hover,
-.Luci-Dialog.root .actions > button.proceed:hover {
+
+.Luci-Dialog.root .actions>button.save:hover,
+.Luci-Dialog.root .actions>button.proceed:hover {
     border: 1px solid var(--color-custom-green);
 }
+
 .stepbar.nav:hover {
     background-color: var(--color-primary-superLight);
 }
-.Luci-Dialog.root .actions > button.disabled,
+
+.Luci-Dialog.root .actions>button.disabled,
 .stepbar.nav.disabled {
     opacity: 0.5;
 }
+
 .Luci-DirectoryView.drive-providers {
     background: transparent;
 }
+
 /* luci-drive file uploading */
 input.Lucidrive.hidden-input {
     clip: rect(0 0 0 0);
@@ -508,45 +588,49 @@ input.Lucidrive.hidden-input {
     white-space: nowrap;
     width: 1;
 }
+
 /* absolute positioned items */
 .stepbar.logo {
     position: absolute;
     bottom: calc(var(--controller-margin) * 3);
     right: calc(var(--controller-margin) * 3);
 }
+
 .matrix.download {
     background-color: var(--color-primary-main);
     color: var(--color-primary-contrastText);
 }
+
 .matrix.download:hover {
     background-color: var(--color-primary-superLight);
     color: var(--color-primary-main);
 }
+
 .flex-1 {
     flex: 1;
 }
+
 /* --------------------------------------------------------------------------- */
 /* workbench */
-.EtlUnit-parameter.measurement
-> .EtlUnit-CardHeader {
+.EtlUnit-parameter.measurement>.EtlUnit-CardHeader {
     justify-content: space-between;
     gap: 0.5em;
 }
+
 .EtlUnit-CardHeader-Tools {
     justify-content: flex-end;
     margin-right: -3px;
 }
-.EtlUnit-parameter.measurement
-> .EtlUnit-CardHeader
-> .EtlUnit-CardHeader-Tools svg {
+
+.EtlUnit-parameter.measurement>.EtlUnit-CardHeader>.EtlUnit-CardHeader-Tools svg {
     width: 0.8em;
     height: 0.8em;
 }
-.EtlUnit-parameter.measurement
-> .EtlUnit-CardHeader
-> .EtlUnit-CardHeader-Tools label {
+
+.EtlUnit-parameter.measurement>.EtlUnit-CardHeader>.EtlUnit-CardHeader-Tools label {
     margin: 0;
 }
+
 /*
 div.workbench.button-group {
     background-color: var(--color-secondary-main);
@@ -563,87 +647,98 @@ div.workbench.button-group {
 div.workbench.button-group * {
     color: #fff;
 } */
-.Luci-Workbench-board > .palette-root {
+.Luci-Workbench-board>.palette-root {
     padding: 10px;
 }
 
-/* Span inputs */
-.Luci-SpanLevel-Chip .title {
-    filter: brightness(1.9);
-}
 .Luci-ValueGrid-cell.count {
-  font-family: 'JetBrainsMono';
-  font-weight: normal;
+    font-family: 'JetBrainsMono';
+    font-weight: normal;
 }
 
 .Luci-Dialog.root .MuiDialog-paper {
     border-radius: var(--default-radius);
     background-color: var(--color-background-card);
 }
+
 .Luci-Dialog.root .frame {
     margin: 3px;
     padding: var(--default-padding);
     border-radius: var(--default-radius);
     background-color: var(--color-background-paper);
 }
+
 .Luci-Dialog.root .frame button {
     padding: 0.5rem;
     width: 65px;
     border: none;
 }
-.Luci-Dialog.root .actions > button:hover,
+
+.Luci-Dialog.root .actions>button:hover,
 .Luci-Dialog.root .frame button:hover {
     opacity: 1;
     background-color: var(--color-background-heading);
 }
+
 .dot-trim-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 .dot-trim-text.dynamic-sizing {
     font-size: 1.2vw;
 }
+
 /* headerView fieldnames */
-.Luci-SummaryDetail-Row > :not(td.Luci-Toggle) > * {
+.Luci-SummaryDetail-Row> :not(td.Luci-Toggle)>* {
     margin: 0;
     padding: 0;
     border-radius: 0;
 }
-.Luci-SummaryDetail-Row > :not(td.Luci-Toggle) > button:hover {
+
+.Luci-SummaryDetail-Row> :not(td.Luci-Toggle)>button:hover {
     background-color: inherit;
 }
+
 .Luci-SummaryDetail-Row .fieldname {
     text-overflow: ellipsis;
     white-space: break-spaces;
 }
-.Luci-DataContainer > .statsSummary > .left > h6,
-.Luci-DataContainer > .statsSummary > .right > h6 {
+
+.Luci-DataContainer>.statsSummary>.left>h6,
+.Luci-DataContainer>.statsSummary>.right>h6 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 1.1vw;
 }
-.Luci-IntervalBox .select-menu .select-controller.time-interval-unit  {
+
+.Luci-IntervalBox .select-menu .select-controller.time-interval-unit {
     width: 9.5ch;
 }
+
 .Luci-IntervalBox .select-menu .select-controller.time-interval-count {
     width: 10.5ch;
 }
+
 .Luci-IntervalBox .time-interval-count .Mui-focused {
     background-color: var(--color-background-heading);
     border-top-right-radius: var(--input-radius);
     border-top-left-radius: var(--input-radius);
 }
+
 .Luci-IntervalBox .form-control .Mui-focused {
     background-color: var(--color-background-heading);
 }
+
 .Luci-IntervalBox .time-interval-count {
     border-top-right-radius: var(--input-radius);
     border-top-left-radius: var(--input-radius);
 }
+
 .Luci-IntervalBox .time-interval-count input,
-.Luci-IntervalBox .form-control > div {
+.Luci-IntervalBox .form-control>div {
     border-top-right-radius: var(--input-radius);
     border-top-left-radius: var(--input-radius);
     padding-left: var(--input-radius);
@@ -653,172 +748,192 @@ button:-moz-focusring,
 [type='button']:-moz-focusring,
 [type='reset']:-moz-focusring,
 [type='submit']:-moz-focusring {
-  outline: 1px solid var(--color-background-heading);
+    outline: 1px solid var(--color-background-heading);
 }
 
 .Luci-Dialog.root .frame * {
     background-color: inherit;
 }
-.Luci-Dialog.root .frame .Luci-FileField-HeadingBox > div {
+
+.Luci-Dialog.root .frame .Luci-FileField-HeadingBox>div {
     border-color: var(--color-background-card)
 }
 
 /* --------------------------------------------------------------------------- */
 /* FileDialog, EtlFieldView, Workbench */
-.SplitPane > .Pane,
+.SplitPane>.Pane,
 .SplitPane {
     position: relative;
     background-color: inherit;
 }
 
-.SplitPane > .Pane {
+.SplitPane>.Pane {
     overflow: inherit;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
 }
-.SplitPane > .Pane > div {
+
+.SplitPane>.Pane>div {
     overflow: inherit;
 }
+
 .Resizer {
-  background-color: var(--color-resizer);
-  border-width: 3px;
-  border-radius: 6px;
-  opacity: 0.7;
-  z-index: 1;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding;
-  background-clip: padding-box;
+    background-color: var(--color-resizer);
+    border-width: 3px;
+    border-radius: 6px;
+    opacity: 0.7;
+    z-index: 1;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
 }
 
 .Resizer:hover {
-  -webkit-transition: all 1.5s ease;
-  transition: all 1.5s ease;
+    -webkit-transition: all 1.5s ease;
+    transition: all 1.5s ease;
 }
 
 .Resizer.horizontal {
-  height: 11px;
-  margin: -5px 0;
-  border-top: 5px solid rgba(255, 255, 255, 0);
-  border-bottom: 5px solid rgba(255, 255, 255, 0);
-  cursor: row-resize;
-  width: 100%;
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
 }
 
 .Resizer.horizontal:hover {
-  border-top: 5px solid rgba(0, 0, 0, 0.5);
-  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
 }
 
 .Resizer.vertical {
-  width: 11px;
-  margin: 0 -5px;
-  border-left: 5px solid rgba(255, 255, 255, 0);
-  border-right: 5px solid rgba(255, 255, 255, 0);
-  cursor: col-resize;
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
 
-  margin-top: auto;
-  margin-bottom: auto;
-  height: 85%;
-  transform: translateX(3px);
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 85%;
+    transform: translateX(3px);
 }
 
 .Resizer.vertical:hover {
-  border-left: 5px solid rgba(0, 0, 0, 0.5);
-  border-right: 5px solid rgba(0, 0, 0, 0.5);
-  height: 95%;
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+    height: 95%;
 }
+
 .Resizer.disabled {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
+
 .Resizer.disabled:hover {
-  border-color: transparent;
+    border-color: transparent;
 }
+
 /* --------------------------------------------------------------------------- */
 /* HeaderView, EtlFieldView */
 .Luci-EtlFieldView.MuiCard-root,
 .Luci-HeaderView.MuiCard-root,
-.Luci-FileField-HeadingBox > .box-card,
+.Luci-FileField-HeadingBox>.box-card,
 .Luci-FileField-HeadingBox .border-heading,
 .Luci-sources.root * {
     background-color: var(--color-background-card);
 }
+
 .componentCountCell,
-.componentCountCell > div {
-  display: flex;
-  justify-content: center;
+.componentCountCell>div {
+    display: flex;
+    justify-content: center;
 }
-.componentCountCell > div > p {
-  margin: auto;
+
+.componentCountCell>div>p {
+    margin: auto;
 }
-.Luci-FileField-HeadingBox > .box-card {
-  border: 1px solid var(--color-box-border);
-  border-radius: 0.4rem;
-  margin: 0 auto;
-  padding: 1.3rem;
-  position: relative;
+
+.Luci-FileField-HeadingBox>.box-card {
+    border: 1px solid var(--color-box-border);
+    border-radius: 0.4rem;
+    margin: 0 auto;
+    padding: 1.3rem;
+    position: relative;
 }
-.Luci-Dialog .Luci-FileField-HeadingBox > .box-card {
-  padding: 0;
+
+.Luci-Dialog .Luci-FileField-HeadingBox>.box-card {
+    padding: 0;
 }
+
 /* sources, derived and wide field configs */
-.box-card > .children {
-  display: none;
+.box-card>.children {
+    display: none;
 }
-.box-card > .children.open {
-  display: block;
-  transition: visibility 0s, opacity 0.5s linear;
+
+.box-card>.children.open {
+    display: block;
+    transition: visibility 0s, opacity 0.5s linear;
 }
+
 .Luci-sources.root {
     width: inherit;
 }
 
 .Luci-FileField-HeadingBox .minimize-button {
-  background-color: var(--color-background-card);
-  color: var(--color-text-primary);
-  border-radius: 6px;
-  padding-left: 6px;
-  padding-right: 6px;
-  position: absolute;
-  top: 5px;
-  right: 17px;
-  transform: rotateX(180deg);
+    background-color: var(--color-background-card);
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+    position: absolute;
+    top: 5px;
+    right: 17px;
+    transform: rotateX(180deg);
 }
-.Luci-FileField-HeadingBox  .minimize-button:hover {
+
+.Luci-FileField-HeadingBox .minimize-button:hover {
     filter: brightness(1.2);
     cursor: pointer;
 }
-.Luci-FileField-HeadingBox  .minimize-button.open {
-  top: -11px;
-  transform: rotateX(0deg);
+
+.Luci-FileField-HeadingBox .minimize-button.open {
+    top: -11px;
+    transform: rotateX(0deg);
 }
 
 .Luci-FileField-HeadingBox .border-heading {
-  border-radius: 10px;
-  padding: 3px 3px;
-  position: absolute;
-  top: 9px;
-  left: 18px;
+    border-radius: 10px;
+    padding: 3px 3px;
+    position: absolute;
+    top: 9px;
+    left: 18px;
 }
+
 .Luci-FileField-HeadingBox .border-heading.open {
-  top: -14px;
+    top: -14px;
 }
+
 .Luci-error-card {
     margin-top: 15px;
     display: grid;
     grid-template-columns: 5px auto;
     background-color: transparent;
 }
+
 .Luci-error-card.detail-view {
     margin-top: 0px;
 }
+
 .Luci-error-card .divider {
-    background-color: rgba(209,5,20,0.2);
+    background-color: rgba(209, 5, 20, 0.2);
 }
-.Luci-error-card > .view {
+
+.Luci-error-card>.view {
     background-color: var(--color-background-title);
     margin: 0.3rem;
     margin-top: 0;
@@ -829,30 +944,35 @@ button:-moz-focusring,
     grid-column: 1 / span 2;
     align-self: start;
 }
+
 .error-item {
     margin-left: 1.5rem;
 }
+
 .error-icon {
     color: var(--color-error-main);
 }
+
 .error-flag {
-  margin-top: -45px;
-  grid-row: 2;
-  grid-column: 2;
-  justify-self: start;
-  width: 30px;
-  height: 30px;
+    margin-top: -45px;
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: start;
+    width: 30px;
+    height: 30px;
 }
 
 .trashCell {
     padding: 5px;
     margin: 3px;
 }
+
 .delete-button:hover,
 .trashCell:hover {
     opacity: 1;
     color: var(--color-primary-main);
 }
+
 span.google-drive {
     display: block;
     text-align: center;
@@ -861,12 +981,12 @@ span.google-drive {
 }
 
 .input-row-group {
-  display: flex;
-  gap: 20px;
+    display: flex;
+    gap: 20px;
 }
 
-.input-row-group > div {
-  flex-grow: 1;
+.input-row-group>div {
+    flex-grow: 1;
 }
 
 .input-row-group.project-name {
@@ -883,45 +1003,51 @@ span.google-drive {
     align-items: center;
     margin: 10px auto;
 }
+
 .spinner {
-  display: inline-block;
-  width: 25px;
-  height: 25px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
 }
+
 .spinner.spinner-lucivia {
-  border-color: rgba(82, 165, 184, 0.4);
-  border-top-color: var(--color-primary-main);
+    border-color: rgba(82, 165, 184, 0.4);
+    border-top-color: var(--color-primary-main);
 }
+
 .spinner.spinner-sm {
-  width: 25px;
-  height: 25px;
-  border-width: 3px;
+    width: 25px;
+    height: 25px;
+    border-width: 3px;
 }
+
 .spinner.default {
-  width: 40px;
-  height: 40px;
-  border-width: 4px;
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
 }
+
 .spinner.spinner-lg {
-  width: 55px;
-  height: 55px;
-  border-width: 5px;
+    width: 55px;
+    height: 55px;
+    border-width: 5px;
 }
 
 @keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
+
 @-webkit-keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 /* ---------------------------------------- */
@@ -931,357 +1057,43 @@ span.google-drive {
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: space-between;
+    font-family: 'Lato';
+    color: var(--color-text-primary);
 }
-.main-page.with-markdown > .footer > img {
+
+.main-page.with-markdown>.footer>img {
     width: 100px
 }
-.main-page.with-markdown > .markdown > :is(h3, h4, h5, h6) {
+
+.main-page.with-markdown>.markdown> :is(h3, h4, h5, h6) {
     margin-bottom: 1rem;
     background-color: inherit;
 }
-.markdown.workbench > :is(h3, h4, h5, h6) {
+
+.markdown.workbench> :is(h3, h4, h5, h6) {
     text-align: center;
     margin-bottom: 1rem;
 }
+
+.app-paging-view :is(h3 + div, h4 + div, h5 + div, h6 + div) {
+    font-family: 'Lato';
+    color: var(--color-text-primary);
+}
+
 /* ---------------------------------------- */
 /* Console log */
 pre.console-log {
- background-color: #eee;
- padding: 1em
+    background-color: #eee;
+    padding: 1em
 }
+
 .react-json-view .variable-value {
     color: var(--color-primary-main);
 }
-.react-json-view .object-key > span {
+
+.react-json-view .object-key>span {
     color: var(--color-primary-main);
 }
-/* ---------------------------------------- */
-/* feedback */
-.feedback.root {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 10px;
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.4s ease-out;
-
-  max-height: 0px;
-  margin-top: 0px;
-}
-.feedback.root.show {
-  max-height: 250px;
-  margin-top: 1rem;
-}
-.feedback.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 360px;
-  min-width: 300px;
-  position: relative;
-}
-.feedback .text-area,
-.feedback .button.submit {
-  border: 1px solid var(--color-box-border);
-  border-radius: 0.6rem;
-  width: 100%;
-  color: var(--color-text-primary);
-  background: var(--color-background-textarea);
-  outline: none;
-  font-size: 1rem;
-}
-.feedback .text-area {
-  padding: 0.4rem 0.6rem;
-  resize: none;
-  transition: box-shadow 300ms ease-in-out;
-  font-weight: 400;
-  line-height: 140%;
-  min-height: 112px;
-  font-family: Lato;
-}
-.feedback .button.submit {
-  padding: 0.4rem 1.5rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-.feedback .button.submit:disabled {
-  color: var(--color-text-primary);
-}
-.feedback .button.submit:hover:enabled {
-  filter: brightness(1.4);
-  /* border-color: var(--color-custom-green); */
-  /* color: var(--color-custom-green); */
-}
-.feedback.mood-container {
-  display: flex;
-  align-content: center;
-  column-gap: 0.4rem;
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-.feedback .mood-icon {
-  padding: 2px;
-  padding-top: 1rem; /* space for tooltip */
-  transition: transform 200ms cubic-bezier(.5,-1,.5,2), filter 150ms ease-in-out, opacity 1500ms ease-in-out;
-  filter: blur(1.5px);
-  opacity: 0.5;
-  z-index: 10;
-}
-.feedback .mood-icon > img {
-    height: 2rem;
-    width: 2rem;
-}
-.feedback .mood-icon:hover {
-  transform: scale(1.12);
-  filter: blur(0);
-  opacity: 0.7;
-}
-.feedback .glowing-background {
-  background: linear-gradient(179.3deg, #FFD239 3.97%, rgba(255, 201, 51, 0.24) 58.23%, #E82992 106.1%);
-  filter: blur(30px);
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-  transition: opacity 300ms ease-in-out;
-  z-index: 0;
-}
-.feedback .mood-tooltip {
-  position: absolute;
-  top: -1.4rem;
-  z-index: 100;
-  background: var(--color-text-primary);
-  font-size: 0.9rem;
-  color: var(--color-button-text);
-  border-radius: 8px;
-  padding: 3px 10px;
-  display: none;
-}
-.feedback .mood-label {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  cursor: pointer;
-}
-.feedback .mood-label > input {
-  position: absolute;
-  opacity: 0;
-}
-
-.feedback .mood-label input:checked ~ .mood-tooltip,
-.feedback .mood-label input:hover ~ .mood-tooltip {
-  display: block;
-}
-
-.feedback .mood-label input:checked ~ .mood-icon {
-  filter: blur(0);
-  border-color: var(--color-button-text);
-  transform: scale(1.315);
-  opacity: 1;
-}
-
-.feedback .mood-label input:checked ~ .glowing-background {
-    opacity: 1;
-}
-/* --------------------------------------------------------- */
-/* stage */
-/* --------------------------------------------------------- */
-:root {
-  --feedback-stage-width: 350px;
-  --feedback-stage-height: 339px;
-}
-.actor.thank-you,
-.feedback-modal.root {
-  background: var(--color-background-feedback);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid var(--color-box-border);
-  border-radius: var(--default-radius);
-  padding: 1.5rem;
-  box-sizing: border-box;
-  max-height: unset;
-  height: var(--feedback-stage-height);
-  width: var(--feedback-stage-width);
-  flex-wrap: nowrap;
-}
-.feedback-modal.root > .header {
-  width: 100%;
-}
-.feedback-modal.root > .header > .heading {
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-  color: var(--color-text-primary);
-  white-space: normal;
-  text-align: center;
-  width: 100%;
-  margin-right: -1rem;
-}
-.feedback-modal.root > .header > .close-button {
-  border: none;
-  color: var(--color-text-primary);
-  background: none;
-  cursor: pointer;
-  outline: none;
-  transform: translate(0.8rem, -0.1rem);
-  align-self: flex-start;
-  /* position: absolute; */
-  /* right: 1rem; */
-}
-/* parent is stage.root with relative positioning */
-.stage.button {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    right: 0;
-}
-/* starting position of the feedback form */
-.stage.feedback {
-    position: absolute;
-    right: 0;
-    top: var(--animation-top-origin-feedback);
-    transform: var(--animation-start-feedback);
-    opacity: 0;
-    z-index: 1;
-}
-
-.stage.feedback .relative,
-.actor.thank-you {
-    position: relative;
-}
-.stage-root {
-  width: var(--feedback-stage-width);
-  height: var(--feedback-stage-height);
-  position: relative;
-  contain: content;
-}
-.stage-root.left-up {
-  --animation-enter-feedback: enter-feedback-left-up;
-  --animation-exit-feedback: exit-feedback-left-up;
-  --animation-start-feedback: translateX(400px);
-  --animation-top-origin-feedback: calc(-1 * var(--feedback-stage-height) + 2rem);
-}
-.stage-root.left-down {
-  --animation-enter-feedback: enter-feedback-left-down;
-  --animation-exit-feedback: exit-feedback-left-down;
-  --animation-start-feedback: translateY(-200px);
-  --animation-top-origin-feedback: 0px;
-}
-
-/* grid-item and parent  */
-.on-stage {
-  position: relative;
-}
-.on-stage > * {
-    position: absolute
-}
-.single-grid {
-  display: grid;
-  place-items: center center;
-  grid-template-columns: 1fr;
-  grid-template-rows: minmax(0, 1fr);
-  height: inherit;
-  width: inherit;
-}
-.single-grid-child {
-  grid-area: 1 / 1 / -1 / -1;
-  height: inherit;
-  width: inherit;
-}
-/* end stage ---------------------- */
-
-.actor.thank-you {
-  visibility: hidden;
-  top: 0;
-  left: 0;
-}
-.actor.thank-you > .frame {
-  align-items: center;
-  margin: auto
-}
-.actor.thank-you svg {
-  font-size: 100px;
-  color: var(--color-secondary-main);
-}
-.actor.thank-you .heading {
-  font-weight: 500;
-  margin-bottom: 0.4rem;
-  white-space: normal;
-  text-align: center;
-  width: 100%;
-}
-/* submit state */
-.actor.thank-you.submit {
-  visibility: visible;
-}
-.actor.feedback.submit {
-  visibility: hidden;
-}
-/* ----------------------------------------- */
-/* slide-in the feedback form */
-@keyframes enter-feedback-left-down {
-    0% { opacity: 0; }
-    70% { opacity: 1; }
-    100% {
-        transform: translateY(50px);
-        opacity: 1;
-    }
-}
-@keyframes exit-feedback-left-down {
-    0% {
-        transform: translateY(50px);
-        opacity: 1;
-    }
-    90% { opacity: 1; }
-    100% {
-        transform: translateY(-360px);
-        opacity: 0;
-    }
-}
-/* ----------------------------------------- */
-@keyframes enter-feedback-left-up {
-    0% { opacity: 0; }
-    70% { opacity: 1; }
-    100% {
-        transform: translateX(-80px);
-        opacity: 1;
-    }
-}
-@keyframes exit-feedback-left-up {
-    0% {
-        transform: translateX(-80px);
-        opacity: 1;
-    }
-    70% { opacity: 0; }
-    100% {
-        transform: translateX(200px);
-        opacity: 0;
-    }
-}
-/* ----------------------------------------- */
-/* subject of the animation */
-.stage.feedback.enter {
-    animation-name: var(--animation-enter-feedback);
-    animation-duration: 0.5s;
-    animation-iteration-count: 1;
-    animation-direction: normal;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-}
-.stage.feedback.exit {
-    animation-name: var(--animation-exit-feedback);
-    animation-duration: 0.5s;
-    animation-iteration-count: 1;
-    animation-direction: normal;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-}
-
-/* end feedback */
 
 /* --------------------------------------------------------- */
 /* Floating button */
@@ -1291,10 +1103,13 @@ pre.console-log {
     bottom: 200px;
     right: 1.5rem;
 }
+
 .floating-actions.hidden {
     visibility: hidden;
 }
+
 .fab.calendar {}
+
 .fab.feedback {}
 
 /* --------------------------------------------------------- */
@@ -1303,6 +1118,7 @@ pre.console-log {
 .project-page.root {
     margin: var(--page-margin);
 }
+
 .project-artifacts {
     max-width: 500px;
 }
@@ -1314,136 +1130,164 @@ pre.console-log {
     --avatar-background-color: var(--color-primary-superLight);
     --opacity: 1;
 }
+
 .project-artifact.root.disabled {
     /* shared context */
     --opacity: 0.5;
     pointer-events: none;
 }
+
 .project-artifact.root:hover {
     /* shared context */
     --avatar-fill-color: var(--color-primary-dark);
     --avatar-background-color: var(--color-primary-main);
 }
+
 /* --------------------------------------------------------- */
-.project-artifact.root > .link {
+.project-artifact.root>.link {
     text-decoration: none;
     cursor: pointer;
 }
-.artifact.text > span:hover {
-}
-.project-artifact.root.disabled > .link {
+
+.artifact.text>span:hover {}
+
+.project-artifact.root.disabled>.link {
     cursor: default;
     opacity: 0.3;
 }
-.artifact.text > p {
+
+.artifact.text>p {
     text-decoration: none;
 }
-.artifact.text > p:hover {
+
+.artifact.text>p:hover {
     text-decoration: none;
 }
+
 .project-artifact {
     gap: 1.5rem;
 }
+
 .artifact.avatar {
     padding-top: 0.5rem;
 }
-.artifact.avatar > div {
+
+.artifact.avatar>div {
     /* svg frame */
     background-color: var(--avatar-background-color);
 }
-.artifact.avatar > div > svg {
+
+.artifact.avatar>div>svg {
     fill: var(--avatar-fill-color);
 }
+
 .project-artifact .MuiListItemText-primary {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--color-text-strong);
 }
-.project-artifact .MuiListItemText-secondary {
-}
+
+.project-artifact .MuiListItemText-secondary {}
+
 /*
  * Debugging layout markers
  */
 .size {
     display: none;
 }
+
 .marker {
-  position: absolute;
-  width: 50px;
-  height: 2px;
-  z-index: 1099;
+    position: absolute;
+    width: 50px;
+    height: 2px;
+    z-index: 1099;
 }
+
 .marker.top {
-  right: 4px;
-  background: cyan;
-  top: var(--main-view-top);
+    right: 4px;
+    background: cyan;
+    top: var(--main-view-top);
 }
+
 .marker.bottom {
-  right: 4px;
-  background: #f433ff;
-  bottom: var(--main-view-bottom);
+    right: 4px;
+    background: #f433ff;
+    bottom: var(--main-view-bottom);
 }
+
 .marker.top.computed {
-  top: calc(0vh + var(--main-view-top));
-  right: 24px;
-  background: #000;
+    top: calc(0vh + var(--main-view-top));
+    right: 24px;
+    background: #000;
 }
+
 /* ----------------------------------------
  * Design process
  */
 ul[title]::before {
-  content: attr(title);
-  /* then add some nice styling as needed, eg: */
-  display: block;
-  font-weight: bold;
-  padding: 4px;
-  padding-left: 0px;
-  margin-left: -10px;
+    content: attr(title);
+    /* then add some nice styling as needed, eg: */
+    display: block;
+    font-weight: bold;
+    padding: 4px;
+    padding-left: 0px;
+    margin-left: -10px;
 }
+
 .next-steps ul {
-  list-style-position: outside;
-  margin-left: -20px;
+    list-style-position: outside;
+    margin-left: -20px;
 }
-.next-steps ul > li {
-  font-size: 12px;
+
+.next-steps ul>li {
+    font-size: 12px;
 }
+
 .done {
-  text-decoration: line-through;
+    text-decoration: line-through;
 }
+
 /* ---------------------------------------- */
 .message {
-  font-size: 30px;
+    font-size: 30px;
 }
+
 /* Style the navbar */
 /* Page content */
 .content {
-  padding: 16px;
+    padding: 16px;
 }
 
 /* other css */
 .left-align {
-  margin: 0 auto 0 0;
-  display: block;
-  width: fit-content;
+    margin: 0 auto 0 0;
+    display: block;
+    width: fit-content;
 }
+
 .right-align {
-  margin: 0 0 0 auto;
-  display: block;
-  width: fit-content;
+    margin: 0 0 0 auto;
+    display: block;
+    width: fit-content;
 }
+
 .center-align {
-  margin: 0 auto 0 auto;
-  display: block;
-  width: fit-content;
+    margin: 0 auto 0 auto;
+    display: block;
+    width: fit-content;
 }
+
 /* The sticky class is added to the navbar with JS when it reaches its scroll position */
 .sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
 /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
-.sticky + .content {
-  padding-top: 60px;
+.sticky+.content {
+    padding-top: 60px;
 }
+
+
+/* END */

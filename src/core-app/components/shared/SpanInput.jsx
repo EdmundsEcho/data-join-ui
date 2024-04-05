@@ -18,6 +18,7 @@ import { timeIntervalUnitOptions } from '../../constants/variables';
 import { getFormattedDate } from '../../lib/filesToEtlUnits/transforms/span/span-helper';
 import { range } from '../../utils/common';
 import { InputError } from '../../lib/LuciErrors';
+import { Div } from '../../../luci-styled';
 
 import ToggleIncludeField from './ToggleIncludeField';
 import SelectMenu from './SelectMenu';
@@ -91,17 +92,13 @@ const SpanInput = (props) => {
   //
   // dynamic span values to determine when to adjust one value based on the value
   // of another.
-  const [requestedSpanStart, setRequestedSpanStart] = useState(
-    () => span.rangeStart,
-  );
+  const [requestedSpanStart, setRequestedSpanStart] = useState(() => span.rangeStart);
 
   const [requestedSpanLength, setRequestedSpanLength] = useState(
     () => span.rangeLength,
   );
 
-  const [requestedSpanSeries, setRequestedSpanSeries] = useState(
-    () => !span.reduced,
-  );
+  const [requestedSpanSeries, setRequestedSpanSeries] = useState(() => !span.reduced);
 
   const availableValueOptions = range(
     span.rangeStart,
@@ -223,12 +220,7 @@ const SpanInput = (props) => {
         },
       });
     },
-    [
-      handleUpdate,
-      remainingSpanLength,
-      requestedSpanLength,
-      requestedSpanSeries,
-    ],
+    [handleUpdate, remainingSpanLength, requestedSpanLength, requestedSpanSeries],
   );
 
   const handleReducedToggle = useCallback(() => {
@@ -243,12 +235,7 @@ const SpanInput = (props) => {
         reduced: !tmp,
       },
     });
-  }, [
-    handleUpdate,
-    requestedSpanLength,
-    requestedSpanSeries,
-    requestedSpanStart,
-  ]);
+  }, [handleUpdate, requestedSpanLength, requestedSpanSeries, requestedSpanStart]);
 
   //
   // Each card
@@ -258,8 +245,7 @@ const SpanInput = (props) => {
   // 👉 has a toggle for reduced or series
   //
   return (
-    <Card
-      className={clsx('MuiSpanInput--01', { list: displayType !== 'icon' })}>
+    <Div className={clsx('Luci-SpanInput root', { list: displayType !== 'icon' })}>
       <DisplayType
         className='displayType'
         displayType={displayType}
@@ -276,6 +262,7 @@ const SpanInput = (props) => {
         label='start'
         onChange={handleChangeSpanStart}
         disabled={disabled}
+        disableUnderline
       />
       <SelectMenu
         className='selectMenu-spanLength'
@@ -283,11 +270,12 @@ const SpanInput = (props) => {
         options={availableSpanLengthOptions}
         name='spanLength'
         value={requestedSpanLength}
-        label={`${timeIntervalUnitOptions[
-          timeProp.interval.unit
-        ].toLowerCase()}${requestedSpanLength > 1 ? 's' : ''}`}
+        label={`${timeIntervalUnitOptions[timeProp.interval.unit].toLowerCase()}${
+          requestedSpanLength > 1 ? 's' : ''
+        }`}
         onChange={handleChangeSpanLength}
         disabled={disabled}
+        disableUnderline
       />
       <Switch
         className='switch'
@@ -297,11 +285,9 @@ const SpanInput = (props) => {
         labelTwo='rollup'
         name='reduced'
         color='primary'
-        disabled={
-          disabled || span.rangeLength === 1 || requestedSpanLength === 1
-        }
+        disabled={disabled || span.rangeLength === 1 || requestedSpanLength === 1}
       />
-    </Card>
+    </Div>
   );
 };
 
@@ -338,8 +324,8 @@ SpanInput.defaultProps = {
 function DisplayType({ displayType, disabled, handleToggleValue, request }) {
   return displayType === 'icon' ? (
     <TimeSpanIcon
-      className={clsx('MuiSvgIcon-span-02', {
-        'MuiSvgIcon-span-02-disabled': disabled,
+      className={clsx('span-icon', {
+        disabled,
       })}
       color='secondary'
     />

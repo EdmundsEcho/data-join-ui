@@ -79,9 +79,7 @@ export const getActiveHvFields = (hv, include = [RAW, WIDE, IMPLIED]) => {
   /* eslint-disable-next-line no-shadow */
   function hasFieldsProp(hv) {
     if (!('fields' in hv)) {
-      throw new ValueError(
-        `The headerView is missing the fields prop: ${hv.filename}`,
-      );
+      throw new ValueError(`The headerView is missing the fields prop: ${hv.filename}`);
     }
   }
 };
@@ -649,7 +647,8 @@ export const fieldsKeyedOnPurpose = (fields, mapFn = (x) => x) => {
   /* eslint-disable no-param-reassign */
   return fields.reduce(
     (fieldsKeyedByPurpose, field) => {
-      if (!field.purpose) {
+      if (!field?.purpose) {
+        console.error('field', field);
         throw new InvalidStateError(
           `A field was found not to have an assigned purpose: ${field['field-alias']}`,
         );

@@ -1,15 +1,21 @@
 {
   "port": 8989,
   "staticPath": "public",
-  "watchDirs": ["src"],
+  "watchDirs": [
+    "src"
+  ],
   "webpack": {
     "configPath": "react-scripts/config/webpack.config",
     "includeHashInOutputFilename": true
   },
+  "plugins": [
+    "react-cosmos-plugin-webpack"
+  ],
   "globalImports": [
     "src/assets/index.css",
     "src/assets/dashboard.css",
-    "src/assets/fonts.css"
+    "src/assets/fonts.css",
+    "src/assets/core-app-sizing.css"
   ],
   "$schema": "http://json.schemastore.org/cosmos-config"
 }

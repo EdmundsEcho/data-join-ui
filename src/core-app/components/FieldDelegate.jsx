@@ -17,6 +17,9 @@ import {
   PURPOSE_TYPES,
 } from '../constants/field-input-config';
 
+/**
+ * todo: disable null-value-expansion when set by the system
+ */
 const FieldDelegate = ({
   fieldType,
   saveChange,
@@ -57,8 +60,7 @@ const FieldDelegate = ({
     impliedMvalueDate || !hasNullValues || !displayInput(nullValueFieldName);
 
   // 🚧 The permit-null configuration seems redundant
-  const nullValueRequired =
-    !displayInput('permit-null') && !hideNullValueOverride;
+  const nullValueRequired = !displayInput('permit-null') && !hideNullValueOverride;
 
   return (
     <>
@@ -93,7 +95,7 @@ const FieldDelegate = ({
             stateId={`${stateId}|${nullValueFieldName}`}
             fieldType={fieldType}
             name={nullValueFieldName}
-            value={getValue(nullValueFieldName) || ''}
+            value={getValue(nullValueFieldName) ?? ''}
             saveChange={saveChange}
             onChange={onChange}
             onBlur={onBlur}
@@ -106,8 +108,7 @@ const FieldDelegate = ({
 
       {/* Design note */}
       {/* ETL displays this field elsewhere */}
-      {!displayInput('codomain-reducer') ||
-      fieldType === FIELD_TYPES.ETL ? null : (
+      {!displayInput('codomain-reducer') || fieldType === FIELD_TYPES.ETL ? null : (
         <Grid item xs={12}>
           {/* Dedup */}
           <CodomainReducerRow

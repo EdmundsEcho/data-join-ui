@@ -1,0 +1,178 @@
+{
+  "Specialty": {
+    "idx": 1,
+    "name": "Specialty",
+    "purpose": "quality",
+    "levels": [],
+    "map-symbols": {
+      "arrows": {}
+    },
+    "map-symbols-array": [
+      {
+        "arrows": {}
+      },
+      {
+        "arrows": {}
+      }
+    ],
+    "etl-unit": "Specialty",
+    "format": null,
+    "null-value-expansion": "unknown",
+    "map-files": null,
+    "sources": [
+      {
+        "enabled": true,
+        "source-type": "RAW",
+        "header-idx": 1,
+        "default-name": "specialty",
+        "field-alias": "Specialty",
+        "purpose": "quality",
+        "null-value": null,
+        "format": null,
+        "map-symbols": {
+          "arrows": {}
+        },
+        "levels": [
+          [
+            "IM",
+            17935
+          ],
+          [
+            "FM",
+            16301
+          ],
+          [
+            "CD",
+            15456
+          ],
+          [
+            "IC",
+            905
+          ],
+          [
+            "ICE",
+            551
+          ],
+          [
+            "PUD",
+            367
+          ],
+          [
+            "GP",
+            199
+          ],
+          [
+            "IMG",
+            136
+          ],
+          [
+            "PCC",
+            127
+          ],
+          [
+            "HEM",
+            85
+          ],
+          [
+            "EM",
+            61
+          ],
+          [
+            "VS",
+            61
+          ],
+          [
+            "N",
+            57
+          ],
+          [
+            "NRP",
+            48
+          ],
+          [
+            "FPG",
+            40
+          ],
+          [
+            "HOS",
+            27
+          ],
+          [
+            "CCM",
+            24
+          ],
+          [
+            "PHA",
+            22
+          ],
+          [
+            "VM",
+            10
+          ],
+          [
+            "IFP",
+            9
+          ],
+          [
+            "GPM",
+            8
+          ],
+          [
+            "FP",
+            6
+          ],
+          [
+            "GYN",
+            3
+          ],
+          [
+            "GER",
+            2
+          ],
+          [
+            "MEM",
+            2
+          ],
+          [
+            "MN",
+            2
+          ]
+        ],
+        "nlevels": 26,
+        "nrows": 52418,
+        "filename": "/shared/datafiles/24c4bb67-2357-4cc0-a9ce-6280d8359999/dropbox/4bdff8/lE0WdposqDkAAAAAABpqBg/target_list.csv",
+        "null-value-count": 0,
+        "codomain-reducer": "FIRST",
+        "map-weights": {
+          "arrows": {}
+        }
+      },
+      {
+        "enabled": true,
+        "source-type": "RAW",
+        "header-idx": 1,
+        "default-name": "Specialty",
+        "field-alias": "Specialty",
+        "purpose": "quality",
+        "null-value": null,
+        "format": null,
+        "map-symbols": {
+          "arrows": {}
+        },
+        "levels": [],
+        "nlevels": 32,
+        "nrows": 50764,
+        "filename": "/shared/datafiles/24c4bb67-2357-4cc0-a9ce-6280d8359999/dropbox/4bdff8/lE0WdposqDkAAAAAABppzw/productA_Units.csv",
+        "null-value-count": 0,
+        "map-weights": {
+          "arrows": {}
+        },
+        "codomain-reducer": "FIRST"
+      }
+    ],
+    "codomain-reducer": "FIRST",
+    "map-weights": {
+      "arrows": {}
+    }
+  }
+}

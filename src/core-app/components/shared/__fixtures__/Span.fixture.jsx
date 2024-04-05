@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelect } from 'react-cosmos/fixture';
+import { useSelect } from 'react-cosmos/client';
 import Span from '../Span';
 
 import data from '../../../datasets/store-headerviews_v2.json';

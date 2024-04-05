@@ -168,7 +168,8 @@ function EtlFieldForm(props) {
       instructions={`Record the information encoded by definition of a subject being
           included in a given file.`}
       handleSave={handleSave}
-      handleCancel={handleCancel}>
+      handleCancel={handleCancel}
+    >
       <TableContainer>
         <Table className='Luci-Table group-by-file dialog'>
           <TableBody>
@@ -181,9 +182,7 @@ function EtlFieldForm(props) {
                   name='name'
                   value={formData.name}
                   error={formData.name.trim() === '' || error(formData.name)}
-                  saveChange={({ target }) =>
-                    updateForm({ name: target.value })
-                  }
+                  saveChange={({ target }) => updateForm({ name: target.value })}
                 />
               </TableCell>
             </TableRow>
@@ -205,7 +204,11 @@ function EtlFieldForm(props) {
             </TableRow>
           </TableBody>
         </Table>
-        <HeadingBox stateId={`${stateId}|levels`} heading='Levels'>
+        <HeadingBox
+          stateId={`${stateId}|levels`}
+          heading='Levels'
+          className='Luci-GroupByFileConfig'
+        >
           <InlineLevels files={files} onChange={addArrow} />
         </HeadingBox>
       </TableContainer>
@@ -213,7 +216,8 @@ function EtlFieldForm(props) {
         className='Luci-Collapse group-by-file dialog error'
         in={error(formData.name)}
         timeout='auto'
-        unmountOnExit>
+        unmountOnExit
+      >
         <Box mx={0} mt={5} mb={0}>
           <ErrorCard
             key={`${stateId}|errorCard`}

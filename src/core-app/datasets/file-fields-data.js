@@ -150,7 +150,7 @@ export const headerForFile0 = {
     {
       enabled: true, // fields from the config
       'header-idx': 0,
-      'default-name': 'npi',
+      'header-name': 'npi',
       'field-alias': 'npi',
       purpose: 'subject',
       'null-value': null,
@@ -167,7 +167,7 @@ export const headerForFile0 = {
     {
       enabled: true,
       'header-idx': 1,
-      'default-name': 'specialty',
+      'header-name': 'specialty',
       'field-alias': 'specialty',
       purpose: 'quality',
       'null-value': null,
@@ -191,7 +191,7 @@ export const headerForFile1 = {
     {
       enabled: true, // fields from the config
       'header-idx': 0,
-      'default-name': 'npi',
+      'header-name': 'npi',
       'field-alias': 'npi',
       purpose: 'subject',
       'null-value': null,
@@ -208,7 +208,7 @@ export const headerForFile1 = {
     {
       enabled: true,
       'header-idx': 1,
-      'default-name': 'specialty',
+      'header-name': 'specialty',
       'field-alias': 'specialty',
       purpose: 'quality',
       'null-value': null,
@@ -223,7 +223,7 @@ export const headerForFile1 = {
     {
       enabled: true,
       'header-idx': 2,
-      'default-name': 'nrx',
+      'header-name': 'nrx',
       'field-alias': 'nrx',
       purpose: 'mvalue',
       'null-value': null,
@@ -239,7 +239,7 @@ export const headerForFile1 = {
     {
       enabled: true,
       'header-idx': 3,
-      'default-name': 'date',
+      'header-name': 'date',
       'field-alias': 'date',
       purpose: 'mspan',
       'null-value': null,
@@ -265,7 +265,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         'field-alias': 'npi',
         purpose: 'subject',
         'null-value': null,
@@ -282,7 +282,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         'field-alias': 'specialty',
         purpose: 'quality',
         'null-value': null,
@@ -304,7 +304,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         'field-alias': 'npi',
         purpose: 'subject',
         'null-value': null,
@@ -321,7 +321,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         'field-alias': 'specialty',
         purpose: 'quality',
         'null-value': null,
@@ -336,7 +336,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 2,
-        'default-name': 'nrx',
+        'header-name': 'nrx',
         'field-alias': 'nrx',
         purpose: 'mvalue',
         'null-value': null,
@@ -352,7 +352,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 3,
-        'default-name': 'date',
+        'header-name': 'date',
         'field-alias': 'date',
         purpose: 'mspan',
         'null-value': null,
@@ -375,7 +375,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         'field-alias': 'npi',
         purpose: 'subject',
         'null-value': null,
@@ -392,7 +392,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         'field-alias': 'specialty',
         purpose: 'quality',
         'null-value': null,
@@ -407,7 +407,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 2,
-        'default-name': 'nrx',
+        'header-name': 'nrx',
         'field-alias': 'nrx',
         purpose: 'mvalue',
         'null-value': null,
@@ -423,7 +423,7 @@ export const headerViews = {
       {
         enabled: true,
         'header-idx': 3,
-        'default-name': 'date',
+        'header-name': 'date',
         'field-alias': 'date',
         purpose: 'mspan',
         'null-value': null,
@@ -450,7 +450,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         'field-alias': 'npi',
         purpose: 'subject',
         'null-value': null,
@@ -467,7 +467,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         'field-alias': 'specialty',
         purpose: 'quality',
         'null-value': null,
@@ -489,7 +489,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         'field-alias': 'npi',
         purpose: 'subject',
         'null-value': null,
@@ -506,7 +506,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         'field-alias': 'specialty',
         purpose: 'quality',
         'null-value': null,
@@ -521,7 +521,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 2,
-        'default-name': 'nrx',
+        'header-name': 'nrx',
         'field-alias': 'nrx',
         purpose: 'mvalue',
         'null-value': null,
@@ -537,7 +537,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 3,
-        'default-name': 'trx',
+        'header-name': 'trx',
         'field-alias': 'trx',
         purpose: 'mvalue',
         'null-value': null,
@@ -553,7 +553,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 4,
-        'default-name': 'payer',
+        'header-name': 'payer',
         'field-alias': 'payer',
         purpose: 'mcomp',
         'null-value': null,
@@ -569,7 +569,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 4,
-        'default-name': 'date2',
+        'header-name': 'date2',
         'field-alias': 'date2',
         purpose: 'mspan',
         'null-value': null,
@@ -592,7 +592,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         'field-alias': 'npi',
         purpose: 'subject',
         'null-value': null,
@@ -609,7 +609,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         'field-alias': 'specialty',
         purpose: 'quality',
         'null-value': null,
@@ -624,7 +624,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 4,
-        'default-name': 'payer',
+        'header-name': 'payer',
         'field-alias': 'payer',
         purpose: 'mcomp',
         'null-value': null,
@@ -640,7 +640,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 2,
-        'default-name': 'nrx',
+        'header-name': 'nrx',
         'field-alias': 'nrx',
         purpose: 'mvalue',
         'null-value': null,
@@ -656,7 +656,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 5,
-        'default-name': 'trx',
+        'header-name': 'trx',
         'field-alias': 'trx',
         purpose: 'mvalue',
         'null-value': null,
@@ -672,7 +672,7 @@ export const headerViewsTwo = {
       {
         enabled: true,
         'header-idx': 3,
-        'default-name': 'date',
+        'header-name': 'date',
         'field-alias': 'date',
         purpose: 'mspan',
         'null-value': null,
@@ -697,7 +697,7 @@ export const resultOfPivot = {
         'field-alias': 'npi',
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         purpose: 'subject',
         'null-value': null,
         format: null,
@@ -714,7 +714,7 @@ export const resultOfPivot = {
         'field-alias': 'npi',
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         purpose: 'subject',
         'null-value': null,
         format: null,
@@ -731,7 +731,7 @@ export const resultOfPivot = {
         'field-alias': 'npi',
         enabled: true,
         'header-idx': 0,
-        'default-name': 'npi',
+        'header-name': 'npi',
         purpose: 'subject',
         'null-value': null,
         format: null,
@@ -752,7 +752,7 @@ export const resultOfPivot = {
         'field-alias': 'specialty',
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         purpose: 'quality',
         'null-value': null,
         format: null,
@@ -767,7 +767,7 @@ export const resultOfPivot = {
         'field-alias': 'specialty',
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         purpose: 'quality',
         'null-value': null,
         format: null,
@@ -782,7 +782,7 @@ export const resultOfPivot = {
         'field-alias': 'specialty',
         enabled: true,
         'header-idx': 1,
-        'default-name': 'specialty',
+        'header-name': 'specialty',
         purpose: 'quality',
         'null-value': null,
         format: null,
@@ -801,7 +801,7 @@ export const resultOfPivot = {
         'field-alias': 'nrx',
         enabled: true,
         'header-idx': 2,
-        'default-name': 'nrx',
+        'header-name': 'nrx',
         purpose: 'mvalue',
         'null-value': null,
         format: null,
@@ -817,7 +817,7 @@ export const resultOfPivot = {
         'field-alias': 'nrx',
         enabled: true,
         'header-idx': 2,
-        'default-name': 'nrx',
+        'header-name': 'nrx',
         purpose: 'mvalue',
         'null-value': null,
         format: null,
@@ -837,7 +837,7 @@ export const resultOfPivot = {
         'field-alias': 'date',
         enabled: true,
         'header-idx': 3,
-        'default-name': 'date',
+        'header-name': 'date',
         purpose: 'mspan',
         'null-value': null,
         format: null,
@@ -853,7 +853,7 @@ export const resultOfPivot = {
         'field-alias': 'date',
         enabled: true,
         'header-idx': 3,
-        'default-name': 'date',
+        'header-name': 'date',
         purpose: 'mspan',
         'null-value': null,
         format: null,

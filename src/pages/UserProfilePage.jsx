@@ -48,7 +48,6 @@ export const UserProfilePage = () => {
       <Typography variant='h5' component='h2'>
         About me
       </Typography>
-      Requested information
       <UserProfileForm data={data} update={update} />
     </div>
   );
@@ -120,7 +119,8 @@ function UserProfileForm({ data: dataFromProp, update }) {
         variant='contained'
         size='small'
         color='primary'
-        type={formik.isSubmitting ? 'button' : 'submit'}>
+        type={formik.isSubmitting ? 'button' : 'submit'}
+      >
         {formik.isSubmitting ? <span className='spinner' /> : 'Save'}
       </Button>
     </form>

@@ -1,0 +1,215 @@
+/* ---------------------------------------- */
+@import "luci-theme.css";
+
+/* ---------------------------------------- */
+/* root popup */
+/* stage -> modal
+/* ---------------------------------------- */
+:root {
+    --modal-stage-width: 350px;
+    --modal-stage-height: 339px;
+}
+
+.dark-theme-context {}
+
+.main-content>[class*="LuciDiv-root"].Luci-SymbolMapMaker {
+    padding: 0;
+    background: inherit;
+}
+
+/* frame, parent is stage-root */
+.modal-root {
+    background: var(--color-background-modal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--color-box-border);
+    border-radius: var(--default-radius);
+    padding: 1.5rem;
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+    margin: auto;
+    height: 100%;
+    /* fill fixed space provided by parent */
+}
+
+.Luci-SymbolMapMaker-dialog>.modal-root {
+    padding: 0.5rem;
+}
+
+.modal-root>.main-content {
+    margin: auto;
+}
+
+.modal-root>.header {
+    width: 100%;
+}
+
+.modal-root>.header>.heading {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    color: var(--color-text-primary);
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+    margin-right: auto;
+    margin-bottom: 0;
+}
+
+.modal-root>.header>.close-button {
+    border: none;
+    color: var(--color-text-primary);
+    background: none;
+    cursor: pointer;
+    outline: none;
+    align-self: flex-start;
+}
+
+/* ---------------------------------------- */
+/* feedback form */
+/* ---------------------------------------- */
+
+.feedback.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.feedback .text-area,
+.feedback .button.submit {
+    border: 1px solid var(--color-box-border);
+    border-radius: 0.6rem;
+    width: 100%;
+    color: var(--color-text-primary);
+    background: var(--color-background-textarea);
+    outline: none;
+    font-size: 1rem;
+}
+
+.feedback .text-area {
+    padding: 0.4rem 0.6rem;
+    resize: none;
+    font-weight: 400;
+    line-height: 140%;
+    min-height: 7em;
+    font-family: 'Lato';
+    color: var(--color-text-primary);
+}
+
+.feedback .button.submit {
+    padding: 0.4rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.feedback .button.submit:disabled {
+    color: var(--color-text-primary);
+}
+
+.feedback .button.submit:hover:enabled {
+    filter: brightness(1.4);
+}
+
+/* row of mood icons */
+.feedback.mood-container {
+    display: flex;
+    align-content: center;
+    column-gap: 0.4rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.feedback .mood-icon {
+    padding: 2px;
+    padding-top: 1rem;
+    /* space for tooltip */
+    transition: transform 200ms cubic-bezier(.5, -1, .5, 2), filter 150ms ease-in-out, opacity 1500ms ease-in-out;
+    filter: blur(1.5px);
+    opacity: 0.5;
+    z-index: 10;
+}
+
+.feedback .mood-icon>img {
+    height: 2rem;
+    width: 2rem;
+}
+
+.feedback .mood-icon:hover {
+    transform: scale(1.12);
+    filter: blur(0);
+    opacity: 0.7;
+}
+
+.feedback .glowing-background {
+    background: linear-gradient(179.3deg, #FFD239 3.97%, rgba(255, 201, 51, 0.24) 58.23%, #E82992 106.1%);
+    filter: blur(30px);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    z-index: 0;
+}
+
+.feedback .mood-tooltip {
+    position: absolute;
+    top: -1.4rem;
+    z-index: 100;
+    background: var(--color-text-primary);
+    font-size: 0.9rem;
+    color: var(--color-button-text);
+    border-radius: 8px;
+    padding: 3px 10px;
+    display: none;
+}
+
+.feedback .mood-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.feedback .mood-label>input {
+    position: absolute;
+    opacity: 0;
+}
+
+.feedback .mood-label input:checked~.mood-tooltip,
+.feedback .mood-label input:hover~.mood-tooltip {
+    display: block;
+}
+
+.feedback .mood-label input:checked~.mood-icon {
+    filter: blur(0);
+    border-color: var(--color-button-text);
+    transform: scale(1.315);
+    opacity: 1;
+}
+
+.feedback .mood-label input:checked~.glowing-background {
+    opacity: 1;
+}
+
+/* override button format */
+button.thank-you {
+    border: none;
+    background: inherit;
+}
+
+.thank-you svg {
+    margin: auto;
+    font-size: 100px;
+    color: var(--color-secondary-main);
+}
+
+.thank-you .heading {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+}

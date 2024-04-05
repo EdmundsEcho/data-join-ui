@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 import { ErrorBoundary as Inner } from 'react-error-boundary';
 
@@ -26,12 +27,16 @@ function Fallback({ error, componentStack, resetErrorBoundary }) {
   return (
     <Container className='Luci-error-boundary'>
       <h2>An error occurred</h2>
-      {error.message}
+      <Typography>{error.message}</Typography>
       <Divider />
-      <details style={{ whiteSpace: 'pre-wrap' }}>
-        <div className='error'>{error && error.toString()}</div>
+      <details>
+        <div className='error'>
+          <Typography>{error && error.toString()}</Typography>
+        </div>
         <Divider />
-        <div className='componentStack'>{componentStack}</div>
+        <div className='componentStack'>
+          <Typography>{componentStack}</Typography>
+        </div>
       </details>
       <Divider />
       <Button variant='contained' type='button' onClick={resetErrorBoundary}>

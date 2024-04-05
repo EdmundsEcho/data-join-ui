@@ -35,6 +35,8 @@ import {
   SET_HV_FIELD_LEVELS, // document levels (likely only mspan)
   ADD_UPDATE_SYMBOL_ITEM,
   DELETE_SYMBOL_ITEM,
+  ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG,
+  DELETE_SYMBOL_ITEM_WIDE_CONFIG,
 } from './actions/headerView.actions';
 import { RESET } from './actions/project-meta.actions';
 
@@ -67,13 +69,10 @@ export const initialState = {
   selected: [], // list of files shared with headerView
   fileInspectionErrors: [], // from the API
   headerViews: {},
-  headerViewFixes: Object.values(SOURCE_TYPES).reduce(
-    (emptyFixes, sourceType) => {
-      emptyFixes[sourceType] = {}; // eslint-disable-line
-      return emptyFixes;
-    },
-    {},
-  ),
+  headerViewFixes: Object.values(SOURCE_TYPES).reduce((emptyFixes, sourceType) => {
+    emptyFixes[sourceType] = {}; // eslint-disable-line
+    return emptyFixes;
+  }, {}),
 };
 // -----------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -96,35 +95,26 @@ export const isFileSelected = (stateFragment, path) => {
   return stateFragment.selected.findIndex(flt) !== -1;
 };
 
-export const getHasSelectedFiles = (stateFragment) =>
-  stateFragment.selected.length > 0;
+export const getHasSelectedFiles = (stateFragment) => stateFragment.selected.length > 0;
 
 /**
- * Returns Object with totalCount and selectionModel keys
- * see getSelectionModel in workbench
- * ⚠️   The levels is now the selectionModel :: Object.
+ * Generates a synthetic selection model for the data grid core
  */
 export const getSelectionModelFile = (stateFragment, filename, headerIdx) => {
-  // 🦀? return [] when inputs fail to return a valid state
-  let selectionModel =
-    stateFragment.headerViews[filename]?.fields[headerIdx]?.levels ?? [];
-
-  if (Array.isArray(selectionModel) && selectionModel.length === 0) {
-    selectionModel = { __ALL__: { value: '__ALL__', request: true } };
-  }
-  const type =
-    Array.isArray(selectionModel) && selectionModel.length > 0
-      ? 'levels'
-      : 'selectionModel';
   return {
-    totalCount:
-      selectionModel.length > 0
-        ? selectionModel.length
-        : stateFragment.headerViews[filename].fields[headerIdx].nlevels,
-    selectionModel,
-    type,
+    totalCount: stateFragment.headerViews[filename].fields[headerIdx].nlevels,
+    selectionModel: { __ALL__: { value: '__ALL__', request: true } },
+    type: 'selectionModel',
   };
 };
+
+/**
+ * v0.3.11
+ * Object: arrows: Object
+ * @return {Object}
+ */
+export const selectSymbolMap = (stateFragment, filename, headerIdx) =>
+  stateFragment.headerViews?.[filename]?.fields[headerIdx]['map-symbols'];
 
 /**
  * returns headerView
@@ -185,9 +175,7 @@ const scrubHeaderView = (stateFragment, filename) => {
   return {
     ...hv,
     fields: hv.fields.map((field) => {
-      return field.purpose === PURPOSE_TYPES.MSPAN
-        ? field
-        : { ...field, levels: [] };
+      return field.purpose === PURPOSE_TYPES.MSPAN ? field : { ...field, levels: [] };
     }),
   };
 };
@@ -254,11 +242,7 @@ export const selectFieldInHeader = (stateFragment, filename, fieldIdx) => {
  * @param {Array<string>} fieldProps
  * @return {Array<Object>}
  */
-const selectHeaderViewFieldsWithProps = (
-  stateFragment,
-  filename,
-  fieldProps,
-) => {
+const selectHeaderViewFieldsWithProps = (stateFragment, filename, fieldProps) => {
   /* eslint-disable no-param-reassign */
   return stateFragment?.headerViews?.[filename].fields.map((field) => {
     return Object.keys(field).reduce((newField, fieldKey) => {
@@ -297,11 +281,22 @@ export const selectWideToLongFields = (stateFragment, filename) => {
   return getWideToLongFieldsConfig(hv);
 };
 
+/**
+ * Return a field from the wideToLongFields configuration
+ * 0.3.11
+ * @param {Object} stateFragment
+ * @param {string} filename
+ * @param {string} fieldAlias
+ * @return {Object} field
+ */
+export const selectWideToLongField = (stateFragment, filename, fieldAlias) => {
+  const hv = selectHeaderView(stateFragment, filename);
+  return getWideToLongFieldsConfig(hv).fields[fieldAlias];
+};
+
 export const selectHasWideToLongFields = (stateFragment, filename) => {
   if (typeof stateFragment === 'undefined') return false;
-  return Boolean(
-    stateFragment?.headerViews?.[filename]?.wideToLongFields ?? false,
-  );
+  return Boolean(stateFragment?.headerViews?.[filename]?.wideToLongFields ?? false);
 };
 
 //------------------------------------------------------------------------------
@@ -314,9 +309,7 @@ export const selectImpliedMvalue = (stateFragment, filename) => {
 
   try {
     if (!Object.keys(hv).includes('implied-mvalue')) {
-      throw new KeyValueError(
-        `Missing key: implied-value does not exist: ${filename}`,
-      );
+      throw new KeyValueError(`Missing key: implied-value does not exist: ${filename}`);
     }
     return stateFragment.headerViews[filename]['implied-mvalue'];
   } catch (e) {
@@ -330,9 +323,7 @@ export const selectImpliedMvalue = (stateFragment, filename) => {
 };
 export const selectHasImpliedMvalue = (stateFragment, filename) => {
   if (typeof stateFragment === 'undefined') return false;
-  return Boolean(
-    stateFragment?.headerViews?.[filename]?.['implied-mvalue'] ?? false,
-  );
+  return Boolean(stateFragment?.headerViews?.[filename]?.['implied-mvalue'] ?? false);
 };
 
 //------------------------------------------------------------------------------
@@ -407,8 +398,7 @@ export const selectHeaderViewFixes = (stateFragment, filename, sourceType) => {
 };
 
 export const selectHasHeaderViewFixes = (stateFragment, sourceType, filename) =>
-  selectHeaderViewFixes(stateFragment, filename, sourceType)?.length > 0 ??
-  false;
+  selectHeaderViewFixes(stateFragment, filename, sourceType)?.length > 0 ?? false;
 
 /**
  *
@@ -420,9 +410,8 @@ export const selectHasHeaderViewFixes = (stateFragment, sourceType, filename) =>
  * @return {number}
  */
 export const getActiveFieldCount = (stateFragment, filename) =>
-  selectHeaderView(stateFragment, filename)?.fields?.filter(
-    ({ enabled }) => enabled,
-  ).length ?? 0;
+  selectHeaderView(stateFragment, filename)?.fields?.filter(({ enabled }) => enabled)
+    .length ?? 0;
 
 //------------------------------------------------------------------------------
 
@@ -547,20 +536,11 @@ const reducer = createReducer(initialState, {
     ...state,
     selected: [...state.selected, [path, displayName]],
   }),
-  //
-  // part of July 2021 push
-  //
   [ADD_INSPECTION_ERROR]: (state, { payload: { filename, message } }) => ({
     ...state,
-    fileInspectionErrors: [
-      ...state.fileInspectionErrors,
-      { [filename]: message },
-    ],
+    fileInspectionErrors: [...state.fileInspectionErrors, { [filename]: message }],
   }),
-  [REMOVE_INSPECTION_ERROR]: (
-    state,
-    { payload: { filename: removeFilename } },
-  ) => ({
+  [REMOVE_INSPECTION_ERROR]: (state, { payload: { filename: removeFilename } }) => ({
     ...state,
     fileInspectionErrors: state.fileInspectionErrors.filter(
       (error) => error.filename !== removeFilename,
@@ -714,22 +694,13 @@ const reducer = createReducer(initialState, {
       console.dir(state.headerViews[filename].fields);
     }
 
-    const scanHvFn = staleDerivedFields
-      ? findAndSeedDerivedFields
-      : ({ hv }) => hv;
+    const scanHvFn = staleDerivedFields ? findAndSeedDerivedFields : ({ hv }) => hv;
 
     // 3️⃣  document the headerViews
     const headerViews = {
       ...state.headerViews,
       [filename]: scanHvFn({
-        hv: {
-          ...state.headerViews[filename],
-          fields: H.deleteReplace(
-            state.headerViews[filename].fields,
-            fieldIdx,
-            newField,
-          ),
-        },
+        hv: updateFieldInHeaderView(state.headerViews[filename], fieldIdx, newField),
         previousHvFields: selectHeaderViewFieldsWithProps(state, filename, [
           'enabled',
           'purpose',
@@ -759,20 +730,7 @@ const reducer = createReducer(initialState, {
       sourceType: 'RAW',
       DEBUG,
     });
-    return {
-      ...state,
-      headerViews: {
-        ...state.headerViews,
-        [filename]: {
-          ...state.headerViews[filename],
-          fields: H.deleteReplace(
-            state.headerViews[filename].fields,
-            headerIdx,
-            newField,
-          ),
-        },
-      },
-    };
+    return updateFieldInState(state, filename, headerIdx, newField);
   },
 
   // 👍 document the results of an async report of fixes/errors
@@ -801,23 +759,127 @@ const reducer = createReducer(initialState, {
 
   // v0.3.11
   [ADD_UPDATE_SYMBOL_ITEM]: (state, { payload }) => {
-    const { left, right } = payload;
-    state.items[left] = { left, right };
-    return {
-      ...state,
-      headerViews: null,
+    const { left, right, filename, headerIdx } = payload;
+    const readOnlyField = selectFieldInHeader(state, filename, headerIdx);
+    const { arrows } = readOnlyField['map-symbols'];
+    const newField = {
+      ...readOnlyField,
+      'map-symbols': {
+        ...readOnlyField['map-symbols'],
+        arrows: {
+          ...arrows,
+          [left]: right,
+        },
+      },
     };
+    return updateFieldInState(state, filename, headerIdx, newField);
   },
   // v0.3.11
   [DELETE_SYMBOL_ITEM]: (state, { payload }) => {
-    const { left, right } = payload;
-    const { [payload.left]: omitted, ...newItems } = state.items;
-    state.items = newItems;
-    return {
-      ...state,
-      headerViews: null,
+    const { left, filename, headerIdx } = payload;
+    const readOnlyField = selectFieldInHeader(state, filename, headerIdx);
+    const { arrows } = readOnlyField['map-symbols'];
+    const { [left]: omit, ...newArrows } = arrows;
+    const newField = {
+      ...readOnlyField,
+      'map-symbols': {
+        ...readOnlyField['map-symbols'],
+        arrows: newArrows,
+      },
     };
+    return updateFieldInState(state, filename, headerIdx, newField);
+  },
+  // v0.3.11
+  [ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG]: (state, { payload }) => {
+    const { left, right, filename, fieldAlias } = payload;
+    const readOnlyField = selectWideToLongField(state, filename, fieldAlias);
+    const { arrows } = readOnlyField['map-symbols'];
+    const newField = {
+      ...readOnlyField,
+      'map-symbols': {
+        ...readOnlyField['map-symbols'],
+        arrows: {
+          ...arrows,
+          [left]: right,
+        },
+      },
+    };
+    return updateWideFieldInState(state, filename, fieldAlias, newField);
+  },
+  // v0.3.11
+  [DELETE_SYMBOL_ITEM_WIDE_CONFIG]: (state, { payload }) => {
+    const { left, filename, fieldAlias } = payload;
+    const readOnlyField = selectWideToLongField(state, filename, fieldAlias);
+    const { arrows } = readOnlyField['map-symbols'];
+    const { [left]: omit, ...newArrows } = arrows;
+    const newField = {
+      ...readOnlyField,
+      'map-symbols': {
+        ...readOnlyField['map-symbols'],
+        arrows: newArrows,
+      },
+    };
+    return updateWideFieldInState(state, filename, fieldAlias, newField);
   },
 });
 
+//------------------------------------------------------------------------------
+// Local reducer mutating functions
+//------------------------------------------------------------------------------
+/**
+ * Swap a field in the state object with a new field (maintains field sequence)
+ * @return {Object} store
+ */
+function updateFieldInState(state, filename, headerIdx, newField) {
+  return {
+    ...state,
+    headerViews: {
+      ...state.headerViews,
+      [filename]: updateFieldInHeaderView(
+        state.headerViews[filename],
+        headerIdx,
+        newField,
+      ),
+    },
+  };
+}
+/**
+ * Swap a field in a headerView with a new field (maintains field sequence)
+ * @param {HeaderView} hv
+ * @return {HeaderView} hv
+ */
+function updateFieldInHeaderView(hv, headerIdx, newField) {
+  return {
+    ...hv,
+    fields: H.deleteReplace(hv.fields, headerIdx, newField),
+  };
+}
+/**
+ * Update a wide field in the wideToLongFields configuration
+ */
+function updateWideFieldInState(state, filename, fieldAlias, newField) {
+  return {
+    ...state,
+    headerViews: {
+      ...state.headerViews,
+      [filename]: updateWideFieldInHeaderView(
+        state.headerViews[filename],
+        fieldAlias,
+        newField,
+      ),
+    },
+  };
+}
+function updateWideFieldInHeaderView(hv, fieldAlias, newField) {
+  return {
+    ...hv,
+    wideToLongFields: {
+      ...hv.wideToLongFields,
+      fields: {
+        ...hv.wideToLongFields.fields,
+        [fieldAlias]: newField,
+      },
+    },
+  };
+}
 export default reducer;

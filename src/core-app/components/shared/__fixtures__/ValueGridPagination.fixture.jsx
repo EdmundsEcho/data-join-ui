@@ -10,7 +10,7 @@ import {
 import Typography from '@mui/material/Typography';
 
 // cosmos
-import { useSelect } from 'react-cosmos/fixture';
+import { useSelect } from 'react-cosmos/client';
 import { getTreeValuesOptions } from '../../../cosmos/tree-data-utils';
 
 import ErrorBoundary from '../ErrorBoundary';

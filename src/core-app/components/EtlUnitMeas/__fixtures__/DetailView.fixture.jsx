@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSelect } from 'react-cosmos/fixture';
+import { useSelect } from 'react-cosmos/client';
 import { useSelector, shallowEqual } from 'react-redux';
 
 // 📖 data

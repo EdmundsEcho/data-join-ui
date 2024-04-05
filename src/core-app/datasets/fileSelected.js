@@ -70,7 +70,7 @@ export default {
             {
               enabled: true,
               'header-idx': 0,
-              'default-name': 'NPI Number',
+              'header-name': 'NPI Number',
               'field-alias': 'NPI Number',
               purpose: 'subject',
               'null-value': null,
@@ -139,7 +139,7 @@ export default {
             {
               enabled: true,
               'header-idx': 1,
-              'default-name': 'SPI Number',
+              'header-name': 'SPI Number',
               'field-alias': 'SPI Number',
               purpose: 'quality',
               'null-value': null,
@@ -202,7 +202,7 @@ export default {
             {
               enabled: true,
               'header-idx': 2,
-              'default-name': 'Primary Specialty Desc',
+              'header-name': 'Primary Specialty Desc',
               'field-alias': 'Primary Specialty Desc',
               purpose: 'quality',
               'null-value': null,
@@ -262,7 +262,7 @@ export default {
             {
               enabled: true,
               'header-idx': 3,
-              'default-name': 'Practitioner State',
+              'header-name': 'Practitioner State',
               'field-alias': 'Practitioner State',
               purpose: 'quality',
               'null-value': null,
@@ -328,7 +328,7 @@ export default {
             {
               enabled: true,
               'header-idx': 4,
-              'default-name': 'Practitioner Zip Code',
+              'header-name': 'Practitioner Zip Code',
               'field-alias': 'Practitioner Zip Code',
               purpose: 'quality',
               'null-value': null,
@@ -388,7 +388,7 @@ export default {
             {
               enabled: true,
               'header-idx': 5,
-              'default-name': 'Payment Type Group',
+              'header-name': 'Payment Type Group',
               'field-alias': 'Payment Type Group',
               purpose: 'mcomp',
               'null-value': null,
@@ -457,7 +457,7 @@ export default {
             {
               enabled: true,
               'header-idx': 6,
-              'default-name': 'Year-Month',
+              'header-name': 'Year-Month',
               'field-alias': 'Year-Month',
               purpose: 'mspan',
               'null-value': null,
@@ -528,7 +528,7 @@ export default {
             {
               enabled: true,
               'header-idx': 7,
-              'default-name': 'NRx Count',
+              'header-name': 'NRx Count',
               'field-alias': 'NRx Count',
               purpose: 'mvalue',
               'null-value': null,
@@ -1030,7 +1030,7 @@ export default {
           {
             enabled: true,
             'header-idx': 0,
-            'default-name': 'NPI Number',
+            'header-name': 'NPI Number',
             'field-alias': 'NPI Number',
             purpose: 'subject',
             'null-value': null,
@@ -1062,7 +1062,7 @@ export default {
           {
             enabled: true,
             'header-idx': 1,
-            'default-name': 'SPI Number',
+            'header-name': 'SPI Number',
             'field-alias': 'SPI Number',
             purpose: 'quality',
             'null-value': null,
@@ -1094,7 +1094,7 @@ export default {
           {
             enabled: true,
             'header-idx': 2,
-            'default-name': 'Primary Specialty Desc',
+            'header-name': 'Primary Specialty Desc',
             'field-alias': 'Primary Specialty Desc',
             purpose: 'quality',
             'null-value': null,
@@ -1120,7 +1120,7 @@ export default {
           {
             enabled: true,
             'header-idx': 3,
-            'default-name': 'Practitioner State',
+            'header-name': 'Practitioner State',
             'field-alias': 'Practitioner State',
             purpose: 'quality',
             'null-value': null,
@@ -1149,7 +1149,7 @@ export default {
           {
             enabled: true,
             'header-idx': 4,
-            'default-name': 'Practitioner Zip Code',
+            'header-name': 'Practitioner Zip Code',
             'field-alias': 'Practitioner Zip Code',
             purpose: 'quality',
             'null-value': null,
@@ -1181,7 +1181,7 @@ export default {
           {
             enabled: true,
             'header-idx': 5,
-            'default-name': 'Payment Type Group',
+            'header-name': 'Payment Type Group',
             'field-alias': 'Payment Type Group',
             purpose: 'mcomp',
             'null-value': null,
@@ -1204,7 +1204,7 @@ export default {
           {
             enabled: true,
             'header-idx': 6,
-            'default-name': 'Year-Month',
+            'header-name': 'Year-Month',
             'field-alias': 'Year-Month',
             purpose: 'mspan',
             'null-value': null,
@@ -1245,7 +1245,7 @@ export default {
           {
             enabled: true,
             'header-idx': 7,
-            'default-name': 'NRx Count',
+            'header-name': 'NRx Count',
             'field-alias': 'NRx Count',
             purpose: 'mvalue',
             'null-value': null,

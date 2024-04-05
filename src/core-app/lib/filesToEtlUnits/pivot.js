@@ -34,14 +34,12 @@ import { combineTimeObjs } from './transforms/combineTimeObjs';
 import { combineLevels } from './transforms/combineLevels';
 import { combineSpans } from './transforms/combineSpans';
 import combineSymbols from './transforms/combineSymbols';
-import { combinePurposes } from './transforms/combinePurposes';
-import {
-  maybeEtlUnitFromName,
-  etlUnitsFromPrePivot,
-} from './transforms/etl-units';
+import { combineExpansions } from './transforms/combineExpansions';
+import { maybeEtlUnitFromName, etlUnitsFromPrePivot } from './transforms/etl-units';
 import { appendWideToLongFields } from './transforms/wide-to-long-fields';
 import { appendImpliedFields } from './transforms/implied-mvalue';
 import { mapFromArray } from './headerview-helpers';
+import { propFromSources } from './etl-field-helper';
 import { InvalidStateError } from '../LuciErrors';
 import { PURPOSE_TYPES as TYPES } from '../sum-types';
 
@@ -251,19 +249,22 @@ function augmentEtlFields(ppHvs, config) {
  * Configuration
  * Use to define how to augment the output of `pivot`.
  *
+ * (see also implied-mvalue, headerview-field impliedMvalueField)
+ *
  */
 function defaultConfig(hvs, etlFieldName, sources, idx) {
-  const purpose = combinePurposes(sources); // does nothing useful
+  const purpose = propFromSources('purpose')(sources)[0];
 
   const etlField = {
     idx,
     name: etlFieldName,
     purpose,
     levels: purpose === 'mspan' ? combineLevels(sources) : [],
-    'map-symbols': combineSymbols(sources),
+    'map-symbols': combineSymbols(sources, 'map-symbols', 'OBJECT'), // symbols applied last
+    'map-symbols-array': combineSymbols(sources, 'map-symbols', 'ARRAY'), // source-specific symbols
     'etl-unit': maybeEtlUnitFromName(etlFieldName, hvs),
-    format: null, // user input
-    'null-value-expansion': null, // user input
+    format: propFromSources('format')(sources)[0] ?? null, // grab the first as a starting point
+    'null-value-expansion': combineExpansions(sources) ?? null, // user input with maybe default
     'map-files': null, // group-by-file user input
     sources,
   };
@@ -329,9 +330,7 @@ function appendEtlUnits(ppHvs) {
   return (etlFields) => {
     try {
       if (!Object.keys(etlFields).length) {
-        throw new InvalidStateError(
-          'appendEtlUnits called with an empty object',
-        );
+        throw new InvalidStateError('appendEtlUnits called with an empty object');
       }
     } catch (e) {
       if (e instanceof InvalidStateError) {

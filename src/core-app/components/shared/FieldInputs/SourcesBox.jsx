@@ -105,7 +105,11 @@ function SourcesBox(props) {
 
   return sources.length > 0 ? (
     <div className='Luci-sources root'>
-      <HeadingBox heading='Sources' stateId={`${stateId}|heading-box`}>
+      <HeadingBox
+        heading='Sources'
+        stateId={`${stateId}|heading-box`}
+        className='Luci-EtlSourcesConfig'
+      >
         <Box mb={5}>{children}</Box>
         <TableContainer>
           <table className={clsx('Luci-Table-Sources', 'sequence')}>
@@ -126,14 +130,16 @@ function SourcesBox(props) {
               {(droppableProvided /* droppableSnapshot */) => (
                 <table
                   className={clsx('Luci-Table-Sources', 'filenames')}
-                  ref={droppableProvided.innerRef}>
+                  ref={droppableProvided.innerRef}
+                >
                   <tbody>
                     {sources.map((source, idx) => (
                       <Draggable
                         key={source.filename}
                         draggableId={source.filename}
                         index={idx}
-                        isDragDisabled={!canReorderSources}>
+                        isDragDisabled={!canReorderSources}
+                      >
                         {(draggableProvided, draggableSnapshot) => (
                           <tr
                             ref={draggableProvided.innerRef}
@@ -142,7 +148,8 @@ function SourcesBox(props) {
                             style={filenameHandleStyle(
                               draggableSnapshot,
                               draggableProvided,
-                            )}>
+                            )}
+                          >
                             <td style={{ width: 325 }}>
                               <Typography variant='body1' noWrap>
                                 {canReorderSources && (
@@ -179,13 +186,12 @@ function SourcesBox(props) {
               {sources.map((source, idx) => (
                 <tr key={`${source}-${idx}`}>
                   <td style={{ height: 50 }}>
-                    {canEditSources &&
-                      getDerivedValue(source.filename) === '' && (
-                        <EditIcon
-                          style={{ fontSize: 16 }}
-                          onClick={() => onViewSource(source.filename)}
-                        />
-                      )}
+                    {canEditSources && getDerivedValue(source.filename) === '' && (
+                      <EditIcon
+                        style={{ fontSize: 16 }}
+                        onClick={() => onViewSource(source.filename)}
+                      />
+                    )}
                   </td>
                 </tr>
               ))}

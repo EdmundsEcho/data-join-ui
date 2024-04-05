@@ -1,0 +1,153 @@
+diff --git a/node_modules/react-cosmos-redux/dist/index.js b/node_modules/react-cosmos-redux/dist/index.js
+index 11554cd..da5d617 100644
+--- a/node_modules/react-cosmos-redux/dist/index.js
++++ b/node_modules/react-cosmos-redux/dist/index.js
+@@ -1,69 +1,91 @@
+-"use strict";
+-var __assign = (this && this.__assign) || function () {
+-    __assign = Object.assign || function(t) {
++'use strict';
++var __assign =
++  (this && this.__assign) ||
++  function () {
++    __assign =
++      Object.assign ||
++      function (t) {
+         for (var s, i = 1, n = arguments.length; i < n; i++) {
+-            s = arguments[i];
+-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+-                t[p] = s[p];
++          s = arguments[i];
++          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+         }
+         return t;
+-    };
++      };
+     return __assign.apply(this, arguments);
+-};
++  };
+ exports.__esModule = true;
+-var React = require("react");
+-var fixture_1 = require("react-cosmos/fixture");
+-var react_redux_1 = require("react-redux");
++var React = require('react');
++var fixture_1 = require('react-cosmos/client');
++var react_redux_1 = require('react-redux');
+ function ReduxMock(_a) {
+-    var children = _a.children, configureStore = _a.configureStore, initialState = _a.initialState;
+-    var _b = React.useContext(fixture_1.FixtureContext), fixtureState = _b.fixtureState, setFixtureState = _b.setFixtureState;
+-    // Create Redux context state
+-    var _c = React.useState(function () {
+-        var reduxFs = fixtureState.redux;
+-        var reduxState = reduxFs ? reduxFs.state : initialState;
+-        var store = configureStore(reduxState);
+-        return {
+-            changedAt: getTime(),
+-            store: store
+-        };
+-    }), state = _c[0], setState = _c[1];
+-    // Subscribe to Redux store
+-    var store = state.store;
+-    React.useEffect(function () {
+-        return store.subscribe(function () {
+-            setState({
+-                changedAt: getTime(),
+-                store: store
+-            });
++  var children = _a.children,
++    configureStore = _a.configureStore,
++    initialState = _a.initialState;
++  var _b = React.useContext(fixture_1.FixtureContext),
++    fixtureState = _b.fixtureState,
++    setFixtureState = _b.setFixtureState;
++  // Create Redux context state
++  var _c = React.useState(function () {
++      var reduxFs = fixtureState.redux;
++      var reduxState = reduxFs ? reduxFs.state : initialState;
++      var store = configureStore(reduxState);
++      return {
++        changedAt: getTime(),
++        store: store,
++      };
++    }),
++    state = _c[0],
++    setState = _c[1];
++  // Subscribe to Redux store
++  var store = state.store;
++  React.useEffect(
++    function () {
++      return store.subscribe(function () {
++        setState({
++          changedAt: getTime(),
++          store: store,
+         });
+-    }, [store, setState]);
+-    // Synchronize fixture state with local Redux state
+-    React.useEffect(function () {
+-        setFixtureState(function (fixtureState) { return (__assign(__assign({}, fixtureState), { redux: {
+-                changedAt: state.changedAt,
+-                state: store.getState()
+-            } })); });
+-    }, [state.changedAt, store, setFixtureState]);
+-    // Override local Redux state when fixture changed by other client
+-    React.useEffect(function () {
+-        if (!fixtureState.redux) {
+-            return;
+-        }
+-        // The changedAt timestamp helps distinguish external fixture state changes
+-        // from local ones (reacting to the latter would create an infinite loop)
+-        var reduxFs = fixtureState.redux;
+-        if (reduxFs.changedAt > state.changedAt) {
+-            var store_1 = configureStore(reduxFs.state);
+-            setState({
+-                changedAt: reduxFs.changedAt,
+-                store: store_1
+-            });
+-        }
+-    }, [fixtureState.redux, state.changedAt, configureStore, setState]);
+-    return React.createElement(react_redux_1.Provider, { store: state.store }, children);
++      });
++    },
++    [store, setState],
++  );
++  // Synchronize fixture state with local Redux state
++  React.useEffect(
++    function () {
++      setFixtureState(function (fixtureState) {
++        return __assign(__assign({}, fixtureState), {
++          redux: {
++            changedAt: state.changedAt,
++            state: store.getState(),
++          },
++        });
++      });
++    },
++    [state.changedAt, store, setFixtureState],
++  );
++  // Override local Redux state when fixture changed by other client
++  React.useEffect(
++    function () {
++      if (!fixtureState.redux) {
++        return;
++      }
++      // The changedAt timestamp helps distinguish external fixture state changes
++      // from local ones (reacting to the latter would create an infinite loop)
++      var reduxFs = fixtureState.redux;
++      if (reduxFs.changedAt > state.changedAt) {
++        var store_1 = configureStore(reduxFs.state);
++        setState({
++          changedAt: reduxFs.changedAt,
++          store: store_1,
++        });
++      }
++    },
++    [fixtureState.redux, state.changedAt, configureStore, setState],
++  );
++  return React.createElement(react_redux_1.Provider, { store: state.store }, children);
+ }
+ exports.ReduxMock = ReduxMock;
+ ReduxMock.cosmosCapture = false;
+ function getTime() {
+-    return Date.now();
++  return Date.now();
+ }

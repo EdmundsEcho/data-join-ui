@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useSelect } from 'react-cosmos/fixture';
+import { useSelect } from 'react-cosmos/client';
 
 import EtlUnitGroupBase from '../EtlUnitGroupBase';
 import EtlUnit from '../EtlUnit';

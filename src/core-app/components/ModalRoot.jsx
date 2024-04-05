@@ -76,10 +76,7 @@ const ModalRoot = ({ themeMode }) => {
     (actionsWithDispatch, name) => {
       actionsWithDispatch[name] = () => {
         if (DEBUG) {
-          console.log(
-            `%c${name} Action with dispatch... dispatched`,
-            colors.red,
-          );
+          console.log(`%c${name} Action with dispatch... dispatched`, colors.red);
         }
         dispatch(modalActions[name]);
       };
@@ -94,12 +91,14 @@ const ModalRoot = ({ themeMode }) => {
 
   /* eslint-disable react/jsx-props-no-spreading */
   const modal = (
-    <ActiveModal
-      className={`Luci-Modal-node active ${themeMode}`}
-      open
-      {...modalProps}
-      {...actionsWithDispatch}
-    />
+    <div className={`${themeMode}-theme-context`}>
+      <ActiveModal
+        className={`Luci-Modal-node active ${themeMode}`}
+        open
+        {...modalProps}
+        {...actionsWithDispatch}
+      />
+    </div>
   );
 
   // render on the DOM

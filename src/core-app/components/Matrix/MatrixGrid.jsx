@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
+import LevelsContextProvider, { CONTEXTS } from '../../contexts/LevelsDataContext';
 import ValueGridCore from '../shared/ValueGridCore';
 import {
   fetchRenderedMatrixWithProjectId as fetchLevels,
@@ -96,4 +97,10 @@ MatrixGrid.propTypes = {
 
 MatrixGrid.defaultProps = {};
 
-export default MatrixGrid;
+export default function MatrixGridWithContext(props) {
+  return (
+    <LevelsContextProvider context={CONTEXTS.MATRIX}>
+      <MatrixGrid {...props} />
+    </LevelsContextProvider>
+  );
+}

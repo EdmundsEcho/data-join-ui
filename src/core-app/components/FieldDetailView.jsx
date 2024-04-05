@@ -36,16 +36,12 @@ import Levels from './shared/Levels';
 import SourcesBox from './shared/FieldInputs/SourcesBox';
 import CodomainReducerRow from './shared/FieldInputs/CodomainReducerRow';
 
-import {
-  displayInput as init,
-  FIELD_TYPES,
-} from '../constants/field-input-config';
+import { displayInput as init, FIELD_TYPES } from '../constants/field-input-config';
 
 // debug
 import { debug, useTraceUpdate } from '../constants/variables';
 
 /* eslint-disable no-console, react/jsx-props-no-spreading */
-
 const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
 
 /**
@@ -103,7 +99,8 @@ function FieldDetailView(props) {
       <Grid
         container
         spacing={5}
-        className={clsx('Luci-FileField', 'detail', 'root', fieldType)}>
+        className={clsx('Luci-FileField', 'detail', 'root', fieldType)}
+      >
         {/* column 1 */}
         <Grid item xs={3} container className={clsx('inputGroup')}>
           <FieldInputDelegate
@@ -122,7 +119,8 @@ function FieldDetailView(props) {
         <Grid
           item
           xs
-          className={clsx('Luci-DataContainer levels', getValue('purpose'))}>
+          className={clsx('Luci-DataContainer levels', getValue('purpose'))}
+        >
           <Levels
             fieldType={fieldType}
             getValue={getValue}

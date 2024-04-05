@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import invariant from 'invariant';
 
 // import clsx from 'clsx';
 
@@ -13,16 +14,21 @@ import StatSummary from './StatSummary';
 import { PURPOSE_TYPES, FIELD_TYPES } from '../../lib/sum-types';
 
 function Levels({ getValue, fieldType, stateId }) {
-  // There is nothing we can return without these props
-  // guard required by ValueGridFileLevels
-  if (!fieldType || !(getValue instanceof Function)) {
-    return null;
-  }
+  invariant(
+    getValue instanceof Function && fieldType,
+    'getValue must be a function and fieldType must be defined',
+  );
   // levels format depends on the purpose
   const purpose = getValue('purpose');
 
   switch (purpose) {
     case PURPOSE_TYPES.MVALUE:
+      if (fieldType === FIELD_TYPES.WIDE) {
+        // for the initial render, the mvalue field isn't available
+        // for now, always return null. TODO: eventually include in StatSummary
+        // for mvalues.
+        return null;
+      }
       return (
         <StatSummary
           key={`${stateId}|statSummary`}

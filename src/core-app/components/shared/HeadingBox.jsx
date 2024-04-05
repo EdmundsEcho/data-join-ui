@@ -14,10 +14,18 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import DownArrow from '@mui/icons-material/ArrowDropDown';
 
+import { Div } from '../../../luci-styled';
 import usePersistedState from '../../hooks/use-persisted-state';
+
+/**
+ * Local to fix ref error/warning
+ */
+const ButtonWithRef = React.forwardRef((props, ref) => (
+  <div role='button' {...props} ref={ref} />
+));
+ButtonWithRef.displayName = 'ButtonWithRef';
 
 /**
  * A custom box that features
@@ -36,6 +44,7 @@ const HeadingBox = ({
   canCollapse,
   expanded,
   stateId = 'temp-undefined', // 🚧 make sure all users provide this prop
+  className,
 }) => {
   const [isOpen, setOpen] = usePersistedState(stateId, expanded);
 
@@ -45,12 +54,12 @@ const HeadingBox = ({
   // onKeyDown={() => {}} // here to fix jsx click-events-have-key-events
 
   return (
-    <Container style={style} className={clsx('Luci-FileField-HeadingBox')}>
-      <div width={width} className='box-card'>
+    <Div style={style} className={clsx(className, 'Luci-FileField-HeadingBox')}>
+      <div style={{ width }} className='box-card'>
         {canCollapse && (
-          <div role='button' tabIndex={-1} onClick={() => setOpen(!isOpen)}>
+          <ButtonWithRef tabIndex={-1} onClick={() => setOpen(!isOpen)}>
             <MinimizeButton isOpen={isOpen} />
-          </div>
+          </ButtonWithRef>
         )}
         {heading && (
           <div className={clsx('border-heading', { open: isOpen })}>
@@ -59,12 +68,13 @@ const HeadingBox = ({
         )}
         <div className={clsx('children', { open: isOpen })}>{children}</div>
       </div>
-    </Container>
+    </Div>
   );
 };
 
 HeadingBox.propTypes = {
   stateId: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
   heading: PropTypes.string,
   children: PropTypes.node,
   canCollapse: PropTypes.bool,

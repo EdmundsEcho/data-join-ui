@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 
-import { useSelect } from 'react-cosmos/fixture';
+import { useSelect } from 'react-cosmos/client';
 
 import TableCellTrash from '../TableCellTrash';
 import EtlUnitParameter from '../EtlUnitParameter';

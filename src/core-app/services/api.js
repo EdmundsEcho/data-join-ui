@@ -21,6 +21,7 @@ import { colors } from '../constants/variables';
 // Read the .env
 //------------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
+
 //------------------------------------------------------------------------------
 /* eslint-disable camelcase, no-console */
 
@@ -28,7 +29,11 @@ const DEBUG = process.env.REACT_APP_DEBUG_API === 'true';
 // Set the endpoint base url based on env setting
 // Read the .env
 //------------------------------------------------------------------------------
-const API_BASE_URL = `${window.location.origin}/v1`;
+const API_BASE_URL =
+  process.env.REACT_APP_ENV === 'production'
+    ? `${window.location.origin}/v1`
+    : process.env.REACT_APP_API_BASE_URL;
+
 const GQL_BASE_URL = API_BASE_URL;
 
 console.info('API base url:', API_BASE_URL);
@@ -265,8 +270,7 @@ export const initApiService = async (eventInterface) => {
   //
   const sendQueueRequest = async (featureInput) => {
     validateEventRequest(eventInterface, featureInput);
-    const { project_id: projectId, signal = undefined } =
-      eventInterface.request;
+    const { project_id: projectId, signal = undefined } = eventInterface.request;
     const serviceType = getServiceType(eventInterface.meta.feature);
     const axiosOptions = {
       method: 'POST',
@@ -370,9 +374,7 @@ export const resultApiService = async (eventInterface) => {
 
     default:
       throw new ApiCallError(
-        `services.api: Unsupported serviceType: ${
-          serviceType || 'no service type'
-        }`,
+        `services.api: Unsupported serviceType: ${serviceType || 'no service type'}`,
       );
   }
 
@@ -381,9 +383,7 @@ export const resultApiService = async (eventInterface) => {
   //
   if (response.status > 200) {
     throw new ApiCallError(
-      `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(
-        response,
-      )}`,
+      `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(response)}`,
     );
   }
 
@@ -424,8 +424,6 @@ export const cancelApiService = async (eventInterface) => {
  * ⬜ Implement pagination support using 'Connection' pattern
  *    (see also fetchLevels for graphql version)
  *
- * see also fetchLevels
- *
  * @function
  * @param {Object} input
  * @param {Array<Object>} input.sources
@@ -436,19 +434,19 @@ export const cancelApiService = async (eventInterface) => {
  */
 export const fetchFileLevels = ({
   projectId,
-  sources,
-  purpose,
   signal,
-  arrows = {},
   page = 1,
-  limit = 10,
+  limit = 30,
+  purpose,
+  ...levelsRequest
 }) => {
   const data = {
-    purpose,
-    sources,
-    arrows,
-    limit: purpose === 'mspan' ? 99999999999 : limit,
+    limit: purpose === 'mspan' ? 9999999999 : limit,
     page,
+    request: {
+      purpose,
+      ...levelsRequest,
+    },
   };
   return apiInstance({
     url: `/levels/${projectId}`,
@@ -547,11 +545,7 @@ export const fetchMatrixSpec = async ({ projectId, request, signal }) => {
  * @param {Object} request
  * @return {Promise}
  */
-export const fetchRequestFieldNames = async ({
-  projectId,
-  request,
-  signal,
-}) => {
+export const fetchRequestFieldNames = async ({ projectId, request, signal }) => {
   const requestConfig = GQL.requestFieldNames(request);
   const axiosOptions = {
     url: `/warehouse/${projectId}`,
@@ -602,10 +596,7 @@ export const fetchLevels = async ({ projectId, signal, request }) => {
 //
 function jobIdInterface(response) {
   if (DEBUG) {
-    console.debug(
-      '%c** api response does it look as expected? **',
-      colors.purple,
-    );
+    console.debug('%c** api response does it look as expected? **', colors.purple);
     console.dir(response);
   }
   /*
@@ -659,10 +650,7 @@ export async function fetchProjectDrives(projectId, signal) {
     signal,
   };
   if (DEBUG) {
-    console.debug(
-      `%c testing "/project-drives/<pid>" endpoint`,
-      'color:orange',
-    );
+    console.debug(`%c testing "/project-drives/<pid>" endpoint`, 'color:orange');
   }
   return apiInstance(axiosOptions);
 }
@@ -699,10 +687,7 @@ export const readDirectory = (request, signal) => {
     signal,
   };
   if (DEBUG) {
-    console.debug(
-      `%c testing POST @ "v1/filesystem/readdir" endpoint`,
-      'color:orange',
-    );
+    console.debug(`%c testing POST @ "v1/filesystem/readdir" endpoint`, 'color:orange');
     console.debug('readDirectory api axios options:', axiosOptions);
   }
 

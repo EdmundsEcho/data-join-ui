@@ -120,7 +120,7 @@ const HeaderViewField = ({ fieldIdx, stateId }) => {
         const syntheticEvent = {
           target: {
             name: 'field-alias',
-            value: getValue('default-name'),
+            value: getValue('header-name'),
           },
         };
         handleSaveChange(syntheticEvent);
@@ -184,12 +184,12 @@ const HeaderViewField = ({ fieldIdx, stateId }) => {
           underline='none'
           variant='text'
           onClick={handleExcludeField}>
-          <Typography>{getValue('default-name')}</Typography>
+          <Typography>{getValue('header-name')}</Typography>
         </Button>
       </TableCell>
 
       {/* Alias - read-write */}
-      {/* Note: only display alias when different from default-name */}
+      {/* Note: only display alias when different from header-name */}
       <TableCell align='left'>
         <TextField
           className='Luci-field field-alias'
@@ -199,7 +199,7 @@ const HeaderViewField = ({ fieldIdx, stateId }) => {
           disabled={!fieldData.enabled}
           margin='dense'
           value={
-            getValue('default-name') === getValue('field-alias')
+            getValue('header-name') === getValue('field-alias')
               ? ''
               : getValue('field-alias')
           }

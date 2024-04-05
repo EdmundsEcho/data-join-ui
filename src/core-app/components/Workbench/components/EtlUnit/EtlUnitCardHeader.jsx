@@ -13,7 +13,7 @@ import PieChart from '@mui/icons-material/PieChart';
 import DateRange from '@mui/icons-material/DateRange';
 import Functions from '@mui/icons-material/Functions';
 
-import Div from '../../../../../components/shared/Div';
+import { Div } from '../../../../../luci-styled';
 import TextField from '../../../shared/TextField';
 import Tools from './Tools';
 
@@ -57,8 +57,7 @@ function EtlUnitCardHeader({
   // required to control styles linked to Box
 
   // TODO make sure part of custom theme
-  const format =
-    etlUnitType === 'quality' || tag === 'measurement' ? 'large' : 'small';
+  const format = etlUnitType === 'quality' || tag === 'measurement' ? 'large' : 'small';
 
   let IconImg;
   switch (true) {
@@ -130,13 +129,13 @@ EtlUnitCardHeader.propTypes = {
     'spanValues',
     'empty',
   ]).isRequired,
-  etlUnitType: PropTypes.oneOf(['quality', 'measurement', 'transformation'])
-    .isRequired,
+  etlUnitType: PropTypes.oneOf(['quality', 'measurement', 'transformation']).isRequired,
   displayType: PropTypes.oneOf(['alias', 'none']),
   title: PropTypes.string.isRequired,
   meta: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   handleMenu: PropTypes.func,
   handleNameChange: PropTypes.func,
+  className: PropTypes.string.isRequired,
 };
 EtlUnitCardHeader.defaultProps = {
   displayType: 'none',
@@ -179,19 +178,11 @@ function TextWrap({ handleNameChange, etlUnitType, meta, title, palette }) {
           },
         },
       }}
-      FormHelperTextProps={{
-        classes: ['componentsHelperText'],
-      }}
-      InputProps={{
-        classes: ['componentsInputText'],
-      }}
       saveChange={handleNameChange}
       name={title}
       value={title}
       helperText={
-        ['measurement'].includes(etlUnitType)
-          ? `field-count: ${meta || 'WIP'}`
-          : null
+        ['measurement'].includes(etlUnitType) ? `field-count: ${meta || 'WIP'}` : null
       }
     />
   );
@@ -199,7 +190,7 @@ function TextWrap({ handleNameChange, etlUnitType, meta, title, palette }) {
 TextWrap.propTypes = {
   handleNameChange: PropTypes.func.isRequired,
   etlUnitType: PropTypes.oneOf(['quality', 'measurement']).isRequired,
-  meta: PropTypes.string.isRequired,
+  meta: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   title: PropTypes.string.isRequired,
   palette: PropTypes.bool.isRequired,
 };

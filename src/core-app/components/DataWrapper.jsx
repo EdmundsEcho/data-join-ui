@@ -105,7 +105,7 @@ function FieldMachine({ fieldRef, children }) {
       const proxyEvent = {
         target: {
           name: 'field-alias',
-          value: machineProps.getValue('default-name'),
+          value: machineProps.getValue('header-name'),
         },
       };
       machineProps.saveChange(proxyEvent);
@@ -175,7 +175,7 @@ function FieldRedux({ filename, fieldIdx, updateField, selector, children }) {
       const proxyEvent = {
         target: {
           name: 'field-alias',
-          value: reduxProps.getValue('default-name'),
+          value: reduxProps.getValue('header-name'),
         },
       };
       reduxProps.saveChange(proxyEvent);

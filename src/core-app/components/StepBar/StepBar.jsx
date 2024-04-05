@@ -38,10 +38,10 @@ import PreviousArrow from '@mui/icons-material/ArrowBackIos';
 import NextArrow from '@mui/icons-material/ArrowForwardIos';
 import DownloadIcon from '@mui/icons-material/Download';
 import ResetIcon from '@mui/icons-material/Replay';
-import FeedbackIcon from '@mui/icons-material/Feedback';
 import EventIcon from '@mui/icons-material/InsertInvitation';
 
-import FeedbackPopup from '../../../widgets/FeedbackPopup';
+import SlidingPopupFeedback from '../../../widgets/SlidingPopperFeedback';
+
 import { useWorkbenchButton } from '../Workbench/components/Main';
 
 import { useFloatingFunctionsDataContext } from '../../../contexts/AppFloatingFunctionsContext';
@@ -159,7 +159,8 @@ const StepBarComponent = () => {
                 disabled: !isPreviousStepEnabled[currentPage.route],
               })}
               startIcon={<PreviousArrow fontSize='small' />}
-              onClick={handlePrevStep}>
+              onClick={handlePrevStep}
+            >
               Previous
             </Button>
             {/* Next */}
@@ -169,7 +170,8 @@ const StepBarComponent = () => {
               })}
               disabled={!isNextStepEnabled[currentPage.route]}
               endIcon={<NextArrow fontSize='small' />}
-              onClick={handleNextStep}>
+              onClick={handleNextStep}
+            >
               Next
             </Button>
           </div>
@@ -178,31 +180,27 @@ const StepBarComponent = () => {
 
       {/* Floating functions */}
       <div
-        className={clsx('floating-actions', 'stack', 'nowrap', {
+        className={clsx('floating-actions stack nowrap', {
           hidden: isLoading,
-        })}>
+        })}
+      >
         {showResetCanvas && <ResetCanvas />}
 
         {showDownloadMatrix && (
           <a href={mkSaveEndpoint(projectId)} download>
-            <Fab
-              color='secondary'
-              className={clsx('matrix', 'download', 'round')}>
+            <Fab color='secondary' className='matrix download round'>
               <DownloadIcon />
             </Fab>
           </a>
         )}
-        {showFeedback && (
-          <FeedbackPopup horizontal='left' vertical='up'>
-            <Fab color='secondary' className='fab feedback'>
-              <FeedbackIcon />
-            </Fab>
-          </FeedbackPopup>
-        )}
+
+        {showFeedback && <SlidingPopupFeedback />}
+
         {showFeedback && (
           <a
             id='Setmore_button_iframe'
-            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'>
+            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'
+          >
             <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
               <EventIcon />
             </Fab>
@@ -225,7 +223,8 @@ function ResetCanvas() {
       color='secondary'
       className='fab feedback'
       onClick={handleResetCanvas}
-      disabled={!isCanvasDirty}>
+      disabled={!isCanvasDirty}
+    >
       <ResetIcon />
     </Fab>
   );

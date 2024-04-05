@@ -1,13 +1,13 @@
 /**
  * @module lib/filesToEtlUnits/transforms/combinePurposes
  *
+ * @deprecated
+ * use an inline function
+ *
  *
  * @description
  * Combines values from sources using the FIRST or LAST non-null, enabled
  * choice. Utilized for the `purpose` property.
- *
- * ⚠️  Fields that share an alias should not exist; the following logic
- *    is thus nonesensical.
  *
  * @function
  * @param sources
@@ -30,12 +30,10 @@ export const combinePurposes = (sources, firstOrLast = 'FIRST') => {
  * Returns String, throws error if nothing is found.
  */
 function combine(array, firstOrLast) {
-  const result = {
+  return {
     FIRST: array.slice(-1)[0],
     LAST: array.slice(1)[0],
-  };
-
-  return result[firstOrLast];
+  }[firstOrLast];
 }
 
 export default combinePurposes;

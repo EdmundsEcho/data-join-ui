@@ -59,8 +59,7 @@ export const getEtlObject = (stateFragment) => stateFragment.etlObject;
 export const getEtlFieldCount = (stateFragment) =>
   Object.keys(stateFragment.etlObject.etlFields).length;
 
-export const getEtlFields = (stateFragment) =>
-  stateFragment.etlObject.etlFields;
+export const getEtlFields = (stateFragment) => stateFragment.etlObject.etlFields;
 
 /**
  * Predicate that tests the existence of a field
@@ -76,8 +75,7 @@ export const etlFieldExists = (stateFragment, fieldName) =>
 export const getEtlUnitTimeProp = (stateFragment, etlUnitName) => {
   const etlField = Object.values(getEtlFields(stateFragment)).find(
     (field) =>
-      field.purpose === PURPOSE_TYPES.MSPAN &&
-      field['etl-unit'] === etlUnitName,
+      field.purpose === PURPOSE_TYPES.MSPAN && field['etl-unit'] === etlUnitName,
   );
   return { time: etlField?.time, formatOut: etlField?.format };
 };
@@ -103,11 +101,18 @@ export const selectEtlFieldChanges = (stateFragment, fieldName) => {
   return fieldName in etlFieldChanges ? etlFieldChanges[fieldName] : undefined;
 };
 
-export const getIsEtlProcessing = (stateFragment) =>
-  stateFragment.isEtlProcessing;
+export const getIsEtlProcessing = (stateFragment) => stateFragment.isEtlProcessing;
 
 export const selectEtlUnit = (stateFragment, qualOrMeaName) =>
   stateFragment.etlObject.etlUnits?.[qualOrMeaName];
+
+/**
+ * v0.3.11
+ * Object: arrows: Object
+ * @return {Object}
+ */
+export const selectSymbolMap = (stateFragment, fieldName) =>
+  selectEtlField(stateFragment, fieldName)?.['map-symbols'] ?? { arrows: {} };
 
 // ----------------------------------------------------------------------------
 /**
@@ -134,52 +139,12 @@ export const listOfFieldNameAndPurposeValues = (
   { etlObject } /* stateFragment */,
   purpose = undefined /* optional */,
 ) => {
-  const predicate = purpose
-    ? ([, tryPurpose]) => tryPurpose === purpose
-    : () => true;
+  const predicate = purpose ? ([, tryPurpose]) => tryPurpose === purpose : () => true;
 
   return Object.entries(etlObject.etlFields)
     .map(([name, field]) => [name, field.purpose])
     .filter(predicate);
 };
-
-/**
- *
- * sources -> lean sources for the EtlView
- *
- * readOnly view: etlFields with a minimum source value
- *
- *  🦀  The lean version is for display.  However, it is also used to
- *      update the configuration when the source sequence is changed.
- *      Bug because likely should maintain only what we need for the view.
- *      ... then pull the detailed view to update the config prior to it
- *      being sent to the backend.
- *
- */
-function getLeanEtlFields(stateFragment /* viewProps */) {
-  const fields = getEtlFields(stateFragment);
-  return Object.keys(fields).reduce((leanFields, fieldName) => {
-    /* eslint-disable no-param-reassign */
-    leanFields[fieldName] = {
-      ...fields[fieldName],
-      sources: fields[fieldName].sources.map((source) => ({
-        'source-type': source['source-type'],
-        filename: source.filename,
-        nlevels: source.nlevels,
-        nrows: source.nrows,
-        'header-idx': source['header-idx'],
-        'header-idxs': source?.['header-idxs'] ?? undefined,
-        'null-value-count': source['null-value-count'],
-        // required for the backend (not just UI view) - see 🦀
-        purpose: source.purpose,
-        'field-alias': source['field-alias'],
-        'codomain-reducer': source['codomain-reducer'],
-      })),
-    };
-    return leanFields;
-  }, {});
-}
-/* eslint-enable no-param-reassign */
 
 // ----------------------------------------------------------------------------
 // combine the subject, quality... requests into one
@@ -190,11 +155,9 @@ function getLeanEtlFields(stateFragment /* viewProps */) {
 //    🔖 useLean is *less* relevant now that we use a separate process for
 //       viewing levels. Remains useful b/c we can still load when mspan.
 //
-export const getFieldsKeyedOnPurpose = (stateFragment, useLean = false) => {
-  return useLean
-    ? fieldsKeyedOnPurpose(Object.values(getLeanEtlFields(stateFragment)))
-    : fieldsKeyedOnPurpose(Object.values(getEtlFields(stateFragment)));
-};
+export const getFieldsKeyedOnPurpose = (stateFragment) =>
+  fieldsKeyedOnPurpose(Object.values(getEtlFields(stateFragment)));
+
 // ----------------------------------------------------------------------------
 // subject fields
 export const getSubEtlField = (stateFragment) => {
@@ -202,9 +165,7 @@ export const getSubEtlField = (stateFragment) => {
     (field) => field.purpose === 'subject',
   );
   if (!subject) {
-    throw new InvalidStateError(
-      `The EtlFields did not return a subject field!`,
-    );
+    throw new InvalidStateError(`The EtlFields did not return a subject field!`);
   }
   return subject;
 };
@@ -398,10 +359,7 @@ const reducer = createReducer(initialState, {
 
   // document
   // 👍 The middleware maker: raw field data -> integrated into state
-  [ADD_DERIVED_FIELD]: (
-    state,
-    { payload: { etlObject, etlFieldChanges } },
-  ) => ({
+  [ADD_DERIVED_FIELD]: (state, { payload: { etlObject, etlFieldChanges } }) => ({
     ...state,
     etlObject,
     etlFieldChanges,

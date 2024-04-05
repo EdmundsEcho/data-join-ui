@@ -28,7 +28,10 @@
  *
  */
 
-import { longFieldFromFactor, meaFieldFromConfig } from './headerview-field';
+import {
+  longFieldFromFactor,
+  meaFieldFromWideConfig as meaFieldFromConfig,
+} from './headerview-field';
 import { trySpanEnabledField } from './span/span-levels';
 import initialTimeValue from './span/initial-time-prop';
 import { setTimeProp } from './span/span-helper';
@@ -88,18 +91,13 @@ const COLOR = colors.light.purple;
  * @returns {Object} hv with more or fieldName -> value slots.
  *
  */
-export function buildWideToLongFields(
-  hv,
-  previousHvFields = [],
-  DEBUG = GLOBAL_DEBUG,
-) {
+export function buildWideToLongFields(hv, previousHvFields = [], DEBUG = GLOBAL_DEBUG) {
   const { wideToLongFields = undefined, ...readOnly } = hv;
 
   // 💰 wide-to-long depends on mvalues.
   //    Nothing to do in the event the set of mvalue names has not changed
   if (previousHvFields.length === 0) {
-    if (DEBUG)
-      console.warn(`wide-to-long-fields: failed to provide a valid heuristic`);
+    if (DEBUG) console.warn(`wide-to-long-fields: failed to provide a valid heuristic`);
   } else if (
     areSetsEqual(
       new Set(
@@ -224,11 +222,7 @@ export function buildWideToLongFields(
  * @return {Object}
  *
  */
-export function appendWideToLongFields(
-  hv,
-  caller = 'unknown',
-  DEBUG = GLOBAL_DEBUG,
-) {
+export function appendWideToLongFields(hv, caller = 'unknown', DEBUG = GLOBAL_DEBUG) {
   if (typeof hv.wideToLongFields === 'undefined') {
     return hv;
   }
@@ -243,9 +237,7 @@ export function appendWideToLongFields(
   }
 
   if (!hasAliasIdxMap(Object.values(wideToLongFields.fields))) {
-    throw new InvalidStateError(
-      "The wtlf config is missing the 'alias-idx-map' prop",
-    );
+    throw new InvalidStateError("The wtlf config is missing the 'alias-idx-map' prop");
   }
 
   return {
@@ -285,8 +277,7 @@ function hasAliasIdxMap(fields) {
  * @return {object} wideToLongFields configuration object
  */
 function mkWideToLongFieldConfigProp({ mvalues, nrows }) {
-  if (GLOBAL_DEBUG)
-    console.log('%cInitializing fields with dummy factors', colors.red);
+  if (GLOBAL_DEBUG) console.log('%cInitializing fields with dummy factors', colors.red);
   // seed
 
   // required seeds to instantiate synthetic headerview-fields
@@ -343,14 +334,10 @@ function longFieldsFromWideConfig(config) {
   const { factors = [] } = config;
   if (factors.length === 0) {
     throw new InputError(
-      `Tried to create long fields without any factors: ${
-        config.mvalue || 'unknown'
-      }`,
+      `Tried to create long fields without any factors: ${config.mvalue || 'unknown'}`,
     );
   }
-  if (
-    new Set([...factors.map((factor) => factor.name)]).size !== factors.length
-  ) {
+  if (new Set([...factors.map((factor) => factor.name)]).size !== factors.length) {
     throw new InputError(
       `Tried to create long fields with non-unique factors: ${
         config.mvalue || 'unknown'
@@ -469,8 +456,7 @@ export function updateWideToLongFields({
       // Update the mvalue name
       /* wtlf.config.name */
       case key === 'config.mvalue':
-        if (DEBUG)
-          console.debug(`%cconfig.mvalue with value: ${value}`, colors.orange);
+        if (DEBUG) console.debug(`%cconfig.mvalue with value: ${value}`, colors.orange);
         return updateMeasurementName({ mvalue: value }, wtlf);
 
       // Update map-fieldnames with a new factor value
@@ -488,10 +474,7 @@ export function updateWideToLongFields({
       // 👎 close, but not yet exploiting fileField update logic
       case typeof fieldId !== 'undefined': {
         if (DEBUG)
-          console.debug(
-            `%ca wide field prop with value: ${value}`,
-            colors.orange,
-          );
+          console.debug(`%ca wide field prop with value: ${value}`, colors.orange);
         return updateFieldProp({ fieldId, key, value }, wtlf);
       }
       // ⚠️  review the udpateArrow function factorName v id.
@@ -499,8 +482,7 @@ export function updateWideToLongFields({
       // Update a factor prop
       /* wtlf.config.factor. */
       case typeof factorId !== 'undefined':
-        if (DEBUG)
-          console.debug(`%ca factor prop with value: ${value}`, colors.orange);
+        if (DEBUG) console.debug(`%ca factor prop with value: ${value}`, colors.orange);
         return updateFactorProp({ factorId, key, value }, wtlf);
 
       default:
@@ -733,8 +715,7 @@ function updateFieldProp({ fieldId: fieldAlias, key, value }, wtlf) {
       break;
     }
 
-    case key === 'format' &&
-      fields[fieldAlias].purpose === PURPOSE_TYPES.MSPAN: {
+    case key === 'format' && fields[fieldAlias].purpose === PURPOSE_TYPES.MSPAN: {
       // try to update levels-mspan
       updatedField[key] = value;
       updatedField = trySpanEnabledField({
@@ -797,8 +778,7 @@ function updateMapFieldnameArrows({ factorId, key, value }, wtlf, DEBUG) {
     }
     if (
       key === 'map-fieldnames.arrow' &&
-      (!Object.keys(value).includes('key') ||
-        !Object.keys(value).includes('value'))
+      (!Object.keys(value).includes('key') || !Object.keys(value).includes('value'))
     ) {
       throw new InputError(
         `wideToLongFields arrow update must use value::object with a key and value props: ${JSON.stringify(
@@ -1045,16 +1025,12 @@ function updateAndNormalizeFields({ config, fields }) {
     },
     {
       [config.mvalue]:
-        fields[config.mvalue] ||
-        meaFieldFromConfig({ config, DEBUG: GLOBAL_DEBUG }),
+        fields[config.mvalue] || meaFieldFromConfig({ config, DEBUG: GLOBAL_DEBUG }),
     },
   );
 }
 
-export const updateWideFieldInWideToLong = (
-  updatedWideField,
-  wideToLongConfig,
-) => ({
+export const updateWideFieldInWideToLong = (updatedWideField, wideToLongConfig) => ({
   ...wideToLongConfig,
   fields: {
     ...wideToLongConfig.fields,

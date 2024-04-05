@@ -28,24 +28,27 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import clsx from 'clsx';
-
 import {
+  gridRowCountSelector,
+  useGridSelector,
+  useGridApiContext,
   DataGridPro as DataGrid,
   GridOverlay,
   getGridStringOperators,
 } from '@mui/x-data-grid-pro';
 import IconButton from '@mui/material/IconButton';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import ReplayIcon from '@mui/icons-material/Replay';
 import LinearProgress from '@mui/material/LinearProgress';
 import Check from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
+import { Div } from '../../../luci-styled';
+import ValueGridTools from './ValueGridTools';
+import GridToolbarFilterButton from './ValueGridFilterButton';
 //------------------------------------------------------------------------------
-const DEBUG = false;
-//------------------------------------------------------------------------------
+//
+const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 /* eslint-disable no-console */
 
 //----------------------------------------------------------------------------
@@ -53,9 +56,9 @@ const DEBUG = false;
 //----------------------------------------------------------------------------
 const HEADER_HEIGHT = 33;
 const ROW_HEIGHT = 35;
-const FOOTER_HEIGHT = 24;
+const FOOTER_HEIGHT = 40;
 const ADJUST_HEIGHT = 0;
-export { ROW_HEIGHT };
+export { ROW_HEIGHT, HEADER_HEIGHT, FOOTER_HEIGHT, ADJUST_HEIGHT };
 
 /**
  *
@@ -91,42 +94,36 @@ Checkbox.displayName = 'GridCheckbox';
 
 //------------------------------------------------------------------------------
 // Counter located in the footer
+// Reload and filter tools
 function Footer({
-  apiRef,
   totalCount,
   inFilterState,
-  clearFilterCallback: clearFilter,
-  resetCallback: reset,
+  clearFilterFn: clearFilter,
+  resetFn: reset,
 }) {
-  return typeof totalCount === 'undefined' ? null : (
-    <div className={clsx('MuiDataGrid-footer', 'EtlUnit-ValueGrid')}>
+  const apiRef = useGridApiContext();
+  const rowCount = useGridSelector(apiRef, gridRowCountSelector) ?? undefined;
+
+  // gridVisibleSortedRowEntriesSelector
+  return (
+    <div className='Luci-Datagrid-footer'>
       <div className='tools'>
         <IconButton size='small' aria-label='reset' onClick={reset}>
           <ReplayIcon />
         </IconButton>
-        <IconButton
-          size='small'
-          aria-label='toggle-filter'
-          disabled={!inFilterState}
-          onClick={clearFilter}>
-          <FilterListIcon size='small' />
-        </IconButton>
+        <GridToolbarFilterButton disabled={!inFilterState} onClick={clearFilter} />
       </div>
-      <div className={clsx('record-counts')}>
-        {apiRef.current.getVisibleRowModels().size} of {totalCount}
-      </div>
+      <ValueGridTools />
+      {rowCount && totalCount && (
+        <div className='record-counts'>{`${rowCount} of ${totalCount}`}</div>
+      )}
     </div>
   );
 }
 Footer.propTypes = {
-  apiRef: PropTypes.shape({
-    current: PropTypes.shape({
-      getVisibleRowModels: PropTypes.func.isRequired,
-    }),
-  }).isRequired,
   totalCount: PropTypes.number,
-  clearFilterCallback: PropTypes.func.isRequired,
-  resetCallback: PropTypes.func.isRequired,
+  clearFilterFn: PropTypes.func.isRequired,
+  resetFn: PropTypes.func.isRequired,
   inFilterState: PropTypes.bool,
 };
 Footer.defaultProps = {
@@ -138,7 +135,7 @@ Footer.defaultProps = {
 const CustomLoadingOverlay = () => {
   return (
     <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+      <div className='Luci-LinearProgress root'>
         <LinearProgress />
       </div>
     </GridOverlay>
@@ -161,24 +158,22 @@ const CustomLoadingOverlay = () => {
 export const gridHeightFn = (
   maxRecords,
   limitGridHeight,
-  rowHeightProp = undefined,
-  headerHeightProp = undefined,
-  gridHeightAdjustment = 0,
+  rowHeight = ROW_HEIGHT,
+  headerHeight = HEADER_HEIGHT,
+  gridHeightAdjustment = ADJUST_HEIGHT,
 ) => {
   if (DEBUG) {
     console.debug('gridHeightFn parameters:', {
       maxRecords,
       limitGridHeight,
-      rowHeightProp,
-      headerHeightProp,
+      rowHeight,
+      headerHeight,
     });
   }
-  const headerHeight = headerHeightProp || HEADER_HEIGHT;
-  const rowHeight = rowHeightProp || ROW_HEIGHT;
   const nonBody = headerHeight + FOOTER_HEIGHT + ADJUST_HEIGHT;
   const limitBodyHeight = limitGridHeight - nonBody;
   const gridBody =
-    Math.min(limitBodyHeight, Math.max(2, maxRecords) * rowHeight) +
+    Math.min(limitBodyHeight, Math.max(2, maxRecords + 1) * rowHeight) +
     gridHeightAdjustment;
   return gridBody + headerHeight + FOOTER_HEIGHT + ADJUST_HEIGHT;
 };
@@ -186,27 +181,34 @@ export const gridHeightFn = (
 //------------------------------------------------------------------------------
 // Data grid options
 // See the theme overrides for other formatting options
-const options = (
-  apiRef,
-  MAX_ROWS,
-  inFilterState,
-  clearFilterCallback,
-  resetCallback,
-) => ({
+const options = {
   hideFooterSelectedRowCount: true,
-  components: {
-    LoadingOverlay: CustomLoadingOverlay,
-    BaseCheckbox: Checkbox,
-    Footer: function customFooter() {
-      return (
-        <Footer
-          apiRef={apiRef}
-          totalCount={MAX_ROWS}
-          inFilterState={inFilterState}
-          clearFilterCallback={clearFilterCallback}
-          resetCallback={resetCallback}
-        />
-      );
+  initialState: {
+    columns: {
+      columnVisibilityModel: {
+        id: false,
+        newSymbol: false,
+      },
+    },
+  },
+};
+const customComponents = ({
+  maxRows: MAX_ROWS,
+  inFilterState,
+  clearFilterFn,
+  resetFn,
+}) => ({
+  slots: {
+    loadingOverlay: CustomLoadingOverlay,
+    baseCheckbox: Checkbox,
+    footer: Footer,
+  },
+  slotProps: {
+    footer: {
+      totalCount: MAX_ROWS,
+      inFilterState,
+      clearFilterFn,
+      resetFn,
     },
   },
 });
@@ -239,6 +241,7 @@ const ValueGridInner = ({
   className,
   rowClassName,
   // state-related
+  selectedRows, // new 0.3.11
   inFilterState,
   loading,
   error,
@@ -248,13 +251,11 @@ const ValueGridInner = ({
   // ---------------------------------------------------------------------------
   // State-machine toggles :/
   // ---------------------------------------------------------------------------
-  // 🛈  🦀 Indirection seems required... not sure why
+  // 🛈  🦀 Indirection seems required... not sure why (remains empty)
   const [iniRows] = useState(() => rows ?? []);
 
   const initialHeight = 66;
-  const gridHeight = Number.isNaN(gridHeightProp)
-    ? initialHeight
-    : gridHeightProp;
+  const gridHeight = Number.isNaN(gridHeightProp) ? initialHeight : gridHeightProp;
 
   const gridStyle = {
     height: `${gridHeight || initialHeight}px`,
@@ -262,11 +263,12 @@ const ValueGridInner = ({
   };
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <div style={gridStyle}>
+    <Div className='Luci-Datagrid' style={gridStyle}>
       <DataGrid
         className={className}
         apiRef={apiRef}
         rows={iniRows}
+        selectionModel={selectedRows}
         columns={columns}
         error={error}
         onRowsScrollEnd={onRowsScrollEnd}
@@ -276,14 +278,6 @@ const ValueGridInner = ({
         onFilterModelChange={onFilterModelChange}
         // user input
         checkboxSelection={checkboxSelection}
-        /*
-        rowSelectionCheckboxChange={(
-          params, // GridRowSelectionCheckboxParams
-          event, // MuiEvent<React.ChangeEvent<HTMLElement>>
-          details, // GridCallbackDetails
-        ) => { }}
-        onSelectionModelChange={({ data: rowModel, isSelected }) => {
-        */
         getRowClassName={() => rowClassName || 'EtlUnit-ValueGrid-Level'}
         // other options
         rowHeight={rowHeight || ROW_HEIGHT}
@@ -295,20 +289,20 @@ const ValueGridInner = ({
           return onRowClick({
             id: rowModel.id,
             level: rowModel.level,
-            isSelected: apiRef.current.isRowSelected(rowModel.id), // 🟡 🦀 no-longer reversing
+            isSelected: apiRef.current.isRowSelected(rowModel.id),
           });
         }}
         onColumnHeaderClick={onToggleAll}
-        {...options(
-          apiRef,
-          MAX_ROWS,
+        {...options}
+        {...customComponents({
+          maxRows: MAX_ROWS,
           inFilterState,
-          handleClearFilter,
+          clearFilterFn: handleClearFilter,
           resetFn,
-        )}
+        })}
         {...rest}
       />
-    </div>
+    </Div>
   );
 };
 
@@ -319,6 +313,7 @@ ValueGridInner.propTypes = {
   }).isRequired,
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   rows: PropTypes.arrayOf(PropTypes.shape({})),
+  selectedRows: PropTypes.arrayOf(PropTypes.string), // 0.3.11, set mui-grid selection model
   headerHeight: PropTypes.number,
   rowHeight: PropTypes.number,
   MAX_ROWS: PropTypes.number,
@@ -352,6 +347,7 @@ ValueGridInner.defaultProps = {
   onRowClick: () => {},
   MAX_ROWS: undefined,
   rows: undefined,
+  selectedRows: [],
 };
 
 export default ValueGridInner;

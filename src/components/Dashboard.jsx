@@ -20,7 +20,7 @@ import AppFloatingFunctionContext from '../contexts/AppFloatingFunctionsContext'
  * 2. Reset the redux store
  *
  */
-const App = () => {
+const DashboardApp = () => {
   const routesElement = useRoutes(routes);
   return (
     <AppFloatingFunctionContext>
@@ -55,4 +55,4 @@ NoMatch.defaultProps = {
   message: undefined,
 };
 
-export default App;
+export default DashboardApp;

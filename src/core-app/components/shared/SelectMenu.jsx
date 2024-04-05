@@ -24,17 +24,16 @@ const SelectMenu = (props) => {
   const {
     options,
     name,
-    value: valueProp,
     label,
+    value: valueProp,
     onChange: onChangeProp,
     className: classNameProp,
     disabled,
+    inputProps,
     ...restSelectProps
   } = props;
 
-  const [value, setValue] = useState(() =>
-    valueProp === null ? '' : valueProp,
-  );
+  const [value, setValue] = useState(() => (valueProp === null ? '' : valueProp));
 
   const onChange = useCallback(
     (e) => {
@@ -47,10 +46,11 @@ const SelectMenu = (props) => {
   return (
     <FormControl
       disabled={disabled}
-      className={clsx('LuciSelectMenu', {
+      className={clsx('Luci-SelectMenu', {
         [classNameProp]: classNameProp !== '',
       })}
-      error={value === '' || value === null || typeof value === 'undefined'}>
+      error={value === '' || value === null || typeof value === 'undefined'}
+    >
       <InputLabel id={`${name}-label`}>{label}</InputLabel>
       <Select
         labelId={`${name}-label`}
@@ -60,14 +60,17 @@ const SelectMenu = (props) => {
         inputProps={{
           name,
           id: name,
+          ...inputProps,
         }}
         autoWidth
-        {...restSelectProps}>
+        {...restSelectProps}
+      >
         {options.map((option) => (
           <MenuItem
             key={`${name}-option-${option.value}`}
             value={`${option.value}`}
-            dense>
+            dense
+          >
             {option.option}
           </MenuItem>
         ))}
@@ -89,12 +92,14 @@ SelectMenu.propTypes = {
   onChange: PropTypes.func.isRequired,
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  inputProps: PropTypes.shape(),
 };
 
 SelectMenu.defaultProps = {
   className: '',
   value: undefined,
   disabled: false,
+  inputProps: {},
 };
 
 export default SelectMenu;

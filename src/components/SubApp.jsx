@@ -16,33 +16,29 @@ import { DesignError } from '../core-app/lib/LuciErrors';
 import CoreApp from '../core-app/Main';
 import { Spinner } from './shared';
 
-import { loadProject } from '../core-app/ducks/actions/project-meta.actions';
 import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
-
+import { loadProject } from '../core-app/ducks/actions/project-meta.actions';
 import { fetchStore as fetchServerStore } from '../core-app/services/api';
 import { loadStore as loadNewOrSavedStore } from '../core-app/ducks/project-meta.reducer';
 import { getProjectId } from '../core-app/ducks/rootSelectors';
+import { applySequentialMigrations } from '../core-app/store-migrations';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-/*
- * loading a new project
+/**
+ * Component that loads a new project
  */
-
 const SubApp = () => {
   //
   const { projectId: requestedProject } = useParams();
-  const projectInReduxIsNull = useSelector(
-    (state) => getProjectId(state) === null,
-  );
+  const projectInReduxIsNull = useSelector((state) => getProjectId(state) === null);
   const previousProjectRef = useRef(undefined);
   const dispatch = useDispatch(); // redux load the fetched store
 
   validateState(requestedProject);
-  // const refetchProjectStore = requestedProject && projectInReduxIsNull;
 
   // ---------------------------------------------------------------------------
   // 💢 Side-effect
@@ -50,7 +46,9 @@ const SubApp = () => {
   //    Note: memoization required b/c used in effect
   const consumeDataFn = useMemo(
     () => (respData) => {
-      const loadThisStore = loadNewOrSavedStore(respData);
+      let loadThisStore = loadNewOrSavedStore(respData);
+      // Apply migrations if needed
+      loadThisStore = applySequentialMigrations(loadThisStore);
       dispatch(loadProject(loadThisStore));
     },
     [dispatch],
@@ -87,8 +85,7 @@ const SubApp = () => {
   if (DEBUG) {
     //
     const sameProject =
-      (previousProjectRef.current &&
-        previousProjectRef.current === requestedProject) ||
+      (previousProjectRef.current && previousProjectRef.current === requestedProject) ||
       false;
     const statusResolved =
       [STATUS.RESOLVED, STATUS.REJECTED].includes(fetchStatus) || false;
@@ -111,9 +108,7 @@ const SubApp = () => {
       !sameProject && statusResolved && !(stepOneV1 || stepOneV2),
       sameProject && statusResolved,
     ];
-    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${
-      steps.length
-    }`;
+    const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${steps.length}`;
     console.debug('%c----------------------------------------', 'color:orange');
     console.debug(`%c📋 SubApp loaded state summary:`, 'color:orange', {
       requestedProject: requestedProject?.slice(-4),

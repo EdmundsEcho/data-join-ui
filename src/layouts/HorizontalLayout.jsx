@@ -24,9 +24,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import EventIcon from '@mui/icons-material/InsertInvitation';
 
-import SideNav2 from './SideNav2';
+import SideNav from './SideNav';
 import AppBar from '../components/AppBar';
-import FeedbackPopup from '../widgets/FeedbackPopup';
+import SlidingPopupFeedback from '../widgets/SlidingPopperFeedback';
+import { Div } from '../luci-styled';
 
 import { useLocationChange, usePageWidth, usePersistedState } from '../hooks';
 import {
@@ -91,7 +92,7 @@ function WithSideBar({ children: routesElement }) {
 
   return (
     <div className='dashboard-layout-root nostack nowrap nogap'>
-      <SideNav2
+      <SideNav
         className={clsx('side-nav', {
           hidden: !displayTypeCfg?.showSideNav,
         })}
@@ -100,12 +101,13 @@ function WithSideBar({ children: routesElement }) {
       />
       {/* Main menu - controls what is displayed in main-viewport */}
       <HorizontalLayout
-        className={clsx('appbar-show-hide', {
+        className={clsx('Luci-AppBar show-hide', {
           hidden: !displayTypeCfg?.showAppBar,
         })}
         toggleDrawer={toggleDrawer}
         open={showWideMainMenu}
-        isMobile={isMobile}>
+        isMobile={isMobile}
+      >
         {/* Main viewport */}
         {routesElement}
       </HorizontalLayout>
@@ -158,19 +160,16 @@ function HorizontalLayout({
     <>
       <AppBar
         position='absolute'
-        className={clsx(
-          'luci-toolbar',
-          'app-bar',
-          `${theme.palette.mode}-toolbar`,
-          className,
-        )}
-        open={open}>
+        className={`Luci-AppBar ${theme.palette.mode}-toolbar ${className}`}
+        open={open}
+      >
         <Toolbar
-          className='tool-bar'
+          className='Luci-Toolbar app-bar'
           sx={{
             mr: '16px', // keep right padding when drawer closed
             ml: '16px',
-          }}>
+          }}
+        >
           <IconButton
             edge='start'
             color='inherit'
@@ -179,7 +178,8 @@ function HorizontalLayout({
             sx={{
               marginRight: '36px',
               ...(open && { display: 'none' }),
-            }}>
+            }}
+          >
             <MenuIcon />
           </IconButton>{' '}
           <Typography
@@ -187,42 +187,25 @@ function HorizontalLayout({
             variant='h6'
             color='inherit'
             noWrap
-            sx={{ flexGrow: 1 }}></Typography>
-          <ActionItems
-            open={open}
-            isMobile={isMobile}
-            handleLogout={handleLogout}
-          />
+            sx={{ flexGrow: 1 }}
+          ></Typography>
+          <ActionItems open={open} isMobile={isMobile} handleLogout={handleLogout} />
         </Toolbar>
       </AppBar>
-      <Box
-        component='main'
-        className='main'
-        sx={{
-          backgroundColor:
-            theme.palette.mode === 'light'
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto',
-        }}>
-        <Toolbar className='appbar-toolbar' />
+      <Div className='main main-app-view'>
+        <Toolbar className='Luci-AppBar Luci-Toolbar' />
         <div className='main-view sizing noradius'>
           <Grid container className='horizontal-layout root'>
             {secondaryElement && (
-              <Grid
-                item
-                xs={12}
-                md={4}
-                className='horizontal-layout secondary-root'>
+              <Grid item xs={12} md={4} className='horizontal-layout secondary-root'>
                 <Paper
                   className='horizontal-layout secondary-main'
                   sx={{
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                  }}>
+                  }}
+                >
                   {secondaryElement()}
                 </Paper>
               </Grid>
@@ -231,27 +214,23 @@ function HorizontalLayout({
               item
               xs={12}
               md={secondaryElement ? 8 : 12}
-              className='horizontal-layout primary-root'>
+              className='horizontal-layout primary-root'
+            >
               <Box className='horizontal-layout primary-main nostack nogap'>
-                <div className={clsx('main-view', 'route-elements')}>
-                  {children}
-                </div>
+                <div className='main-view route-elements'>{children}</div>
               </Box>
             </Grid>
           </Grid>
         </div>
-      </Box>
+      </Div>
       {/* only show when not in projects (see StepBar) */}
       {showFeedback && !inProjectRoutes && (
-        <div className={clsx('floating-actions', className, 'stack', 'nowrap')}>
-          <FeedbackPopup horizontal='left' vertical='up'>
-            <Fab color='secondary' className='fab feedback'>
-              <FeedbackIcon />
-            </Fab>
-          </FeedbackPopup>
+        <div className={`floating-actions stack nowrap ${className}`}>
+          <SlidingPopupFeedback />
           <a
             id='Setmore_button_iframe'
-            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'>
+            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'
+          >
             <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
               <EventIcon />
             </Fab>
@@ -289,7 +268,8 @@ function TextWithIcon({ open, handleLogout, isMobile }) {
           className='button-w-text regular logout'
           onClick={handleLogout}
           endIcon={<LogoutIcon />}
-          color='inherit'>
+          color='inherit'
+        >
           Log out
         </Button>
       )}

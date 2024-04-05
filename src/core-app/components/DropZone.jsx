@@ -37,7 +37,8 @@ const DropZone = (props) => {
             activeZone: snapshot.isDraggingOver,
           })}
           {...provided.droppableProps}
-          ref={provided.innerRef}>
+          ref={provided.innerRef}
+        >
           {/* Draggable children */}
           {children}
           {provided.placeholder}
