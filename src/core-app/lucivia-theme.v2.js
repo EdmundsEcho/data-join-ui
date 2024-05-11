@@ -7,11 +7,7 @@
  * The overrides and palette are the workhorses for the module.
  *
  */
-import React from 'react';
-import { alpha, createTheme } from '@mui/material/styles';
-
-import Check from '@mui/icons-material/Check';
-import Clear from '@mui/icons-material/Clear';
+import { alpha, createTheme, darken, lighten } from '@mui/material/styles';
 
 import paletteLight from './assets/scheme/palette.v2.json';
 import paletteDarkOverrides from './assets/scheme/palette-dark.json';
@@ -55,6 +51,21 @@ const paletteDark = {
 export default (mode) => {
   const isLightMode = mode === 'light';
   const palette = isLightMode ? paletteLight : paletteDark;
+
+  // start temp
+  const getBackgroundColor = (color) =>
+    mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7);
+
+  const getHoverBackgroundColor = (color) =>
+    mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+
+  const getSelectedBackgroundColor = (color) =>
+    mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
+
+  const getSelectedHoverBackgroundColor = (color) =>
+    mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4);
+
+  // end temp
 
   return createTheme({
     spacing,
@@ -153,13 +164,6 @@ export default (mode) => {
         },
       },
       //--------------------------------------------------------------------------
-      MuiCheckbox: {
-        defaultProps: {
-          disableRipple: true,
-          checkedIcon: <Check color='primary' />,
-          icon: <Clear />,
-        },
-      },
       //--------------------------------------------------------------------------
       /* Table */
       /* Note: can also pass { theme, ownerState } */
@@ -582,8 +586,8 @@ export default (mode) => {
               // sibling; helper text
               '& + p': {
                 fontFamily: 'Lato',
-                fontSize: '0.6rem',
-                lineHeight: '0.6rem',
+                fontSize: '0.7rem',
+                lineHeight: '0.7rem',
                 color: theme.palette.primary.main,
               },
               // WIP - can't find the lavel in html
@@ -608,8 +612,26 @@ export default (mode) => {
       },
       //--------------------------------------------------------------------------
       /* DataGrid */
+      // rowClassName || `Luci-DataGrid-Row--${params.row.status}`
       MuiDataGrid: {
         styleOverrides: {
+          root: ({ theme }) => ({
+            fontSize: '0.8rem',
+            lineHeight: '0.8rem',
+            fontFamily: 'Rubik',
+            cursor: 'pointer',
+            border: `none`,
+            padding: '0',
+            margin: '0',
+            '& .Luci-DataGrid-workbench--header': {},
+            '& .Luci-DataGrid-workbench--level': {
+              // backgroundColor: getBackgroundColor(theme.palette.grey[100]),
+              '&.hover': {
+                // backgroundColor: getHoverBackgroundColor(theme.palette.grey[100]),
+              },
+            },
+            '&.Luci-DataGrid-matrix': {},
+          }),
           columnHeaders: ({ theme }) => ({
             backgroundColor: isLightMode
               ? theme.palette.grey[200]
@@ -618,8 +640,19 @@ export default (mode) => {
             borderTopRightRadius: '0.5em',
           }),
           columnHeader: ({ theme }) => ({
-            padding: `0 ${theme.spacingFn(4)}`,
-            paddingBottom: theme.spacingFn(4),
+            height: 'calc(1.3em * 5)',
+            lineHeight: '1.3em',
+            padding: '0.7em 0.5em',
+            paddingTop: '1.0em',
+            border: 'none',
+            outline: 'none',
+            outlineColor: 'transparent',
+            '&:focus': {
+              outline: 'none',
+            },
+            '&:focus-within': {
+              outline: 'none',
+            },
           }),
           columnHeaderTitleContainer: () => ({
             // a flex box
@@ -646,19 +679,44 @@ export default (mode) => {
             '&:focus': {
               outline: 'none',
             },
+            '&:focus-within': {
+              outline: 'none',
+            },
           }),
-          columnHeaderCheckbox: () => ({
-            '& .MuiDataGrid-columnHeaderTitleContainerContent > svg': {
+          columnHeaderCheckbox: ({ theme }) => ({
+            padding: spacingFn(1),
+            '& svg': {
               height: '1.2rem',
               width: '1.2rem',
               fontSize: '1.2rem',
             },
+            '& svg.selected': {
+              color: theme.palette.primary.main,
+            },
+            '& svg.deselected': {
+              color: theme.palette.grey[500],
+            },
           }),
-          cellCheckbox: () => ({
+          cellCheckbox: ({ theme }) => ({
+            border: 'none',
+            '&:hover': { backgroundColor: 'transparent' },
+            '&:focus': {
+              outline: 'none',
+            },
+            '&:focus-within': {
+              outline: 'none',
+            },
+            padding: '0',
             '& > svg': {
-              height: '1.2rem',
-              width: '1.2rem',
-              fontSize: '1.2rem',
+              height: '1.0rem',
+              width: '1.0rem',
+              fontSize: '1.0rem',
+            },
+            '& svg.selected': {
+              color: theme.palette.primary.main,
+            },
+            '& svg.deselected': {
+              color: theme.palette.grey[500],
             },
           }),
           row: ({ theme }) => ({
@@ -680,15 +738,36 @@ export default (mode) => {
               },
             },
           }),
-          root: ({ theme }) => ({
-            fontSize: '0.8rem',
-            lineHeight: '0.8rem',
-            fontFamily: 'Rubik',
-            cursor: 'pointer',
-            border: `none`,
-            padding: '0',
-            margin: '0',
+          panelWrapper: ({ theme }) => ({
+            padding: '0.4em',
+            backgroundColor: isLightMode
+              ? theme.palette.grey[300]
+              : theme.palette.grey[900],
+            borderRadius: '0.4em',
           }),
+          panelFooter: ({ theme }) => ({
+            marginTop: '0.5em',
+          }),
+          filterForm: ({ theme }) => ({
+            '& > div > button': {
+              marginBottom: 'auto',
+              // move the buttom up and to the left by 5px
+              transform: 'translate(-5px, -5px)',
+              color: isLightMode ? theme.palette.grey[400] : theme.palette.grey[700],
+              width: '24px',
+              height: '24px',
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            },
+          }),
+        },
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          popper: {
+            borderRadius: '0.5em',
+          },
         },
       },
       //--------------------------------------------------------------------------
@@ -789,19 +868,13 @@ export default (mode) => {
               },
             },
             //----------------------------------------------------------------------
-            // EtlField detail view
+            // DataGrid-actions
             //----------------------------------------------------------------------
-            '&.Luci-DataContainer.levels > .stack': {
-              width: '100%',
-            },
-            //----------------------------------------------------------------------
-            // ValueGrid-actions
-            //----------------------------------------------------------------------
-            [`&.${FIELD_TYPES.ETL}  .Luci-ValueGrid-header`]: {
+            [`&.${FIELD_TYPES.ETL}  .Luci-DataGrid-header`]: {
               marginTop: '-12px',
               marginBottom: '11px',
             },
-            '&.Luci-ValueGrid-actions': {
+            '&.Luci-DataGrid-actions': {
               display: 'flex',
               marginLeft: 'auto',
               marginRight: '1ch',
@@ -853,87 +926,6 @@ export default (mode) => {
                 },
                 '&.closeIcon': {
                   marginRight: `auto`,
-                },
-              },
-            },
-            //----------------------------------------------------------------------
-            // FileField (also default for to EtlField)
-            //----------------------------------------------------------------------
-            // FileField DetailView (collapse)
-            '&.Luci-FileField.root.detail': {
-              display: 'flex',
-              flexWrap: 'wrap',
-              width: 'auto',
-              height: 'auto',
-              boxSizing: 'border-box',
-              marginTop: theme.spacingFn(3),
-              marginBottom: theme.spacingFn(3),
-              marginLeft: theme.spacingFn(1),
-              marginRight: theme.spacingFn(3),
-              // 🔖 track with sources box
-              '& .inputGroup': {
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                alignContent: 'flex-start',
-                gap: '1rem 0px',
-                minWidth: '185px', // directly measured; avoid changing
-                paddingLeft: '0px',
-                paddingBottom: theme.spacingFn(4),
-                margin: theme.spacingFn(0),
-                '& .MuiGrid-item': {
-                  padding: '0px',
-                  // marginBottom: theme.spacingFn(5),
-                },
-                '& .MuiFormHelperText-root': {
-                  color: theme.palette.grey[500],
-                  lineHeight: '1.1rem',
-                  textShadow: 'none',
-                },
-                '& .time-config': {
-                  margin: '0px',
-                  gap: '0.4rem 0px',
-                  '& div': {
-                    marginBottom: '0px',
-                  },
-                  '& .MuiGrid-container': {
-                    alignItems: 'center',
-                  },
-                },
-              },
-              //--------------------------------------------------------------------
-              // Levels
-              //--------------------------------------------------------------------
-              '& .levels': {
-                // marginLeft: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                width: 'auto',
-                height: 'auto',
-                justifyContent: 'center',
-                alignItems: 'flex-start', // top is the default
-                alignContent: 'center',
-                [`&.${PURPOSE_TYPES.SUBJECT}, &.${PURPOSE_TYPES.MVALUE}`]: {
-                  alignItems: 'center',
-                },
-                [`&.${PURPOSE_TYPES.QUALITY}, &.${PURPOSE_TYPES.MCOMP}`]: {
-                  height: '100%', // prevents jitter when loading fetched results
-                },
-                //------------------------------------------------------------------
-                // Levels-statsSummary
-                //------------------------------------------------------------------
-                '& .statsSummary': {
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignContent: 'center',
-                  '&.error': {
-                    width: 'auto',
-                  },
-                  // anti-pattern to use margins in grid
-                  '& .title': {},
-                  '& .left': {},
-                  '& .right': {},
                 },
               },
             },
@@ -1578,7 +1570,12 @@ export default (mode) => {
       },
       //--------------------------------------------------------------------------
       /* Collapse */
+      // see for options https://reactcommunity.org/react-transition-group/transition
       MuiCollapse: {
+        defaultProps: {
+          timeout: 'auto', // depends on height
+          mountOnEnter: true, // lazy load
+        },
         styleOverrides: {
           root: {
             // 🦀? was container
@@ -1589,6 +1586,22 @@ export default (mode) => {
               marginRight: `${spacingFn(4)}`,
               padding: `${spacingFn(3)} 0px`,
             },
+            '&.Luci-Collapse-prerender': {
+              overflow: 'hidden',
+              '&.hidden': {
+                visibility: 'hidden',
+              },
+            },
+            /*
+            entered: {
+              transition: 'height 100ms linear', // Adjust the time here
+            },
+            container: {
+              transition: 'height 100ms linear', // Adjust the time here
+            },
+            wrapper: {
+              transition: 'height 100ms linear', // Adjust the time here
+            }, */
           },
         },
       },
@@ -1619,10 +1632,18 @@ export default (mode) => {
             '&.EtlUnit-parameter, &.EtlUnit-measurement': {
               padding: '0px',
               margin: `${theme.spacingFn(2)} 0px`,
-              border: `0.5px ridge ${theme.palette.grey[200]}`,
-              borderRadius: '4px',
+              // coordinate with MuiCardHeader EtlUnit-CardHeader
+              border: isLightMode
+                ? `0.5px solid ${theme.palette.grey[300]}`
+                : `1.5px solid ${theme.palette.grey[700]}`,
+              borderRadius: '5px',
               '&.no-border, &.quality': {
                 border: `none`,
+              },
+            },
+            '&.EtlUnit-parameter.quality, &.EtlUnit-measurement.measurement': {
+              '& .EtlUnit-CardHeader.root': {
+                gap: '0.5em',
               },
             },
             '&.Luci-DirectoryView': {
@@ -1645,14 +1666,6 @@ export default (mode) => {
         styleOverrides: {
           root: ({ theme }) => ({
             '&.Luci-FileUploader': {
-              backgroundColor: 'inherit',
-            },
-            //---------------------------------------------------------------------
-            // Luci-matrix
-            // Most of the formatting occurs in the MuiDataGrid
-            //---------------------------------------------------------------------
-            '&.Luci-matrix': {
-              borderRadius: 0,
               backgroundColor: 'inherit',
             },
             //---------------------------------------------------------------------
@@ -1755,11 +1768,13 @@ export default (mode) => {
             //
             // 1/2 major style sections
             // 👉 EtlUnitBase, EtlUnitGroupBase; extends MuiCard
-            // �������� Node-root for superGroup, group and unit; extends MuiContainer
+            // Node-root for superGroup, group and unit; extends MuiContainer
             //---------------------------------------------------------------------
             '&.EtlUnitBase-root': {
-              borderRadius: '4px',
-              border: `1px solid ${theme.palette.primary.light}`,
+              borderRadius: '5px',
+              border: isLightMode
+                ? `1px solid ${theme.palette.primary.light}`
+                : `1px solid ${theme.palette.primary.dark}`,
               boxShadow: 'none',
               backgroundColor: theme.palette.themeColors['color-background-title'],
               display: 'block',
@@ -2168,46 +2183,159 @@ export default (mode) => {
                   : theme.palette.grey[900],
               flexGrow: 1,
               height: 'calc(100vh - var(--app-bar-height))',
-              overflow: 'auto',
               marginTop: 'var(--app-bar-height)',
             },
-
+            //---------------------------------------------------------------------
+            // Luci-matrix
+            // Most of the formatting occurs in the MuiDataGrid
+            // Coordinate with Luci-DataGrid-matrix
+            //---------------------------------------------------------------------
+            '&.Luci-matrix': {
+              borderRadius: '0.5rem',
+              display: 'block', // required to keep inside
+              maxWidth: '100%',
+              height: '100%',
+              '& > .outer-container': {
+                height: '100%',
+                '& > .inner-make-scrollable-container': {
+                  overflowX: 'auto',
+                  height: '100%',
+                },
+              },
+            },
+            //----------------------------------------------------------------------
+            // FieldData (FileField and EtlField views)
+            //----------------------------------------------------------------------
+            '&.Luci-FieldData.root.detail': {
+              display: 'flex',
+              flexDirection: 'column',
+              margin: '1.5em 1em',
+              marginBottom: '2em',
+              backgroundColor: 'inherit',
+              gap: '2em',
+              '& > .footer': {
+                width: '100%',
+              },
+              '& > .main-content': {
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                alignContent: 'flex-start',
+                gap: '2em',
+                width: '100%',
+                //----------------------------------------------------------------------
+                // column 1
+                '& > .inputGroup': {
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                  alignContent: 'flex-start',
+                  gap: '1rem 0px',
+                  width: '185px', // directly measured; avoid changing
+                  flex: '0 0 auto',
+                  '& > .delegate-item': {
+                    width: '100%',
+                  },
+                  '& .MuiFormHelperText-root': {
+                    color: theme.palette.grey[500],
+                    lineHeight: '1.1rem',
+                    textShadow: 'none',
+                  },
+                  '& .time-config': {
+                    margin: '0px',
+                    gap: '0.4rem 0px',
+                    '& div': {
+                      marginBottom: '0px',
+                    },
+                    '& .MuiGrid-container': {
+                      alignItems: 'center',
+                    },
+                  },
+                },
+                //----------------------------------------------------------------------
+                // column 2
+                '& > .Luci-DataContainer.levels': {
+                  display: 'flex',
+                  flex: '1 1 0%',
+                  maxWidth: '100%',
+                  minWidth: '50%',
+                  paddingLeft: '0px',
+                  '& > .stack': {
+                    width: '100%',
+                  },
+                  //--------------------------------------------------------------------
+                  // Levels
+                  //--------------------------------------------------------------------
+                  '& .levels': {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start', // top is the default
+                    alignContent: 'center',
+                    [`&.${PURPOSE_TYPES.SUBJECT}, &.${PURPOSE_TYPES.MVALUE}`]: {
+                      alignItems: 'center',
+                    },
+                    [`&.${PURPOSE_TYPES.QUALITY}, &.${PURPOSE_TYPES.MCOMP}`]: {
+                      height: '100%', // prevents jitter when loading fetched results
+                    },
+                    //------------------------------------------------------------------
+                    // Levels-statsSummary
+                    //------------------------------------------------------------------
+                    '& .statsSummary': {
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignContent: 'center',
+                      '&.error': {
+                        width: 'auto',
+                      },
+                      // anti-pattern to use margins in grid
+                      '& .title': {},
+                      '& .left': {},
+                      '& .right': {},
+                    },
+                  },
+                },
+              },
+            },
             //--------------------------------------------------------------------
             // wide-to-long configuration
             //--------------------------------------------------------------------
             '&.Luci-WideToLongFileConfig': {
-              '& .config-root': {
-                '& .Luci-Table.factorNames': {
-                  width: '100%',
-                  tableLayout: 'fixed',
-                  '& .MuiTableCell-head': {},
-                  '& thead tr th:first-of-type': {
-                    width: '170px',
-                  },
-                  '& tbody tr td': {
-                    border: 'none',
-                  },
-                  '& tbody tr[class*=nowInView] td': {
-                    borderBottom: `1.5px solid ${theme.palette.grey[300]}`,
-                  },
-                  '& thead tr th:last-child': {
-                    width: '50px',
-                  },
-                  '& tr[class*=summaryView] .MuiTableCell-body': {
-                    '& .MuiInputBase-root': {
-                      color: theme.palette.primary.main,
-                      fontStyle: 'italic',
-                    },
+              '& .Luci-Table.factorNames': {
+                width: '100%',
+                tableLayout: 'fixed',
+                '& .MuiTableCell-head': {},
+                '& thead tr th:first-of-type': {
+                  width: '170px',
+                },
+                '& tbody tr td': {
+                  border: 'none',
+                },
+                '& tbody tr[class*=nowInView] td': {
+                  borderBottom: `1.5px solid ${theme.palette.grey[300]}`,
+                },
+                '& thead tr th:last-child': {
+                  width: '50px',
+                },
+                '& tr[class*=summaryView] .MuiTableCell-body': {
+                  '& .MuiInputBase-root': {
+                    color: theme.palette.primary.main,
+                    fontStyle: 'italic',
                   },
                 },
-                '& .Luci-Table.fieldNames': {
-                  '& .MuiTableCell-body': {
-                    border: 'none',
-                  },
-                  '& tbody tr:last-child td': {
-                    paddingBottom: spacingFn(7),
-                    borderBottom: `2px solid ${theme.palette.grey[300]}`,
-                  },
+              },
+              '& .Luci-Table.fieldNames': {
+                '& thead tr th, tbody tr td': {
+                  paddingLeft: '1em',
+                },
+                '& .MuiTableCell-body': {
+                  border: 'none',
+                },
+                '& tbody tr:last-child td': {
+                  paddingBottom: spacingFn(7),
+                  borderBottom: `2px solid ${theme.palette.grey[300]}`,
                 },
               },
               '& .Luci-Wide-Factors .Luci-TextField, & .factorWithMenu': {
@@ -2226,7 +2354,7 @@ export default (mode) => {
                   marginTop: 'auto',
                 },
                 '& >.menu': {
-                  transform: 'translateX(20px)',
+                  transform: 'translateX(10px)',
                 },
               },
             },
@@ -2257,9 +2385,12 @@ export default (mode) => {
             },
             '&.Luci-SpanInput': {
               justifyContent: 'space-between',
-              minWidth: '200px',
+              minWidth: '180px',
               maxWidth: '400px',
               maxHeight: '40px',
+              // coordinate with EtlUnit-CardHeader
+              padding: '5px 4px 7px 8px',
+              radius: '3px', // smaller radius
               // select
               '& > .Luci-SelectMenu': {
                 '& .MuiSelect-select': {
@@ -2439,12 +2570,20 @@ export default (mode) => {
             // EtlUnitCardHeader
             '&.EtlUnit-CardHeader.root': {
               alignItems: 'center',
+              // coordinate padding & radius with
+              // * MuiCardContent EtlUnit-parameter
+              // * Luci-SpanInput
               padding: '5px 8px 7px 8px',
               '&.component-detailView, &.spanValues-detailView': {
                 padding: `0px 0px 8px 0px`,
                 margin: '0px',
               },
               backgroundColor: theme.palette.themeColors['color-background-title'],
+              // coordinate radius with MuiCardContent EtlUnit-parameter
+              borderRadius: '5px',
+              '&.no-border, &.quality': {
+                border: `none`,
+              },
             },
             '& .EtlUnit-CardHeader-IconWrap': {
               display: 'flex',
@@ -2466,21 +2605,9 @@ export default (mode) => {
               lineHeight: '19px',
               color: theme.palette.primary.main,
             },
-            //----------------------------------------------------------------------------
-            // testing Div
-            '&.test': {
-              backgroundColor: theme.palette.themeColors['color-background-title'],
-            },
             '& .MuiDataGrid-main': {
               borderTopLeftRadius: '0.5em',
               borderTopRightRadius: '0.5em',
-            },
-            '& .Luci-ValueGrid-fileLevels': {
-              '& button': {
-                padding: 0,
-                marginRight: '0.5em',
-                marginLeft: '0.5em',
-              },
             },
             '& .Luci-Datagrid-footer': {
               display: 'flex',
@@ -2492,19 +2619,27 @@ export default (mode) => {
               borderBottomRightRadius: '0.5em',
               backgroundColor: theme.palette.themeColors['color-background-footer'],
               filter: 'brightness(1.1)',
-              '& .tools': {
-                '& .MuiIconButton-sizeSmall': {
-                  color: theme.palette.primary.main,
-                  '&.Mui-disabled': {
-                    color: 'inherit',
+              '& .tools, & .Luci-DataGrid-actions': {
+                display: 'flex',
+                gap: '0.5em',
+                padding: '0.5em',
+                '& button': {
+                  height: '24px',
+                  width: '24px',
+                  color: isLightMode
+                    ? theme.palette.grey[900]
+                    : theme.palette.grey[500],
+                  '&:hover': {
+                    backgroundColor: 'transparent',
                   },
-                  '& > *:first-of-type': {
-                    '& > *:first-of-type': {
-                      // svg-icon
-                      fontSize: '1em',
-                    },
+                  '& svg': {
+                    height: '24px',
+                    width: '24px',
                   },
                 },
+              },
+              '& .Luci-DataGrid-actions': {
+                gap: '0.5em',
               },
               '& .MuiTablePagination-root': {
                 '& .MuiTablePagination-toolbar': {
@@ -2525,6 +2660,21 @@ export default (mode) => {
                           fontSize: '1.2rem',
                         },
                       },
+                    },
+                  },
+                },
+              },
+            },
+            '& .EtlUnit-parameter': {
+              '& .Luci-Datagrid-footer': {
+                '& .tools, & .Luci-DataGrid-actions': {
+                  gap: '1.1em',
+                  '& button': {
+                    height: '20px',
+                    width: '20px',
+                    '& svg': {
+                      height: '20px',
+                      width: '20px',
                     },
                   },
                 },

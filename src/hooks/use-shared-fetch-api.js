@@ -10,6 +10,7 @@ import {
   START,
   SUCCESS,
   SUCCESS_NOCHANGE,
+  READING_CACHE,
   ERROR,
   RESET,
   RESET_ERROR,
@@ -153,11 +154,12 @@ const useSharedFetchApi = ({
   // complete the state-cycle with a fresh cache
   // -> UNINITIALIZED
   const reset = useCallback(() => {
+    console.debug('Called reset use-shared-fetch-api');
     return dispatch({ type: RESET });
   }, []);
 
   // access point that enables
-  // response -> generate side-effects taht consume errors and other meta
+  // response -> generate side-effects that consume errors and other meta
   const middlewareWithDispatch = useCallback(
     (...args) => {
       const partialState = { fetchArgs: state.fetchArgs, cache: state.cache };
@@ -184,6 +186,8 @@ const useSharedFetchApi = ({
   // hook API
   //
   // middlewareWithDispatch is a function
+  //
+  // public STATUS: PENDING, RESOLVED, REJECTED, UNINITIALIZED, IDLE
   //
   //  return ({
   //    response,
@@ -244,6 +248,12 @@ function reducer(blockAsyncWithEmptyParams, caller, DEBUG) {
         return {
           ...state,
           status: STATUS.RESOLVED,
+        };
+      }
+      case READING_CACHE: {
+        return {
+          ...state,
+          status: STATUS.CONSUMED,
         };
       }
       case ERROR: {
@@ -486,13 +496,7 @@ function middleware(dispatch, state) {
  * @function
  * @param {Array}
  */
-function changedArgs(
-  newArgs,
-  prevArgs,
-  blockAsyncWithEmptyParams,
-  caller,
-  DEBUG,
-) {
+function changedArgs(newArgs, prevArgs, blockAsyncWithEmptyParams, caller, DEBUG) {
   const noValue = (value) =>
     [(v) => v === null, (v) => typeof v === 'undefined'].reduce(
       (acc, predicate) => acc || predicate(value),
@@ -507,9 +511,7 @@ function changedArgs(
       break;
 
     // [] -> [] consider different when not blocked
-    case emptyArgs(prevArgs) &&
-      emptyArgs(newArgs) &&
-      !blockAsyncWithEmptyParams:
+    case emptyArgs(prevArgs) && emptyArgs(newArgs) && !blockAsyncWithEmptyParams:
       changed = true;
       break;
 
@@ -520,11 +522,8 @@ function changedArgs(
     const color = changed ? 'color:orangered' : 'color:green';
     const msg = changed ? 'Params Changed' : 'Params UNCHANGED';
     console.debug(
-      `%cuse-fetch-api ${caller}: ${msg}\n${JSON.stringify(newArgs, null, 2)}`,
-      color,
-    );
-    console.debug(
-      `%cuse-fetch-api ${caller}: ${msg}\n${JSON.stringify(prevArgs, null, 2)}`,
+      // `%cuse-fetch-api ${caller}: ${msg}\n${JSON.stringify(newArgs, null, 2)}`,
+      `%cuse-fetch-api ${caller}: ${msg}`,
       color,
     );
   }
@@ -545,9 +544,7 @@ export function is200ResponseError(response) {
       error: true,
       status: 'Unexpected response',
     };
-    return error && status !== 'Error' && response.status === 200
-      ? error
-      : false;
+    return error && status !== 'Error' && response.status === 200 ? error : false;
   } catch (e) {
     console.warn(e);
     console.dir(e);
@@ -581,10 +578,7 @@ function actionsFrom403Error(response, fetchArgs) {
   try {
     const { message, provider } = response.data;
     const [{ project_id: projectId }] = fetchArgs;
-    console.assert(
-      message.includes('Expired token'),
-      'Unexpected 403 response format',
-    );
+    console.assert(message.includes('Expired token'), 'Unexpected 403 response format');
     return [
       {
         type: SET_NOTICE,

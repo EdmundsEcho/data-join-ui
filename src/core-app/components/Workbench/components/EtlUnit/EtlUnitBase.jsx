@@ -1,7 +1,7 @@
 // src/components/Workbench/components/EtlUnit/EtlUnitBase.jsx
 
-import React, { useCallback } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import React, { useCallback, useMemo } from 'react';
+import { useSelector, shallowEqual } from 'react-redux';
 
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -17,6 +17,7 @@ import { useTraceUpdate } from '../../../../constants/variables';
 import {
   getNodeDataSeed,
   getIsCompReducedMap,
+  getMaybeSelectionModel,
   getIsTimeSingleton,
   selectEtlUnitDisplayConfig,
 } from '../../../../ducks/rootSelectors';
@@ -25,14 +26,25 @@ import {
 import EtlUnitCardHeader from './EtlUnitCardHeader';
 import EtlUnitValueGrid from './ValueGridWorkbench';
 import EtlUnitSpanGrid from './EtlUnitSpanGrid';
-import ToolContextProvider, { ToolContext } from './ToolContext';
+import EtlUnitDisplayContextProvider, {
+  EtlUnitDisplayDataContext,
+  useDisplayDataContext,
+} from '../../../../contexts/EtlUnitDisplayContext';
+import SelectionModelContextProvider from '../../../../contexts/SelectionModelContext';
 // data types
 import detailViewTypes from './detailViewTypes';
 import displayTypes from './displayTypes';
 import etlUnitTypes from './etlUnitTypes';
 // import { PURPOSE_TYPES } from '../../../../lib/sum-types';
-// actions
-import { setCompReduced } from '../../../../ducks/actions/workbench.actions';
+import { PURPOSE_TYPES } from '../../../../lib/sum-types';
+import { InputError } from '../../../../lib/LuciErrors';
+
+// -----------------------------------------------------------------------------
+const DEBUG =
+  process.env.REACT_APP_DEBUG_WORKBENCH === 'true' ||
+  process.env.REACT_APP_DEBUG_LEVELS === 'true';
+// -----------------------------------------------------------------------------
+/* eslint-disable no-console */
 
 /**
  * 📌
@@ -44,11 +56,17 @@ import { setCompReduced } from '../../../../ducks/actions/workbench.actions';
  *    👉 quality | measurement | component
  *
  *    Layers to a shell
- *    👉 App bar <<< group
- *    👉 Derived field <<< group
- *    👉 EtlUnit
+ *    * App bar <<< group
+ *    * Derived field <<< group
+ *    * EtlUnit
  *
- * ⬜ Introduce the stateId to store the toggled state
+ * Layers of EtlUnit
+ *   * EtlUnitBase
+ *   * EtlUnitInner
+ *   * PaletteEtlUnitMain | CanvasEtlUnitMain
+ *
+ * The MAP function drives the lion share of the renderering.
+ *
  */
 function EtlUnitBase({ nodeId, context }) {
   const { etlUnitType, identifier, displayType } = useSelector(
@@ -83,29 +101,37 @@ EtlUnitBase.defaultProps = {};
  * Called once
  * 📖 selectEtlUnitDisplayConfig
  *
+ * Layers of EtlUnit
+ *   * EtlUnitBase
+ *   * EtlUnitInner
+ *   * PaletteEtlUnitMain | CanvasEtlUnitMain
+ *
  */
 function EtlUnitInner({ nodeId, palette, etlUnitType, identifier, displayType }) {
+  // get the configs to render multipe nodes
   const configs = useSelector(
     (state) =>
       selectEtlUnitDisplayConfig(
         state,
         nodeId,
         identifier,
-        etlUnitType === 'measurement',
+        etlUnitType === 'measurement', // meaFlag
+        'EtlUnitRoot',
       ),
     shallowEqual,
   );
 
-  return (
-    <>
-      {etlUnitType === 'measurement' ? <Divider variant='middle' /> : null}
-      <EtlUnitParameter
-        nodeId={nodeId}
-        palette={palette}
-        configs={configs}
-        displayType={displayType}
-      />
-    </>
+  return palette ? (
+    <PaletteEtlUnitMain parameterOrMeasurement={etlUnitType} config={configs[0]} />
+  ) : (
+    <CanvasEtlUnitMain
+      nodeId={nodeId}
+      palette={palette}
+      configs={configs}
+      measurementType={etlUnitType === 'measurement' ? identifier : undefined}
+      displayType={displayType}
+      type='EtlUnitRoot'
+    />
   );
 }
 EtlUnitInner.propTypes = {
@@ -119,7 +145,7 @@ EtlUnitInner.propTypes = {
 /**
  * Hosts an array of quality or components
  * Called recursively when dealing with etlUnit::measurement
- * (see DetailView/Components)
+ * (see DetailView/EtlUnitComponents)
  *
  *   one of three detail views
  *
@@ -127,61 +153,73 @@ EtlUnitInner.propTypes = {
  *    👉 component spanValues
  *    👉 measurement: list of components
  *
+ * 💥 cleanup of user settings: stateId = `EtlUnitBase-${nodeId}`;
+ *
  */
-export function EtlUnitParameter({
+export function CanvasEtlUnitMain({
   nodeId,
   palette,
   measurementType,
   configs,
   displayType,
 }) {
-  const dispatch = useDispatch();
+  console.debug('CanvasEtlUnitMain', configs);
+  //----------------------------------------------------------------------------
+  // MAP
+  return configs.map((config) => {
+    const { parameterOrMeasurement } = etlUnitParameterInstance(config);
 
-  const handleReducedToggle = useCallback(
-    (config, valueIdx) => (rollup) => {
-      dispatch(setCompReduced(nodeId, config.identifier, valueIdx, !rollup));
-    },
-    [dispatch, nodeId],
-  );
+    // one of three versions with a display set using purpose:
+    // 1. quality
+    // 2. meaasurement
+    // 3. parameter
 
-  // returns an object keyed by identifier
-  const isCompReduced = useSelector(
-    (state) => getIsCompReducedMap(state, nodeId),
-    shallowEqual,
-  );
+    // Configure the display with instance-specific values
+    // (e.g., one or more mspan values). This returns true
+    // for all of measurement components.
+    const isTimeSingleton = useSelector(
+      (state) => getIsTimeSingleton(state, nodeId),
+      shallowEqual,
+    );
+    // Configure the display using purpose
+    const showDetail =
+      (isTimeSingleton && config.purpose === PURPOSE_TYPES.MSPAN) ||
+      config.purpose === PURPOSE_TYPES.MVALUE;
 
-  const isTimeSingleton = useSelector(
-    (state) => getIsTimeSingleton(state, nodeId),
-    shallowEqual,
-  );
+    const data = useMemo(
+      () => ({
+        switchOn: config.purpose === PURPOSE_TYPES.MSPAN,
+        showSwitch:
+          config.purpose === PURPOSE_TYPES.MCOMP ||
+          (!isTimeSingleton && config.purpose !== PURPOSE_TYPES.QUALITY),
+        showDetail,
+        ...config,
+      }),
+      [config, showDetail, isTimeSingleton],
+    );
 
-  const showSwitch = (tag) => {
-    return tag !== 'spanValues' ? true : !isTimeSingleton;
-  };
+    if (!config.purpose) {
+      throw new InputError('MAP - SelectionModelContext requires a purpose object');
+    }
 
-  /*
-  const isNoValuesSelected = useSelector(
-    (state) => getIsNoValuesSelected(state, nodeId),
-    shallowEqual,
-  );
-  disableSwitch={isNoValuesSelected[config.identifier]}
-  */
-
-  return configs.map((config, valueIdx) => {
-    const { instanceOf, parameterOrMeasurement } = etlUnitParameterInstance(config);
     return (
-      <ToolContextProvider
-        switchCallback={handleReducedToggle(config, valueIdx)}
-        switchOn={!isCompReduced?.[config.identifier] ?? false}
-        showSwitch={showSwitch(config.tag)}
-        stateId={`EtlUnitBase-${nodeId}-${config.identifier}`}
-        key={`ValueGrid-${nodeId}-${config.identifier}`}
-        showDetail={config.tag === 'spanValues'} // show detail when date
+      <EtlUnitDisplayContextProvider
+        key={`$EtlUnitDisplayContext-${config.nodeId}-${config.identifier}`}
+        stateId={`$EtlUnitBase-${config.nodeId}-${config.identifier}`}
+        identifier={config.identifier}
+        data={data}
       >
-        <ToolContext.Consumer>
-          {/* function called using the showDetail value in the ToolContext */}
-          {({ showDetail }) => {
-            return (
+        <MaybeContextProvider
+          props={{ config }}
+          Context={SelectionModelContextProvider}
+          guard={[
+            PURPOSE_TYPES.QUALITY,
+            PURPOSE_TYPES.MCOMP,
+            PURPOSE_TYPES.MSPAN,
+          ].includes(config.purpose)}
+        >
+          <EtlUnitDisplayDataContext.Consumer>
+            {({ showDetail, showSwitch }) => (
               <CardContent
                 className={clsx({
                   'EtlUnit-parameter': parameterOrMeasurement === 'parameter',
@@ -198,16 +236,17 @@ export function EtlUnitParameter({
                   palette={palette || displayType === 'alias'}
                   tag={config.tag}
                   etlUnitType={config.etlUnitType}
-                  handleMenu={() => {}}
-                  showSwitch={isTimeSingleton}
+                  showSwitch={showSwitch}
                   displayType={displayType}
                 />
-                {/* Detail view: values */}
                 <Collapse
                   in={showDetail}
-                  className={clsx('EtlUnit-ValueGrid-Collapse', config.tag)}
-                  timeout='auto'
-                  unmountOnExit
+                  className={clsx(
+                    'EtlUnit-ValueGrid-Collapse',
+                    config.tag,
+                    'Luci-Collapse-prerender',
+                    { hidden: !showDetail },
+                  )}
                 >
                   {displayType !== 'alias' ? (
                     <DetailView
@@ -215,32 +254,74 @@ export function EtlUnitParameter({
                       palette={palette}
                       tag={config.tag}
                       identifier={config.identifier}
+                      valueIdx={config?.valueIdx}
                       measurementType={measurementType}
-                      instanceOf={instanceOf}
+                      purpose={config.purpose}
+                      displayType={displayType}
                     />
                   ) : null}
                 </Collapse>
               </CardContent>
-            );
-          }}
-        </ToolContext.Consumer>
-      </ToolContextProvider>
+            )}
+          </EtlUnitDisplayDataContext.Consumer>
+        </MaybeContextProvider>
+      </EtlUnitDisplayContextProvider>
     );
   });
 }
-
+/**
+ * Optional selection model context provider
+ */
+function MaybeContextProvider({ guard, Context, props, children }) {
+  if (guard) {
+    return <Context {...props}>{children}</Context>;
+  }
+  return children;
+}
+MaybeContextProvider.propTypes = {
+  guard: PropTypes.bool.isRequired,
+  Context: PropTypes.elementType.isRequired,
+  props: PropTypes.shape({}).isRequired,
+  children: PropTypes.node.isRequired,
+};
+/*
+ */
+function PaletteEtlUnitMain({ parameterOrMeasurement, config }) {
+  return (
+    <CardContent
+      className={clsx({
+        'EtlUnit-parameter': parameterOrMeasurement === 'parameter',
+        'EtlUnit-measurement': parameterOrMeasurement === 'measurement',
+        quality: config.purpose === PURPOSE_TYPES.QUALITY,
+        measurement: config.purpose !== PURPOSE_TYPES.QUALITY,
+        'no-border': config.tag === 'measurement',
+      })}
+    >
+      <EtlUnitCardHeader
+        className='EtlUnit-CardHeader'
+        title={config.title}
+        palette
+        tag={config.tag}
+        etlUnitType={config.etlUnitType}
+        handleMenu={() => {}}
+        displayType='none'
+      />
+    </CardContent>
+  );
+}
+// proptypes for PaletteEtlUnitMain
+PaletteEtlUnitMain.propTypes = {
+  parameterOrMeasurement: PropTypes.oneOf(['measurement', 'parameter', 'quality'])
+    .isRequired,
+  config: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    etlUnitType: PropTypes.oneOf(etlUnitTypes).isRequired,
+    tag: PropTypes.oneOf(detailViewTypes).isRequired,
+    purpose: PropTypes.oneOf(Object.values(PURPOSE_TYPES)).isRequired,
+  }).isRequired,
+};
 /**
  * config -> etlUnitParameterInstance
- * Local helper to identify display characteristics.
- *
- * FYI for when streamline types - {
- *   measurement: PURPOSE_TYPES.MVALUE,
- *   quality: PURPOSE_TYPES.QUALITY,
- *   component: PURPOSE_TYPES.MCOMP,
- *   mspan: PURPOSE_TYPES.MSPAN,
- * };
- *
- * TODO: Figure out how to type derived field transformation
  *
  * @function
  * @param {Object} config
@@ -254,29 +335,28 @@ function etlUnitParameterInstance({ tag, etlUnitType }) {
         `Unexpected etlUnitType: ${etlUnitType}`,
       );
       return {
-        instanceOf: 'measurement',
         parameterOrMeasurement: 'measurement',
       };
 
     case etlUnitType === 'quality':
-      return { instanceOf: 'quality', parameterOrMeasurement: 'parameter' };
+      return { parameterOrMeasurement: 'parameter' };
 
     case etlUnitType !== 'quality' && ['txtValues', 'intValues'].includes(tag):
-      return { instanceOf: 'component', parameterOrMeasurement: 'parameter' };
+      return { parameterOrMeasurement: 'parameter' };
 
     case tag === 'spanValues':
-      return { instanceOf: 'mspan', parameterOrMeasurement: 'parameter' };
+      return { parameterOrMeasurement: 'parameter' };
 
     default:
       throw Error('Unreachable');
   }
 }
-const INSTANCES = ['measurement', 'quality', 'component', 'mspan'];
 
-EtlUnitParameter.propTypes = {
+CanvasEtlUnitMain.propTypes = {
   nodeId: PropTypes.number.isRequired,
   palette: PropTypes.bool.isRequired,
   measurementType: PropTypes.string,
+  type: PropTypes.oneOf(['EtlUnitComponents', 'EtlUnitRoot']).isRequired,
   configs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
@@ -288,7 +368,7 @@ EtlUnitParameter.propTypes = {
     }),
   ).isRequired,
 };
-EtlUnitParameter.defaultProps = {
+CanvasEtlUnitMain.defaultProps = {
   measurementType: undefined,
 };
 
@@ -299,30 +379,49 @@ EtlUnitParameter.defaultProps = {
  * - mspan (a version of component)
  */
 function DetailView(props) {
-  const { nodeId, palette, measurementType, identifier, tag, instanceOf } = props;
+  const { nodeId, palette, measurementType, identifier, valueIdx, tag, displayType } =
+    props;
   useTraceUpdate(props);
 
-  switch (true) {
-    case instanceOf === 'measurement':
-      // expand measurement to components
-      return <Components nodeId={nodeId} palette={palette} identifier={identifier} />;
+  const { purpose } = useDisplayDataContext();
 
-    case ['quality', 'component'].includes(instanceOf):
+  switch (true) {
+    case purpose === PURPOSE_TYPES.MVALUE:
+      // expand measurement to components
+      return (
+        <EtlUnitComponents
+          nodeId={nodeId}
+          palette={palette}
+          identifier={identifier}
+          displayType={displayType}
+        />
+      );
+
+    case [PURPOSE_TYPES.QUALITY, PURPOSE_TYPES.MCOMP].includes(purpose):
       return (
         <EtlUnitValueGrid
           type={tag}
           measurementType={measurementType}
           identifier={identifier}
+          valueIdx={valueIdx} // relevant for component lookup
           nodeId={nodeId}
-          instanceOf={instanceOf}
+          purpose={purpose}
         />
       );
 
-    case instanceOf === 'mspan':
-      return <EtlUnitSpanGrid nodeId={nodeId} identifier={identifier} />;
+    case purpose === PURPOSE_TYPES.MSPAN:
+      return (
+        <EtlUnitSpanGrid
+          type={tag}
+          measurementType={measurementType}
+          identifier={identifier}
+          nodeId={nodeId}
+          valueidx={valueIdx}
+        />
+      );
 
     default:
-      return <div>{`${identifier} ${instanceOf} Unreachable`}</div>;
+      return <div>{`${identifier} ${purpose} Unreachable`}</div>;
   }
 }
 
@@ -330,33 +429,40 @@ DetailView.propTypes = {
   nodeId: PropTypes.number.isRequired,
   palette: PropTypes.bool.isRequired,
   identifier: PropTypes.string.isRequired,
+  valueIdx: PropTypes.number,
   tag: PropTypes.string.isRequired,
   measurementType: PropTypes.string,
-  instanceOf: PropTypes.oneOf(INSTANCES).isRequired,
+  displayType: PropTypes.oneOf(displayTypes.leaf).isRequired,
 };
 
 DetailView.defaultProps = {
   measurementType: undefined,
+  valueIdx: undefined,
 };
 
-export function Components({ nodeId, palette, identifier }) {
+export function EtlUnitComponents({ nodeId, palette, identifier, displayType }) {
   const configs = useSelector(
-    (state) => selectEtlUnitDisplayConfig(state, nodeId, identifier),
+    (state) =>
+      selectEtlUnitDisplayConfig(state, nodeId, identifier, false, 'EtlUnitComponents'),
     shallowEqual,
   );
+  console.debug('Canvas do configs have valueIdx', configs);
   return (
-    <EtlUnitParameter
+    <CanvasEtlUnitMain
       nodeId={nodeId}
       palette={palette}
+      displayType={displayType}
       measurementType={identifier}
       configs={configs}
+      type='EtlUnitComponents'
     />
   );
 }
-Components.propTypes = {
+EtlUnitComponents.propTypes = {
   nodeId: PropTypes.number.isRequired,
   palette: PropTypes.bool.isRequired,
   identifier: PropTypes.string.isRequired,
+  displayType: PropTypes.oneOf(displayTypes.leaf).isRequired,
 };
 
 export default EtlUnitBase;

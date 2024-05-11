@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import clsx from 'clsx';
-import Grid from '@mui/material/Grid';
-
 import FormatRow from './shared/FieldInputs/FormatRow';
 import NullValueRow from './shared/FieldInputs/NullValueRow';
 import CodomainReducerRow from './shared/FieldInputs/CodomainReducerRow';
@@ -65,7 +62,7 @@ const FieldDelegate = ({
   return (
     <>
       {!displayInput('format') ? null : (
-        <Grid item xs={12}>
+        <div className='delegate-item'>
           {/* Format in || out */}
           <FormatRow
             key={`${stateId}|format-${getValue('format')}`}
@@ -79,7 +76,7 @@ const FieldDelegate = ({
             onKeyDown={onKeyDown}
             onKeyUp={onKeyUp}
           />
-        </Grid>
+        </div>
       )}
 
       {/* Design note */}
@@ -88,7 +85,7 @@ const FieldDelegate = ({
       {/* 🔖  Note the override for wide-to-long caller */}
 
       {!hideNullValueOverride ? (
-        <Grid item xs={12}>
+        <div className='delegate-item'>
           {/* Null */}
           <NullValueRow
             key={`${stateId}|${nullValueFieldName}`}
@@ -103,13 +100,13 @@ const FieldDelegate = ({
             onKeyUp={onKeyUp}
             required={nullValueRequired}
           />
-        </Grid>
+        </div>
       ) : null}
 
       {/* Design note */}
       {/* ETL displays this field elsewhere */}
       {!displayInput('codomain-reducer') || fieldType === FIELD_TYPES.ETL ? null : (
-        <Grid item xs={12}>
+        <div className='delegate-item'>
           {/* Dedup */}
           <CodomainReducerRow
             key={`${stateId}|codomain-reducer`}
@@ -121,12 +118,12 @@ const FieldDelegate = ({
             }
             onChange={saveChange}
           />
-        </Grid>
+        </div>
       )}
       {/* Design note */}
       {/* The codomain slicing reducer is ultimately an etl-level concept */}
       {!displayInput('slicing-reducer') ? null : (
-        <Grid item xs={12}>
+        <div className='delegate-item'>
           {/* Combine when reducing */}
           <SlicingReducerRow
             key={`${stateId}|slicing-reducer`}
@@ -135,10 +132,10 @@ const FieldDelegate = ({
             value={getValue('slicing-reducer') || 'SUM'}
             onChange={saveChange}
           />
-        </Grid>
+        </div>
       )}
       {!displayInput('time') ? null : (
-        <Grid item xs={12}>
+        <div className='delegate-item'>
           <IntervalBox
             key={`${stateId}|time.interval`}
             stateId={`${stateId}|time.interval`}
@@ -146,7 +143,7 @@ const FieldDelegate = ({
             count={parseInt(getValue('time').interval.count, 10)}
             onChange={saveChange}
           />
-        </Grid>
+        </div>
       )}
     </>
   );

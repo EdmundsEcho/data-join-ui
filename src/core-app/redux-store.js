@@ -174,7 +174,7 @@ const configureStoreDev2 = (preloadedState) => {
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
 
-  // enable access to the store from window
+  // 👍 enable access to the store from window
   window.coreAppStore = store;
 
   return { store /* persistor */ };

@@ -8,12 +8,15 @@ import {
   fmapPreProcessCache,
 } from './derived-field-requests';
 
+import { mkQualOrCompRequest } from '../dataGridSelectionLib';
+
 import { range } from '../../utils/common';
 
 import { InvalidStateError, InputError } from '../LuciErrors';
 
 //------------------------------------------------------------------------------
-const DEBUG = false;
+// const DEBUG = process.env.REACT_APP_DEBUG_MATRIX === 'true';
+const DEBUG = true;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -107,9 +110,9 @@ export function requestFromTree(flatTree) {
     if (designArity(node) !== node.data.cache.length) {
       // validate the correct "operation" of the workbench
       throw new InvalidStateError(
-        `The group-level cache is flawed: children: ${designArity(
-          node,
-        )} ==? cache: ${node.data.cache.length}`,
+        `The group-level cache is flawed: children: ${designArity(node)} ==? cache: ${
+          node.data.cache.length
+        }`,
       );
     }
     if (designArity(node) !== getDerivedFieldArity(identifier)) {
@@ -283,30 +286,15 @@ export function withDerivedFields(obsResponse, derived = []) {
   };
 }
 
-//------------------------------------------------------------------------------
-//
-const mkValues = (v) => {
-  return v.map(({ value }) => value);
-  // return v.filter((v_) => v_.request).map(({ value }) => value);
-};
-
-const isAntiRequest = (values) => {
-  return !Object.values(values)?.[0]?.request ?? false;
-};
-
 const mkQuality = (quality) => {
+  const { selectionModel, qualityName, tag } = quality;
+  const { antiRequest, request } = mkQualOrCompRequest(selectionModel);
   const result = {
-    antiRequest: isAntiRequest(quality.values),
-    qualityName: quality.qualityName,
+    antiRequest,
+    qualityName,
     qualityValues: {
-      //
-      // txtValues: [
-      //    "FAMILY",
-      //    "INTERNAL"
-      // ]
-      [quality.tag]: quality.values?.__ALL__
-        ? []
-        : mkValues(Object.values(quality?.values) ?? []),
+      // txtValues: [ "FAMILY", "INTERNAL" ]
+      [tag]: request,
     },
   };
   if (DEBUG) {
@@ -318,20 +306,25 @@ const mkQuality = (quality) => {
 };
 
 const mkComponent = (comp) => {
+  const { selectionModel, componentName, tag } = comp;
+  const { antiRequest, request, reduced } = mkQualOrCompRequest(
+    selectionModel,
+    comp?.values,
+  );
   const result = {
-    antiRequest: isAntiRequest(comp.values),
-    componentName: comp.componentName,
+    antiRequest,
+    componentName,
     componentValues: {
-      reduced: comp.reduced,
-      [comp.tag]: comp.values?.__ALL__
-        ? []
-        : mkValues(Object.values(comp?.values) ?? []),
+      reduced,
+      [tag]: request,
     },
   };
   if (DEBUG) {
     console.log(`%ccomp making`, 'color:green');
-    console.dir(comp);
-    console.dir(result);
+    console.dir({ comp, result, antiRequest, request, reduced });
+    if (antiRequest) {
+      console.warn('Need to convert the antiRequest to a request', comp);
+    }
   }
   return result;
 };
@@ -366,17 +359,12 @@ const mkCompMix = (comp) => {
  * @return {Array<Quality>}
  */
 const buildQualityMixes = (etlUnits) => {
-  //
-  // interpret: values: { __ALL__: {value: '__ALL__', request: bool} }
-  // interpret: values: { value: {value: value, request: false} }
-  //
   const qualityMix = etlUnits
     .filter((etlUnit) => etlUnit.value.request)
     .map((etlUnit, idx) => mkQuality(etlUnit.value, idx));
 
   return {
-    subjectType:
-      etlUnits.length === 0 ? null : etlUnits[0].subjectType || 'SUBJECT',
+    subjectType: etlUnits.length === 0 ? null : etlUnits[0].subjectType || 'SUBJECT',
     qualityMix,
   };
 };
@@ -390,10 +378,10 @@ const buildQualityMixes = (etlUnits) => {
  * @param {Components} qualities
  * @return {Array<Component>}
  */
-const buildComponentMixes = (etlUnits) => {
-  return etlUnits
-    .filter((etlUnit) => etlUnit.value.request)
-    .map((etlUnit) => etlUnit.value)
+const buildComponentMixes = (requestEtlUnits) => {
+  return requestEtlUnits
+    .filter((unit) => unit.value.request)
+    .map((unit) => unit.value)
     .map(mkCompMix);
 };
 
@@ -414,16 +402,13 @@ function buildRequest(selectedUnits) {
     (etlUnit) => etlUnit.type === 'etlUnit::measurement',
   );
 
-  /*
-  console.log(`buildRequest with...`);
-  console.dir(selectedUnits);
-  */
-
   const subReq = buildQualityMixes(qualityUnits);
   const meaReqs = buildComponentMixes(measurementUnits);
 
   return { subReq, meaReqs };
 }
+
+export default { mkQuality, mkComponent };
 //------------------------------------------------------------------------------
 /*
  * 🦀 The request generator is not behaving as expected

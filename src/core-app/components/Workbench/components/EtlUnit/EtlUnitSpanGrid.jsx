@@ -14,10 +14,7 @@ import {
 } from '../../../../ducks/rootSelectors';
 
 // ☎️
-import {
-  setSpanValue,
-  toggleValue,
-} from '../../../../ducks/actions/workbench.actions';
+import { setSpanValue, toggleValue } from '../../../../ducks/actions/workbench.actions';
 
 import SpanInput from '../../../shared/SpanInput';
 
@@ -40,7 +37,6 @@ import SpanInput from '../../../shared/SpanInput';
  */
 const EtlUnitSpanGrid = ({ nodeId, identifier }) => {
   const dispatch = useDispatch();
-
 
   // 📖
   const { displayName: etlUnitName, value: spanData } = useSelector((state) =>
@@ -77,12 +73,9 @@ const EtlUnitSpanGrid = ({ nodeId, identifier }) => {
     [dispatch, nodeId, identifier],
   );
 
-  const displayType =
-    Object.keys(spanData.values).length > 1 ? 'toggle' : 'icon';
+  const displayType = Object.keys(spanData.values).length > 1 ? 'toggle' : 'icon';
 
-  const ready = [timeProp, spanData].every(
-    (data) => typeof data !== 'undefined',
-  );
+  const ready = [timeProp, spanData].every((data) => typeof data !== 'undefined');
 
   return !ready ? (
     <Typography>...loading</Typography>

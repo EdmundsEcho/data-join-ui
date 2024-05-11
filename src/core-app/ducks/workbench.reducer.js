@@ -9,6 +9,8 @@
  * @category Reducers
  *
  */
+import invariant from 'invariant';
+
 import createReducer from '../utils/createReducer';
 import {
   SET_TREE,
@@ -18,11 +20,11 @@ import {
   SET_DRAGGED_ID,
   SET_MSPAN_REQUEST,
   SET_COMP_REDUCED,
-  SET_COMP_VALUES,
+  SET_COMP_REQUEST,
+  SET_QUAL_REQUEST,
+  SET_SELECTION_MODEL,
   SET_GROUP_SEMANTIC,
   TAG_WAREHOUSE_STATE,
-  TOGGLE_VALUE,
-  TOGGLE_REDUCED,
   UPDATE_ETLUNIT_TEXT,
 } from './actions/workbench.actions';
 import {
@@ -35,8 +37,7 @@ import { RESET } from './actions/project-meta.actions';
 import { Tree } from '../lib/obsEtlToMatrix/tree';
 
 import { NODE_TYPES, PURPOSE_TYPES, ETL_UNIT_TYPES } from '../lib/sum-types';
-import { InputError } from '../lib/LuciErrors';
-import { removeProp } from '../utils/common';
+import { InputError, WorkbenchError } from '../lib/LuciErrors';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
@@ -50,6 +51,45 @@ const initialState = {
   nowDragging: null, // supports dnd rendering
   hostedWarehouseState: 'STALE', // STALE | CURRENT | RENAME (no structural change)
   hostedMatrixState: 'STALE', // STALE | CURRENT | RENAME (no structural change)
+};
+
+/**
+ * Node -> Purpose
+ * Unifies a hodge-podge of logic to map graphql obsEtl data to an instance of
+ * PURPOSE_TYPES.
+ * @function
+ * @param {Object} nodeData
+ * @param {string} identifier
+ * @param {bool} measurement
+ * @param {string} caller
+ * @return {string} PURPOSE_TYPES
+ */
+const purposeSelector = (nodeData, identifier /* meaFlag, caller*/) => {
+  const rootEtlUnit = nodeData.type;
+
+  switch (true) {
+    case rootEtlUnit && nodeData.type === 'etlUnit::quality':
+      return PURPOSE_TYPES.QUALITY;
+
+    case rootEtlUnit && nodeData.type === 'etlUnit::measurement':
+      return PURPOSE_TYPES.MVALUE;
+
+    case rootEtlUnit && nodeData.value.displayType === 'alias':
+      return undefined;
+
+    case !rootEtlUnit && nodeData.tag === 'spanValues':
+      return PURPOSE_TYPES.MSPAN;
+
+    case !rootEtlUnit && nodeData.tag === 'txtValues':
+      return PURPOSE_TYPES.MCOMP;
+
+    // Default case if none of the above conditions are met
+    default:
+      throw new InputError(
+        `Failed to set purpose for Node: ${nodeData.type} - ${identifier}`,
+        nodeData,
+      );
+  }
 };
 
 // ------------------------------------------------------------------------------
@@ -95,8 +135,7 @@ export const isCanvasDirty = (stateFragment) => {
 // -----------------------------------------------------------------------------
 const validateRequestSpec = (tree) => {
   // filter the node type = "canvas", height = 4
-  const filter = ({ type, height }) =>
-    type === NODE_TYPES.CANVAS && height === 4;
+  const filter = ({ type, height }) => type === NODE_TYPES.CANVAS && height === 4;
   const canvasLeafNodes = Object.values(tree).filter(filter);
   // find the required data types
   const isQuality = ({ data }) => data.type === ETL_UNIT_TYPES.quality;
@@ -196,7 +235,9 @@ export const getNodeDataSeed = (stateFragment, id) => {
 };
 
 /**
- * Component related.
+ * Returns a map keyed by the etlUnit::measurement parameters and the reduced
+ * stated of each.
+ *
  * @function
  * @param {string?} identifier
  * @return {Object | bool}
@@ -210,16 +251,11 @@ export const getIsCompReducedMap = (stateFragment, id, identifier) => {
   if (data.type === 'etlUnit::quality') {
     return undefined;
   }
-  const mapComponents = Object.values(data.value.values).reduce(
-    (acc, value) => {
-      acc[value.componentName] = value.reduced;
-      return acc;
-    },
-    {},
-  );
-  return typeof identifier === 'undefined'
-    ? mapComponents
-    : mapComponents[identifier];
+  const mapComponents = Object.values(data.value.values).reduce((acc, value) => {
+    acc[value.componentName] = value.reduced;
+    return acc;
+  }, {});
+  return typeof identifier === 'undefined' ? mapComponents : mapComponents[identifier];
 };
 
 /**
@@ -264,13 +300,14 @@ export const getIsTimeSingleton = (stateFragment, id) => {
   return data.type === 'etlUnit::quality' || data.displayType === 'alias'
     ? false
     : Object.keys(
-        Object.values(data.value.values).find(
-          (value) => value.tag === 'spanValues',
-        ).values,
+        Object.values(data.value.values).find((value) => value.tag === 'spanValues')
+          .values,
       ).length === 1;
 };
 
 /**
+ * graphql data -> display and selection model contexts for the display
+ *
  * Retrieve the config required to display etlUnit data
  *
  * 🔑 Only return what are "permanent" values to avoid re-renders when
@@ -284,6 +321,8 @@ export const getIsTimeSingleton = (stateFragment, id) => {
  *    tag: meta.tag,
  *    etlUnitType: meta.etlUnitType,
  *    palette: false,
+ *    purpose: ?PURPOSE_TYPES,
+ *    rowCountTotal: ?number,
  *  };
  * @function
  * @param
@@ -293,13 +332,17 @@ export const selectEtlUnitDisplayConfig = (
   stateFragment,
   id,
   identifier,
-  measurement, // bool toggle for mea header data
+  meaFlag, // bool toggle for mea header data
+  caller, // EtlUnitRoot, EtlUnitComponents
 ) => {
-  const {
-    data: nodeData,
-    id: nodeId,
-    type: paletteOrCanvas,
-  } = stateFragment.tree[id];
+  const { data: nodeData, id: nodeId, type: paletteOrCanvas } = stateFragment.tree[id];
+  // guard against value not in the nodeData, and value === undefined
+  if (!nodeData || !nodeData.value) {
+    return [];
+  }
+
+  // single component scenarios
+  const purpose = purposeSelector(nodeData, identifier, meaFlag, caller);
 
   switch (true) {
     case nodeData.displayType === 'alias':
@@ -313,10 +356,13 @@ export const selectEtlUnitDisplayConfig = (
           etlUnitType: 'transformation',
           type: 'alias',
           palette: false,
+          purpose,
+          valueIdx: undefined,
+          rowCountTotal: undefined,
         },
       ];
 
-    case measurement:
+    case meaFlag:
       return [
         {
           title: nodeData?.value.displayName,
@@ -326,6 +372,10 @@ export const selectEtlUnitDisplayConfig = (
           tag: 'measurement',
           etlUnitType: 'measurement',
           palette: paletteOrCanvas === 'palette',
+          measurementType: nodeData?.value?.measurementType,
+          purpose,
+          valueIdx: undefined,
+          rowCountTotal: nodeData?.count,
         },
       ];
 
@@ -339,12 +389,16 @@ export const selectEtlUnitDisplayConfig = (
           tag: nodeData.value.tag,
           etlUnitType: 'quality',
           palette: paletteOrCanvas === 'palette',
+          measurementType: undefined,
+          purpose,
+          valueIdx: undefined,
+          rowCountTotal: nodeData.value.count,
         },
       ];
     case nodeData?.value.measurementType !== identifier: {
-      // component
-      const component = Object.values(nodeData.value.values).find(
-        (comp) => identifier === comp.componentName,
+      // single component
+      const [valueIdx, component] = Object.entries(nodeData.value.values).find(
+        ([, comp]) => comp.componentName === identifier,
       );
       return [
         {
@@ -355,13 +409,17 @@ export const selectEtlUnitDisplayConfig = (
           tag: component.tag,
           etlUnitType: 'measurement',
           palette: paletteOrCanvas === 'palette',
+          measurementType: nodeData?.value.measurementType,
+          purpose,
+          valueIdx: parseInt(valueIdx, 10),
+          rowCountTotal: component?.count,
         },
       ];
     }
 
     case nodeData?.value.measurementType === identifier:
-      // components
-      return Object.values(nodeData.value.values).map((component) => ({
+      // collection of components
+      return Object.entries(nodeData.value.values).map(([valueIdx, component]) => ({
         title: component.displayName,
         fieldCount: 'WIP',
         nodeId,
@@ -369,126 +427,146 @@ export const selectEtlUnitDisplayConfig = (
         tag: component.tag,
         etlUnitType: 'measurement',
         palette: paletteOrCanvas === 'palette',
+        measurementType: nodeData?.value.measurementType,
+        purpose: purposeSelector(
+          component,
+          component.componentName,
+          false,
+          'EtlUnit-Component',
+        ),
+        valueIdx: parseInt(valueIdx, 10),
+        rowCountTotal: component?.count,
       }));
 
     default:
       throw new InputError(`Unreachable: ${identifier}`);
   }
 };
-export const selectNodeWithoutLevels = (stateFragment, id) => {
-  if (stateFragment.tree[id].data.type === 'etlUnit::quality') {
-    const { values, ...restValue } = stateFragment.tree[id].data.value;
-    return {
-      ...stateFragment.tree[id],
-      data: { ...stateFragment.tree[id].data, value: restValue },
-    };
-  }
-  // else when measurement, return component stubs
-  const { values } = stateFragment.tree[id].data.value;
-  return {
-    ...stateFragment.tree[id],
-    data: {
-      ...stateFragment.tree[id].data,
-      value: {
-        ...stateFragment.tree[id].data.value,
-        /* eslint-disable no-shadow */
-        values: Object.entries(values).reduce((acc, [key, value]) => {
-          const { values, ...restValue } = value;
-          acc[key] = restValue;
-          return acc;
-        }, {}),
-        /* eslint-enable no-shadow */
-      },
-    },
-  };
-};
 
 /**
- * nodeId + identifier -> graphql levels filter
+ * Returns a selectionModel if exists, else null. The selectionModel depends on
+ * a complete rendering of the workbench tree.
  *
- * Seed for the DetailView
+ * Used for retrieving quality or mcomp values. WIP mspan.
  *
  * @function
  * @param {Object} stateFragment
  * @param {number} nodeId
- * @param {string} identifier display name of the component
- * @return {Object | null} seeds
+ * @param {string} identifier display name of the component or quality
+ * @param {string} purpose  (quality | mcomp)
+ * @param {?string} measurementType (required when mcomp)
+ * @return {?Object} selectionModel | null
  */
-export const selectSeedForValues = (stateFragment, nodeId, identifier) => {
-  /* eslint-disable no-nested-ternary */
-  if (!stateFragment.tree[nodeId]?.data?.value) {
+export const getMaybeSelectionModel = (
+  stateFragment,
+  { nodeId, purpose, measurementType, valueIdx },
+) => {
+  if (!purpose) {
     return null;
   }
-  const { data } = stateFragment.tree[nodeId];
-  const isRequestComponents = identifier === data.value?.measurementType;
-  // when a quality, there is only one choice
-  return data.type === 'etlUnit::quality'
-    ? { qualityName: identifier }
-    : isRequestComponents
-    ? // return the comp meta, remove values
-      {
-        measurementType: data.value.measurementType,
-        components: Object.values(data.value.values).map((comp) => {
-          const { values, ...compMeta } = comp;
-          return compMeta;
-        }),
-      }
-    : {
-        componentName: identifier,
-        measurementType: data.value.measurementType,
-      };
-  /* eslint-enable no-nested-ternary */
-};
-
-/**
- * Hydrate the detail view
- * 🔑 values themselves are viewed directly from graphql
- *    ... only the user selection model is provided.
- *
- * quality -> values
- * component -> values
- * ⚠️  measurement -> Array of meta-data
- *
- *
- * 🔖 the selectionModel :: Object
- *
- * @function
- * @param {Object} stateFragment
- * @param {number} nodeId
- * @param {string} identifier display name of the component
- * @return {Object} with totalCount and selectionModel keys
- */
-export const getSelectionModel = (stateFragment, nodeId, identifier) => {
-  /* eslint-disable no-nested-ternary */
-  // not every node has a valid data object
   if (!stateFragment.tree[nodeId]?.data?.value) {
+    console.error(`Tried to retrieve selectionModel from invalid node: ${nodeId}`);
     return null;
   }
-  const { data } = stateFragment.tree[nodeId];
-  const isRequestComponents = identifier === data.value?.measurementType;
+  // assert purpose of type quality when data.type === 'etlUnit::quality'
+  // assert purpose of type mcomp when data.type === 'etlUnit::measurement'
+  // assert measurementType exists when data.type === 'etlUnit::measurement'
 
-  const mkResultFromComp = ({ count, values }) => ({
-    totalCount: count,
-    selectionModel: values,
-  });
-  // when a quality, there is only one choice
-  return data.type === 'etlUnit::quality'
-    ? // quality
-      { totalCount: data.value.count, selectionModel: data.value.values }
-    : isRequestComponents
-    ? // Measuremnt -> components
-      // return the comp meta, remove values
-      Object.values(data.value.values).map((comp) => {
-        const { values, ...compMeta } = comp;
-        return compMeta;
-      })
-    : // component
-      mkResultFromComp(
-        Object.values(data.value.values).find(
-          ({ componentName }) => componentName === identifier,
-        ),
+  const node = stateFragment.tree[nodeId];
+  const { type, value } = node.data;
+
+  // Handle different node types with assertions
+  switch (type) {
+    case 'etlUnit::quality':
+      invariant(
+        purpose === PURPOSE_TYPES.QUALITY,
+        `Failed invariant, expected type quality: ${purpose}`,
       );
-  /* eslint-enable no-nested-ternary */
+      // Directly return the selectionModel for 'quality' type
+      return value?.selectionModel ?? null;
+
+    case 'etlUnit::measurement': {
+      invariant(
+        [PURPOSE_TYPES.MCOMP, PURPOSE_TYPES.MSPAN].includes(purpose) && measurementType,
+        `Failed invariant, expected type mcomp: ${purpose} and a defined measurementType`,
+      );
+      return value.values[valueIdx]?.selectionModel ?? null;
+    }
+
+    default:
+      throw new WorkbenchError(`Unexpected node type: ${type}`, {
+        message: `Unexpected node type: ${type}`,
+        fix: `Make sure the lookup values are correct`,
+      });
+  }
+};
+
+/**
+ * Updates the selectionModel hosted in the redux store.
+ * See SET_SELECTION_MODEL
+ * @private
+ */
+const setSelectionModel = (state, action) => {
+  const { id, identifier, purpose, measurementType, payload } = action;
+  const node = state.tree[id];
+  if (!node || !node.data || !node.data.value) {
+    throw new WorkbenchError(`Node data is invalid or missing in action: ${action}`);
+  }
+
+  const { type, value } = node.data;
+  const [maybeCompIdx, readOnlyCompOrQual] =
+    purpose === PURPOSE_TYPES.QUALITY
+      ? [undefined, state.tree[id].data.value]
+      : Object.entries(state.tree[id].data.value.values).find(
+          ([, comp]) => comp.componentName === identifier,
+        );
+  const newCompOrQual = {
+    ...readOnlyCompOrQual,
+    selectionModel: payload,
+  };
+
+  // for documentation
+  if (process.env.NODE_ENV === 'development') {
+    switch (type) {
+      case 'etlUnit::quality':
+        invariant(
+          purpose === PURPOSE_TYPES.QUALITY,
+          `Expected type quality: ${purpose}`,
+        );
+        break;
+
+      case 'etlUnit::measurement': {
+        invariant(
+          [PURPOSE_TYPES.MCOMP, PURPOSE_TYPES.MSPAN].includes(purpose),
+          `Expected type mcomp or mspan: ${purpose}`,
+        );
+        invariant(
+          value.measurementType === measurementType,
+          `Expected types to match: ${measurementType}`,
+        );
+        break;
+      }
+      default:
+        throw new WorkbenchError(`Unexpected node type: ${type}`);
+    }
+  }
+
+  const newData = {
+    ...state.tree[id].data,
+    value:
+      purpose === PURPOSE_TYPES.QUALITY
+        ? { ...newCompOrQual } // 🎉 update here for quality :)
+        : {
+            ...state.tree[id].data.value,
+            values: {
+              ...state.tree[id].data.value.values,
+              [maybeCompIdx]: {
+                ...newCompOrQual,
+              },
+            },
+          },
+  };
+  return updateNodeData(state, id, newData);
 };
 
 /**
@@ -551,8 +629,7 @@ export const getAmIDropDisabled = (stateFragment, id) => {
 export const getDraggedNode = (stateFragment) =>
   stateFragment.tree?.[stateFragment.nowDragging?.id] ?? null;
 
-export const getCanvasLists = (stateFragment) =>
-  stateFragment?.tree[2]?.childIds;
+export const getCanvasLists = (stateFragment) => stateFragment?.tree[2]?.childIds;
 
 /**
  * Utilized by the middleware; strictly speaking not async so
@@ -590,105 +667,6 @@ export const resetCanvas = ({ tree }) => {
   /* eslint-enable no-param-reassign */
 };
 
-/**
- * Update a Component or Quality node
- * Returns an updated node
- *
- * 🦀 parent request value should be false
- *    when all children are false.
- *
- * @function
- * @param {Object} node
- * @param {number} valueIdx
- * @return {Object} node
- */
-const setCompOrQualNodeRequest = (node, valueIdx, isSelected, level) => {
-  //
-  // clear the __ALL__ flag
-  //
-  const values = removeProp('__ALL__', node.values);
-  //
-  // If the valueIdx already exists on the list, remove it.
-  // Else, add it.
-  // 👍 ensures the list contains only the one "type" of request
-  //    ... vs request vs antiRequest (where the type can change)
-  //
-  const alreadyOnTheList = Object.keys(node.values).includes(valueIdx);
-
-  return alreadyOnTheList
-    ? {
-        ...node,
-        values: removeProp(valueIdx, node.values),
-      }
-    : {
-        ...node,
-        request: !alreadyOnTheList && isSelected ? true : node.request,
-        antiRequest: !isSelected,
-        values: {
-          ...values,
-          [valueIdx]: {
-            value: level,
-            request: isSelected,
-          },
-        },
-      };
-};
-
-/**
- * set the request prop for all values in the collection
- * request: bool
- *
- * @param {Object} compOrQualNode
- * @param {bool} toValue
- * @return values
- */
-const setRequestValues = (toValue /* values */) => {
-  return { __ALL__: { value: '__ALL__', request: toValue } };
-};
-/**
- * Logic to coordinate compOrQualNode value when all values
- * are requested = true | false
- */
-const setAll = (compOrQualNode, isSelected) => {
-  return {
-    ...compOrQualNode,
-    request: isSelected, // toggle the value
-    // reduced: !isSelected ? true : compOrQualNode.reduced,
-    antiRequest: false, // inference
-    values: setRequestValues(isSelected /* areSelected :) */),
-  };
-};
-/**
- * Apply after each individual toggle to see if all values
- * are the same... in which case, record the state at the group-level.
- *
- *       compOrQualNode -> compOrQualNode
- *
- * 🔖 dependency of allSelected with reduced
- *
- * @function
- * @param {Object} compOrQualNode
- * @return {Object} compOrQualNode
- *
- */
-const maybeSetAll = (compOrQualNode) => {
-  // Determine when all values are pointing to the same value
-  const allSelected =
-    Object.values(compOrQualNode.values).filter(({ request }) => request)
-      .length === compOrQualNode.count;
-
-  const allDeselected =
-    Object.values(compOrQualNode.values).filter(({ request }) => !request)
-      .length === compOrQualNode.count;
-
-  const noneSelected = Object.keys(compOrQualNode.values).length === 0;
-
-  const isSeries = !compOrQualNode?.reduced ?? false;
-
-  return allDeselected || (allSelected && !isSeries) || noneSelected
-    ? setAll(compOrQualNode, allSelected || noneSelected)
-    : compOrQualNode;
-};
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // The Reducer
@@ -804,8 +782,12 @@ const reducer = createReducer(initialState, {
     return updateComp(state, action);
   },
 
-  [SET_COMP_VALUES]: (state, action) => {
+  [SET_COMP_REQUEST]: (state, action) => {
     return updateComp(state, action);
+  },
+
+  [SET_QUAL_REQUEST]: (state, action) => {
+    return updateQual(state, action);
   },
 
   [SET_GROUP_SEMANTIC]: (state, action) => {
@@ -813,216 +795,10 @@ const reducer = createReducer(initialState, {
     const { data } = selectMaybeNodeState(state, id) || { data: {} };
     return updateNodeData(state, id, { ...data, ...(rest || {}) });
   },
-
   //
-  // 🚧 scrappy overloaded action payload
+  // v0.4.0
   //
-  // valueOrId :: number | string -> change a single value to isSelected
-  // valueOrId :: Array empty -> set __ALL__ using isSelected
-  //
-  [TOGGLE_VALUE]: (state, { id, valueOrId, identifier, isSelected }) => {
-    //
-    // 🔖 retrieve the node values; method depends on Component vs Quality
-    //    store the keys required to update the specific comp node
-    //
-    const etlUnitType =
-      state.tree[id].data.type === 'etlUnit::quality'
-        ? PURPOSE_TYPES.QUALITY
-        : PURPOSE_TYPES.MVALUE;
-
-    // tmp flag to weed-out deprecated approach
-    if (typeof valueOrId === 'undefined' || isSelected === 'undefined') {
-      throw new InputError(
-        `The toggle request sent an incomplete action for: ${identifier}\n` +
-          `valueOrId: ${valueOrId} isSelected: ${isSelected}`,
-      );
-    }
-    // may be an empty array to signal change all
-    const updateGroupOfValues = Array.isArray(valueOrId);
-
-    // pull the "prev/current" values from the store
-    const [maybeCompIdx, compOrQualNode] =
-      etlUnitType === PURPOSE_TYPES.QUALITY
-        ? [undefined, state.tree[id].data.value]
-        : Object.entries(state.tree[id].data.value.values).find(
-            ([, comp]) => comp.componentName === identifier,
-          );
-
-    // assert when maybeCompIdx can't be "Nothing"
-    if (
-      typeof maybeCompIdx === 'undefined' &&
-      etlUnitType === PURPOSE_TYPES.MVALUE
-    ) {
-      throw new InputError(
-        `Tried to update a component, ${identifier}, on node ${id} without a compIdx`,
-      );
-    }
-
-    //
-    // 🔖 how many values get updated depends on the valueIdx type
-    //    The approach needs to work for both quality and component
-    //
-    let newCompOrQualNode = {};
-    switch (true) {
-      //
-      // Group-level update (__ALL__ values)
-      // Clear the request, set the __ALL__ key value to isSelected
-      //
-      // 🔖
-      //    interaction between reduced and __ALL__ selected
-      //    inference of antiRequest when __ALL__ is activated
-      //
-      case updateGroupOfValues && compOrQualNode.tag !== 'spanValues':
-        newCompOrQualNode = setAll(
-          compOrQualNode,
-          isSelected /* areSelected :) */,
-        );
-        break;
-      //
-      // Individual level/value updates
-      // set the value at valueIdx (for a specific value)
-      //
-      case !updateGroupOfValues:
-        newCompOrQualNode = setCompOrQualNodeRequest(
-          compOrQualNode,
-          valueOrId,
-          isSelected,
-          valueOrId,
-        );
-        //
-        // synchronize the state of the individual values with the group
-        //
-        newCompOrQualNode = maybeSetAll(newCompOrQualNode);
-        break;
-      default:
-    }
-    //
-    // 🔖 Nested but normalized; flatening provides not clear advantage
-    //
-    // quality:         data/value
-    //   state.tree[id].data.value
-    //
-    // component:        data/value/values[maybeCompIdx]
-    //    state.tree[id].data.value.values[maybeCompIdx];
-    //
-    const newData = {
-      ...state.tree[id].data,
-      value:
-        etlUnitType === PURPOSE_TYPES.QUALITY
-          ? { ...newCompOrQualNode } // 🎉 update here for quality :)
-          : {
-              ...state.tree[id].data.value,
-              values: {
-                ...state.tree[id].data.value.values,
-                [maybeCompIdx]: {
-                  ...newCompOrQualNode,
-                  values: newCompOrQualNode.values,
-                },
-              },
-            },
-    };
-
-    return updateNodeData(state, id, newData);
-  },
-  //
-  // this is measurement/comp/mspan related (i.e., not a quality property)
-  // valueIdx is for mspan values
-  //
-  // 🔖 MCOMP and MSPAN are both etlUnit parameters (losely both are components)
-  //    The leaf values of MSPAN have an extra reduced prop
-  //
-  //    etlUnit::Measurement : Subject, MSPAN, [MCOMP] -> MVALUE
-  //
-  //    🔑 A synonym for Reduced is to not include the component in the
-  //    request. This way, all of the mvalues are reduced for that component
-  //    (the component is "is reduced out" of the measurement).
-  //
-  //
-  [TOGGLE_REDUCED]: (state, { id, valueOrId, identifier: componentName }) => {
-    const updateType = ['number'].includes(typeof valueOrId)
-      ? PURPOSE_TYPES.MSPAN
-      : PURPOSE_TYPES.MCOMP;
-
-    const [compIdx, compNode] = Object.entries(
-      state.tree[id].data.value.values,
-    ).find(([, comp]) => comp.componentName === componentName);
-
-    if (
-      !(
-        (updateType === PURPOSE_TYPES.MSPAN && compNode.tag === 'spanValues') ||
-        (updateType === PURPOSE_TYPES.MCOMP &&
-          ['intValues', 'txtValues'].includes(compNode.tag))
-      )
-    ) {
-      throw new InputError(
-        `The toggleReduced action event is flawed: ${
-          valueOrId ?? 'no valueOrId'
-        } ${updateType} ${componentName}`,
-      );
-    }
-
-    let newCompNode = {};
-    switch (true) {
-      // toggle the value at valueOrId
-      case updateType === PURPOSE_TYPES.MCOMP:
-        newCompNode = {
-          ...compNode,
-          request: true,
-          reduced: !compNode.reduced,
-        };
-        break;
-      case updateType === PURPOSE_TYPES.MSPAN:
-        newCompNode = {
-          ...compNode,
-          request: true,
-          reduced: null,
-          values: {
-            ...compNode,
-            [valueOrId]: {
-              ...compNode[valueOrId],
-              request: true,
-              value: {
-                ...compNode[valueOrId].value,
-                reduced: !compNode[valueOrId].value.reduced,
-              },
-            },
-          },
-        };
-        break;
-      default:
-    }
-    //
-    // 🔖 Nested but normalized; flatening provides no clear advantage
-    //
-    // quality:         data/value
-    //   state.tree[id].data.value
-    //
-    // component:        data/value/values[maybeCompIdx]
-    //    state.tree[id].data.value.values[maybeCompIdx];
-    //
-    return {
-      ...state,
-      tree: {
-        ...state.tree,
-        [id]: {
-          ...state.tree[id],
-          data: {
-            ...state.tree[id].data,
-            value: {
-              ...state.tree[id].data.value,
-              values: {
-                ...state.tree[id].data.value.values,
-                [compIdx]: {
-                  ...newCompNode,
-                  values: newCompNode.values,
-                },
-              },
-            },
-          },
-        },
-      },
-    };
-  },
+  [SET_SELECTION_MODEL]: (state, action) => setSelectionModel(state, action),
 
   // ------------------------------------------------------------------------------
   // Move to matrix reducer
@@ -1072,8 +848,11 @@ function updateNodeData(state, id, newData) {
   };
 }
 //-------------------------------------------------------------------------------
-// Reuse
+// CompaIdx and ValueIdx are different here.  ValueIdx is for mspan values.
+// 💥 Do not use valueIdx when purpose mcomp (use componentName)
+//
 // 🔑 uses componentName to update state
+//    (finds compIdx using compName)
 //
 function updateComp(state, action) {
   if (DEBUG) {
@@ -1113,6 +892,45 @@ function updateComp(state, action) {
   };
   return result;
 }
+function updateQual(state, action) {
+  if (DEBUG) {
+    console.debug(`inspect action updateQual`);
+    console.dir(action);
+  }
+  const { id } = action;
+
+  const result = {
+    ...state,
+    tree: {
+      ...state.tree,
+      [id]: {
+        ...state.tree[id],
+        data: {
+          ...state.tree[id].data,
+          value: qualityReducer(action, state.tree[id].data.value),
+        },
+      },
+    },
+  };
+  return result;
+}
+function qualityReducer(action, state) {
+  switch (action.type) {
+    case SET_QUAL_REQUEST: {
+      const { payload } = action;
+      return setQualPropValue(state, 'request', payload);
+    }
+    default:
+      return state;
+  }
+}
+
+function setQualPropValue(qual, prop, value) {
+  return {
+    ...qual,
+    [prop]: value,
+  };
+}
 //-------------------------------------------------------------------------------
 /**
  *
@@ -1134,7 +952,6 @@ function componentReducer(action, state) {
       },
     };
   };
-  // returns first values
   const setCompPropValue = (mea, compIdx, prop, value) => {
     return {
       ...mea,
@@ -1151,9 +968,9 @@ function componentReducer(action, state) {
       return setCompPropValue(state, compIdx, 'reduced', newValue);
     }
 
-    case SET_COMP_VALUES: {
+    case SET_COMP_REQUEST: {
       const { compIdx, newValue } = action;
-      return setCompPropValue(state, compIdx, 'values', newValue);
+      return setCompPropValue(state, compIdx, 'request', newValue);
     }
 
     case SET_MSPAN_REQUEST: {

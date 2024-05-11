@@ -8,6 +8,7 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 // core-app related
 import AppInitializer from './AppInitializer';
 import { ErrorBoundary, Fallback } from './components/shared/ErrorBoundary';
+import { Div } from '../luci-styled/Styled';
 // import ModalRoot from './components/ModalRoot';
 
 import StepBar from './components/StepBar/StepBar';
@@ -45,33 +46,22 @@ function Main() {
       setWidth(() => node.offsetWidth);
     }
   };
-  /*
-  useEffect(() => {
-    console.debug(`Outlet height: ${height}`);
-  }, [height]);
-  useEffect(() => {
-    console.debug(`Outlet width: ${width}`);
-  }, [width]);
-  const value = getComputedStyle(document.documentElement).getPropertyValue(
-    '--unit',
-  );
-*/
 
   Outlet.displayName = 'CoreApp-Outlet';
 
   return (
     <AppInitializer>
       <div className='project-view root stack nowrap'>
-        <div className='app-paging-view'>
+        <Div className='app-paging-view'>
           <ErrorBoundary FallbackComponent={Fallback}>
-            <div ref={(node) => calcHeight(node)}>
+            <div className='app-height-calculator' ref={(node) => calcHeight(node)}>
               <AppSizeProvider height={height} width={width}>
                 <Outlet />
                 <div className='size'>size:</div>
               </AppSizeProvider>
             </div>
           </ErrorBoundary>
-        </div>
+        </Div>
         <StepBar className='controller step-bar'></StepBar>
       </div>
     </AppInitializer>

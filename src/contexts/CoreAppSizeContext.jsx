@@ -2,10 +2,10 @@ import { createContext, useContext, useMemo } from 'react';
 import { PropTypes } from 'prop-types';
 
 export const SizeDataContext = createContext();
-SizeDataContext.displayName = 'Context - SizeDataContext';
+SizeDataContext.displayName = 'Context - AppSizeDataContext';
 
 export const SizeApiContext = createContext();
-SizeApiContext.displayName = 'Context - SizeApiContext';
+SizeApiContext.displayName = 'Context - AppSizeApiContext';
 
 /**
  * Make the core app width and height part of the context
@@ -25,7 +25,7 @@ const Provider = ({ height: heightProp, width: widthProp, children }) => {
   );
 };
 
-Provider.displayName = 'Provider-AppSizeContext';
+Provider.displayName = 'Provider - AppSizeContext';
 Provider.propTypes = {
   children: PropTypes.node.isRequired,
   height: PropTypes.number,

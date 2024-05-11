@@ -38,20 +38,20 @@
  *    materialized in the warehouse as part of the graphql configuration.
  *
  */
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { useSelector } from 'react-redux';
 
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 // Levels store lookup context
 import LevelsContextProvider, {
   CONTEXTS,
   useLevelsApiContext,
+  useLevelsDataContext,
 } from '../../contexts/LevelsDataContext';
 // 📡 Note: does not use actions (levels is outside of redux scope)
 import { fetchFileLevels as fetchLevelsInner } from '../../services/api';
@@ -60,16 +60,11 @@ import { fileLevelsRequest } from '../../lib/filesToEtlUnits/levels-request';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { FIELD_TYPES } from '../../lib/sum-types';
 
-import {
-  // getSelectionModelFile,
-  getSelectionModelEtl,
-  selectFieldInHeader as selectorFileField,
-  selectEtlField as selectorEtlField,
-} from '../../ducks/rootSelectors';
-import ValueGridCore, { filterOperators, ROW_HEIGHT } from './ValueGridCore';
+import { fieldSelectorCreatorCfg } from '../../ducks/selectors/fieldSelectorCreator';
+import { mapSymbolsSelectorCreator } from '../../ducks/mapSymbol.selectors';
+import ValueGridCore, { filterOperators, ROW_HEIGHT, SERVICES } from './ValueGridCore';
 import useAbortController from '../../../hooks/use-abort-controller';
 
-// import fieldData_ from './temp_field.json';
 //------------------------------------------------------------------------------
 //
 const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
@@ -89,6 +84,7 @@ const limitGridHeight = 9 * ROW_HEIGHT;
 //
 const gridOptions = {
   disableSelectionOnClick: true,
+  columnHeaderHeight: 45,
 };
 // export for debugging
 export const columns = [
@@ -96,7 +92,7 @@ export const columns = [
   {
     field: 'level',
     headerName: 'Level',
-    cellClassName: clsx('Luci-ValueGrid-cell', 'level'),
+    cellClassName: clsx('Luci-DataGrid-cell', 'level'),
     sortable: true,
     filterOperators,
     flex: 1,
@@ -106,13 +102,13 @@ export const columns = [
   {
     field: 'newSymbol',
     headerName: 'Change to...',
-    cellClassName: clsx('Luci-ValueGrid-cell', 'newLevel'),
-    hide: true,
+    cellClassName: clsx('Luci-DataGrid-cell', 'newLevel'),
+    hide: false,
   },
   {
     field: 'count',
     headerName: 'Count',
-    cellClassName: clsx('Luci-ValueGrid-cell', 'count'),
+    cellClassName: clsx('Luci-DataGrid-cell', 'count'),
     type: 'number',
     flex: 0.7,
     disableColumnMenu: true,
@@ -125,21 +121,42 @@ const sortModel = [
     sort: 'desc',
   },
 ];
+/**
+ * Example of a filterModel
+const filterModel = {
+  items: [
+    {
+      field: 'level',
+      operator: 'contains',
+      value: 'Intermediate',
+    },
+    {
+      field: 'count',
+      operator: '>',
+      value: 10,
+    },
+  ],
+  logicOperator: 'and', // This means both conditions must be true for a row to be included
+}; */
 //-------------------------------------------------------------------------------
 /**
+ * Must align with the columns configuration
  *
  * @function
  * @param {Object} edge
  * @return {GridRowModel} grid row model
  *
  */
-export const edgeToGridRowFn = (edge) => ({
+const edgeToGridRowFn = (edge) => ({
   id: edge.node.level,
   level: edge.node.level,
   count: edge.node.count,
   newSymbol: edge?.newSymbol ?? '',
 });
-export const edgeToIdFn = (edge) => edge.node.level;
+/**
+ * Used to count unique row values (and elsewhere, to build the selection model)
+ */
+const edgeToGridRowIdFn = (edge) => edge.node.level;
 //-------------------------------------------------------------------------------
 // api data -> grid
 //
@@ -151,13 +168,8 @@ const fetchLevels =
   (projectId, signal) =>
   ({ filter, ...rest }) => {
     if (DEBUG) {
-      console.debug(
-        '📥 calling fetchLevels: projectId, signal, filter, rest',
-        projectId,
-        signal,
-        filter,
-        rest,
-      );
+      console.debug('📥 calling fetchLevels: projectId, signal, filter, rest');
+      console.debug(projectId, signal, filter, rest);
     }
     return fetchLevelsInner({ projectId, signal, ...filter, ...rest });
   };
@@ -177,91 +189,29 @@ const rowFromLevel = ([value, count]) => ({
   newSymbol: '',
 });
 /**
- * Local selector for the "map-symbols" prop.  map-symbols is used to
- * to scrub levels data.
- *
- * Returns a store selector. Not all branches depend on state (i.e. are
- * constant functions).
- *
- *
- * @param {FIELD_TYPES} fieldType
+ * Local getter for the totalRowCount. Returns an optional value.
+ * @function
+ * @param {string} FIELD_TYPES.value
  * @param {function} getFieldValue
- * @returns {Object} selectionModel
+ * @returns {number|undefined}
  * @private
  */
-const mapSymbolsSelectorCreator = ({ fieldType, getFieldValue: getValue }) => {
-  return (state) => {
-    switch (fieldType) {
-      case FIELD_TYPES.FILE:
-        // field.map-symbols
-        return {
-          totalCount: getValue('nlevels'),
-          selectionModel: {
-            __ALL__: {
-              value: '__ALL__',
-              request: true,
-            },
-          },
-          type: 'selectionModel',
-        };
+const maybeTotalRowCountValue = ({ fieldType, getFieldValue: getValue }) => {
+  switch (fieldType) {
+    // headerView
+    case FIELD_TYPES.FILE:
+    case FIELD_TYPES.WIDE:
+      return getValue('nlevels');
 
-      case FIELD_TYPES.ETL:
-        // etlField.map-symbols (recall: etlField is information driven, not
-        // source driven abstraction)
-        return getSelectionModelEtl(state, getValue('name'));
+    // etlView
+    case FIELD_TYPES.ETL:
+      return getValue('sources').length === 1
+        ? getValue('sources')[0].nlevels
+        : undefined;
 
-      case FIELD_TYPES.WIDE:
-        return {
-          totalCount: getValue('levels').length,
-          selectionModel: getValue('levels'),
-          type: 'levels',
-        };
-
-      default:
-        throw new InvalidStateError(`Unsupported fieldType: ${fieldType}`);
-    }
-  };
-};
-/**
- * Local selector for the "selectionModel".  It unifies reading data from the
- * store, from the backend levels.
- *
- * Returns a store selector.
- *
- * @param {FIELD_TYPES} fieldType
- * @param {function} getFieldValue
- * @returns {Object} selectionModel
- * @private
- */
-const selectionModelSelectorCreator = ({ fieldType, getFieldValue: getValue }) => {
-  return (state) => {
-    switch (fieldType) {
-      case FIELD_TYPES.FILE:
-        return {
-          totalCount: getValue('nlevels'),
-          selectionModel: {
-            __ALL__: {
-              value: '__ALL__',
-              request: true,
-            },
-          },
-          type: 'selectionModel',
-        };
-
-      case FIELD_TYPES.ETL:
-        return getSelectionModelEtl(state, getValue('name'));
-
-      case FIELD_TYPES.WIDE:
-        return {
-          totalCount: getValue('levels').length,
-          selectionModel: getValue('levels'),
-          type: 'levels',
-        };
-
-      default:
-        throw new InvalidStateError(`Unsupported fieldType: ${fieldType}`);
-    }
-  };
+    default:
+      throw new InvalidStateError(`Unsupported fieldType: ${fieldType}`);
+  }
 };
 //
 //------------------------------------------------------------------------------
@@ -273,27 +223,24 @@ const selectionModelSelectorCreator = ({ fieldType, getFieldValue: getValue }) =
  *
  */
 const ValueGridFileLevels = () => {
-  const { getFieldValue: getValue, fieldType } = useLevelsApiContext();
+  const { fieldType } = useLevelsDataContext();
+  const { getFieldValue: getValue } = useLevelsApiContext();
   //
-  // baseline selectAll levels
+  // Reset the filter value when the params for the levels request changes.
   //
-  const selectAll = useMemo(
-    () => fileLevelsRequest(getValue, fieldType),
-    [fieldType, getValue],
-  );
+  // baseline filter to retrieve values
+  const filter = fileLevelsRequest(getValue, fieldType, false /* includeMapSymbols */);
+  console.debug('filter', filter);
 
-  const { projectId } = useParams();
-  const abortController = useAbortController();
-
-  // source of the selected levels data
-  const selectionModel = useSelector(
-    selectionModelSelectorCreator({ fieldType, getFieldValue: getValue }),
-  );
-
-  // source of the selected levels data
   const mapSymbols = useSelector(
     mapSymbolsSelectorCreator({ fieldType, getFieldValue: getValue }),
   );
+  console.debug('mapSymbols', mapSymbols);
+
+  // inject into the fetch function
+  const { projectId } = useParams();
+  const abortController = useAbortController();
+
   //
   // group-by-file | wide-to-long-field
   //
@@ -302,43 +249,56 @@ const ValueGridFileLevels = () => {
   //     the data presents when stacked with RAW
   //
   const hasGroupByFileValues = getValue('map-files')?.arrows ?? false;
+  const maybeTotalRowCount = maybeTotalRowCountValue({
+    fieldType,
+    getFieldValue: getValue,
+  });
 
   // two paths to being a derived field
-  let isDerivedField = hasGroupByFileValues || fieldType === FIELD_TYPES.WIDE;
+  const isDerivedField = hasGroupByFileValues || fieldType === FIELD_TYPES.WIDE;
 
-  // only derived fields have
-  isDerivedField = selectionModel.type === 'levels';
+  const derivedRowsWithTotal = isDerivedField
+    ? {
+        totalCount: getValue('levels').length,
+        rows: getValue('levels').map(rowFromLevel),
+      }
+    : undefined;
+
+  if (derivedRowsWithTotal) {
+    console.debug('📥 DERIVED data', derivedRowsWithTotal.rows);
+  }
+
+  // 📖 both FILE and WIDE use the field-alias prop
+  const identifier =
+    fieldType === FIELD_TYPES.ETL ? getValue('name') : getValue('field-alias');
 
   return (
     <div className='stack'>
       <Title fieldType={fieldType} />
       <ValueGridCore
-        className='Luci-ValueGrid-fileLevels'
+        className={clsx('Luci-DataGrid-fileLevels', identifier)}
         columns={columns}
         sortModel={sortModel}
-        // 📖 both FILE and WIDE use the field-alias prop
-        identifier={
-          fieldType === FIELD_TYPES.ETL ? getValue('name') : getValue('field-alias')
+        mapSymbols={mapSymbols}
+        // when data is a derivedField 📖
+        derivedDataRows={derivedRowsWithTotal ? derivedRowsWithTotal.rows : undefined}
+        // derived and when in headerView
+        rowCountTotal={
+          derivedRowsWithTotal ? derivedRowsWithTotal.totalRows : maybeTotalRowCount
         }
+        identifier={identifier}
         purpose={getValue('purpose')}
-        baseSelectAll={selectAll}
+        filter={filter} // 📖
         fetchFn={fetchLevels(projectId, abortController.signal)}
         abortController={abortController}
         limitGridHeight={limitGridHeight}
         normalizer={parseRespData}
         edgeToGridRowFn={edgeToGridRowFn}
-        edgeToIdFn={edgeToIdFn}
-        // required to determine the height of the grid
-        selectionModel={selectionModel}
+        edgeToGridRowIdFn={edgeToGridRowIdFn}
         // version of the grid
-        feature='LIMIT'
+        service={SERVICES.LEVELS}
         checkboxSelection={false}
         pageSize={PAGE_SIZE}
-        // when data is a derivedField 📖
-        // 🦀 weird reference to the selectionModel
-        derivedDataRows={
-          isDerivedField ? selectionModel.selectionModel.map(rowFromLevel) : undefined
-        }
         DEBUG={DEBUG}
         {...gridOptions}
       />
@@ -346,23 +306,17 @@ const ValueGridFileLevels = () => {
   );
 };
 
-// ValueGridFileLevels.whyDidYouRender = true;
-ValueGridFileLevels.propTypes = {
-  // getValue: PropTypes.func.isRequired,
-  // fieldType: PropTypes.oneOf(Object.values(FIELD_TYPES)).isRequired,
-};
+ValueGridFileLevels.propTypes = {};
 
 ValueGridFileLevels.defaultProps = {};
 
 function Title({ fieldType }) {
   return (
-    <Grid container className={clsx('Luci-ValueGrid-header', fieldType)}>
-      <Grid item>
-        <Typography className={clsx('Luci-ValueGrid-title')} variant='h6'>
-          Frequency count
-        </Typography>
-      </Grid>
-    </Grid>
+    <div className={clsx('Luci-DataGrid-header', fieldType)}>
+      <Typography className={clsx('Luci-DataGrid-title')} variant='h6'>
+        Frequency count
+      </Typography>
+    </div>
   );
 }
 Title.propTypes = {
@@ -377,46 +331,14 @@ const createSelectorWithProps = (selector, selectorProps) => {
 };
 
 export default function ValueGridFileLevelsWithContext({ fieldType, getValue }) {
-  // pull data from redux to generate the levels request using a mapped selector
-  // check for wideToLongFields
-  let field;
-  switch (fieldType) {
-    case FIELD_TYPES.ETL:
-      field = {
-        selector: selectorEtlField,
-        selectorProps: [getValue('name')],
-      };
-      break;
-
-    case FIELD_TYPES.FILE:
-      field = {
-        selector: selectorFileField,
-        selectorProps: [getValue('filename'), getValue('header-idx')],
-      };
-      break;
-
-    case FIELD_TYPES.WIDE:
-      field = {
-        selector: () => {
-          return new Proxy(
-            {},
-            {
-              get: (_, prop) => getValue(prop),
-            },
-          );
-        },
-        selectorProps: [],
-      };
-      break;
-
-    default:
-      throw new InvalidStateError(`Unsupported fieldType: ${fieldType}`);
-  }
-
+  //
+  // pull data from redux to generate the levels request using a mapped
+  // selector check for wideToLongFields
+  //
+  const field = fieldSelectorCreatorCfg(fieldType, getValue);
   const fieldData = useSelector(
     createSelectorWithProps(field.selector, field.selectorProps),
   );
-
   return (
     fieldData && (
       <LevelsContextProvider

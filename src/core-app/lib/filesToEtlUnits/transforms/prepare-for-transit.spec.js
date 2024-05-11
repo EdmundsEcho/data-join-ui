@@ -16,13 +16,13 @@ describe('prepare-for-transit', () => {
   describe('create a map from sanitized -> fieldName', () => {
     test('replaces spaces', () => {
       const tobe = {
+        m_nrxcount: 'NRx Count',
         npinumber: 'NPI Number',
-        nrxcount: 'NRx Count',
         paymenttypegroup: 'Payment Type Group',
-        practitionerstate: 'Practitioner State',
-        practitionerzipcode: 'Practitioner Zip Code',
-        primaryspecialtydesc: 'Primary Specialty Desc',
-        yearmonth: 'Year-Month',
+        q_practitionerstate: 'Practitioner State',
+        q_practitionerzipcode: 'Practitioner Zip Code',
+        q_primaryspecialtydesc: 'Primary Specialty Desc',
+        time: 'Year-Month',
       };
       expect(createNameMap(etlObject.etlFields)).toEqual(tobe);
     });

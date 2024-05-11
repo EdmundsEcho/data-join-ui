@@ -1,6 +1,8 @@
 /**
  * @module /components/HeaderViewDialog
  *
+ * @deprecate - likely just use back arrow
+ *
  * @description
  * HeaderViewDialog
  * A pop-up used to update a headerView from another part of the process (e.g.,
@@ -37,7 +39,7 @@ import IconButton from '@mui/material/IconButton';
 import HeaderView from './HeaderView';
 
 // machine
-import { useFormMachine } from '../machines/form-machines/useFormMachine';
+import { useFormMachine } from '../hooks/use-form-machine';
 
 // action creators
 import {
@@ -87,11 +89,7 @@ function HeaderViewDialog(props) {
   // extract hv meta for display
   const { nrows /* filename */ } = headerView;
 
-  console.debug(
-    '%crendering: DIALOG HeaderViewDialog',
-    debug.color.green,
-    filename,
-  );
+  console.debug('%crendering: DIALOG HeaderViewDialog', debug.color.green, filename);
   console.dir(headerView);
 
   // retrieve features from useFormMachine
@@ -103,14 +101,8 @@ function HeaderViewDialog(props) {
     fieldMachines,
   } = useFormMachine({
     // input
-    update: useCallback(
-      (...args) => dispatch(updateFileField(...args)),
-      [dispatch],
-    ),
-    reset: useCallback(
-      (...args) => dispatch(resetFileFields(...args)),
-      [dispatch],
-    ),
+    update: useCallback((...args) => dispatch(updateFileField(...args)), [dispatch]),
+    reset: useCallback((...args) => dispatch(resetFileFields(...args)), [dispatch]),
     data: headerView,
     dataId: headerView.filename,
     fieldId: 'header-idx',

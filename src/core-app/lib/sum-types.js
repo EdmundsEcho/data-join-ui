@@ -64,6 +64,8 @@ export const STATUS = {
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
   EMPTY: 'empty',
+  SUCCESS: 'success',
+  CONSUMED: 'consumed', // the response was read by consumer
   inactive: 'inactive',
   idle: 'idle',
   pending: 'pending',

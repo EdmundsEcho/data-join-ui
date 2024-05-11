@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
@@ -8,19 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import ToolTip from '@mui/material/Tooltip';
 
 import {
-  useGridApiRef,
   useGridApiContext,
   gridExpandedSortedRowIdsSelector as gridRowIdsSelector,
-  gridRowCountSelector,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-
-/*
-import {
-  useGridApiRef,
-  gridRowCountSelector,
-  useGridSelector,
-} from '@mui/x-data-grid-pro'; */
 
 import EditIcon from '@mui/icons-material/Edit';
 import LabelIcon from '@mui/icons-material/Label';
@@ -30,7 +21,11 @@ import WeightIcon from '@mui/icons-material/FitnessCenter';
 import { SymbolMapMaker } from '../SymbolMapMaker';
 import SlidingPopper from '../../../widgets/SlidingPopper';
 import { PURPOSE_TYPES } from '../../lib/sum-types';
-import { useLevelsApiContext, CONTEXTS } from '../../contexts/LevelsDataContext';
+import {
+  useLevelsApiContext,
+  useLevelsDataContext,
+  CONTEXTS,
+} from '../../contexts/LevelsDataContext';
 //------------------------------------------------------------------------------
 //
 const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
@@ -43,14 +38,18 @@ const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
  *
  */
 const ValueGridTools = () => {
-  const { purpose, fieldType, getFieldValue, context } = useLevelsApiContext();
+  const { getFieldValue, handleUpdateSymbols } = useLevelsApiContext();
+  // print the type of handleUpdateSymbols, I want to confirm it's a function
+  console.log('handleUpdateSymbols', typeof handleUpdateSymbols);
+  const { purpose, fieldType, context } = useLevelsDataContext();
   const apiRef = useGridApiContext();
 
+  // options for the symbol map maker
   const consumedOptions = useMemo(() => {
     return Object.keys((getFieldValue('map-symbols') ?? { arrows: {} }).arrows);
   }, [getFieldValue]);
 
-  const options_ = useGridSelector(apiRef, gridRowIdsSelector) ?? [];
+  const options_ = useGridSelector(apiRef, gridRowIdsSelector);
 
   // options = levels ex options already configured
   const options = useMemo(
@@ -59,7 +58,7 @@ const ValueGridTools = () => {
   );
 
   return [CONTEXTS.MATRIX, CONTEXTS.WORKBENCH].includes(context) ? null : (
-    <Grid className={clsx('Luci-ValueGrid-actions', fieldType)} item>
+    <Grid className={clsx('Luci-DataGrid-actions', fieldType)} item>
       {purpose === PURPOSE_TYPES.MCOMP ? (
         <ToolTip title='Series function'>
           <IconButton
@@ -107,6 +106,11 @@ const ValueGridTools = () => {
             options,
             fieldType,
             onDone: () => {
+              // will update gridRows newSymbol column
+              if (handleUpdateSymbols) {
+                handleUpdateSymbols();
+              }
+              console.log('symbol map onDone');
               if (DEBUG) {
                 console.log('symbol map onDone');
               }

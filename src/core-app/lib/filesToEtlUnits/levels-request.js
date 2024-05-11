@@ -29,10 +29,19 @@ const sourcePropsForRequest = ['filename', 'header-idx', 'map-symbols', 'null-va
  * @param {function | object} source
  * @returns {Object} source
  */
-const sourceForRequest = (source) => {
+const sourceForRequest = (source, includeMapSymbol = true) => {
   const getValue = typeof source === 'function' ? source : (prop) => source[prop];
 
-  const result = sourcePropsForRequest.reduce((acc, prop) => {
+  // create a new sourcePropsForRequest to exclude map-symbols when includeMapSYmbol is false
+  // use map filter
+  let adjustedSourceProps = sourcePropsForRequest;
+  if (!includeMapSymbol) {
+    adjustedSourceProps = sourcePropsForRequest.filter(
+      (prop) => prop !== 'map-symbols',
+    );
+  }
+
+  const result = adjustedSourceProps.reduce((acc, prop) => {
     acc[prop] = getValue(prop);
     return acc;
   }, {});
@@ -49,13 +58,13 @@ const sourceForRequest = (source) => {
  * @param {('ETL' | 'FILE' | 'WIDE')} fieldType
  * @return {Object} request for the tnc py levels endpoint
  */
-export const fileLevelsRequest = (getValue, fieldType) => {
+export const fileLevelsRequest = (getValue, fieldType, includeMapSymbol = false) => {
   switch (fieldType) {
     // call from headerView
     case FIELD_TYPES.FILE:
       return {
         purpose: getValue('purpose'),
-        sources: [sourceForRequest(getValue)],
+        sources: [sourceForRequest(getValue, includeMapSymbol)],
       };
     // called from the headerView.
     case FIELD_TYPES.WIDE:
@@ -78,14 +87,14 @@ export const fileLevelsRequest = (getValue, fieldType) => {
   }
 };
 
-function buildEtlSources(sources) {
+function buildEtlSources(sources, includeMapSymbol = true) {
   //
   // Universal processing of source types: RAW, WIDE, IMPLIED
   //
   const result = sources.flatMap((source) => {
     switch (source['source-type']) {
       case SOURCE_TYPES.RAW:
-        return sourceForRequest(source);
+        return sourceForRequest(source, includeMapSymbol);
 
       case SOURCE_TYPES.WIDE:
         return makeSourcesFromWide((prop) => source[prop]);

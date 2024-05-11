@@ -1,0 +1,962 @@
+{
+  "id": "9lhAPOt2bdWlcmdcmPhjokYauiuR2R17",
+  "name": "ValueGridFileLevels",
+  "fileName": "ValueGridFileLevels.jsx",
+  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx",
+  "importPath": "/",
+  "expanded": false,
+  "depth": 0,
+  "count": 1,
+  "thirdParty": false,
+  "reactRouter": false,
+  "reduxConnect": false,
+  "children": [
+    {
+      "id": "F87N7fs4itHdWoRszR3gFszdq8kY2KMP",
+      "name": "ValueGridCore",
+      "fileName": "ValueGridCore",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+      "importPath": "./ValueGridCore",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": false,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "className": true,
+        "columns": true,
+        "sortModel": true,
+        "identifier": true,
+        "purpose": true,
+        "baseSelectAll": true,
+        "fetchFn": true,
+        "abortController": true,
+        "limitGridHeight": true,
+        "normalizer": true,
+        "edgeToGridRowFn": true,
+        "edgeToIdFn": true,
+        "selectionModel": true,
+        "feature": true,
+        "checkboxSelection": true,
+        "pageSize": true,
+        "derivedDataRows": true,
+        "DEBUG": true
+      },
+      "children": [
+        {
+          "id": "Auhx1lxoEM4GRpbmDUQuZrqtbuigErGQ",
+          "name": "ValueGridInner",
+          "fileName": "ValueGridInner",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+          "importPath": "./ValueGridInner",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": false,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "apiRef": true,
+            "className": true,
+            "rowClassName": true,
+            "columnClassName": true,
+            "columns": true,
+            "MAX_ROWS": true,
+            "gridHeightProp": true,
+            "rowHeight": true,
+            "headerHeight": true,
+            "error": true,
+            "onRowsScrollEnd": true,
+            "rowBuffer": true,
+            "loading": true,
+            "selectedRows": true,
+            "checkboxSelection": true,
+            "onRowClick": true,
+            "onToggleAll": true,
+            "tabindex": true,
+            "onFilterModelChange": true,
+            "handleClearFilter": true,
+            "inFilterState": true,
+            "resetFn": true
+          },
+          "children": [
+            {
+              "id": "EmjuRUS5tqFndg5bqWJYb0EvJcnOI5Zt",
+              "name": "IndeterminateCheckBoxIcon",
+              "fileName": "IndeterminateCheckBox",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/IndeterminateCheckBox",
+              "importPath": "@mui/icons-material/IndeterminateCheckBox",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "ref": true,
+                "color": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "fkzILo3wUzjhDyIU1M5dBDzuHjpf1b8k",
+              "name": "Clear",
+              "fileName": "Clear",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Clear",
+              "importPath": "@mui/icons-material/Clear",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "ref": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "vk96n9T1JysDBuGdOunA4g7sG5vyVfYc",
+              "name": "Check",
+              "fileName": "Check",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Check",
+              "importPath": "@mui/icons-material/Check",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "ref": true,
+                "color": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "wrLPUM5O99EDCJ5lloM8hJGtTMXiOoO5",
+              "name": "IconButton",
+              "fileName": "IconButton",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/IconButton",
+              "importPath": "@mui/material/IconButton",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "size": true,
+                "aria-label": true,
+                "onClick": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "eZO9M4ye45bizGcmF7A79fp1BvT276Ji",
+              "name": "ReplayIcon",
+              "fileName": "Replay",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Replay",
+              "importPath": "@mui/icons-material/Replay",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "Deex66YHfgEUExFuI0fAZT1pcV5L7m53",
+              "name": "GridToolbarFilterButton",
+              "fileName": "ValueGridFilterButton",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+              "importPath": "./ValueGridFilterButton",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "disabled": true,
+                "onClick": true
+              },
+              "children": [
+                {
+                  "id": "3dj4oOIIkVGQnzljWH8cIqWYVOQ5vhWs",
+                  "name": "Tooltip",
+                  "fileName": "material",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                  "importPath": "@mui/material",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "title": true,
+                    "enterDelay": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "o7tDDpky1vuYXIplDptRZVYFCBTS7lSH",
+                  "name": "IconButton",
+                  "fileName": "material",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                  "importPath": "@mui/material",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "onClick": true,
+                    "aria-label": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "XZAXFeuQjRxyKZnaaul0xPaaBrgeMjeQ",
+                  "name": "Badge",
+                  "fileName": "material",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                  "importPath": "@mui/material",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "badgeContent": true,
+                    "color": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "M0xCvB1F9ATr1B9RfSnxZF0wokgNqtg9",
+                  "name": "FilterListIcon",
+                  "fileName": "FilterList",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/FilterList",
+                  "importPath": "@mui/icons-material/FilterList",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {},
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "rHaGvfbt6jJ1R0ULMIoQHW8GnNot3kQk",
+              "name": "ValueGridTools",
+              "fileName": "ValueGridTools",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+              "importPath": "./ValueGridTools",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {},
+              "children": [
+                {
+                  "id": "x6pxBpuAcUapsst0j82kXkrK85TelzzS",
+                  "name": "Grid",
+                  "fileName": "Grid",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Grid",
+                  "importPath": "@mui/material/Grid",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "className": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "bekaG8hU3pXSeO4sG4FI4EXDJ8Dhxo2N",
+                  "name": "ToolTip",
+                  "fileName": "Tooltip",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Tooltip",
+                  "importPath": "@mui/material/Tooltip",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 4,
+                  "props": {
+                    "title": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "lPYxTuk34kbFDV9vhb2ZiiUIuMn4Xjv0",
+                  "name": "IconButton",
+                  "fileName": "IconButton",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/IconButton",
+                  "importPath": "@mui/material/IconButton",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 4,
+                  "props": {
+                    "className": true,
+                    "tabIndex": true,
+                    "size": true,
+                    "onClick": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "Gb7V9qtuhelm8pxBJEkbUB8UAAxpebCV",
+                  "name": "SeriesIcon",
+                  "fileName": "LinearScale",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/LinearScale",
+                  "importPath": "@mui/icons-material/LinearScale",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {},
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "KyjmpmjV2RfB6w8C7gbW34amBQNdyG60",
+                  "name": "LabelIcon",
+                  "fileName": "Label",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Label",
+                  "importPath": "@mui/icons-material/Label",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {},
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "h3XhtT2yCRNlFZloEC88oCMiUnLEbYoy",
+                  "name": "WeightIcon",
+                  "fileName": "FitnessCenter",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/FitnessCenter",
+                  "importPath": "@mui/icons-material/FitnessCenter",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {},
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "QyDuWsiHIwPXp5rNl6R9eEkAcpOfhIcX",
+                  "name": "SlidingPopper",
+                  "fileName": "SlidingPopper",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                  "importPath": "../../../widgets/SlidingPopper",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "className": true,
+                    "handle": true,
+                    "placement": true,
+                    "title": true,
+                    "slots": true,
+                    "slotProps": true
+                  },
+                  "children": [
+                    {
+                      "id": "g9OUKIw8Fwkvzqvy5hNnoCkScMUPKfyP",
+                      "name": "Popper",
+                      "fileName": "Popper",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/@mui/material/Popper",
+                      "importPath": "@mui/material/Popper",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "className": true,
+                        "id": true,
+                        "open": true,
+                        "anchorEl": true,
+                        "placement": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "4wXQTU1rf8XgbVmZuAjM15g97TEHheHV",
+                      "name": "Draggable",
+                      "fileName": "react-draggable",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/react-draggable",
+                      "importPath": "react-draggable",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "handle": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "xzvK5ho7lL7ZR3cYrznsYBqPFmP4bEar",
+                      "name": "Resizable",
+                      "fileName": "re-resizable",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/re-resizable",
+                      "importPath": "re-resizable",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {},
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "Gp0bjiBK5sBRskDI1CwpCghI8kP5wTsp",
+                      "name": "Fade",
+                      "fileName": "Fade",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/@mui/material/Fade",
+                      "importPath": "@mui/material/Fade",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "timeout": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                      ],
+                      "error": ""
+                    }
+                  ],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "FBCkaWE6tsVaFshagHkrLmeNsHgRtpnB",
+                  "name": "EditIcon",
+                  "fileName": "Edit",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Edit",
+                  "importPath": "@mui/icons-material/Edit",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {},
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "Q9ziH4ShV29FwACYI2gOefEhCIbiJJ6O",
+              "name": "GridOverlay",
+              "fileName": "x-data-grid-pro",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/x-data-grid-pro",
+              "importPath": "@mui/x-data-grid-pro",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "uEwWdpF2l6UYgJOzeFDkdz14f5zQKwIg",
+              "name": "LinearProgress",
+              "fileName": "LinearProgress",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/LinearProgress",
+              "importPath": "@mui/material/LinearProgress",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "jbMc0CCxKGkbwSz2ynhOcRuAAcMN1sE8",
+              "name": "Div",
+              "fileName": "luci-styled",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/luci-styled",
+              "importPath": "../../../luci-styled",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true,
+                "style": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": "File not found."
+            },
+            {
+              "id": "LS3r5gAIWPkPlzXcugkSljFp5JCx50KJ",
+              "name": "DataGridPro",
+              "fileName": "x-data-grid-pro",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/x-data-grid-pro",
+              "importPath": "@mui/x-data-grid-pro",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true,
+                "apiRef": true,
+                "rows": true,
+                "selectionModel": true,
+                "columns": true,
+                "error": true,
+                "onRowsScrollEnd": true,
+                "loading": true,
+                "filterRowMode": true,
+                "onFilterModelChange": true,
+                "checkboxSelection": true,
+                "getRowClassName": true,
+                "rowHeight": true,
+                "headerHeight": true,
+                "onRowClick": true,
+                "onColumnHeaderClick": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            }
+          ],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+          ],
+          "error": ""
+        },
+        {
+          "id": "5D1nAtQQwKkAW16Ib5zraccRxz8AboPB",
+          "name": "ErrorBoundary",
+          "fileName": "ErrorBoundary",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+          "importPath": "./ErrorBoundary",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": false,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {},
+          "children": [
+            {
+              "id": "RU4v1IeEtCjyZ3uoDtgJ74y1k3mmF5lW",
+              "name": "ErrorBoundary",
+              "fileName": "react-error-boundary",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/react-error-boundary",
+              "importPath": "react-error-boundary",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "FallbackComponent": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "iVcL1WD472VVeUWdmaMC4FeJalgbNgGe",
+              "name": "Container",
+              "fileName": "Container",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Container",
+              "importPath": "@mui/material/Container",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "OHKvw58i1jOPdO6rAC8cNYhkkVcZ0LVm",
+              "name": "Typography",
+              "fileName": "Typography",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Typography",
+              "importPath": "@mui/material/Typography",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 3,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "rd25wOr6VKl58u4bLtDalvgLcGnN7eZU",
+              "name": "Divider",
+              "fileName": "Divider",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Divider",
+              "importPath": "@mui/material/Divider",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 3,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "TYewZ0iymzAwi8N5wKs1SsYKcNA1dIXM",
+              "name": "Button",
+              "fileName": "Button",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Button",
+              "importPath": "@mui/material/Button",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "variant": true,
+                "type": true,
+                "onClick": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+              ],
+              "error": ""
+            }
+          ],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+          ],
+          "error": ""
+        }
+      ],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "l42nPIfmC3EuEZhKG92sJtQ1dHdvAl6X",
+      "name": "Grid",
+      "fileName": "Grid",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Grid",
+      "importPath": "@mui/material/Grid",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": true,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 2,
+      "props": {
+        "className": true
+      },
+      "children": [],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "wtpk0pgTsQLUuQWm2bHreT0URHwSpWzv",
+      "name": "Typography",
+      "fileName": "Typography",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Typography",
+      "importPath": "@mui/material/Typography",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": true,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "className": true,
+        "variant": true
+      },
+      "children": [],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "HRkM6FIQoKUyi2Nbdt6pDm8EwXiZiFhd",
+      "name": "LevelsContextProvider",
+      "fileName": "LevelsDataContext",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/contexts/LevelsDataContext.jsx",
+      "importPath": "../../contexts/LevelsDataContext",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": false,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "context": true,
+        "purpose": true,
+        "getFieldValue": true,
+        "fieldType": true
+      },
+      "children": [],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFileLevels.jsx"
+      ],
+      "error": ""
+    }
+  ],
+  "parentList": [],
+  "props": {},
+  "error": ""
+}

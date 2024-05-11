@@ -31,7 +31,7 @@ const filename =
 const headerIdx = 1;
 
 const projectId = '24c4bb67-2357-4cc0-a9ce-6280d8359999';
-const className = 'Luci-ValueGrid-fileLevels';
+const className = 'Luci-DataGrid-fileLevels';
 
 const MAX_ROWS = 32;
 const data = {

@@ -35,9 +35,7 @@ import {
 } from '../../../../ducks/actions/workbench.actions';
 
 // custom components used to fill the shell/base
-import EtlUnitGroupProvider, {
-  EtlUnitGroupContext,
-} from './EtlUnitGroupContext';
+import EtlUnitGroupProvider, { EtlUnitGroupContext } from './EtlUnitGroupContext';
 
 /**
  * Group shell
@@ -84,8 +82,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
 */
 
   const version = 1;
-  const displayType =
-    context === 'palette' ? 'shell' : data?.displayType || 'empty';
+  const displayType = context === 'palette' ? 'shell' : data?.displayType || 'empty';
   // when to show group semantic
   const withShowMore = ['derivedField'].includes(displayType);
   const showFab = displayType === 'empty';
@@ -100,7 +97,8 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
       data={data}
       showDetail={showDetailInit}
       stateId={stateId}
-      showMoreMenu={false}>
+      showMoreMenu={false}
+    >
       {/* only use class to show/hide header 🦀 ? */}
       <EtlUnitGroupContext.Consumer>
         {({ showDetail, handleClickFab }) => (
@@ -108,10 +106,8 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
             <Card className={clsx('EtlUnitGroupBase-root', context)}>
               {/* Header */}
               <CardContent
-                className={clsx(
-                  'header-wrapper',
-                  displayType === 'shell' && 'shell',
-                )}>
+                className={clsx('header-wrapper', displayType === 'shell' && 'shell')}
+              >
                 <Header
                   className={clsx('header')}
                   type={displayType}
@@ -122,15 +118,9 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
               {/* Group semantic */}
               <Grid className='group-semantic' container spacing={0}>
                 <Grid item xs>
-                  <Collapse
-                    in={showDetail}
-                    timeout='auto'
-                    unmountOnExit={false}>
+                  <Collapse in={showDetail} timeout='auto' unmountOnExit={false}>
                     {displayType === 'derivedField' ? (
-                      <DerivedFieldConfig
-                        nodeId={nodeId}
-                        className='semantic'
-                      />
+                      <DerivedFieldConfig nodeId={nodeId} className='semantic' />
                     ) : null}
                   </Collapse>
                 </Grid>
@@ -140,10 +130,8 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
 
               {/* Footer */}
               <div
-                className={clsx(
-                  'footer-wrapper',
-                  displayType === 'shell' && 'shell',
-                )}>
+                className={clsx('footer-wrapper', displayType === 'shell' && 'shell')}
+              >
                 <Footer type={displayType} showFab={displayType === 'empty'} />
               </div>
             </Card>
@@ -154,7 +142,8 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
                   className='fab'
                   size='small'
                   color='secondary'
-                  onClick={handleClickFab}>
+                  onClick={handleClickFab}
+                >
                   <AddIcon fontSize='small' />
                 </Fab>
                 <div className={clsx('spacer')} />
@@ -197,8 +186,8 @@ Title.propTypes = {
 };
 
 //------------------------------------------------------------------------------
-// Tools
-function Tools({ version, withShowMore }) {
+// GroupTools
+function GroupTools({ version, withShowMore }) {
   const { handleClearCommand, toggleShowDetail, showDetail } =
     useContext(EtlUnitGroupContext);
 
@@ -243,21 +232,18 @@ function Tools({ version, withShowMore }) {
   );
   /* eslint-enable no-nested-ternary */
 }
-Tools.propTypes = {
+GroupTools.propTypes = {
   version: PropTypes.number,
   withShowMore: PropTypes.bool,
 };
-Tools.defaultProps = {
+GroupTools.defaultProps = {
   version: 1,
   withShowMore: false,
 };
 
 function Clear({ handleClearCommand }) {
   return (
-    <IconButton
-      className={clsx('tool')}
-      onClick={handleClearCommand}
-      size='large'>
+    <IconButton className={clsx('tool')} onClick={handleClearCommand} size='large'>
       <ClearIcon className={clsx('icon', 'clear')} />
     </IconButton>
   );
@@ -310,7 +296,7 @@ function Header({ type, version, withShowMore, className }) {
   return (
     <div className={className}>
       <Title {...titleProps} />
-      <Tools version={version} withShowMore={withShowMore} />
+      <GroupTools version={version} withShowMore={withShowMore} />
     </div>
   );
 }

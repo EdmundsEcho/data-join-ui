@@ -25,9 +25,9 @@ import {
 } from '../../actions/project-meta.actions';
 import { UPDATE_FILEFIELD } from '../../actions/headerView.actions';
 import {
-  ADD_DERIVED_FIELD,
+  ADD_GROUP_BY_FILE_FIELD,
   DELETE_FIELD,
-  DELETE_DERIVED_FIELD,
+  DELETE_GROUP_BY_FILE_FIELD,
   SET_ETL_VIEW,
   SET_ETL_FIELD_CHANGES,
   UPDATE_ETL_FIELD,
@@ -173,11 +173,11 @@ function saveReduxManager(saveFn, delay = 1500) {
 const WHITE_LIST = [
   UPDATE_FILEFIELD,
   UPDATE_ETL_FIELD,
-  ADD_DERIVED_FIELD,
+  ADD_GROUP_BY_FILE_FIELD,
   SET_ETL_VIEW,
   SET_ETL_FIELD_CHANGES,
   DELETE_FIELD,
-  DELETE_DERIVED_FIELD,
+  DELETE_GROUP_BY_FILE_FIELD,
   SET_TREE,
   // TOGGLE_VALUE, // building the request
   // TOGGLE_REDUCED, // building the request

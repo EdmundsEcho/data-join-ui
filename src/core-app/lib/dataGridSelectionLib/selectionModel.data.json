@@ -1,0 +1,103 @@
+{
+  "query": "query matrix($request: RequestInput!) {\n  reqMatrixSpec(requestSpec: $request) {\n    fieldCount\n    subExpression {\n      source {\n        codomain\n      }\n      fields {\n        value\n      }\n      filter {\n        fieldName {\n          value\n        }\n        relations {\n          lhs {\n            fieldName {\n              value\n            }\n          }\n          relation\n          rhs {\n            __typename\n            ... on TxtValues {\n              txtValues\n            }\n            ... on IntValues {\n              intValues\n            }\n          }\n        }\n      }\n    }\n    meaExpressions {\n      source {\n        codomain\n      }\n      fields {\n        value\n      }\n      filter {\n        fieldName {\n          value\n        }\n        relations {\n          lhs {\n            fieldName {\n              value\n            }\n          }\n          relation\n          rhs {\n            __typename\n            ... on TxtValues {\n              txtValues\n            }\n            ... on IntValues {\n              intValues\n            }\n            ... on SpanFilter {\n              range {\n                filterStart\n                filterEnd\n              }\n            }\n          }\n        }\n      }\n      fields {\n        value\n      }\n      reducer\n    }\n    header {\n      value\n    }\n  }\n}",
+  "variables": {
+    "request": {
+      "subReq": {
+        "subjectType": "SUBJECT",
+        "qualityMix": [
+          {
+            "antiRequest": true,
+            "qualityName": "Spec Desc",
+            "qualityValues": { "txtValues": ["specialty 11", "specialty 7"] }
+          }
+        ]
+      },
+      "meaReqs": [
+        {
+          "measurementType": "Unit Count",
+          "componentMix": [
+            {
+              "antiRequest": false,
+              "componentName": "Payment Type Group",
+              "componentValues": {
+                "reduced": false,
+                "txtValues": []
+              }
+            },
+            {
+              "antiRequest": false,
+              "componentName": "Year-Month",
+              "componentValues": {
+                "reduced": false,
+                "spanValues": [{ "rangeStart": 0, "rangeLength": 21, "reduced": true }]
+              }
+            }
+          ]
+        },
+        {
+          "measurementType": "Unit Count",
+          "componentMix": [
+            {
+              "antiRequest": false,
+              "componentName": "Payment Type Group",
+              "componentValues": {
+                "reduced": false,
+                "txtValues": []
+              }
+            },
+            {
+              "antiRequest": false,
+              "componentName": "Year-Month",
+              "componentValues": {
+                "reduced": false,
+                "spanValues": [{ "rangeStart": 0, "rangeLength": 21, "reduced": true }]
+              }
+            }
+          ]
+        },
+        {
+          "measurementType": "Unit Count",
+          "componentMix": [
+            {
+              "antiRequest": true,
+              "componentName": "Payment Type Group",
+              "componentValues": {
+                "reduced": false,
+                "txtValues": ["MEDICAID"]
+              }
+            },
+            {
+              "antiRequest": false,
+              "componentName": "Year-Month",
+              "componentValues": {
+                "reduced": false,
+                "spanValues": [{ "rangeStart": 0, "rangeLength": 21, "reduced": true }]
+              }
+            }
+          ]
+        },
+        {
+          "measurementType": "Unit Count",
+          "componentMix": [
+            {
+              "antiRequest": true,
+              "componentName": "Payment Type Group",
+              "componentValues": {
+                "reduced": true,
+                "txtValues": ["MEDICAID"]
+              }
+            },
+            {
+              "antiRequest": false,
+              "componentName": "Year-Month",
+              "componentValues": {
+                "reduced": false,
+                "spanValues": [{ "rangeStart": 0, "rangeLength": 21, "reduced": true }]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

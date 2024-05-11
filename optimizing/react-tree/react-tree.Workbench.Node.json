@@ -1,0 +1,3090 @@
+{
+  "id": "4ZnIfcq4sxR48yOPFq1kseAyNYKAPZAf",
+  "name": "Node",
+  "fileName": "Node.jsx",
+  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx",
+  "importPath": "/",
+  "expanded": false,
+  "depth": 0,
+  "count": 1,
+  "thirdParty": false,
+  "reactRouter": false,
+  "reduxConnect": false,
+  "children": [
+    {
+      "id": "XLG1b8tK0Tp7AYFdRVAJ2UQvkZWS5ds7",
+      "name": "Typography",
+      "fileName": "Typography",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/@mui/material/Typography",
+      "importPath": "@mui/material/Typography",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": true,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 2,
+      "props": {},
+      "children": [],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "qSgHjeG7nRNZNxgII35fXbDCaZXNjWqt",
+      "name": "Dragger",
+      "fileName": "Dragger",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Dragger.jsx",
+      "importPath": "../../Dragger",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": false,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 2,
+      "props": {
+        "key": true,
+        "className": true,
+        "config": true,
+        "moveOrCopy": true
+      },
+      "children": [
+        {
+          "id": "ZAWfwx85giTKVqNmtmxMONzNFh8aNB6k",
+          "name": "Draggable",
+          "fileName": "dnd",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/@hello-pangea/dnd",
+          "importPath": "@hello-pangea/dnd",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": true,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "key": true,
+            "draggableId": true,
+            "index": true,
+            "isDragDisabled": true
+          },
+          "children": [],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Dragger.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+          ],
+          "error": ""
+        },
+        {
+          "id": "gVSLAjpftkGtA3AUv8C50p453KDUhNkG",
+          "name": "Container",
+          "fileName": "Container",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/@mui/material/Container",
+          "importPath": "@mui/material/Container",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": true,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "ref": true,
+            "className": true
+          },
+          "children": [],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Dragger.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+          ],
+          "error": ""
+        }
+      ],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "22WqH2SasCOYsOMxWGmdjLo8Bxr5Lk9P",
+      "name": "EtlUnit",
+      "fileName": "EtlUnit",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+      "importPath": "./EtlUnit/EtlUnit",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": false,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "className": true,
+        "context": true,
+        "nodeId": true
+      },
+      "children": [
+        {
+          "id": "cImQFy6i9D9UjyTaPXmivDyVotyncRdF",
+          "name": "EtlUnitBase",
+          "fileName": "EtlUnitBase",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+          "importPath": "./EtlUnitBase",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": false,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "context": true,
+            "nodeId": true
+          },
+          "children": [
+            {
+              "id": "bixM1Q5KI107uEKEbx30SiXe6khjeKvW",
+              "name": "Card",
+              "fileName": "Card",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Card",
+              "importPath": "@mui/material/Card",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "GpfIw1i9niVMLaq7YhndMsdDLAjjNImW",
+              "name": "Divider",
+              "fileName": "Divider",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Divider",
+              "importPath": "@mui/material/Divider",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 3,
+              "props": {
+                "className": true,
+                "orientation": true,
+                "variant": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "0uQt4sV2801bcwFF4NZV6SFUIwhou2ah",
+              "name": "ToolContextProvider",
+              "fileName": "ToolContext",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ToolContext.jsx",
+              "importPath": "./ToolContext",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "switchCallback": true,
+                "switchOn": true,
+                "showSwitch": true,
+                "stateId": true,
+                "key": true,
+                "showDetail": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "uzuOtIuu1fleadNut6xcun872c7Bm75p",
+              "name": "ToolContext",
+              "fileName": "ToolContext",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ToolContext.jsx",
+              "importPath": "./ToolContext",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "IUeGPF0MC45Nxin7wVl8v9EFiEiek4lA",
+              "name": "CardContent",
+              "fileName": "CardContent",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/CardContent",
+              "importPath": "@mui/material/CardContent",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "Wsy1RFsiF3aB8ceTZU5rlgfYxvo2TRzO",
+              "name": "EtlUnitCardHeader",
+              "fileName": "EtlUnitCardHeader",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+              "importPath": "./EtlUnitCardHeader",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true,
+                "title": true,
+                "meta": true,
+                "palette": true,
+                "tag": true,
+                "etlUnitType": true,
+                "handleMenu": true,
+                "showSwitch": true,
+                "displayType": true
+              },
+              "children": [
+                {
+                  "id": "idq5NlzTXFESwimVK5eufMnyWFNU3haX",
+                  "name": "Div",
+                  "fileName": "luci-styled",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/luci-styled",
+                  "importPath": "../../../../../luci-styled",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 4,
+                  "props": {
+                    "className": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": "File not found."
+                },
+                {
+                  "id": "M7bpWQP5jU1VshNjF5qJV52majV2wqsm",
+                  "name": "Icon",
+                  "fileName": "Icon",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Icon",
+                  "importPath": "@mui/material/Icon",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "className": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "shtKpGqsVpUeKaB5QNQZRL0LScn9yxGi",
+                  "name": "Tools",
+                  "fileName": "Tools",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                  "importPath": "./Tools",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "onClickMenu": true,
+                    "tag": true,
+                    "etlUnitType": true
+                  },
+                  "children": [
+                    {
+                      "id": "GWhro7wdA69PchvqN1amfHz4B2O9HuFA",
+                      "name": "IconButton",
+                      "fileName": "IconButton",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/IconButton",
+                      "importPath": "@mui/material/IconButton",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "size": true,
+                        "className": true,
+                        "onClick": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "TkUw72ejsHb44KJnezSj2Jn0Ck4C239R",
+                      "name": "MoreVert",
+                      "fileName": "MoreVert",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/MoreVert",
+                      "importPath": "@mui/icons-material/MoreVert",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {},
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "aDmOjMPE8BYaTKN0iHZiFjAj13hlzRKx",
+                      "name": "ShowDetail",
+                      "fileName": "ShowDetail",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ShowDetail.jsx",
+                      "importPath": "./ShowDetail",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "onChange": true,
+                        "showDetail": true
+                      },
+                      "children": [
+                        {
+                          "id": "WLhrSBDEa6xmP6ZEisHlCoae5Cjbn0Tf",
+                          "name": "IconButton",
+                          "fileName": "IconButton",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/IconButton",
+                          "importPath": "@mui/material/IconButton",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "size": true,
+                            "className": true,
+                            "onClick": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ShowDetail.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "UgVvgdrbu7PLaRgBTZqLp229R3zhE4pn",
+                          "name": "ExpandMore",
+                          "fileName": "ExpandMore",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/ExpandMore",
+                          "importPath": "@mui/icons-material/ExpandMore",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "className": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ShowDetail.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "Y6MEH9IrGnOK7npnFPGDNQBtPMlAnlYV",
+                      "name": "Switch",
+                      "fileName": "Switch",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/Switch.jsx",
+                      "importPath": "../../../shared/Switch",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "className": true,
+                        "labelOne": true,
+                        "labelTwo": true,
+                        "checked": true,
+                        "onChange": true,
+                        "disabled": true
+                      },
+                      "children": [
+                        {
+                          "id": "t5UC15pb2RdgqeMIAfPPerY3IdVXb5ai",
+                          "name": "InnerSwitch",
+                          "fileName": "Switch",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Switch",
+                          "importPath": "@mui/material/Switch",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "color": true,
+                            "onChange": true,
+                            "checked": true,
+                            "disabled": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/Switch.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "D07GuvWHiVAANSKpFPhfb4vXwbscLrD2",
+                          "name": "FormControlLabel",
+                          "fileName": "material",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                          "importPath": "@mui/material",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "className": true,
+                            "control": true,
+                            "label": true,
+                            "labelPlacement": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/Switch.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/Tools.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    }
+                  ],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "NyY35yUs4KCdV3df6hfyXAspQfmbidJJ",
+                  "name": "Typography",
+                  "fileName": "Typography",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Typography",
+                  "importPath": "@mui/material/Typography",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "component": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "APYh6GPgnVNHr5lJniOCVvEsrrK8t760",
+                  "name": "TextField",
+                  "fileName": "TextField",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextField.jsx",
+                  "importPath": "../../../shared/TextField",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "stateId": true,
+                    "className": true,
+                    "InputLabelProps": true,
+                    "saveChange": true,
+                    "name": true,
+                    "value": true,
+                    "helperText": true
+                  },
+                  "children": [
+                    {
+                      "id": "flEPQMP2MIuvnTV0JmaUf14CKm3iuvm2",
+                      "name": "FormControl",
+                      "fileName": "FormControl",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/FormControl",
+                      "importPath": "@mui/material/FormControl",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "variant": true,
+                        "className": true,
+                        "error": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextField.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "2pk1Yw5m7kyskfZSdWChLhrqMrrHdJBh",
+                      "name": "InputLabel",
+                      "fileName": "InputLabel",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/InputLabel",
+                      "importPath": "@mui/material/InputLabel",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {},
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextField.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "iswl07Goz2K03qbuxUDM54okp1tgaPFq",
+                      "name": "TextInput",
+                      "fileName": "TextInput",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextInput.jsx",
+                      "importPath": "./TextInput",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "saveChange": true,
+                        "value": true
+                      },
+                      "children": [
+                        {
+                          "id": "RiiCiVPCzDJucGwIMLdWTHjp4TitH0cB",
+                          "name": "Input",
+                          "fileName": "Input",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Input",
+                          "importPath": "@mui/material/Input",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "key": true,
+                            "id": true,
+                            "name": true,
+                            "inputRef": true,
+                            "value": true,
+                            "onChange": true,
+                            "onBlur": true,
+                            "onKeyUp": true,
+                            "label": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextField.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextField.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "z1jMO87zSZOH4LDxchal76BwMwwJuAK2",
+                      "name": "FormHelperText",
+                      "fileName": "FormHelperText",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/FormHelperText",
+                      "importPath": "@mui/material/FormHelperText",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {},
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/TextField.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    }
+                  ],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitCardHeader.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "37cKLL6VwPVaHejMNjPXJkDISoJcSR5U",
+              "name": "Collapse",
+              "fileName": "Collapse",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Collapse",
+              "importPath": "@mui/material/Collapse",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "in": true,
+                "className": true,
+                "timeout": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "StChxDKBX913HeFsxF6TgScTYE3ksSJM",
+              "name": "EtlUnitValueGrid",
+              "fileName": "ValueGridWorkbench",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+              "importPath": "./ValueGridWorkbench",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "type": true,
+                "measurementType": true,
+                "identifier": true,
+                "nodeId": true,
+                "instanceOf": true
+              },
+              "children": [
+                {
+                  "id": "mnMFcstLQHl9xgQ0N4sZIrSBwO8Vt8Iw",
+                  "name": "ValueGridCore",
+                  "fileName": "ValueGridCore",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                  "importPath": "../../../shared/ValueGridCore",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "className": true,
+                    "columns": true,
+                    "sortModel": true,
+                    "identifier": true,
+                    "purpose": true,
+                    "baseSelectAll": true,
+                    "fetchFn": true,
+                    "abortController": true,
+                    "normalizer": true,
+                    "edgeToGridRowFn": true,
+                    "selectionModel": true,
+                    "reduced": true,
+                    "limitGridHeight": true,
+                    "handleToggleValue": true,
+                    "handleSetAllValues": true,
+                    "feature": true,
+                    "pageSize": true,
+                    "rowHeight": true,
+                    "gridHeightAdjustment": true,
+                    "DEBUG": true
+                  },
+                  "children": [
+                    {
+                      "id": "ZRrgRk8DVGJKFzgee7WMyHpNVjOpycN0",
+                      "name": "ValueGridInner",
+                      "fileName": "ValueGridInner",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                      "importPath": "./ValueGridInner",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "apiRef": true,
+                        "className": true,
+                        "rowClassName": true,
+                        "columnClassName": true,
+                        "columns": true,
+                        "MAX_ROWS": true,
+                        "gridHeightProp": true,
+                        "rowHeight": true,
+                        "headerHeight": true,
+                        "error": true,
+                        "onRowsScrollEnd": true,
+                        "rowBuffer": true,
+                        "loading": true,
+                        "selectedRows": true,
+                        "checkboxSelection": true,
+                        "onRowClick": true,
+                        "onToggleAll": true,
+                        "tabindex": true,
+                        "onFilterModelChange": true,
+                        "handleClearFilter": true,
+                        "inFilterState": true,
+                        "resetFn": true
+                      },
+                      "children": [
+                        {
+                          "id": "dcuaHT3SFnkDTRAt0vTWfJv2fwMizg3U",
+                          "name": "IndeterminateCheckBoxIcon",
+                          "fileName": "IndeterminateCheckBox",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/IndeterminateCheckBox",
+                          "importPath": "@mui/icons-material/IndeterminateCheckBox",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "ref": true,
+                            "color": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "pAHzS8oCzNAQ9tE5z9YqSo0ZE49mB9HH",
+                          "name": "Clear",
+                          "fileName": "Clear",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Clear",
+                          "importPath": "@mui/icons-material/Clear",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "ref": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "B3RG9Po3ALj3vPAfudxkUIFREyWuwuqm",
+                          "name": "Check",
+                          "fileName": "Check",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Check",
+                          "importPath": "@mui/icons-material/Check",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "ref": true,
+                            "color": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "UdiLZ4QQ2LNTeEO3yi7OJUjrWPkH0qFT",
+                          "name": "IconButton",
+                          "fileName": "IconButton",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/IconButton",
+                          "importPath": "@mui/material/IconButton",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "size": true,
+                            "aria-label": true,
+                            "onClick": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "JwZLu6IKq6nVqy2POQW6Vrm6PpqvjYYx",
+                          "name": "ReplayIcon",
+                          "fileName": "Replay",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Replay",
+                          "importPath": "@mui/icons-material/Replay",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {},
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "qS0QPlJxochrd8LWHHEjmALjLUJ8JJN6",
+                          "name": "GridToolbarFilterButton",
+                          "fileName": "ValueGridFilterButton",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                          "importPath": "./ValueGridFilterButton",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": false,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "disabled": true,
+                            "onClick": true
+                          },
+                          "children": [
+                            {
+                              "id": "JJZow2YSDso772ARMp1mYEpIIB9gW5s5",
+                              "name": "Tooltip",
+                              "fileName": "material",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                              "importPath": "@mui/material",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {
+                                "title": true,
+                                "enterDelay": true
+                              },
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "vNAAmf3QqELWlEeqwlPxe9eodK07mbK5",
+                              "name": "IconButton",
+                              "fileName": "material",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                              "importPath": "@mui/material",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {
+                                "onClick": true,
+                                "aria-label": true
+                              },
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "jE2thRreDIjRarDKUx6VodJzCJsa3Fz3",
+                              "name": "Badge",
+                              "fileName": "material",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                              "importPath": "@mui/material",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {
+                                "badgeContent": true,
+                                "color": true
+                              },
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "FYfoeikPD302aHcrSRE6zz7AHL2YchMj",
+                              "name": "FilterListIcon",
+                              "fileName": "FilterList",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/FilterList",
+                              "importPath": "@mui/icons-material/FilterList",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {},
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridFilterButton.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            }
+                          ],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "Kuq0DfjUT016plsy0HUEaCTrD50Qd3iO",
+                          "name": "ValueGridTools",
+                          "fileName": "ValueGridTools",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                          "importPath": "./ValueGridTools",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": false,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {},
+                          "children": [
+                            {
+                              "id": "PEoXxXOrcTFs1GbkluuuL4KdjT1am9So",
+                              "name": "Grid",
+                              "fileName": "Grid",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Grid",
+                              "importPath": "@mui/material/Grid",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {
+                                "className": true
+                              },
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "AgqUG6YbtgqOPDD19xlQzeCYHYlPZ89K",
+                              "name": "ToolTip",
+                              "fileName": "Tooltip",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Tooltip",
+                              "importPath": "@mui/material/Tooltip",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 4,
+                              "props": {
+                                "title": true
+                              },
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "DhF5vKGRoWyEv0SXO7cJ8V329UDRMU1u",
+                              "name": "IconButton",
+                              "fileName": "IconButton",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/IconButton",
+                              "importPath": "@mui/material/IconButton",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 4,
+                              "props": {
+                                "className": true,
+                                "tabIndex": true,
+                                "size": true,
+                                "onClick": true
+                              },
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "GW28iFVLJEjSkOqF8VI4q3anCUeSAZ8E",
+                              "name": "SeriesIcon",
+                              "fileName": "LinearScale",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/LinearScale",
+                              "importPath": "@mui/icons-material/LinearScale",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {},
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "5uGsYtr7dsl2VNlPsvx1nXBhlMDKCcQC",
+                              "name": "LabelIcon",
+                              "fileName": "Label",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Label",
+                              "importPath": "@mui/icons-material/Label",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {},
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "jI95F3Fviue3IzIPGFLocAjsXsgAFWY9",
+                              "name": "WeightIcon",
+                              "fileName": "FitnessCenter",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/FitnessCenter",
+                              "importPath": "@mui/icons-material/FitnessCenter",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {},
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "y0xTVR8MKe7wHLgqcy6TppTedGesRstB",
+                              "name": "SlidingPopper",
+                              "fileName": "SlidingPopper",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                              "importPath": "../../../widgets/SlidingPopper",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": false,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {
+                                "className": true,
+                                "handle": true,
+                                "placement": true,
+                                "title": true,
+                                "slots": true,
+                                "slotProps": true
+                              },
+                              "children": [
+                                {
+                                  "id": "DMWfo9t7zwUBbNGh9FDwdUMMRrx18xgh",
+                                  "name": "Popper",
+                                  "fileName": "Popper",
+                                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/@mui/material/Popper",
+                                  "importPath": "@mui/material/Popper",
+                                  "expanded": false,
+                                  "depth": 8,
+                                  "thirdParty": true,
+                                  "reactRouter": false,
+                                  "reduxConnect": false,
+                                  "count": 1,
+                                  "props": {
+                                    "className": true,
+                                    "id": true,
+                                    "open": true,
+                                    "anchorEl": true,
+                                    "placement": true
+                                  },
+                                  "children": [],
+                                  "parentList": [
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                                  ],
+                                  "error": ""
+                                },
+                                {
+                                  "id": "zzdbahvJaGAcNXHrNX2Gl3yk2VatyiPN",
+                                  "name": "Draggable",
+                                  "fileName": "react-draggable",
+                                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/react-draggable",
+                                  "importPath": "react-draggable",
+                                  "expanded": false,
+                                  "depth": 8,
+                                  "thirdParty": true,
+                                  "reactRouter": false,
+                                  "reduxConnect": false,
+                                  "count": 1,
+                                  "props": {
+                                    "handle": true
+                                  },
+                                  "children": [],
+                                  "parentList": [
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                                  ],
+                                  "error": ""
+                                },
+                                {
+                                  "id": "itw0zCAJeK23rduYek6kt0Oj4EjYpkAp",
+                                  "name": "Resizable",
+                                  "fileName": "re-resizable",
+                                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/re-resizable",
+                                  "importPath": "re-resizable",
+                                  "expanded": false,
+                                  "depth": 8,
+                                  "thirdParty": true,
+                                  "reactRouter": false,
+                                  "reduxConnect": false,
+                                  "count": 1,
+                                  "props": {},
+                                  "children": [],
+                                  "parentList": [
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                                  ],
+                                  "error": ""
+                                },
+                                {
+                                  "id": "3mai7VaYzZQNKPfvPFyYxIPT53oYyzTu",
+                                  "name": "Fade",
+                                  "fileName": "Fade",
+                                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/@mui/material/Fade",
+                                  "importPath": "@mui/material/Fade",
+                                  "expanded": false,
+                                  "depth": 8,
+                                  "thirdParty": true,
+                                  "reactRouter": false,
+                                  "reduxConnect": false,
+                                  "count": 1,
+                                  "props": {
+                                    "timeout": true
+                                  },
+                                  "children": [],
+                                  "parentList": [
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/widgets/SlidingPopper.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                                  ],
+                                  "error": ""
+                                }
+                              ],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            },
+                            {
+                              "id": "ZEzhzAUis7E3lXKcAPgH51HgJ2G57WFZ",
+                              "name": "EditIcon",
+                              "fileName": "Edit",
+                              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Edit",
+                              "importPath": "@mui/icons-material/Edit",
+                              "expanded": false,
+                              "depth": 7,
+                              "thirdParty": true,
+                              "reactRouter": false,
+                              "reduxConnect": false,
+                              "count": 1,
+                              "props": {},
+                              "children": [],
+                              "parentList": [
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridTools.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                              ],
+                              "error": ""
+                            }
+                          ],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "VlddlJlSRDkRXw9cyX2oEchJ1jTkAbep",
+                          "name": "GridOverlay",
+                          "fileName": "x-data-grid-pro",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/x-data-grid-pro",
+                          "importPath": "@mui/x-data-grid-pro",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {},
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "UO9HS9U8XfKCpBrwpziJHaWGq7gSRYjm",
+                          "name": "LinearProgress",
+                          "fileName": "LinearProgress",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/LinearProgress",
+                          "importPath": "@mui/material/LinearProgress",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {},
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "var9smdPgHJpcg6uehvbWpiNt4vJxHpf",
+                          "name": "Div",
+                          "fileName": "luci-styled",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/luci-styled",
+                          "importPath": "../../../luci-styled",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": false,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "className": true,
+                            "style": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": "File not found."
+                        },
+                        {
+                          "id": "YzRe6MncRLVirntm5Y2fsfbYE2NrAnZv",
+                          "name": "DataGridPro",
+                          "fileName": "x-data-grid-pro",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/x-data-grid-pro",
+                          "importPath": "@mui/x-data-grid-pro",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "className": true,
+                            "apiRef": true,
+                            "rows": true,
+                            "selectionModel": true,
+                            "columns": true,
+                            "error": true,
+                            "onRowsScrollEnd": true,
+                            "loading": true,
+                            "filterRowMode": true,
+                            "onFilterModelChange": true,
+                            "checkboxSelection": true,
+                            "getRowClassName": true,
+                            "rowHeight": true,
+                            "headerHeight": true,
+                            "onRowClick": true,
+                            "onColumnHeaderClick": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridInner.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "fpN1N3g0Gf18tQNHVHL0UxTMhUpreldk",
+                      "name": "ErrorBoundary",
+                      "fileName": "ErrorBoundary",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                      "importPath": "./ErrorBoundary",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {},
+                      "children": [
+                        {
+                          "id": "J3KemWXDy1qnbIRKRlWoWIcEQynbT0Tj",
+                          "name": "ErrorBoundary",
+                          "fileName": "react-error-boundary",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/react-error-boundary",
+                          "importPath": "react-error-boundary",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "FallbackComponent": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "3iqoJIoWzrnaVPaOt7Ry8qhvHTnniMC8",
+                          "name": "Container",
+                          "fileName": "Container",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Container",
+                          "importPath": "@mui/material/Container",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "className": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "hu2oNj4pNPCVeprg6QIHEOr8tsWhy3L4",
+                          "name": "Typography",
+                          "fileName": "Typography",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Typography",
+                          "importPath": "@mui/material/Typography",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 3,
+                          "props": {},
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "CQn8eiP2E74jxBoVwpFYQ6iyh2nNUfr7",
+                          "name": "Divider",
+                          "fileName": "Divider",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Divider",
+                          "importPath": "@mui/material/Divider",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 3,
+                          "props": {},
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "dC1e2t5MZaIYRp7l7Cv5oqvaAkNFN0Tz",
+                          "name": "Button",
+                          "fileName": "Button",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Button",
+                          "importPath": "@mui/material/Button",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "variant": true,
+                            "type": true,
+                            "onClick": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ErrorBoundary.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ValueGridCore.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    }
+                  ],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "4qk6q2Ji2R6t1NJbSVdZrzWGl9wS0aT0",
+                  "name": "LevelsContextProvider",
+                  "fileName": "LevelsDataContext",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/contexts/LevelsDataContext.jsx",
+                  "importPath": "../../../../contexts/LevelsDataContext",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "context": true,
+                    "purpose": true,
+                    "fieldType": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ValueGridWorkbench.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "HRuQTNZjr1dQ51Y4KbE8BIGWWkpxHBrg",
+              "name": "EtlUnitSpanGrid",
+              "fileName": "EtlUnitSpanGrid",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+              "importPath": "./EtlUnitSpanGrid",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "nodeId": true,
+                "identifier": true
+              },
+              "children": [
+                {
+                  "id": "CksXS6kMU0sNEYrEJteVvPan6nWJZ9VO",
+                  "name": "Typography",
+                  "fileName": "Typography",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Typography",
+                  "importPath": "@mui/material/Typography",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {},
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "PwNtDKgfZgSiOnfn6Ei2vxr80gV57ibe",
+                  "name": "SpanInput",
+                  "fileName": "SpanInput",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                  "importPath": "../../../shared/SpanInput",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "key": true,
+                    "span": true,
+                    "timeProp": true,
+                    "formatOut": true,
+                    "handleUpdate": true,
+                    "handleToggleValue": true,
+                    "displayType": true,
+                    "request": true
+                  },
+                  "children": [
+                    {
+                      "id": "L5fUgNxipsnNxCNn9KzQtAgm0Y6VSoFN",
+                      "name": "Div",
+                      "fileName": "luci-styled",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/luci-styled",
+                      "importPath": "../../../luci-styled",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "className": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": "File not found."
+                    },
+                    {
+                      "id": "Rgsrm7BCYnuJSpUUAGMbJavDtpvqzcVi",
+                      "name": "SelectMenu",
+                      "fileName": "SelectMenu",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                      "importPath": "./SelectMenu",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 2,
+                      "props": {
+                        "className": true,
+                        "key": true,
+                        "options": true,
+                        "name": true,
+                        "value": true,
+                        "label": true,
+                        "onChange": true,
+                        "disabled": true
+                      },
+                      "children": [
+                        {
+                          "id": "Ffp8QsKBcMSyqfJovwQNOLPbl9HTLuv3",
+                          "name": "FormControl",
+                          "fileName": "FormControl",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/FormControl",
+                          "importPath": "@mui/material/FormControl",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "disabled": true,
+                            "className": true,
+                            "error": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "Jub2xtZjlN2fofkRWuw8UrxfZVdxz70G",
+                          "name": "InputLabel",
+                          "fileName": "InputLabel",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/InputLabel",
+                          "importPath": "@mui/material/InputLabel",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "id": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "b5JmxRAM9SpJIQ9wWm0t0Gg3tiVNkR33",
+                          "name": "Select",
+                          "fileName": "Select",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Select",
+                          "importPath": "@mui/material/Select",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "labelId": true,
+                            "id": true,
+                            "value": true,
+                            "onChange": true,
+                            "inputProps": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "HSbGzyNDISX9Fi5EomIY3nOJN3S956Gj",
+                          "name": "MenuItem",
+                          "fileName": "MenuItem",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/MenuItem",
+                          "importPath": "@mui/material/MenuItem",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "key": true,
+                            "value": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "JQzZJb3LOLLC2s1V4dRlX7RUND4Xhypr",
+                      "name": "Switch",
+                      "fileName": "Switch",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/Switch.jsx",
+                      "importPath": "./Switch",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "className": true,
+                        "checked": true,
+                        "onChange": true,
+                        "labelOne": true,
+                        "labelTwo": true,
+                        "name": true,
+                        "color": true,
+                        "disabled": true
+                      },
+                      "children": [
+                        {
+                          "id": "vnFAwRS1Tlb3wWbv7svhZGsf8yYzbck9",
+                          "name": "InnerSwitch",
+                          "fileName": "Switch",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Switch",
+                          "importPath": "@mui/material/Switch",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "color": true,
+                            "onChange": true,
+                            "checked": true,
+                            "disabled": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/Switch.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "4DHblouuaBY2TJ0ku659z9DJKhuzLt3i",
+                          "name": "FormControlLabel",
+                          "fileName": "material",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material",
+                          "importPath": "@mui/material",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "className": true,
+                            "control": true,
+                            "label": true,
+                            "labelPlacement": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/Switch.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "YjqwezZpot3jtnmYofG7DWUo6djDx90L",
+                      "name": "TimeSpanIcon",
+                      "fileName": "DateRange",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/DateRange",
+                      "importPath": "@mui/icons-material/DateRange",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "className": true,
+                        "color": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "0h00PRIGu9rj4yvYMdQSlW3We7rNdeVz",
+                      "name": "Button",
+                      "fileName": "Button",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Button",
+                      "importPath": "@mui/material/Button",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "size": true,
+                        "onClick": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "NhqgWumfeBsNmZrTwm2IR6KkveMpFyaD",
+                      "name": "ToggleIncludeField",
+                      "fileName": "ToggleIncludeField",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ToggleIncludeField.jsx",
+                      "importPath": "./ToggleIncludeField",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": false,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "color": true,
+                        "checked": true
+                      },
+                      "children": [
+                        {
+                          "id": "xAane3LzElM3vVTrcLDxfuUYgsfRtvip",
+                          "name": "Check",
+                          "fileName": "Check",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Check",
+                          "importPath": "@mui/icons-material/Check",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "fontSize": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ToggleIncludeField.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        },
+                        {
+                          "id": "E2AEEHkAeYa6DdxVgBpCQUWgGIHLcHTJ",
+                          "name": "Clear",
+                          "fileName": "Clear",
+                          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/icons-material/Clear",
+                          "importPath": "@mui/icons-material/Clear",
+                          "expanded": false,
+                          "depth": 6,
+                          "thirdParty": true,
+                          "reactRouter": false,
+                          "reduxConnect": false,
+                          "count": 1,
+                          "props": {
+                            "fontSize": true
+                          },
+                          "children": [],
+                          "parentList": [
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/ToggleIncludeField.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                          ],
+                          "error": ""
+                        }
+                      ],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SpanInput.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    }
+                  ],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitSpanGrid.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            }
+          ],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnit.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+          ],
+          "error": ""
+        }
+      ],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "mQEZpks4sUW8mBoz1ERddKdFKemMejrt",
+      "name": "EtlUnitGroup",
+      "fileName": "EtlUnitGroup",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+      "importPath": "./EtlUnit/EtlUnitGroup",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": false,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "context": true,
+        "className": true,
+        "config": true
+      },
+      "children": [
+        {
+          "id": "FuhOtYyluc0PkDGDNRfyYimoNFNVHQ07",
+          "name": "EtlUnitGroupBase",
+          "fileName": "EtlUnitGroupBase",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+          "importPath": "./EtlUnitGroupBase",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": false,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "nodeId": true,
+            "context": true
+          },
+          "children": [
+            {
+              "id": "ZQWLRUwSjkIR8WOCB2GJD0O1vtjFnCJV",
+              "name": "EtlUnitGroupProvider",
+              "fileName": "EtlUnitGroupContext",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupContext.jsx",
+              "importPath": "./EtlUnitGroupContext",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "displayType": true,
+                "clearCallback": true,
+                "clickFabCallback": true,
+                "data": true,
+                "showDetail": true,
+                "stateId": true,
+                "showMoreMenu": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "Tu24dsymq4mxqU07HOTMKpjXcLALvbu4",
+              "name": "EtlUnitGroupContext",
+              "fileName": "EtlUnitGroupContext",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupContext.jsx",
+              "importPath": "./EtlUnitGroupContext",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {},
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "4iZPakDHnLCYnP1h7oLedMywB1rWouRS",
+              "name": "Card",
+              "fileName": "Card",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Card",
+              "importPath": "@mui/material/Card",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "T4X223WKdflAHYGNBefnt4SZq6Ewya5D",
+              "name": "CardContent",
+              "fileName": "CardContent",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/CardContent",
+              "importPath": "@mui/material/CardContent",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "lvfz6Y3e57i135X1rAPOTEZiPm2l7sHc",
+              "name": "Grid",
+              "fileName": "Grid",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Grid",
+              "importPath": "@mui/material/Grid",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 2,
+              "props": {
+                "className": true,
+                "spacing": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "gMhU6lQNBwXIcmE8K6RTuWerCkiYbwEm",
+              "name": "Collapse",
+              "fileName": "Collapse",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Collapse",
+              "importPath": "@mui/material/Collapse",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "in": true,
+                "timeout": true,
+                "unmountOnExit": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "w2PpPiTLQw11GHc135cxZLnkljQDW9Fl",
+              "name": "DerivedFieldConfig",
+              "fileName": "DerivedFieldConfig",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+              "importPath": "./DerivedFieldConfig",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "nodeId": true,
+                "className": true
+              },
+              "children": [
+                {
+                  "id": "EM9jvqL7KRwk9kOPR81eqVq0Qt36sjHJ",
+                  "name": "Grid",
+                  "fileName": "Grid",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Grid",
+                  "importPath": "@mui/material/Grid",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 3,
+                  "props": {
+                    "className": true,
+                    "xs": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "r8lS10QFeaRLqPDtR6rLYzVJkxheSAIg",
+                  "name": "SelectMenu",
+                  "fileName": "SelectMenu",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                  "importPath": "../../../shared/SelectMenu",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": false,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "options": true,
+                    "name": true,
+                    "value": true,
+                    "label": true,
+                    "placeholder": true,
+                    "onChange": true,
+                    "className": true
+                  },
+                  "children": [
+                    {
+                      "id": "GTIwoxu2tA8auGgKsey6MiBciYnSwYbq",
+                      "name": "FormControl",
+                      "fileName": "FormControl",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/FormControl",
+                      "importPath": "@mui/material/FormControl",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "disabled": true,
+                        "className": true,
+                        "error": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "qZyRXxdSA7Csk70N5AeXHTBhgyaa8C7S",
+                      "name": "InputLabel",
+                      "fileName": "InputLabel",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/InputLabel",
+                      "importPath": "@mui/material/InputLabel",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "id": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "8YZCLwXLBW2Ogn9VyxP2CVXHUmee7jm2",
+                      "name": "Select",
+                      "fileName": "Select",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/Select",
+                      "importPath": "@mui/material/Select",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "labelId": true,
+                        "id": true,
+                        "value": true,
+                        "onChange": true,
+                        "inputProps": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    },
+                    {
+                      "id": "IU1fbKgNcXfwdJHNfiCawdEN6U3SnOJE",
+                      "name": "MenuItem",
+                      "fileName": "MenuItem",
+                      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/@mui/material/MenuItem",
+                      "importPath": "@mui/material/MenuItem",
+                      "expanded": false,
+                      "depth": 5,
+                      "thirdParty": true,
+                      "reactRouter": false,
+                      "reduxConnect": false,
+                      "count": 1,
+                      "props": {
+                        "key": true,
+                        "value": true
+                      },
+                      "children": [],
+                      "parentList": [
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/shared/SelectMenu.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                      ],
+                      "error": ""
+                    }
+                  ],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "24oGchD0ZM0NrM4OAdVTG4fkhkdhW4DZ",
+                  "name": "Typography",
+                  "fileName": "Typography",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Typography",
+                  "importPath": "@mui/material/Typography",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "display": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/DerivedFieldConfig.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "wvbBkiMUq7hnFFozJGl0LkVAYBIe85Tb",
+              "name": "Fab",
+              "fileName": "Fab",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Fab",
+              "importPath": "@mui/material/Fab",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true,
+                "size": true,
+                "color": true,
+                "onClick": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "oKZl5a8pHXr2kSwwZvVQBpX1c8XnPDeT",
+              "name": "AddIcon",
+              "fileName": "AddRounded",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/AddRounded",
+              "importPath": "@mui/icons-material/AddRounded",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "fontSize": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "6hAyjJ2OGpiHTwhb2Z5qGQEhdA2pWff4",
+              "name": "Typography",
+              "fileName": "Typography",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/Typography",
+              "importPath": "@mui/material/Typography",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "variant": true,
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "KowEmQeoiEeowySve9EjI5vg6kv3s0wd",
+              "name": "ShowDetail",
+              "fileName": "ShowDetail",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ShowDetail.jsx",
+              "importPath": "./ShowDetail",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": false,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 2,
+              "props": {
+                "iconButtonClass": true,
+                "expandIconClass": true,
+                "onChange": true,
+                "showDetail": true
+              },
+              "children": [
+                {
+                  "id": "NMslv9y2MkqQKcvac29spvhuSEVnBBgm",
+                  "name": "IconButton",
+                  "fileName": "IconButton",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/IconButton",
+                  "importPath": "@mui/material/IconButton",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "size": true,
+                    "className": true,
+                    "onClick": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ShowDetail.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                },
+                {
+                  "id": "pQr3gN5QJFcax7aC6z9vPt1ypwQMomiS",
+                  "name": "ExpandMore",
+                  "fileName": "ExpandMore",
+                  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/ExpandMore",
+                  "importPath": "@mui/icons-material/ExpandMore",
+                  "expanded": false,
+                  "depth": 4,
+                  "thirdParty": true,
+                  "reactRouter": false,
+                  "reduxConnect": false,
+                  "count": 1,
+                  "props": {
+                    "className": true
+                  },
+                  "children": [],
+                  "parentList": [
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/ShowDetail.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+                  ],
+                  "error": ""
+                }
+              ],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "MlwtR8SGAV0eYT7DOjbdytnvU2yjQJ5j",
+              "name": "IconButton",
+              "fileName": "IconButton",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/material/IconButton",
+              "importPath": "@mui/material/IconButton",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 4,
+              "props": {
+                "className": true,
+                "size": true,
+                "onClick": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "UqBkfEfaatD93NjKiRlKJebnC8r8Jyuh",
+              "name": "UnfoldMoreIcon",
+              "fileName": "UnfoldMoreRounded",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/UnfoldMoreRounded",
+              "importPath": "@mui/icons-material/UnfoldMoreRounded",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 2,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "FvcaVwDN2c7ArbbVAy4rDBFbXFy6UXNk",
+              "name": "ClearIcon",
+              "fileName": "ClearRounded",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/ClearRounded",
+              "importPath": "@mui/icons-material/ClearRounded",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            },
+            {
+              "id": "4udTesYQv15qBSsOSeRZboOKEoH0TEHH",
+              "name": "MenuIcon",
+              "fileName": "Menu",
+              "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/@mui/icons-material/Menu",
+              "importPath": "@mui/icons-material/Menu",
+              "expanded": false,
+              "depth": 3,
+              "thirdParty": true,
+              "reactRouter": false,
+              "reduxConnect": false,
+              "count": 1,
+              "props": {
+                "className": true
+              },
+              "children": [],
+              "parentList": [
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroupBase.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+                "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+              ],
+              "error": ""
+            }
+          ],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/EtlUnit/EtlUnitGroup.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+          ],
+          "error": ""
+        }
+      ],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "gzOUVAR4Omgd2dU0Q5ESe0zuPgcKNgLN",
+      "name": "DropZone",
+      "fileName": "DropZone",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/DropZone.jsx",
+      "importPath": "../../DropZone",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": false,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 2,
+      "props": {
+        "key": true,
+        "config": true,
+        "droppableId": true,
+        "direction": true,
+        "isDropDisabled": true
+      },
+      "children": [
+        {
+          "id": "KB4WpqOtirDjQhFbkHohfyYxPTMW1KDb",
+          "name": "Droppable",
+          "fileName": "dnd",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/@hello-pangea/dnd",
+          "importPath": "@hello-pangea/dnd",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": true,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "key": true
+          },
+          "children": [],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/DropZone.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+          ],
+          "error": ""
+        },
+        {
+          "id": "4lrLgQVC89KUHA77kI3WsSBFuBezTHVH",
+          "name": "Container",
+          "fileName": "Container",
+          "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/@mui/material/Container",
+          "importPath": "@mui/material/Container",
+          "expanded": false,
+          "depth": 2,
+          "thirdParty": true,
+          "reactRouter": false,
+          "reduxConnect": false,
+          "count": 1,
+          "props": {
+            "className": true,
+            "ref": true
+          },
+          "children": [],
+          "parentList": [
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/DropZone.jsx",
+            "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+          ],
+          "error": ""
+        }
+      ],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "df4GUOK1AlWC4iCJlH7mNIdfEbHOsCUu",
+      "name": "Card",
+      "fileName": "Card",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/@mui/material/Card",
+      "importPath": "@mui/material/Card",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": true,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "key": true,
+        "className": true
+      },
+      "children": [],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    },
+    {
+      "id": "Dz9OLX4oD1Am6THQfA0hEs4ZkZ7YQoBF",
+      "name": "ReactMarkdown",
+      "fileName": "react-markdown",
+      "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/react-markdown",
+      "importPath": "react-markdown",
+      "expanded": false,
+      "depth": 1,
+      "thirdParty": true,
+      "reactRouter": false,
+      "reduxConnect": false,
+      "count": 1,
+      "props": {
+        "remarkPlugins": true
+      },
+      "children": [],
+      "parentList": [
+        "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+      ],
+      "error": ""
+    }
+  ],
+  "parentList": [],
+  "props": {},
+  "error": ""
+}

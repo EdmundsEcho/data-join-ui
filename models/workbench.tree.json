@@ -1,0 +1,616 @@
+{
+  "tree": {
+    "0": {
+      "id": 0,
+      "type": "root",
+      "height": 0,
+      "parent": null,
+      "data": {},
+      "index": null,
+      "childIds": [1, 2],
+      "listeners": []
+    },
+    "1": {
+      "id": 1,
+      "type": "palette",
+      "height": 1,
+      "parent": 0,
+      "data": {},
+      "index": 0,
+      "childIds": [3],
+      "listeners": []
+    },
+    "2": {
+      "id": 2,
+      "type": "canvas",
+      "height": 1,
+      "parent": 0,
+      "data": {},
+      "index": 1,
+      "childIds": [18, 19, 20],
+      "listeners": []
+    },
+    "3": {
+      "id": 3,
+      "type": "palette",
+      "height": 2,
+      "parent": 1,
+      "data": {},
+      "index": 0,
+      "childIds": [4, 6, 8, 10, 12, 14, 16],
+      "listeners": []
+    },
+    "4": {
+      "id": 4,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Specialty"
+      },
+      "index": 0,
+      "childIds": [5],
+      "listeners": []
+    },
+    "5": {
+      "id": 5,
+      "type": "palette",
+      "height": 4,
+      "parent": 4,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Specialty",
+          "displayName": "Specialty",
+          "palette-name": "Specialty",
+          "canvas-alias": "Specialty",
+          "tag": "txtValues",
+          "count": 30,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "6": {
+      "id": 6,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "State"
+      },
+      "index": 1,
+      "childIds": [7],
+      "listeners": []
+    },
+    "7": {
+      "id": 7,
+      "type": "palette",
+      "height": 4,
+      "parent": 6,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "State",
+          "displayName": "State",
+          "palette-name": "State",
+          "canvas-alias": "State",
+          "tag": "txtValues",
+          "count": 55,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "8": {
+      "id": 8,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Zip"
+      },
+      "index": 2,
+      "childIds": [9],
+      "listeners": []
+    },
+    "9": {
+      "id": 9,
+      "type": "palette",
+      "height": 4,
+      "parent": 8,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Zip",
+          "displayName": "Zip",
+          "palette-name": "Zip",
+          "canvas-alias": "Zip",
+          "tag": "txtValues",
+          "count": 4057,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "10": {
+      "id": 10,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "in network"
+      },
+      "index": 3,
+      "childIds": [11],
+      "listeners": []
+    },
+    "11": {
+      "id": 11,
+      "type": "palette",
+      "height": 4,
+      "parent": 10,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "in network",
+          "displayName": "in network",
+          "palette-name": "in network",
+          "canvas-alias": "in network",
+          "tag": "txtValues",
+          "count": 2,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "12": {
+      "id": 12,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "empty",
+        "groupTag": "Unit Count"
+      },
+      "index": 4,
+      "childIds": [13],
+      "listeners": []
+    },
+    "13": {
+      "id": 13,
+      "type": "palette",
+      "height": 4,
+      "parent": 12,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "Unit Count",
+          "displayName": "Unit Count",
+          "palette-name": "Unit Count",
+          "canvas-alias": "Unit Count",
+          "values": {
+            "0": {
+              "request": false,
+              "componentName": "Payer",
+              "displayName": "Payer",
+              "palette-name": "Payer",
+              "canvas-alias": "Payer",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "values": {
+                "__ALL__": {
+                  "value": "__ALL__",
+                  "request": false
+                }
+              }
+            },
+            "1": {
+              "request": true,
+              "componentName": "Year-Month",
+              "displayName": "Year-Month",
+              "palette-name": "Year-Month",
+              "canvas-alias": "Year-Month",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": {
+                "0": {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 0,
+                    "reduced": false,
+                    "rangeLength": 24
+                  }
+                }
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2014-11",
+                  "isoFormat": "YYYY-MM"
+                }
+              }
+            },
+            "2": {
+              "request": false,
+              "componentName": "rx-product",
+              "displayName": "rx-product",
+              "palette-name": "rx-product",
+              "canvas-alias": "rx-product",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 2,
+              "values": {
+                "__ALL__": {
+                  "value": "__ALL__",
+                  "request": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "14": {
+      "id": 14,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "empty",
+        "groupTag": "eng"
+      },
+      "index": 5,
+      "childIds": [15],
+      "listeners": []
+    },
+    "15": {
+      "id": 15,
+      "type": "palette",
+      "height": 4,
+      "parent": 14,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "eng",
+          "displayName": "eng",
+          "palette-name": "eng",
+          "canvas-alias": "eng",
+          "values": {
+            "0": {
+              "request": false,
+              "componentName": "Brand",
+              "displayName": "Brand",
+              "palette-name": "Brand",
+              "canvas-alias": "Brand",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "values": {
+                "__ALL__": {
+                  "value": "__ALL__",
+                  "request": false
+                }
+              }
+            },
+            "1": {
+              "request": false,
+              "componentName": "Themes",
+              "displayName": "Themes",
+              "palette-name": "Themes",
+              "canvas-alias": "Themes",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "values": {
+                "__ALL__": {
+                  "value": "__ALL__",
+                  "request": false
+                }
+              }
+            },
+            "2": {
+              "request": true,
+              "componentName": "eng-date",
+              "displayName": "eng-date",
+              "palette-name": "eng-date",
+              "canvas-alias": "eng-date",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": {
+                "0": {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 7,
+                    "reduced": false,
+                    "rangeLength": 3
+                  }
+                }
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 7,
+                  "value": "2015-06",
+                  "isoFormat": "YYYY-MM"
+                }
+              }
+            },
+            "3": {
+              "request": false,
+              "componentName": "eng-type",
+              "displayName": "eng-type",
+              "palette-name": "eng-type",
+              "canvas-alias": "eng-type",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "values": {
+                "__ALL__": {
+                  "value": "__ALL__",
+                  "request": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "16": {
+      "id": 16,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "empty",
+        "groupTag": "reach"
+      },
+      "index": 6,
+      "childIds": [17],
+      "listeners": []
+    },
+    "17": {
+      "id": 17,
+      "type": "palette",
+      "height": 4,
+      "parent": 16,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "reach",
+          "displayName": "reach",
+          "palette-name": "reach",
+          "canvas-alias": "reach",
+          "values": {
+            "0": {
+              "request": true,
+              "componentName": "reach-date",
+              "displayName": "reach-date",
+              "palette-name": "reach-date",
+              "canvas-alias": "reach-date",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": {
+                "0": {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 14,
+                    "reduced": false,
+                    "rangeLength": 8
+                  }
+                }
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 14,
+                  "value": "16-Jan",
+                  "isoFormat": "YY-MMM"
+                }
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "18": {
+      "id": 18,
+      "type": "canvas",
+      "height": 2,
+      "parent": 2,
+      "data": {},
+      "index": 0,
+      "childIds": [21],
+      "listeners": []
+    },
+    "19": {
+      "id": 19,
+      "type": "canvas",
+      "height": 2,
+      "parent": 2,
+      "data": {},
+      "index": 1,
+      "childIds": [23],
+      "listeners": []
+    },
+    "20": {
+      "id": 20,
+      "type": "canvas",
+      "height": 2,
+      "parent": 2,
+      "data": {},
+      "index": 2,
+      "childIds": [],
+      "listeners": []
+    },
+    "21": {
+      "id": 21,
+      "type": "canvas",
+      "height": 3,
+      "parent": 18,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Specialty"
+      },
+      "index": 0,
+      "childIds": [22],
+      "listeners": []
+    },
+    "22": {
+      "id": 22,
+      "type": "canvas",
+      "height": 4,
+      "parent": 21,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Specialty",
+          "displayName": "Specialty",
+          "palette-name": "Specialty",
+          "canvas-alias": "Specialty",
+          "tag": "txtValues",
+          "count": 30,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "23": {
+      "id": 23,
+      "type": "canvas",
+      "height": 3,
+      "parent": 19,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Zip"
+      },
+      "index": 0,
+      "childIds": [24],
+      "listeners": []
+    },
+    "24": {
+      "id": 24,
+      "type": "canvas",
+      "height": 4,
+      "parent": 23,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Zip",
+          "displayName": "Zip",
+          "palette-name": "Zip",
+          "canvas-alias": "Zip",
+          "tag": "txtValues",
+          "count": 4057,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    }
+  }
+}

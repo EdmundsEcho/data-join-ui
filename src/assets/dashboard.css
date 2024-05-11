@@ -24,8 +24,8 @@
 
     /* controller main & outlet */
     /* flex-handles */
-    --controller-main-flex-handle: 1 3 0%;
-    --controller-outlet-flex-handle: 5 1 0%;
+    --controller-main-flex-handle: .20;
+    --controller-outlet-flex-handle: .74;
     /* gap between  */
     --controller-outlet-gap: 2px;
     --controller-outlet-radius: 1rem;
@@ -37,7 +37,7 @@
     --main-view-min-width: 400px;
     --controller-main-mini-width: 80px;
     --controller-main-max-width: 350px;
-    --stepbar-height: 100px;
+    --stepbar-height: 130px;
     --stepbar-nav-width: 100px;
 
     /* computed value to set the height of main-view */
@@ -47,6 +47,13 @@
 
 .test-outside-mui {
     background-color: blue
+}
+
+/* This will ensure that padding does not add to the width */
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
 }
 
 /*
@@ -332,19 +339,24 @@ button.cancel {
 }
 
 /* controller hand-off to core-app */
-.project-view,
+.project-view {
+    flex-grow: 1;
+    width: 100%;
+}
+
 .app-paging-view {
     flex-grow: 1;
 }
 
-.app-paging-view {
-    max-height: var(--core-app-outlet-height);
-    overflow: scroll;
-}
-
-.app-paging-view>div {
+.app-height-calculator {
+    max-width: 100%;
     height: 100%;
 }
+
+.app-paging-view {
+    max-height: var(--core-app-outlet-height);
+}
+
 
 /* ---------------------------------------- */
 /* AppBar and SideNav formatting */
@@ -512,6 +524,7 @@ button.cancel {
 /* stepbar */
 .stepbar.root {
     height: var(--stepbar-height);
+    gap: 0.7em;
 }
 
 .stepbar.stepper-root {
@@ -1081,6 +1094,20 @@ span.google-drive {
 }
 
 /* ---------------------------------------- */
+/* MUI tooltip poper                        */
+/* ---------------------------------------- */
+.base-Popper-root>div {
+    border-radius: 0.3rem;
+}
+
+.MuiDataGrid-columnHeader,
+.MuiDataGrid-columnHeader.MuiDataGrid-columnHeader--sortable {}
+
+.MuiDataGrid-columnHeader>div {
+    overflow-Y: scroll;
+    overflow-X: hidden;
+}
+
 /* Console log */
 pre.console-log {
     background-color: #eee;

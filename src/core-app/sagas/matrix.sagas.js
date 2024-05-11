@@ -53,7 +53,9 @@ import { range } from '../utils/common';
 import { colors } from '../constants/variables';
 
 //------------------------------------------------------------------------------
-const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
+const DEBUG =
+  process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true' ||
+  process.env.REACT_APP_DEBUG_MATRIX === 'true';
 const COLOR = colors.light.blue;
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
@@ -211,10 +213,7 @@ function* buildMatrixSpec(abortController) {
 
     //
     if (DEBUG) {
-      yield console.debug(
-        `%c1️⃣ Request from workbench: Tree -> Request`,
-        COLOR,
-      );
+      yield console.debug(`%c1️⃣ Request from workbench: Tree -> Request`, COLOR);
       yield console.dir(request);
       yield console.dir(derivedFields);
     }
@@ -250,20 +249,14 @@ function* buildMatrixSpec(abortController) {
       ),
     };
     if (DEBUG) {
-      yield console.debug(
-        `%c2️⃣ requestFragments: Fragments from graphql`,
-        COLOR,
-      );
+      yield console.debug(`%c2️⃣ requestFragments: Fragments from graphql`, COLOR);
       yield console.dir(requestFragments);
     }
     //
     // 🔖 Derived fields are separate from obs/mms that hosts single-source of truth
     //    Thus, append derived fields.
     //
-    const finalRequest = yield withDerivedFields(
-      requestFragments,
-      derivedFields,
-    );
+    const finalRequest = yield withDerivedFields(requestFragments, derivedFields);
 
     if (DEBUG) {
       yield console.debug(`%c3️⃣ finalSpec: ...with derived fields`, COLOR);
@@ -324,10 +317,7 @@ function* fetchFragmentedRequest(request, apiFn, abortController, apiFnName) {
     return requestFragments;
   } catch (e) {
     abortController.abort();
-    throw new GqlError(
-      `fetchFragment call to ${apiFnName} failed: ${e?.message}`,
-      e,
-    );
+    throw new GqlError(`fetchFragment call to ${apiFnName} failed: ${e?.message}`, e);
   }
 }
 
@@ -337,10 +327,7 @@ function* fetchFragmentedRequest(request, apiFn, abortController, apiFnName) {
 // Watcher
 // Use the output of the workbench (config) to warehouse -> matrix
 export function* watchForMatrixRequest() {
-  UT.log(
-    yield takeLatest(FETCH_MATRIX, _queueMatrixRequest),
-    `taking ${FETCH_MATRIX}`,
-  );
+  UT.log(yield takeLatest(FETCH_MATRIX, _queueMatrixRequest), `taking ${FETCH_MATRIX}`);
 }
 export function* watchForMatrixCache() {
   UT.log(

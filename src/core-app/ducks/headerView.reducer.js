@@ -98,17 +98,6 @@ export const isFileSelected = (stateFragment, path) => {
 export const getHasSelectedFiles = (stateFragment) => stateFragment.selected.length > 0;
 
 /**
- * Generates a synthetic selection model for the data grid core
- */
-export const getSelectionModelFile = (stateFragment, filename, headerIdx) => {
-  return {
-    totalCount: stateFragment.headerViews[filename].fields[headerIdx].nlevels,
-    selectionModel: { __ALL__: { value: '__ALL__', request: true } },
-    type: 'selectionModel',
-  };
-};
-
-/**
  * v0.3.11
  * Object: arrows: Object
  * @return {Object}

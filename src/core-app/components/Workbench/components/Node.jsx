@@ -11,10 +11,7 @@ import Typography from '@mui/material/Typography';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-import {
-  selectMaybeNodeSeed,
-  getAmIDropDisabled,
-} from '../../../ducks/rootSelectors';
+import { selectMaybeNodeSeed, getAmIDropDisabled } from '../../../ducks/rootSelectors';
 
 import DropZone from '../../DropZone';
 import Dragger from '../../Dragger';
@@ -42,12 +39,7 @@ function parentIndex(paletteOrCanvas, height) {
  *    parentIndex is chosen.
  *
  */
-const RenderChildren = ({
-  childIds,
-  type,
-  height,
-  parentIndex: parentIndexProp,
-}) => {
+const RenderChildren = ({ childIds, type, height, parentIndex: parentIndexProp }) => {
   return childIds.map((childId, index) => (
     <Node
       key={`node-${childId}`}
@@ -143,7 +135,8 @@ function Node(props) {
             type: 'leaf',
             context: paletteOrCanvas,
           }}
-          moveOrCopy={moveOrCopy}>
+          moveOrCopy={moveOrCopy}
+        >
           <EtlUnit
             className={clsx('Node-inner', 'unit', paletteOrCanvas)}
             context={paletteOrCanvas}
@@ -163,14 +156,16 @@ function Node(props) {
             type: 'group',
             context: paletteOrCanvas,
           }}
-          moveOrCopy={moveOrCopy}>
+          moveOrCopy={moveOrCopy}
+        >
           <EtlUnitGroup
             context={paletteOrCanvas}
             className={clsx('Node-inner', 'group', paletteOrCanvas)}
             config={{
               type: groupType,
               nodeId: id,
-            }}>
+            }}
+          >
             <DropZone
               key={`drop-zone-${id}`}
               config={{
@@ -179,9 +174,11 @@ function Node(props) {
                 type: 'group',
                 context: paletteOrCanvas,
               }}
+              /* eslint-disable react/jsx-curly-brace-presence */
               droppableId={`${id}`}
               direction={direction}
-              isDropDisabled={isDropDisabled}>
+              isDropDisabled={isDropDisabled}
+            >
               {/* Draggable children */}
               {childIds?.length === 0 ? (
                 <Typography>Drop zone</Typography>
@@ -201,7 +198,8 @@ function Node(props) {
       return (
         <Card
           key={`node-card-${id}`}
-          className={clsx('Node-inner', 'superGroup', paletteOrCanvas)}>
+          className={clsx('Node-inner', 'superGroup', paletteOrCanvas)}
+        >
           <DropZone
             key={`drop-zone-${id}`}
             config={{
@@ -213,11 +211,10 @@ function Node(props) {
             droppableId={`${id}`}
             direction={direction}
             isDropDisabled={isDropDisabled}
-            isCombineEnabled>
+            isCombineEnabled
+          >
             {/* Draggable children */}
-            {childIds?.length === 0
-              ? index === 2 && <Instructions />
-              : renderChildren}
+            {childIds?.length === 0 ? index === 2 && <Instructions /> : renderChildren}
           </DropZone>
         </Card>
       );

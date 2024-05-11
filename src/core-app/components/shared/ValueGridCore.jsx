@@ -19,16 +19,22 @@
  *
  *
  * 🔖  The ValueGrid hosts 2 state values:
- *     1. the data
+ *     1. the levels data
  *     2. the selection model
+ *
+ * 🔖 The MUI onScrollEnd parameters (see mui-event-model.json)
+ * {
+ *  "visibleColumns": [ { } ],
+ *  "viewportPageSize": 6,
+ *  "visibleRowsCount": 200
+ * }
+ *
  */
 
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
-
-import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import ValueGridInner, {
   filterOperators,
@@ -37,73 +43,61 @@ import ValueGridInner, {
   HEADER_HEIGHT,
   ADJUST_HEIGHT,
 } from './ValueGridInner';
+// import { useDisplayApiContext } from '../../contexts/EtlUnitDisplayContext';
 import ErrorBoundary from './ErrorBoundary';
 
 // api interface
-import { usePagination, STATUS } from '../../hooks/use-pagination';
+import { usePagination, STATUS, SERVICES } from '../../hooks/use-pagination';
+import { useScrollListener } from '../../../hooks/use-scroll-listener';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { PURPOSE_TYPES } from '../../lib/sum-types';
 
-// support functions
-import { removeProp } from '../../utils/common';
-
+// selection model service set
+import { mkGridSelectionModelFilter } from '../../hooks/use-selection-model';
+import {
+  useSelectionModelApiContext,
+  useSelectionModelDataContext,
+} from '../../contexts/SelectionModelContext';
+import { useLevelsApiContext } from '../../contexts/LevelsDataContext';
 // re-export
 export { filterOperators, ROW_HEIGHT };
+export { SERVICES };
 
 //-----------------------------------------------------------------------------
-//
-// set DEBUG to true when REACT_APP_DEBUG_LEVELS is true
 const DEBUG_MODULE = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 /* eslint-disable no-console */
 
-//------------------------------------------------------------------------------
-const selectAllModel = {
-  __ALL__: {
-    value: '__ALL__',
-    request: false, // grid reverses this semantic
-  },
-};
-
-//------------------------------------------------------------------------------
-// The main component
-//------------------------------------------------------------------------------
 /**
  *
  * @component
  *
  */
 const ValueGridCore = ({
-  className,
-  columns,
-  //
-  // 📖 data and parsing
-  //
+  className, // includes identifier
+  columns: columnsProp,
   identifier, // lookup key
+  // 📖 data when derived
+  derivedDataRows,
+  rowCountTotal: rowCountTotalProp, // available when derived & single source
   purpose,
-  baseSelectAll, // filter, interface for using the key
-  fetchFn, // api fetch
+  filter, // filter, interface for using the key (populates the request e.g., sources)
+  fetchFn, // api fetch with project_id and abortController
   abortController,
   normalizer, // raw api -> fodder for edgeToGridRowFn
   edgeToGridRowFn,
-  edgeToIdFn,
-  derivedDataRows, // when data ::derivedField
-  apiRef: apiRefProp,
-  //
-  // 🙂 user input (parent retrieves)
-  //
-  selectionModel,
-  reduced, // bool
-  //
-  // 📬 events that update the redux-store
-  //
-  handleSetAllValues,
-  handleToggleValue,
+  // selection model related
+  rowToIdFn,
+  // other display options
+  filterModel: filterModelProp,
+  sortModel: sortModelProp,
+  // scrub function related
+  mapSymbols,
   //
   // Grid version
   //
-  feature,
+  service, // GRAPHQL (graphql) | LEVELS (levels service)
   checkboxSelection,
-  pageSize,
+  pageSize: pageSizeProp,
   limitGridHeight,
   rowHeight,
   headerHeight,
@@ -113,387 +107,146 @@ const ValueGridCore = ({
 }) => {
   //
   const DEBUG = debugProp || DEBUG_MODULE;
-  const localApiRef = useGridApiRef();
-  const apiRef = apiRefProp ?? localApiRef;
 
-  // New 0.3.11
-  // deprecate apiRef.current.selectionModel related functions
-  const [selectedRows, setSelectedRows] = useState(() => []);
+  // New 0.4.0
+  const [gridRows, setGridRows] = useState(() => derivedDataRows || []);
+  const [columns, setColumns] = useState(() => columnsProp);
+  // ---------------------------------------------------------------------------
+  // State-machine toggles :/
+  // ---------------------------------------------------------------------------
+  // a constant, set when the api returns 'STATUS.RESOLVED' (success)
+  const [MAX_ROWS, setMaxRows] = useState(() => rowCountTotalProp);
+  // set when the api returns, used to set the grid error prop
+  const [error, setError] = useState(() => undefined);
+  // latch for one-time render when the api status = 'success'; override
+  // when the rows prop is valid
+  const [readyForMore, setReadyForMore] = useState(() => typeof rows === 'undefined');
+  // tracks when the paging endCursor is invalid
+  const [inNewClearedState, setInNewClearedState] = useState(() => true);
+  // tracks when can avoid api to retrieve a full list
+  // when transition to inSeriesBuildingState
+  const [inGridHasAllValuesState, setInGridHasAllValuesState] = useState(() => false);
+  // changes how the footer displays the record counts
+  const [inFilterState, setInFilterState] = useState(() => false);
+  // filterModel for the grid
+  const [filterModel, setFilterModel] = useState(() => filterModelProp);
+  // sortModel for the grid
+  const [sortModel, setSortModel] = useState(() => sortModelProp);
 
-  // initialize the api edge -> grid row transformer
-  // using the function provided as props
-  const toGridFn = useMemo(
-    () => toGrid(edgeToIdFn, edgeToGridRowFn),
-    [edgeToIdFn, edgeToGridRowFn],
+  /** --------------------------------------------------------------------------
+   * @function
+   * @param {Function} edgeToIdFn
+   * @param {Function} edgeToGridRowFn
+   * @returns { rows: newRows, selectedRows: newSelected }
+   */
+  const toGridRowsFn = useMemo(() => toGridRows(edgeToGridRowFn), [edgeToGridRowFn]);
+  //----------------------------------------------------------------------------
+  // 📦 Luci selection model -> Grid selection model
+  const { selectionModel } = useSelectionModelDataContext();
+  const {
+    onRowClick,
+    onToggleAll,
+    // reset: resetSelectionModel,
+  } = useSelectionModelApiContext();
+
+  const computeGridSelectionModel = mkGridSelectionModelFilter(
+    selectionModel,
+    rowToIdFn,
   );
 
-  // derived fields (group-by-file or WIDE)
-  const dataPreloaded = Boolean(derivedDataRows);
-  const isDerivedData = dataPreloaded;
-
+  console.debug('📦 selectionModel Grid selection model', {
+    selectionModel,
+    gridRows,
+    gridSelectionModel: computeGridSelectionModel(gridRows),
+  });
   //----------------------------------------------------------------------------
-  // PAGE SIZE (size of each api response)
-  //----------------------------------------------------------------------------
-  const PAGE_SIZE = pageSize;
 
   // ---------------------------------------------------------------------------
   // 📖 Infinity window using the pagination hook
+  //
+  // The hook returns one of two interfaces (LEVELS | GRAPHQL)
   //
   const {
     fetchPage,
     setFilter: setFetchFilter,
     status,
     data,
+    reset: resetPagination,
+    // cancel,
   } = usePagination({
     fetchFn,
     abortController,
-    normalizer, // raw api -> fodder for the edge -> row
-    filter: baseSelectAll,
-    feature,
-    pageSize: PAGE_SIZE,
-    turnOff: dataPreloaded, // turn off api fetch
+    normalizer,
+    filter, // fetch params
+    service,
+    pageSize: pageSizeProp,
+    turnOff: derivedDataRows, // off when we have derived data
   });
-
-  if (typeof PAGE_SIZE === 'undefined') {
-    throw new InvalidStateError(
-      `The ValueGrid must maintain a valid page size prop: ${identifier}`,
-    );
-  }
-  // ---------------------------------------------------------------------------
-  // 🙂 Primary user input
-  // Default and/or user-directed requested values
-  //
-  // 🔑 totalCount sets the MAX_ROWS value; it may start as undefined. The second
-  // source arrives onces the api returns.
-  //
-  const { totalCount, selectionModel: storeSelectionModel = selectAllModel } =
-    selectionModel;
-  const modelType = selectionModelType(storeSelectionModel);
-  const storeRowCount = Object.keys(storeSelectionModel).length;
-
-  // ---------------------------------------------------------------------------
-  // 🙂  Building a series or not
-  //
-  // 💫  Should re-render the component when the series-switch is toggled
-  // component-specific reduced request vs expressed (i.e., series)
-  // bool | undefined when quality
-  // true -> single value
-  // false -> series
-  // undefined -> isQuality
-  //
-  // const { switchOn /* setDisableSwitch */ } = useContext(ToolContext);
-  // inSeries <-> !reduced
-  //
-  const inSeriesBuildingStateStore = typeof reduced === 'undefined' ? false : !reduced;
-
-  // ---------------------------------------------------------------------------
-  // State-machine toggles :/
-  // ---------------------------------------------------------------------------
-  // a constant, set when the api returns 'success'
-  const [MAX_ROWS, setMaxRows] = useState(() => totalCount);
-  // set when the api returns, used to set the grid error prop
-  const [error, setError] = useState(() => undefined);
-  // latch for one-time render when the api status = 'success'; override
-  // when the rows prop is valid
-  const [readyForMore, setReadyForMore] = useState(() => typeof rows === 'undefined');
-  // changes how the footer displays the record counts
-  const [inFilterState, setInFilterState] = useState(() => false);
-  // tracks when the paging endCursor is invalid
-  const [inNewClearedState, setInNewClearedState] = useState(() => true);
-  // tracks when can avoid api to retrieve a full list
-  // when transition to inSeriesBuildingState
-  const [inGridHasAllValuesState, setInGridHasAllValuesState] = useState(() => false);
-  // changes the data request and how the selection model is recorded
-  const [inSeriesBuildingState, setInSeriesBuildingState] = useState(
-    () => inSeriesBuildingStateStore,
-  );
-  // inSeriesBuilding: ensures setting REQUEST model using the all of the values
-  const [inFromSelectAllState, setInFromSelectAllState] = useState(() => undefined);
-
-  // ---------------------------------------------------------------------------
-  // 🔗 inSeriesBuildingStateStore -> inSeriesBuildingState
-  //
-  useEffect(() => {
-    if (inSeriesBuildingState !== inSeriesBuildingStateStore) {
-      setInSeriesBuildingState(() => inSeriesBuildingStateStore);
-    }
-  }, [inSeriesBuildingState, inSeriesBuildingStateStore]);
 
   // ---------------------------------------------------------------------------
   // Initial state to call when hit reset
   //
-  const initialState = useCallback(() => {
-    setMaxRows(totalCount);
+  const resetState = useCallback(() => {
+    console.debug('🔥 Called Resetting the grid state.');
+    // setMaxRows(rowCountTotalProp);
     setError(undefined);
     setReadyForMore(true);
-    setInFilterState(false);
     setInNewClearedState(true);
-    setInFromSelectAllState(undefined);
     setInGridHasAllValuesState(false);
-  }, [totalCount]);
+    setInFilterState(false);
+    // resetSelectionModel();
+    resetPagination();
+    // fetchPage({reset: true});
+  }, [resetPagination]);
 
-  if (DEBUG) {
-    console.debug('%c----------------------------------------', 'color:orange');
-    console.debug(`%c📋 ValueGridCore loaded state summary:`, 'color:orange', {
-      identifier,
-      purpose,
-      MAX_ROWS: MAX_ROWS || totalCount,
-      pageSize,
-      readyForMore,
-      inFilterState,
-      inNewClearedState,
-      inGridHasAllValuesState,
-      inFromSelectAllState,
-      inSeriesBuildingState,
-      reduced,
-      dataPreloaded,
-      cache: {
-        status,
-        totalCount: data.cache.totalCount,
-        edges: data.cache.edges,
-      },
-    });
+  if (typeof pageSizeProp === 'undefined') {
+    throw new InvalidStateError(
+      `The ValueGrid must maintain a valid page size prop: ${identifier}`,
+    );
   }
 
   // ----------------------------------------------------------------------
-  // Infinite scrolling feature
+  // Get more data when scrolling
   //
-  const handleOnRowScrollEnd = ({ viewportPageSize }) => {
-    // 🦀 ?
-    const gridRowCount = apiRef.current.getAllRowIds().length;
-    if (gridRowCount > 0 && gridRowCount < MAX_ROWS) {
-      const nextPageSize = Math.max(PAGE_SIZE, viewportPageSize);
+  const handleFetchRows = useCallback(() => {
+    // when to call for more data
+    if (gridRows.length > 0 && gridRows.length < MAX_ROWS) {
+      const remainingRows = MAX_ROWS - gridRows.length;
+      const nextPageSize = Math.min(remainingRows, pageSizeProp);
 
-      let max;
+      let maxCursor;
       if (inNewClearedState) {
         /* set the cursor to the max value of ids */
-        const ids = apiRef.current.getAllRowIds();
-        max = ids.sort()[ids.length - 1];
+        maxCursor = gridRows.map((row) => row.id).sort()[gridRows.length - 1];
         setInNewClearedState(false);
       }
 
-      if (feature === 'SCROLL') {
-        fetchPage({ pageSize: nextPageSize, after: max });
+      // GRAPHQL (graphql) | LEVELS (levels service)
+      if (service === SERVICES.GRAPHQL) {
+        if (DEBUG) {
+          console.debug('💥 Fetching more data GRAPHQL', maxCursor);
+        }
+        fetchPage({ pageSize: nextPageSize, after: maxCursor });
       } else {
+        if (DEBUG) {
+          console.debug('✨ Fetching more data LEVELS');
+        }
         fetchPage();
       }
 
       setReadyForMore(true);
     }
-  };
-  // ---------------------------------------------------------------------------
-  // set fromSelectAllState
-  // 🔖 undefined seems to have meaning ( ⬜ validate design )
-  //
-  useEffect(() => {
-    if (inSeriesBuildingState) {
-      // catch the all selected state; only reset when length === 0
-      if (storeRowCount === MAX_ROWS) {
-        setInFromSelectAllState(() => true);
-      }
-      if (storeRowCount === 0) {
-        setInFromSelectAllState(() => false);
-      }
-    }
-  }, [MAX_ROWS, inSeriesBuildingState, storeRowCount]);
-  //
-  // local routine that coordinates how to update the store
-  // with that state of the grid.
-  //
-  // task: update the storeState using the full list of values, request = true
-  //
-  // Where are all of the values?
-  // 🚫  the selection model is empty (b/c all are selected)
-  // 🚫  the cache generally cannot be trusted to host all of them
-  //     (e.g., what if a filter was applied...)
-  // ✅  only the grid itself if we know it has all of the values
-  //     ... this was accomplished by definition of the
-  //     inSeriesBuildingState (recall with max rows 100)
-  //
-  const selectAllValues = useCallback(() => {
-    if (DEBUG) {
-      console.debug(`%cCalled selectAllValues: ${identifier}`, 'color:green');
-      console.assert(
-        apiRef.current.getSelectedRows().size !== 0,
-        `${identifier}: selectAllValues trying to empty what is already empty: ${
-          apiRef.current.getSelectedRows().size
-        }`,
-      );
-    }
-    // store gets full list request: true
+  }, [MAX_ROWS, pageSizeProp, fetchPage, gridRows, service, inNewClearedState]);
 
-    handleSetAllValues(rowIdsToRequestModel(apiRef.current.getAllRowIds()));
-    // grid selection model gets an empty list
-    // apiRef.current.setSelectionModel([]);
-    setSelectedRows(() => []);
-  }, [DEBUG, apiRef, identifier, handleSetAllValues]);
-
-  const deSelectAllValues = useCallback(() => {
-    if (DEBUG) {
-      console.debug(`%cCalled deSelectAllValues: ${identifier}`, 'color:red');
-      console.assert(
-        apiRef.current.getSelectedRows().size === 0,
-        `${identifier}: deSelect is trying to fill, when not empty: ${
-          apiRef.current.getSelectedRows().size
-        }`,
-      );
-    }
-    // store gets set to a state that will accumulate values REQUEST true
-    handleToggleValue({ level: [], isSelected: false });
-    // grid selection model gets the full list
-    // apiRef.current.setSelectionModel(apiRef.current.getAllRowIds());
-    setSelectedRows(() => apiRef.current.getAllRowIds());
-  }, [DEBUG, apiRef, identifier, handleToggleValue]);
-
-  const handleToggleAll = useCallback(
-    ({ field }) => {
-      if (field !== '__check__') return;
-      // ⚠️  recall: isSelected = !selected in the grid.
-      const isSelected = apiRef.current.getSelectedRows().size === 0;
-      if (inSeriesBuildingState && !isSelected) {
-        selectAllValues();
-      }
-      if (inSeriesBuildingState && isSelected) {
-        deSelectAllValues();
-      }
-      if (!inSeriesBuildingState) {
-        const storeSelectionModelGenerator = {
-          __ALL__: {
-            value: '__ALL__',
-            request: !storeSelectionModel?.__ALL__?.request ?? false,
-          },
-        };
-        if (DEBUG) {
-          console.log(`%cisSelected: ${isSelected}`, 'color:orange');
-          console.dir(storeSelectionModelGenerator);
-          console.debug(
-            ` 📬 handleToggleValue: leve: [] isSelected: ${storeSelectionModelGenerator.__ALL__.request}`,
-          );
-        }
-        handleToggleValue({
-          level: [], // valueIdx [] encodes ALL
-          isSelected: storeSelectionModelGenerator.__ALL__.request,
-        });
-        // apiRef.current.setSelectionModel(
-        setSelectedRows(
-          makeGridSelectionModel(
-            storeSelectionModelGenerator,
-            apiRef.current.getAllRowIds(),
-          ),
-        );
-      }
-    },
-    [
-      DEBUG,
-      apiRef,
-      deSelectAllValues,
-      inSeriesBuildingState,
-      selectAllValues,
-      storeSelectionModel?.__ALL__?.request,
-      handleToggleValue,
-    ],
-  );
-
-  // ----------------------------------------------------------------------
-  // Key assertions prior to running more complex effects
-  // (they won't always pass, but need to at the "right time")
+  // register the handler with useScrollListener
   //
-  if (DEBUG) {
-    const isQuality = purpose === PURPOSE_TYPES.QUALITY;
-    console.assert(
-      (typeof reduced === 'undefined' && isQuality) || !isQuality,
-      `${identifier}: The store reduced state should be undefined for Quality values: isQuality: ${isQuality} reduced: ${reduced}`,
-    );
-    // inSeriesBuildingStateStore false
-    // inSeriesBuildingState true
-  }
-
-  // ----------------------------------------------------------------------
-  // Pull extra data when in the inSeriesBuildingState
   //
-  // in building series state, pull all of the values to
-  // set a 'REQUEST' type selection model
-  //
-  // 👍 It's possible to manually select less than 100
-  // 👍 or 👎 it's also possible to manually select over 100 too :)
-  //
-  useEffect(() => {
-    if (DEBUG) {
-      console.debug(
-        `%cEffect - maybe (look for yellow): ${identifier}`,
-        'color: green',
-      );
-    }
-    if (inSeriesBuildingState && !modelType.seriesCompatible(inFromSelectAllState)) {
-      if (DEBUG) {
-        console.debug(
-          `%cChanging the filter to get series data: Effect for: ${identifier} in series: ${inSeriesBuildingState} model type: ${modelType.type}`,
-          'color: yellow',
-        );
-      }
-      //
-      // when the grid has all values
-      // ... just update the store's selection model by combining the
-      // current value of the store with allValues
-      //
-      if (inGridHasAllValuesState) {
-        if (DEBUG) {
-          console.debug(
-            ` 📬 handleSetAllValues: ${makeStoreRequestSelectionModel(
-              storeSelectionModel,
-              apiRef.current.getAllRowIds(),
-              (id) => ({ value: id, request: true }),
-              inFromSelectAllState,
-            )}`,
-          );
-        }
-        handleSetAllValues(
-          makeStoreRequestSelectionModel(
-            storeSelectionModel,
-            apiRef.current.getAllRowIds(),
-            (id) => ({ value: id, request: true }),
-            inFromSelectAllState,
-          ),
-        );
-
-        // fill-up the store state
-        // rowIdsToRequestModel(apiRef.current.getAllRowIds()),
-        //
-        // fill-up the grid selection model
-        // apiRef.current.setSelectionModel(apiRef.current.getAllRowIds());
-        //
-        // do what is done to merge handleToggleValue
-        // send a new selection model to the store
-        // the grid rows nor the grid selection model changes
-      }
-
-      if (!inGridHasAllValuesState && MAX_ROWS <= 100) {
-        // create and set a new filter
-        // use the values to create a new selection model
-        setFetchFilter(newFilterFrom(baseSelectAll), MAX_ROWS);
-        setReadyForMore(() => true);
-      } else {
-        // take the ui out of this state
-        // ⬜ Provide the user with a message
-        /* eslint-disable-next-line */
-        window.alert(`Too many component levels to include in a series`);
-        // setSwitchOn(false);
-      }
-    }
-  }, [
-    DEBUG,
-    MAX_ROWS,
-    apiRef,
-    baseSelectAll,
-    identifier,
-    inFromSelectAllState,
-    inGridHasAllValuesState,
-    inSeriesBuildingState,
-    handleSetAllValues,
-    setFetchFilter,
-    storeSelectionModel,
-    modelType,
-  ]);
+  const { reset: reactivateScrollListener } = useScrollListener({
+    rowHeight: ROW_HEIGHT,
+    bufferRowCount: 75,
+    callback: handleFetchRows,
+    className,
+  });
 
   // -------------------------------------------------------------------------
   //
@@ -509,128 +262,148 @@ const ValueGridCore = ({
   // DataGrid filter model
   //
   const handleFilterModelChange = useCallback(
-    ({ filterModel = undefined }) => {
-      setFetchFilter(newFilterFrom(baseSelectAll, filterModel));
-      /*
-      setInFilterState(typeof filterModel !== 'undefined');
+    ({ filterModel: newFilterModel = undefined }) => {
+      setFetchFilter(newFilterFrom(filter, newFilterModel));
+      setInFilterState(typeof newFilterModel !== 'undefined');
       setInNewClearedState(true);
       setReadyForMore(true);
-            */
     },
-    [baseSelectAll, setFetchFilter],
+    [filter, setFetchFilter],
   );
   // ---------------------------------------------------------------------------
   // Reset the state of the grid
   //
   const reset = useCallback(() => {
-    if (typeof rows === 'undefined') {
-      apiRef.current.setFilterModel({
-        items: [],
-      });
-    }
-    apiRef.current.setRows(isDerivedData ? derivedDataRows : []);
-    initialState();
-  }, [apiRef, initialState, isDerivedData, derivedDataRows]);
+    setGridRows(() => derivedDataRows || []);
+    resetState();
+  }, [resetState, derivedDataRows]);
 
   //
   // hidden + visible -> all visible
   //
   const handleClearFilter = useCallback(() => {
-    apiRef.current.setFilterModel({
+    setFilterModel({
       items: [],
     });
-    apiRef.current.setSortModel([{ field: 'id', sort: 'asc' }]);
+    setSortModel([{ field: 'id', sort: 'asc' }]);
     setInFilterState(false);
     setInNewClearedState(true);
     handleFilterModelChange({});
-  }, [apiRef, handleFilterModelChange]);
-
-  // -------------------------------------------------------------------------
-  // Set the MAX_ROWS following fetch request (flag readyForMore)
-  //
-  useEffect(() => {
-    if (status === 'success') {
-      setMaxRows(() => data.cache.totalCount);
-    }
-  }, [data.cache.totalCount, readyForMore, status]);
+  }, [handleFilterModelChange]);
 
   // ---------------------------------------------------------------------------
-  // Effect applied when
+  // newSymbol column updates
+  // ---------------------------------------------------------------------------
+  const setColumnVisible = useCallback((fieldName, visible) => {
+    setColumns((currentColumns) => {
+      return currentColumns.map((column) => {
+        if (column.field === fieldName) {
+          return { ...column, hide: !visible };
+        }
+        return column;
+      });
+    });
+  }, []);
+  // Set the mapSymbol column value when exists
+  // changes the local state (gridRows) when 'newSymbol' column is present
+  //
+  //
+  const handleUpdateSymbols = useCallback(() => {
+    const hasNewSymbolCol = columns.some((column) => column.field === 'newSymbol');
+    if (hasNewSymbolCol) {
+      const updatedRows = gridRows.map((row) => {
+        if (mapSymbols[row.level]) {
+          return { ...row, newSymbol: mapSymbols[row.level] };
+        }
+        return row;
+      });
+      setGridRows(updatedRows); // Update grid rows
+    }
+  }, [mapSymbols, columns, gridRows]);
+
+  const [latch, setLatch] = useState(() => true);
+  useEffect(() => {
+    if (mapSymbols && latch) {
+      handleUpdateSymbols();
+      setLatch(() => false);
+    }
+  }, [latch, mapSymbols, handleUpdateSymbols]);
+
+  // may not be necessary
+  const columnVisibilityModel = columns.reduce((acc, column) => {
+    acc[column.field] = !column.hide;
+    return acc;
+  }, {});
+
+  // link the callback to the levels context for use by the symbol
+  // maker in tools.
+  const { setUpdateSymbolsHandler } = useLevelsApiContext();
+  // call setState only while other component's arent' rendering
+  useEffect(() => {
+    if (setUpdateSymbolsHandler) {
+      setUpdateSymbolsHandler(handleUpdateSymbols);
+    }
+    return () => setUpdateSymbolsHandler(() => {});
+  }, [handleUpdateSymbols, setUpdateSymbolsHandler]);
+
+  // ---------------------------------------------------------------------------
+  // 📦 Retrieve data; Effect applied when
   //
   //   1️⃣  data.status changes
   //
-  //      👉 from 'success' -> 'pending' => do nothing
+  //      👉 from 'resolved' -> 'pending' => do nothing
   //      👉 from 'pending' -> 'error' => display error
-  //      👉 from 'pending' -> 'success' => concat rows to local state
+  //      👉 from 'pending' -> 'resolved' => concat rows to local state
   //
   //   2️⃣  redux store values change (user update of selected)
   //
-  //      👉 'success', prevSelectList -> 'success', newSelectList
+  //      👉 'resolved', prevSelectList -> 'resolved', newSelectList
   //         => update selection model
   //
   // ---------------------------------------------------------------------------
   useEffect(() => {
     switch (true) {
-      case isDerivedData:
-        apiRef.current.updateRows(derivedDataRows);
-        break;
-
       case status === STATUS.REJECTED:
-        setError({ message: JSON.stringify(data.cache) });
+        setError({ message: JSON.stringify(data.cache.message) });
         break;
 
-      // ---------------------------------------------------------------------------
-      // 🎉 Success scenarios
-      //
-      // When building a series of fields, the format of the selection model
-      // changes to one that describes every level (i.e., does not use ALL)
-      //
-      case status === STATUS.RESOLVED &&
-        readyForMore &&
-        inSeriesBuildingState &&
-        !inFromSelectAllState:
-        if (DEBUG) {
-          console.debug(`%cEffect Expanding to Series`, 'color:yellow');
-          console.debug(
-            ' 📬 handleSetAllValues:',
-            makeStoreRequestSelectionModel(
-              storeSelectionModel,
-              data.cache.edges,
-              (edge) => ({ value: edge.node.level, request: true }),
-              inFromSelectAllState,
-            ),
-          );
-        }
-        handleSetAllValues(
-          makeStoreRequestSelectionModel(
-            storeSelectionModel,
-            data.cache.edges,
-            (edge) => ({ value: edge.node.level, request: true }),
-            inFromSelectAllState,
-          ),
-        );
-        setReadyForMore(() => false);
-        setMaxRows(() => data.cache.totalCount);
-        break;
-
-      //
-      // otherwise...
-      // convert the data waiting in the cache to be consumed by the grid
-      //
       case status === STATUS.RESOLVED && readyForMore: {
         if (DEBUG) {
-          console.debug(`%cEffect *not inSeriesMode*`, 'color:yellow');
+          console.debug(`%cEffect api resolved: ${identifier}`, 'color:yellow');
         }
-        const { rows: newRows, selectedRows: newSelected } = toGridFn(
-          data.cache,
-          storeSelectionModel,
-        );
 
-        apiRef.current.updateRows(newRows);
-        apiRef.current.selectRows(newSelected);
-
-        setReadyForMore(() => false);
+        const newRows = toGridRowsFn(data.getCache());
         setMaxRows(() => data.cache.totalCount);
+        setGridRows((prevRows) => {
+          console.debug(
+            'Is the new cache in fact new?',
+            prevRows[0]?.id !== newRows[0]?.id,
+          );
+
+          // update the rows; validate proper use of the cache.
+          const result = [...prevRows, ...newRows];
+          // if the Set size and result.length are different, report the
+          // differences in the console.error
+          if (result.length !== new Set(result.map((row) => row.id)).size) {
+            // find the duplicate entries
+            const duplicates = result.reduce((acc, row) => {
+              acc[row.id] = (acc[row.id] || 0) + 1;
+              return acc;
+            }, {});
+            console.error(
+              'The grid rows are not unique. This could be due to copying the cache more than once.',
+              duplicates,
+            );
+          }
+          // invariant(
+          //   result.length === new Set(result.map((row) => row.id)).size,
+          //   'The grid rows are not unique. This could be due to copying the cache more than once.',
+          // );
+          return result;
+        });
+
+        setReadyForMore(false);
+        reactivateScrollListener();
 
         if (purpose === PURPOSE_TYPES.MSPAN) {
           /* update the store with [[value, count]] */
@@ -638,83 +411,88 @@ const ValueGridCore = ({
 
         break;
       }
-      case status === STATUS.RESOLVED && apiRef.current.getAllRowIds().length === 0: {
-        // move data from the cache into the grid
-        if (DEBUG) {
-          console.debug(`%cEffect trying to reload empty grid`, 'color:yellow');
-        }
-        const { rows: newRows, selectedRows: newSelected } = toGridFn(
-          data.cache,
-          storeSelectionModel,
-        );
-        apiRef.current.updateRows(newRows);
-        apiRef.current.selectRows(newSelected);
-
-        break;
-      }
       default:
       /* do nothing */
     }
+    return () => {};
   }, [
     DEBUG,
-    data.cache,
-    derivedDataRows,
-    isDerivedData,
-    handleSetAllValues,
-    apiRef,
-    identifier,
-    inFromSelectAllState,
-    inSeriesBuildingState,
-    purpose,
-    readyForMore,
+    // when status changes, data will change and vice-versa
+    data,
     status,
-    storeSelectionModel,
-    toGridFn,
+    purpose,
+    identifier,
+    readyForMore,
+    toGridRowsFn,
+    reactivateScrollListener,
   ]);
+
+  // ---------------------------------------------------------------------------
+  // 🔗 changes to filter -> readyForMore
+  //
+  useEffect(() => {
+    setReadyForMore(true);
+    return () => {};
+  }, [filter]);
 
   // ---------------------------------------------------------------------------
   // gridHasAllValuesState
   //
   useEffect(() => {
-    if (DEBUG) {
-      console.debug(
-        `👉 The grid row count: ${apiRef.current.getAllRowIds().length}`,
-        `\n👉 MAX_ROWS: ${MAX_ROWS}`,
-        `\n👉 inFilterState: ${inFilterState}`,
-        inGridHasAllValuesState
-          ? `\n🎉 inGridHasAllValuesState: ${inGridHasAllValuesState}`
-          : `\n⬜  inGridHasAllValuesState: ${inGridHasAllValuesState}`,
-      );
-    }
-    setInGridHasAllValuesState(() => hasAllRecords(apiRef, MAX_ROWS, inFilterState));
-  }, [DEBUG, MAX_ROWS, apiRef, inFilterState, inGridHasAllValuesState]);
-
-  if (DEBUG) {
-    console.assert(
-      inSeriesBuildingStateStore === inSeriesBuildingState,
-      `${identifier}: Store does not align with component state: inSeriesBuildingStateStore: ${inSeriesBuildingStateStore} !== inSeriesBuildingState: ${inSeriesBuildingState}`,
+    setInGridHasAllValuesState(() =>
+      hasAllRecords(MAX_ROWS, gridRows.length, inFilterState),
     );
+    return () => {};
+  }, [DEBUG, MAX_ROWS, gridRows.length, inFilterState, inGridHasAllValuesState]);
+
+  // ---------------------------------------------------------------------------
+  // debug report
+  if (DEBUG) {
+    console.debug('%c----------------------------------------', 'color:orange');
+    console.debug(`%c📋 ValueGridCore loaded state summary:`, 'color:orange', {
+      identifier,
+      purpose,
+      MAX_ROWS,
+      gridRowCount: gridRows.length,
+      pageSizeProp,
+      readyForMore,
+      inNewClearedState,
+      inGridHasAllValuesState: inGridHasAllValuesState
+        ? `🎉  ${inGridHasAllValuesState}`
+        : `⬜  ${inGridHasAllValuesState}`,
+      inFilterState,
+      dataPreloaded: Boolean(derivedDataRows),
+      selectionModel,
+      cache: {
+        status,
+        totalCount: data.cache.totalCount,
+        cache: data.cache,
+      },
+    });
   }
 
   if (DEBUG) {
     console.log('👉 grid height function inputs', {
-      rowCount: derivedDataRows?.length ?? MAX_ROWS,
+      rowCount: MAX_ROWS,
       limitGridHeight,
       rowHeight,
       headerHeight,
       gridHeightAdjustment,
     });
   }
+  // ---------------------------------------------------------------------------
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <ValueGridInner
-      apiRef={apiRef}
+      key={`ValueGrid-${identifier}`}
       className={className}
       rowClassName={clsx(className, 'row')}
       columnClassName={clsx(className, 'column')}
+      rows={gridRows}
+      rowCountTotal={MAX_ROWS}
       columns={columns}
-      MAX_ROWS={MAX_ROWS /* from api */ || totalCount /* from redux */}
+      columnVisibilityModel={columnVisibilityModel}
       gridHeightProp={gridHeightFn(
         derivedDataRows?.length ?? MAX_ROWS,
         limitGridHeight,
@@ -725,20 +503,18 @@ const ValueGridCore = ({
       rowHeight={rowHeight}
       headerHeight={headerHeight}
       error={error}
-      onRowsScrollEnd={handleOnRowScrollEnd}
-      rowBuffer={15}
       loading={data.status === 'pending' ?? true}
-      // user input
-      selectedRows={selectedRows}
-      checkboxSelection={checkboxSelection}
-      onRowClick={handleToggleValue}
-      onToggleAll={handleToggleAll}
-      tabindex='-1'
       // filtering
       onFilterModelChange={handleFilterModelChange}
       handleClearFilter={handleClearFilter}
       inFilterState={inFilterState}
       resetFn={reset}
+      // user input (selector model changes)
+      checkboxSelection={checkboxSelection}
+      onRowClick={onRowClick}
+      onToggleAll={onToggleAll}
+      rowSelectionModel={computeGridSelectionModel(gridRows)}
+      tabindex='-1'
       {...rest}
     />
   );
@@ -748,11 +524,11 @@ const noop = () => {};
 
 ValueGridCore.whyDidYouRender = true;
 ValueGridCore.propTypes = {
-  className: PropTypes.string,
-  baseSelectAll: PropTypes.shape({}).isRequired,
+  className: PropTypes.string.isRequired,
+  filter: PropTypes.shape({}).isRequired,
   checkboxSelection: PropTypes.bool,
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  feature: PropTypes.oneOf(['SCROLL', 'LIMIT']).isRequired,
+  service: PropTypes.oneOf(Object.values(SERVICES)).isRequired,
   fetchFn: PropTypes.func.isRequired,
   abortController: PropTypes.shape({}),
   reduced: PropTypes.bool,
@@ -769,56 +545,62 @@ ValueGridCore.propTypes = {
     selectionModel: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.array]),
     type: PropTypes.string,
   }),
+  filterModel: PropTypes.shape({}),
+  sortModel: PropTypes.arrayOf(PropTypes.shape({})),
+  mapSymbols: PropTypes.shape({}),
   edgeToGridRowFn: PropTypes.func.isRequired,
-  edgeToIdFn: PropTypes.func,
+  rowToIdFn: PropTypes.func,
   handleSetAllValues: PropTypes.func,
-  handleToggleValue: PropTypes.func,
+  handleSelectValue: PropTypes.func,
+  handleSetSelectionModel: PropTypes.func,
   derivedDataRows: PropTypes.arrayOf(PropTypes.shape({})),
-  apiRef: PropTypes.shape({}),
+  rowCountTotal: PropTypes.number,
   DEBUG: PropTypes.bool,
 };
 
 ValueGridCore.defaultProps = {
-  className: '',
   checkboxSelection: false,
   DEBUG: false,
   reduced: undefined,
   handleSetAllValues: noop,
-  handleToggleValue: noop,
-  selectionModel: {
-    totalCount: undefined,
-    selectionModel: { __ALL__: { value: '__ALL__', request: true } },
+  handleSelectValue: noop,
+  handleSetSelectionModel: noop,
+  selectionModel: undefined,
+  filterModel: {
+    items: [],
   },
+  sortModel: [{ field: 'id', sort: 'asc' }],
+  mapSymbols: undefined,
   abortController: undefined,
   headerHeight: HEADER_HEIGHT,
   gridHeightAdjustment: ADJUST_HEIGHT,
   rowHeight: ROW_HEIGHT,
-  // ⬜ move this to a required prop
-  edgeToIdFn: (edge) => edge.node.level,
+  rowCountTotal: undefined,
   derivedDataRows: undefined,
-  apiRef: undefined,
+  // selection model related
+  rowToIdFn: undefined,
 };
 
 //-------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 // Utility functions for the grid
 //------------------------------------------------------------------------------
-function hasAllRecords(apiRef, MAX_ROWS, inFilterState) {
-  return !inFilterState && apiRef.current.getAllRowIds().length === MAX_ROWS;
+function hasAllRecords(MAX_ROWS, rowsInState, inFilterState) {
+  return !inFilterState && rowsInState === MAX_ROWS;
 }
 
 /**
  * Apply a filter to the baseline select all filter
  *
  * @function
- * @param {Object} baseSelectAll
+ * @param {Object} filter
  * @param {GridFilterModel} filterModel
  * @return {Object} filter utilized by obs graphql
  */
-function newFilterFrom(baseSelectAll, filterModel) {
+function newFilterFrom(filter, filterModel) {
   const result =
     typeof filterModel === 'undefined'
-      ? baseSelectAll
+      ? filter
       : filterModel.items
           .filter(({ value }) => typeof value !== 'undefined')
           // assemble the filter items from the grid
@@ -832,188 +614,30 @@ function newFilterFrom(baseSelectAll, filterModel) {
               return acc;
             },
             // merge the items with an updated selectAll filter
-            { ...baseSelectAll },
+            { ...filter },
           );
   return result;
 }
+
 //-------------------------------------------------------------------------------
 /**
- *     grid ids -> store request model (type REQUEST)
- */
-function rowIdsToRequestModel(ids) {
-  return ids.reduce((requestModel, id) => {
-    /* eslint-disable-next-line */
-    requestModel[id] = { value: id, request: true };
-    return requestModel;
-  }, {});
-}
-//-------------------------------------------------------------------------------
-/**
- * Transform the levels received from the api to what the valueGrid requires.
- * Combine the api information with the user-input recorded in the
- * redux-store.
+ * Injects edge -> grid row transformation function
  *
- * 🔑 The store records either levels requested or levels not requested;
- *    not a mix of requested and not requested. Accordingly, the listTypes
- *    are 'REQUEST' | 'ANTIREQUEST'
- *
- * ⚠️  The ValueGrid reverses the semantic of selecting a row.  This chosen
- *    approach reflects the bias that all records are inherently selected.
- *    The exception is to not be selected.
- *
- * data with edges prop
- * @param {Function} edgeToIdFn
+ * Row data (edges) -> grid rows
+ * Depends on paged edge data structure.
+ * Transform the data from the api to what the valueGrid requires.
+ * Note: raw data must be pre-processed using the api normalizer fn
+ * @function
  * @param {Function} edgeToGridRowFn
+ * @returns rows
  */
-export function toGrid(edgeToIdFn, edgeToGridRowFn) {
-  return (data, requestOrNotList) => {
-    const seed = { rows: [], selectedRows: [] };
+function toGridRows(edgeToGridRowFn) {
+  return (data /* from the api */) => {
     if (typeof data === 'undefined' || (data?.edges ?? null) === null) {
-      return seed;
+      return [];
     }
-    const { addPredicate } = addToSelectionModelPredicate(
-      requestOrNotList,
-      true, // useGlobalEmptyModel
-    );
-
-    // ---------------------------------------------------------------------------
-    //
-    //  edgeToValueId :: edge -> valueId
-    //
-    const { rows, selectedRows } = data.edges.reduce(
-      /* eslint-disable no-shadow */
-      ({ rows, selectedRows }, edge) => {
-        // -----------------------------------------------------------------------
-        // 1️⃣  render the data to display
-        rows.push(edgeToGridRowFn(edge));
-        // -----------------------------------------------------------------------
-        // 2️⃣  render which values are selected
-        // ... and reverse the display logic
-        if (addPredicate(edgeToIdFn(edge))) {
-          selectedRows.push(edge.node.level);
-        }
-        return { rows, selectedRows };
-      },
-      /* eslint-enable no-shadow */
-      seed,
-    );
-
-    return { rows, selectedRows };
+    return data.edges.map(edgeToGridRowFn);
   };
-}
-
-//-------------------------------------------------------------------------------
-/**
- *
- * 2️⃣  Predicate that determines whether to add a
- *    row to the selectionModel.
- *
- * @function
- * @param {Array<(string | number)>}
- * @return bool
- */
-function addToSelectionModelPredicate(requestOrNotList, useGlobalEmptyModel = false) {
-  const [isAll = false, allRequested] = [
-    requestOrNotList?.__ALL__,
-    requestOrNotList?.__ALL__?.request, // ⚠️  reverse, for !isSelected
-  ];
-
-  const globalEmptyModel = useGlobalEmptyModel ? isAll && allRequested : false;
-
-  const listType = selectionModelType(requestOrNotList).type;
-
-  return {
-    isAll,
-    allRequested,
-    addPredicate: (rowId) => {
-      const whatIsTheRequest =
-        requestOrNotList?.[rowId]?.request ?? listType !== 'REQUEST';
-      //
-      // selectModel displays ✅ when *not* on the list
-      // ...only add to the selectionModel when !request
-      return !globalEmptyModel && ((isAll && !allRequested) || !whatIsTheRequest);
-    },
-  };
-}
-//-------------------------------------------------------------------------------
-/**
- *
- * Provides an updated selection model required following
- * user changes in the values requested.
- *
- * 💡 The rows are not recomputed when changing the request value.
- *    The redux-store receives the event and changes the store.
- *    This handler updates the selectionModel for the grid.
- *
- * @function
- * @param {Array} newSelectionModel
- * @param {Array<GridRowModel>} rows
- * @return {Array} updated selectionModel
- */
-function makeGridSelectionModel(storeRequestOrNotList, allRowIds) {
-  const { isAll, allRequested, addPredicate } =
-    addToSelectionModelPredicate(storeRequestOrNotList);
-
-  if (isAll && allRequested) return [];
-  if (isAll && !allRequested) return allRowIds;
-
-  /* eslint-disable no-shadow */
-  const selectedRows = allRowIds.reduce((selectedRows, rowId) => {
-    if (addPredicate(rowId)) {
-      selectedRows.push(rowId);
-    }
-    return selectedRows;
-  }, []);
-  /* eslint-enable no-shadow */
-
-  return selectedRows;
-}
-
-//------------------------------------------------------------------------------
-//
-function selectionModelType(requestOrNotList) {
-  // empty bias = REQUEST
-  const tmp = Object.values(requestOrNotList)?.[0]?.request ?? true;
-  const isAll = Object.keys(requestOrNotList).includes('__ALL__');
-  return tmp
-    ? {
-        type: 'REQUEST',
-        isAll,
-        seriesCompatible: (inFromSelectAllState = false) =>
-          inFromSelectAllState || !isAll,
-      }
-    : { type: 'ANTIREQUEST', isAll, seriesCompatible: () => isAll };
-}
-
-//------------------------------------------------------------------------------
-// 🧮 compute a 'REQUEST' list by combining the list of all values
-//    with the current selectionModel
-//
-//    @return {Object} the store selection model
-//
-function makeStoreRequestSelectionModel(
-  storeSelectionModel,
-  allValues,
-  toStoreEntryFn,
-  inFromSelectAllState,
-) {
-  const model = selectionModelType(storeSelectionModel);
-  if (model.seriesCompatible(inFromSelectAllState)) {
-    return storeSelectionModel;
-  }
-  const fullRequestModel = Object.values(allValues)
-    .map((edge) => toStoreEntryFn(edge))
-    .reduce((acc, entry) => {
-      acc[entry.value] = entry;
-      return acc;
-    }, {});
-  if (model.type === 'REQUEST' && model.isAll) {
-    return fullRequestModel;
-  }
-  // ... when ANTIREQUEST, remove from the fullRequestModel
-  // when storeSelectionModel = false
-  // base = allEdges
-  return removeProp(Object.keys(storeSelectionModel), fullRequestModel);
 }
 
 //------------------------------------------------------------------------------

@@ -1,0 +1,186 @@
+{
+  "project_id": "6aadd287-dfb2-46b6-878c-514ca8726ff5",
+  "spec": {
+    "matrix": {
+      "fieldCount": 8,
+      "subExpression": {
+        "source": { "codomain": "SUBJECT" },
+        "filter": {
+          "fieldName": null,
+          "relations": [
+            {
+              "lhs": { "fieldName": { "value": "Customer State" } },
+              "rhs": { "__typename": "TxtValues", "txtValues": ["AR", "AZ", "CA"] },
+              "relation": "NOT_IN"
+            }
+          ]
+        },
+        "fields": [{ "value": "Customer State" }]
+      },
+      "meaExpressions": [
+        {
+          "source": { "codomain": "Unit Count" },
+          "reducer": "SUM",
+          "filter": {
+            "fieldName": {
+              "value": "MeaType::Unit Count.Payment Type Group::CASH.Year-Month::0"
+            },
+            "relations": [
+              {
+                "lhs": { "fieldName": { "value": "Payment Type Group" } },
+                "rhs": { "__typename": "TxtValues", "txtValues": ["CASH"] },
+                "relation": "EQ"
+              },
+              {
+                "lhs": { "fieldName": { "value": "Year-Month" } },
+                "rhs": {
+                  "__typename": "SpanFilter",
+                  "range": { "filterStart": 0, "filterEnd": 0 }
+                },
+                "relation": "EQ"
+              }
+            ]
+          },
+          "fields": [{ "value": "MeaType::Unit Count" }]
+        },
+        {
+          "source": { "codomain": "Unit Count" },
+          "reducer": "SUM",
+          "filter": {
+            "fieldName": {
+              "value": "MeaType::Unit Count.Payment Type Group::CASH.Year-Month::1"
+            },
+            "relations": [
+              {
+                "lhs": { "fieldName": { "value": "Payment Type Group" } },
+                "rhs": { "__typename": "TxtValues", "txtValues": ["CASH"] },
+                "relation": "EQ"
+              },
+              {
+                "lhs": { "fieldName": { "value": "Year-Month" } },
+                "rhs": {
+                  "__typename": "SpanFilter",
+                  "range": { "filterStart": 1, "filterEnd": 1 }
+                },
+                "relation": "EQ"
+              }
+            ]
+          },
+          "fields": [{ "value": "MeaType::Unit Count" }]
+        },
+        {
+          "source": { "codomain": "Unit Count" },
+          "reducer": "SUM",
+          "filter": {
+            "fieldName": {
+              "value": "MeaType::Unit Count.Payment Type Group::CASH.Year-Month::2"
+            },
+            "relations": [
+              {
+                "lhs": { "fieldName": { "value": "Payment Type Group" } },
+                "rhs": { "__typename": "TxtValues", "txtValues": ["CASH"] },
+                "relation": "EQ"
+              },
+              {
+                "lhs": { "fieldName": { "value": "Year-Month" } },
+                "rhs": {
+                  "__typename": "SpanFilter",
+                  "range": { "filterStart": 2, "filterEnd": 2 }
+                },
+                "relation": "EQ"
+              }
+            ]
+          },
+          "fields": [{ "value": "MeaType::Unit Count" }]
+        },
+        {
+          "source": { "codomain": "Unit Count" },
+          "reducer": "SUM",
+          "filter": {
+            "fieldName": {
+              "value": "MeaType::Unit Count.Payment Type Group::TOTAL THIRD PARTY.Year-Month::0"
+            },
+            "relations": [
+              {
+                "lhs": { "fieldName": { "value": "Payment Type Group" } },
+                "rhs": {
+                  "__typename": "TxtValues",
+                  "txtValues": ["TOTAL THIRD PARTY"]
+                },
+                "relation": "EQ"
+              },
+              {
+                "lhs": { "fieldName": { "value": "Year-Month" } },
+                "rhs": {
+                  "__typename": "SpanFilter",
+                  "range": { "filterStart": 0, "filterEnd": 0 }
+                },
+                "relation": "EQ"
+              }
+            ]
+          },
+          "fields": [{ "value": "MeaType::Unit Count" }]
+        },
+        {
+          "source": { "codomain": "Unit Count" },
+          "reducer": "SUM",
+          "filter": {
+            "fieldName": {
+              "value": "MeaType::Unit Count.Payment Type Group::TOTAL THIRD PARTY.Year-Month::1"
+            },
+            "relations": [
+              {
+                "lhs": { "fieldName": { "value": "Payment Type Group" } },
+                "rhs": {
+                  "__typename": "TxtValues",
+                  "txtValues": ["TOTAL THIRD PARTY"]
+                },
+                "relation": "EQ"
+              },
+              {
+                "lhs": { "fieldName": { "value": "Year-Month" } },
+                "rhs": {
+                  "__typename": "SpanFilter",
+                  "range": { "filterStart": 1, "filterEnd": 1 }
+                },
+                "relation": "EQ"
+              }
+            ]
+          },
+          "fields": [{ "value": "MeaType::Unit Count" }]
+        },
+        {
+          "source": { "codomain": "Unit Count" },
+          "reducer": "SUM",
+          "filter": {
+            "fieldName": {
+              "value": "MeaType::Unit Count.Payment Type Group::TOTAL THIRD PARTY.Year-Month::2"
+            },
+            "relations": [
+              {
+                "lhs": { "fieldName": { "value": "Payment Type Group" } },
+                "rhs": {
+                  "__typename": "TxtValues",
+                  "txtValues": ["TOTAL THIRD PARTY"]
+                },
+                "relation": "EQ"
+              },
+              {
+                "lhs": { "fieldName": { "value": "Year-Month" } },
+                "rhs": {
+                  "__typename": "SpanFilter",
+                  "range": { "filterStart": 2, "filterEnd": 2 }
+                },
+                "relation": "EQ"
+              }
+            ]
+          },
+          "fields": [{ "value": "MeaType::Unit Count" }]
+        }
+      ]
+    },
+    "derived": []
+  },
+  "maxTries": "30",
+  "signal": {}
+}

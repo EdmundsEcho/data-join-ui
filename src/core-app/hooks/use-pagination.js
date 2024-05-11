@@ -7,6 +7,7 @@ import { InputError } from '../lib/LuciErrors';
 import { colors } from '../constants/variables';
 import { useFetchApi, STATUS } from '../../hooks/use-fetch-api';
 import useAbortController from '../../hooks/use-abort-controller';
+import debounce from '../utils/debounce';
 
 //-----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
@@ -25,17 +26,22 @@ const dummyPageInfo = {
   },
 };
 
+export const SERVICES = {
+  LEVELS: 'LEVELS',
+  GRAPHQL: 'GRAPHQL',
+};
+
 /*
 The concept of cursor comes up in both the request and response.
 Filter is a separate concept. Cursor in the response is a base64 uid
 for a specific value; so is a string.  There are two cursor object types
 used in the request:
 
-PAGING cursor {
+GRAPHQL cursor {
     first: page size,
     after: cursor value,
  }
-LIMIT cursor {
+LEVELS cursor {
     page: page number,
     limit: page size
  }
@@ -64,22 +70,28 @@ LIMIT cursor {
  *
  * @function
  * @param {Object} input
- * @param {('LIMIT' | 'SCROLL')} input.feature
+ * @param {('GRAPHQL' | 'LEVELS')} input.service
  * @param {number} input.rowsPerPageProp
  * @param {Object} input.filter qualityName | componentName, measurementType
  * @param {Object} input.fetchFn param Object with filter and cursor props
  * @return {React.hook}
  */
 const usePagination = ({
-  feature = 'LIMIT',
+  service,
   fetchFn, // how retrieve the raw data
   abortController: abortControllerProp,
-  normalizer, // post-processing
+  normalizer, // post-process response from api
   filter: filterProp,
   pageSize: pageSizeProp,
   turnOff = false, // support for derived data
   DEBUG: debugProp,
 }) => {
+  //
+  // temp debug
+  console.debug('use-pagination service: ', service);
+  useEffect(() => {
+    console.log('filter prop changed', filterProp);
+  }, [filterProp]);
   //
   // initialize the local state
   const [pageSize, setPageSize] = useState(() => pageSizeProp);
@@ -87,18 +99,21 @@ const usePagination = ({
   // fragments of the fetch request
   const [currentPageIdx1, setCurrentPageIdx1] = useState(() => 1);
   const [cursor, setCursor] = useState(() => {
-    return feature === 'LIMIT'
+    return service === SERVICES.LEVELS
       ? { page: 1, limit: pageSizeProp }
       : {
           first: pageSize,
           after: null,
         };
   });
-  const abortController = useAbortController(abortControllerProp);
 
+  const abortController = useAbortController(abortControllerProp);
+  useEffect(() => {
+    setFilter(() => filterProp);
+  }, [filterProp]);
   // ---------------------------------------------------------------------------
   // 💢 Side-effect
-  //    setCacheFn: pre-process cache value
+  //    setCacheFn: transform cache value
   //    Note: memoization required b/c used in effect
   const setCacheFn = useMemo(
     () => (respData, cache) => ({
@@ -108,7 +123,14 @@ const usePagination = ({
     }),
     [currentPageIdx1, normalizer],
   );
-  const { execute, status, cache, cancel } = useFetchApi({
+  const {
+    execute,
+    status,
+    cache,
+    getCache, // reads the cache, sets internal state to consumed
+    cancel,
+    reset: resetCache,
+  } = useFetchApi({
     asyncFn: fetchFn,
     setCacheFn, // (response.data, cache)
     initialCacheValue: dummyPageInfo,
@@ -127,7 +149,7 @@ const usePagination = ({
   /*
   const initialState = useCallback(() => {
     setPageSize(pageSizeProp);
-    setStatus('pending');
+    setStatus(STATUS.PENDING);
     setFilter(filterProp);
     setCursor({
       first: pageSize,
@@ -138,19 +160,27 @@ const usePagination = ({
 */
 
   const reset = useCallback(() => {
-    setCursor(() => ({
-      first: pageSize || pageSizeProp,
-      after: null,
-    }));
-    setCurrentPageIdx1(() => 1);
-  }, [pageSize, pageSizeProp]);
+    console.debug('Called reset in usePagination');
+    setCurrentPageIdx1(1);
+    setCursor(() => {
+      return service === SERVICES.LEVELS
+        ? { page: 1, limit: pageSizeProp }
+        : {
+            first: pageSize,
+            after: null,
+          };
+    });
+    // cancel and reset the fetch hook
+    // cancel();
+    resetCache();
+  }, [cancel, resetCache, pageSizeProp, service, pageSize]);
 
   //------------------------------------------------------------------------------
-  // feature: 'SCROLL'
+  // service: 'GRAPHQL' (graphql) | 'SCROLL' (tnc-py)
   //------------------------------------------------------------------------------
   // side-effect: sets a new cursor value and stores it in the local state
   //
-  const onFetchPage = useCallback(
+  const onFetchPageGraphQL = useCallback(
     ({
       pageSize: fetchPageSize = pageSize,
       after = undefined,
@@ -168,8 +198,7 @@ const usePagination = ({
       const endCursor = overrideCursor ? btoa(after) : defaultEndCursor;
       const hasNextPage = overrideCursor || defaultHasNext;
 
-      // for now, only scroll forward; the consumer can cache "along the way"
-      // to avoid an api call going backwards
+      // scroll forward, consumer to cache "along the way"
       if (hasNextPage) {
         setCursor(() => ({
           first: fetchPageSize,
@@ -181,11 +210,12 @@ const usePagination = ({
   );
 
   //------------------------------------------------------------------------------
-  // feature: 'LIMIT'
+  // service: 'LEVELS'
   //------------------------------------------------------------------------------
   // side-effect: sets the local state
+  // @private
   //------------------------------------------------------------------------------
-  const onPageChange = useCallback(
+  const fetchPageLevels = useCallback(
     (pageNumber, isZeroIdx = true) => {
       const newPage = isZeroIdx ? pageNumber + 1 : pageNumber;
       switch (true) {
@@ -239,11 +269,14 @@ const usePagination = ({
       pageSize,
     ],
   );
-  const fetchNextPage = () => {
-    onPageChange(currentPageIdx1 + 1, false /* isZeroIdx */);
+  /**
+   * @public
+   */
+  const onFetchNextPage = () => {
+    fetchPageLevels(currentPageIdx1 + 1, false /* isZeroIdx */);
   };
-  const fetchPreviousPage = () => {
-    onPageChange(currentPageIdx1 - 1, false /* isZeroIdx */);
+  const onFetchPreviousPage = () => {
+    fetchPageLevels(currentPageIdx1 - 1, false /* isZeroIdx */);
   };
 
   // when change page size, restart the list
@@ -273,19 +306,51 @@ const usePagination = ({
   //      👉 setPageNumber page -> new page
   //      👉 filter
   //
+  // sample when pulling levels for headerView
+  // {
+  //   "purpose": "quality",
+  //   "sources": [
+  //     {
+  //       "filename": "/shared/datafiles/62277da3-1a58-4dbc-af84-22208d6fd3f0/dropbox/4bdff8/lE0WdposqDkAAAAAABpqBg/target_list.csv",
+  //       "header-idx": 2,
+  //       "map-symbols": {
+  //         "arrows": {
+  //           "AK": "AKs",
+  //           "CA": "CAs",
+  //           "FL": "FLs"
+  //         }
+  //       },
+  //       "null-value": "ZZ"
+  //     }
+  //   ]
+  // }
   // ---------------------------------------------------------------------------
   // 🟢 Pull new data when the request changes
   //    create the request by reading the cursor from the current state
   // ---------------------------------------------------------------------------
+  const debounceExecute = useMemo(
+    () =>
+      debounce(
+        (params) => {
+          execute(params);
+        },
+        300,
+        true,
+      ),
+    [execute],
+  ); // Debounce execute to prevent too frequent calls
   useEffect(() => {
     if (!turnOff) {
-      execute({
+      debounceExecute({
         filter,
         ...cursor,
       });
     }
-    return cancel;
-  }, [turnOff, cancel, execute, filter, cursor]);
+    return () => {
+      debounceExecute.cancel();
+      cancel();
+    };
+  }, [turnOff, cancel, debounceExecute, filter, cursor]);
 
   // ---------------------------------------------------------------------------
   // report on state of the component
@@ -297,6 +362,9 @@ const usePagination = ({
       status === STATUS.UNINITIALIZED,
       status === STATUS.PENDING,
       status === STATUS.RESOLVED,
+      status === STATUS.CONSUMED,
+      // status === STATUS.REJECTED, not used to render
+      // status === STATUS.IDLE, not used to render
     ];
     const currentStep = `${steps.findIndex((v) => v === true) + 1} of ${steps.length}`;
     console.debug('%c----------------------------------------', colors.blue);
@@ -312,28 +380,16 @@ const usePagination = ({
     });
   }
 
+  const commonInterface = {
+    fetchPage: service === SERVICES.LEVELS ? onFetchNextPage : onFetchPageGraphQL,
+    setFilter: onSetFilter,
+    status,
+    data: { status, cache, getCache },
+    reset, // hard reset
+    cancel,
+  };
   // ---------------------------------------------------------------------------
-  // Array.from(map)[map.size - 1];
-  return feature === 'LIMIT'
-    ? {
-        // common interface
-        fetchPage: fetchNextPage,
-        setFilter: onSetFilter,
-        status,
-        data: { status, cache },
-        // LIMIT only
-        fetchNextPage,
-        fetchPreviousPage,
-        setPageSize: onPageSizeChange,
-        setPageNumber: (pageNumber) => onPageChange(pageNumber, true /* isZeroIdx */),
-      }
-    : {
-        // common interface
-        fetchPage: onFetchPage,
-        setFilter: onSetFilter,
-        status,
-        data: { status, cache },
-      };
+  return commonInterface;
 };
 
 export { usePagination, STATUS };

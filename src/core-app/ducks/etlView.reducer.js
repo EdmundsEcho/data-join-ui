@@ -20,16 +20,19 @@ import {
   SET_ETL_FIELD_CHANGES,
   SET_ETL_VIEW_ERROR,
   RESET_ETL_VIEW_ERROR,
-  ADD_DERIVED_FIELD,
-  DELETE_DERIVED_FIELD,
+  ADD_GROUP_BY_FILE_FIELD,
+  DELETE_GROUP_BY_FILE_FIELD,
   UPDATE_ETL_FIELD,
 } from './actions/etlView.actions';
 import { RESET } from './actions/project-meta.actions';
 
 import { setTimeProp } from '../lib/filesToEtlUnits/transforms/span/span-helper';
-import { removeDerivedField } from '../lib/filesToEtlUnits/remove-etl-field';
+import { removeGroupByFileField } from '../lib/filesToEtlUnits/remove-etl-field';
 
-import { fieldsKeyedOnPurpose } from '../lib/filesToEtlUnits/headerview-helpers';
+import {
+  fieldsKeyedOnPurpose,
+  isEtlFieldGroupByFile as isEtlFieldGroupByFileH,
+} from '../lib/filesToEtlUnits/headerview-helpers';
 import { selectEtlUnitsWithFieldName as selectEtlUnits } from '../lib/filesToEtlUnits/transforms/etl-unit-helpers';
 import { PURPOSE_TYPES, SOURCE_TYPES } from '../lib/sum-types';
 
@@ -82,16 +85,15 @@ export const getEtlUnitTimeProp = (stateFragment, etlUnitName) => {
 
 export const getEtlUnits = (stateFragment) => stateFragment.etlObject.etlUnits;
 
+export const selectEtlUnit = (stateFragment, qualOrMeaName) =>
+  stateFragment.etlObject.etlUnits?.[qualOrMeaName];
+
 export const selectEtlUnitsWithFieldName = (stateFragment, fieldName) =>
   selectEtlUnits(fieldName, stateFragment.etlObject.etlUnits);
 
 export const getEtlFieldChanges = (stateFragment) => {
   return stateFragment.etlFieldChanges || initialState.etlFieldChanges;
 };
-
-// 🦀 ? aug 13, 2022
-export const isEtlFieldDerived = (stateFragment, fieldName) =>
-  fieldName in getEtlFieldChanges(stateFragment).__derivedFields ?? false;
 
 export const selectEtlField = (stateFragment, fieldName) =>
   stateFragment.etlObject.etlFields[fieldName];
@@ -103,9 +105,34 @@ export const selectEtlFieldChanges = (stateFragment, fieldName) => {
 
 export const getIsEtlProcessing = (stateFragment) => stateFragment.isEtlProcessing;
 
-export const selectEtlUnit = (stateFragment, qualOrMeaName) =>
-  stateFragment.etlObject.etlUnits?.[qualOrMeaName];
-
+/**
+ * v0.3.11
+ * Predicate that return true when the data is derived
+ * - sources are type WIDE, or IMPLIED
+ * - has a group-by-file prop
+ * @function
+ * @param {Object} state
+ * @param {string} fieldName
+ * @return {bool}
+ *
+ * 🦀 assumes if one source has type WIDE, the field is derived.
+ *    ... strictly speaking this may not be the case.  This is a broader
+ *    design upgrade. For now, assume all sources are of the same type for
+ *    any single field.
+ *
+ *    Scenario where breaks: stack wide engagement data with matching long
+ *    engagement data (matching etlUnit structure).
+ */
+export const isEtlFieldDerived = (stateFragment, fieldName) => {
+  const field = selectEtlField(stateFragment, fieldName);
+  return (
+    field.sources[0]['source-type'] === SOURCE_TYPES.WIDE ||
+    field.sources[0]['source-type'] === SOURCE_TYPES.IMPLIED ||
+    isEtlFieldGroupByFileH(field)
+  );
+};
+export const isEtlFieldGroupByFile = (stateFragment, fieldName) =>
+  isEtlFieldGroupByFileH(selectEtlField(stateFragment, fieldName));
 /**
  * v0.3.11
  * Object: arrows: Object
@@ -195,59 +222,6 @@ export const getMeaEtlUnits = (stateFragment) =>
       return units;
     }, {});
 /* eslint-enable no-param-reassign */
-
-/**
- * This function toggles between returning levels versus a selection model
- *
- *     selectionModel :: Object
- *     levels :: [[value,count]]
- *
- * The design is an artifact of by default loading levels vs not, and using
- * the prop to record the request value of :: ANTIREQUEST and REQUEST.
- *
- * ⚠️  When "between" fieldNames, this function returns undefined
- *
- */
-export const getSelectionModelEtl = (stateFragment, fieldName) => {
-  const dummyValue = {
-    totalCount: undefined,
-    selectionModel: undefined,
-    type: undefined,
-  };
-  // requires a valid fieldName
-  if (!fieldName) {
-    return dummyValue;
-  }
-  // scrappy hack - find out if source is WIDE
-  const isWide =
-    selectEtlField(stateFragment, fieldName)?.sources[0]['source-type'] ===
-    SOURCE_TYPES.WIDE;
-
-  if (typeof isWide === 'undefined') {
-    return dummyValue;
-  }
-
-  let selectionModel = selectEtlField(stateFragment, fieldName)?.levels ?? [];
-  if (isWide) {
-    selectionModel = selectEtlField(stateFragment, fieldName).sources[0].levels;
-  }
-
-  // a selection model set by the grid is type Object
-  if (Array.isArray(selectionModel) && selectionModel.length === 0) {
-    selectionModel = { __ALL__: { value: '__ALL__', request: true } };
-  }
-  const type =
-    Array.isArray(selectionModel) && selectionModel.length > 0
-      ? 'levels'
-      : 'selectionModel';
-
-  const result = {
-    totalCount: selectionModel.length > 0 ? selectionModel.length : undefined,
-    selectionModel,
-    type,
-  };
-  return result;
-};
 
 export const getEtlViewErrors = (stateFragment) => stateFragment.etlViewErrors;
 export const getHasEtlViewErrors = (stateFragment) =>
@@ -359,16 +333,16 @@ const reducer = createReducer(initialState, {
 
   // document
   // 👍 The middleware maker: raw field data -> integrated into state
-  [ADD_DERIVED_FIELD]: (state, { payload: { etlObject, etlFieldChanges } }) => ({
+  [ADD_GROUP_BY_FILE_FIELD]: (state, { payload: { etlObject, etlFieldChanges } }) => ({
     ...state,
     etlObject,
     etlFieldChanges,
   }),
 
   // the derived-field document path for remove_field
-  [DELETE_DERIVED_FIELD]: (state, { fieldName }) => ({
+  [DELETE_GROUP_BY_FILE_FIELD]: (state, { fieldName }) => ({
     ...state,
-    ...removeDerivedField(fieldName, state),
+    ...removeGroupByFileField(fieldName, state),
   }),
 
   // document the derived state

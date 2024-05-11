@@ -34,16 +34,6 @@ function Switch({
     onChange(!checked ? labelOne : labelTwo);
   }, [checked, labelOne, labelTwo, onChange]);
 
-  const switchInner = (
-    <InnerSwitch
-      color={color}
-      disableRipple
-      onChange={handleChange}
-      checked={checked}
-      disabled={disabled}
-    />
-  );
-
   return (
     <FormControlLabel
       className={clsx(
@@ -52,7 +42,15 @@ function Switch({
         `${labelPlacement}Placement`,
         className,
       )}
-      control={switchInner}
+      control={
+        <InnerSwitch
+          color={color}
+          disableRipple
+          onChange={handleChange}
+          checked={checked}
+          disabled={disabled}
+        />
+      }
       label={checked ? labelOne : labelTwo}
       labelPlacement={labelPlacement}
     />

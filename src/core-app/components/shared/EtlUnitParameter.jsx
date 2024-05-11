@@ -19,7 +19,7 @@ import Typography from '@mui/material/Typography';
 import MeasurementCutIcon from '@mui/icons-material/PieChart';
 import TimeSpanIcon from '@mui/icons-material/DateRange';
 
-import { isEtlFieldDerived as isDerived } from '../../lib/filesToEtlUnits/headerview-helpers';
+import { isEtlFieldGroupByFile as isDerived } from '../../lib/filesToEtlUnits/headerview-helpers';
 
 import { PURPOSE_TYPES as TYPES } from '../../lib/sum-types';
 

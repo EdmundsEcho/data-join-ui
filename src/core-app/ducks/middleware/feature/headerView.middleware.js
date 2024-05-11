@@ -14,6 +14,7 @@ import {
   HEADER_VIEW, // feature
   FETCH_HEADER_VIEW, // command
   CANCEL_HEADER_VIEW, // command
+  REMOVE_SELECTED, // pass-through document
   addHeaderView, // document
   removeHeaderView, // document
   addToSelectedList, // document
@@ -65,6 +66,8 @@ import {
 } from '../../../lib/LuciErrors';
 import { colors } from '../../../constants/variables';
 import { getTimePropValueWithCompoundedKey } from '../../../lib/filesToEtlUnits/transforms/span/span-helper';
+// clean-up local storage
+import { deleteKeysWithPrefix } from '../../../hooks/use-persisted-state';
 
 //------------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
@@ -309,6 +312,17 @@ const middleware =
           } else {
             throw error;
           }
+        }
+        break;
+      }
+      // v0.4.0
+      case REMOVE_SELECTED: {
+        next(tagWarehouseState('STALE'));
+        try {
+          await deleteKeysWithPrefix(action.path, projectId);
+          await deleteKeysWithPrefix(`|${action.path}`, projectId);
+        } catch (error) {
+          console.error('Error deleting keys with prefix:', action.path, error);
         }
         break;
       }

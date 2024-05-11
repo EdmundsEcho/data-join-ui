@@ -28,7 +28,7 @@ import ERRORS from '../../constants/error-messages';
 import { colors } from '../../constants/variables';
 
 // re-export -> single access point for remove-etl-field
-export { removeDerivedField } from './etl-from-pivot';
+export { removeGroupByFileField } from './etl-from-pivot';
 
 //------------------------------------------------------------------------------
 const GLOBAL_DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
@@ -134,9 +134,7 @@ export function removeNonDerivedEtlField({
     switch (true) {
       // Scenario: invalid change
       case !safe: {
-        throw new InvalidStateError(
-          `Failed to remove the etl field ${fieldName}`,
-        );
+        throw new InvalidStateError(`Failed to remove the etl field ${fieldName}`);
       }
 
       // Scenario: Remove a derived field
@@ -168,22 +166,12 @@ export function removeNonDerivedEtlField({
  * @function
  * @return {HeaderViews}
  */
-function disableFieldStackInHvs(
-  disableFieldName,
-  etlUnit,
-  hvs,
-  DEBUG = GLOBAL_DEBUG,
-) {
+function disableFieldStackInHvs(disableFieldName, etlUnit, hvs, DEBUG = GLOBAL_DEBUG) {
   //---------------------------------------------------------------------------
   // closure for repeated use whilst reducing hvs
   //---------------------------------------------------------------------------
-  const disableFields = selectRelatedRemovableFields(
-    disableFieldName,
-    etlUnit,
-    DEBUG,
-  );
-  const disablePredicate = (field) =>
-    disableFields.includes(field['field-alias']);
+  const disableFields = selectRelatedRemovableFields(disableFieldName, etlUnit, DEBUG);
+  const disablePredicate = (field) => disableFields.includes(field['field-alias']);
   //
   if (DEBUG) {
     console.log(
@@ -312,9 +300,7 @@ function disableFieldStackInHvs(
 
     if ('wideToLongFields' in hv) {
       /* eslint-disable-next-line no-shadow */
-      const { wtlf, mutated, hasFactors } = processWideFields(
-        hv.wideToLongFields,
-      );
+      const { wtlf, mutated, hasFactors } = processWideFields(hv.wideToLongFields);
       hvMutated = setLatchedMutated(mutated);
       switch (true) {
         // updated wtlf that still encodes at least one factor

@@ -1,0 +1,31 @@
+{
+  "tree": {
+    "24": {
+      "id": 24,
+      "type": "canvas",
+      "height": 4,
+      "parent": 23,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Zip",
+          "displayName": "Zip",
+          "palette-name": "Zip",
+          "canvas-alias": "Zip",
+          "tag": "txtValues",
+          "count": 4057,
+          "values": {
+            "__ALL__": {
+              "value": "__ALL__",
+              "request": true
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    }
+  }
+}

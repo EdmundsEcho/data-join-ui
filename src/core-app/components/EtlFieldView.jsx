@@ -83,7 +83,7 @@ import {
 // lib
 import { getNextDisplayField } from '../lib/filesToEtlUnits/transforms/etl-unit-helpers';
 import {
-  isEtlFieldDerived as isDerived,
+  isEtlFieldGroupByFile as isDerived,
   mkViewFields,
 } from '../lib/filesToEtlUnits/headerview-helpers';
 import { PURPOSE_TYPES } from '../lib/sum-types';

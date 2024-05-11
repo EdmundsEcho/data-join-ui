@@ -193,10 +193,9 @@ export const longFieldFromFactor = ({ factor, config, prevField, DEBUG = false }
     'field-aliases': config['field-aliases'], // fixed
     'alias-idx-map': config['alias-idx-map'], // fixed
     filename: config.filename, // fixed
-    nlevels: config['field-aliases'].length, // set when update arrows
-
     format, // ui
     levels, // set when update arrows
+    nlevels: null, // set when update arrows
     'map-symbols': mapSymbols,
     'map-fieldnames': mapFieldnames,
   };

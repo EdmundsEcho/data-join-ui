@@ -1,6 +1,6 @@
-// src/components/Workbench/components/EtlUnit/Tools.jsx
+// src/components/Workbench/components/EtlUnit/EtlUnitTools.jsx
 
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -10,10 +10,18 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import Switch from '../../../shared/Switch';
 import ShowDetail from './ShowDetail';
 
-import { ToolContext } from './ToolContext';
+import {
+  useDisplayApiContext,
+  useDisplayDataContext,
+} from '../../../../contexts/EtlUnitDisplayContext';
+import {
+  useSelectionModelApiContext,
+  useSelectionModelDataContext,
+} from '../../../../contexts/SelectionModelContext';
 
 const tags = ['quality', 'measurement', 'txtValues', 'intValues', 'spanValues'];
 const etlUnitTypes = ['quality', 'measurement'];
+const noop = () => {};
 
 /**
  * Add-on for a header
@@ -23,30 +31,26 @@ const etlUnitTypes = ['quality', 'measurement'];
  *     👉 toggle view detail
  *     👉 menu
  */
-function Tools({ onClickMenu, tag, etlUnitType }) {
-  const {
-    // setShowDetail, ⬜ read from stateId record
-    // setSwitchOn,
-    showDetail,
-    toggleShowDetail,
-    switchOn,
-    toggleSwitchOn,
-    disableSwitch,
-    showSwitch,
-    showMoreMenu,
-  } = useContext(ToolContext);
+function EtlUnitTools({ onClickMenu, tag, etlUnitType }) {
+  // display context
+  const { toggleShowDetail } = useDisplayApiContext();
+  const { showDetail, showSwitch, disableSwitch } = useDisplayDataContext();
+  // selectionModel series toggle
+  const { onSetReduceComputation = noop } = useSelectionModelApiContext();
+  const { seriesComputation: initialChecked = false } = useSelectionModelDataContext();
+
+  const showMoreMenu = false;
 
   return (
     <div className={clsx('Luci-Workbench', 'etlUnit', 'tools')}>
-      <Rollup
+      <ReduceSeriesSwitch
         showSwitch={showSwitch}
         etlUnitType={etlUnitType}
         tag={tag}
-        switchOn={switchOn}
-        toggleSwitchOn={toggleSwitchOn}
+        checked={initialChecked}
+        onChange={onSetReduceComputation}
         disableSwitch={disableSwitch}
       />
-
       {showMoreMenu ? (
         <IconButton size='small' className='button menu' onClick={onClickMenu}>
           <MoreVert />
@@ -56,43 +60,33 @@ function Tools({ onClickMenu, tag, etlUnitType }) {
     </div>
   );
 }
-Tools.propTypes = {
+EtlUnitTools.propTypes = {
   etlUnitType: PropTypes.oneOf(etlUnitTypes).isRequired,
   tag: PropTypes.oneOf(tags).isRequired,
   onClickMenu: PropTypes.func.isRequired,
 };
 
-Tools.defaultProps = {};
+EtlUnitTools.defaultProps = {};
 
 // Rollup component: show or not
-function Rollup({
-  showSwitch,
-  etlUnitType,
-  tag,
-  switchOn,
-  toggleSwitchOn,
-  disableSwitch,
-}) {
-  return !showSwitch ||
-    etlUnitType === 'quality' ||
-    tag === 'measurement' ? null : (
+function ReduceSeriesSwitch({ showSwitch, tag, checked, onChange, disableSwitch }) {
+  return showSwitch ? (
     <Switch
       className={tag}
       labelOne='series'
       labelTwo='rollup'
-      checked={switchOn}
-      onChange={toggleSwitchOn}
+      checked={checked}
+      onChange={onChange}
       disabled={disableSwitch}
     />
-  );
+  ) : null;
 }
-Rollup.propTypes = {
+ReduceSeriesSwitch.propTypes = {
   showSwitch: PropTypes.bool.isRequired,
-  etlUnitType: PropTypes.oneOf(etlUnitTypes).isRequired,
   tag: PropTypes.oneOf(tags).isRequired,
-  switchOn: PropTypes.bool.isRequired,
-  toggleSwitchOn: PropTypes.bool.isRequired,
+  checked: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
   disableSwitch: PropTypes.bool.isRequired,
 };
 
-export default Tools;
+export default EtlUnitTools;

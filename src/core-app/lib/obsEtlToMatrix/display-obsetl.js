@@ -8,10 +8,17 @@
  *
  */
 
-import { toEtlFieldName } from '../filesToEtlUnits/transforms/prepare-for-transit';
+// import { toEtlFieldName } from '../filesToEtlUnits/transforms/prepare-for-transit';
 import { lowerFirstChar } from '../../utils/common';
+import {
+  newSelectionModel,
+  PURPOSE_TYPES,
+  COMPUTATION_TYPES,
+} from '../dataGridSelectionLib';
 
 /**
+ *
+ * Used to instantiate the palette tree with the measurements.
  *
  * Utilized (Jul 2023)
  *
@@ -45,46 +52,54 @@ import { lowerFirstChar } from '../../utils/common';
  * @param {Object} data
  * @return {Object}
  */
-const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
+const iniEtlUnitMea =
+  ({ etlFields, etlUnits }) =>
+  (data) => {
     // closure/memoize with etlObj data for reuse
     // const etlNameLookup = toEtlFieldName(etlFields);
 
     // 🚧 Should remain user-centric (separate from db-compliant)
     const { measurementType, components } = data;
 
+    // drive the sequence of the reduction with mspan at the top
+    const types = Object.values(components).map((c) => c.componentValues.__typename);
+    const reduceSequenceKeys = [
+      types.indexOf('SpanValues'),
+      ...types.map((t, i) => (t === 'SpanValues' ? -1 : i)).filter((i) => i !== -1),
+    ];
+
     // update graphql components for the measurement (mcomp or mspan)
-    const newComponents = Object.keys(components).reduce((acc, k) => {
-        //
-        // augment the mea component with etlObj timeProp when
-        // graphql component has spanValues
-        //
-        // ?? 🦀 using componentName to set displayName (see iniComponent)
-        //
-        const [displayName, timeProp] = components[k].componentValues?.spanValues
-            ? [
-                etlUnits[measurementType].mspan,
-                etlFields[etlUnits[measurementType].mspan].time,
-            ]
-            : [components[k].componentName, undefined];
+    const newComponents = reduceSequenceKeys.reduce((acc, k, newK) => {
+      //
+      // augment the mea component with etlObj timeProp when
+      // graphql component has spanValues
+      //
+      // ?? 🦀 using componentName to set displayName (see iniComponent)
+      //
+      const [displayName, timeProp] = components[k].componentValues?.spanValues
+        ? [
+            etlUnits[measurementType].mspan,
+            etlFields[etlUnits[measurementType].mspan].time,
+          ]
+        : [components[k].componentName, undefined];
 
-        acc[k] = iniComponent(components[k], displayName, timeProp);
+      acc[newK] = iniComponent(components[k], displayName, timeProp);
 
-        return acc;
-
+      return acc;
     }, {});
 
     // measurement display name
     const displayName = measurementType;
 
     return {
-        request: true,
-        measurementType,
-        displayName,
-        'palette-name': displayName,
-        'canvas-alias': displayName,
-        values: newComponents,
+      request: true,
+      measurementType,
+      displayName,
+      'palette-name': displayName,
+      'canvas-alias': displayName,
+      values: newComponents,
     };
-};
+  };
 
 /**
  *
@@ -94,82 +109,87 @@ const iniEtlUnitMea = ({ etlFields, etlUnits }) => (data) => {
  *    Only use for spanValues; other values are not recorded in state.
  */
 const _iniValue = (value, requestDefault = true) => {
-    return {
-        request: requestDefault,
-        value,
-    };
+  return {
+    request: requestDefault,
+    value,
+  };
 };
 
+/**
+ * Convert the graphql obsEtl values that take on one of three
+ * types: txtValues, intValues, spanValues.
+ *
+ * For spanValues we set the values prop to include all of the spanValues.  For
+ * other types, values is undefined.  We use a selection model instead.
+ *
+ * tag is one of: txtValues, intValues, spanValues and found on the __typename
+ * prop of componentValues.
+ *
+ */
 function iniComponent(
-    { componentName, componentValues, count },
-    displayName,
-    timeProp,
+  { componentName, componentValues, count },
+  displayName,
+  timeProp,
 ) {
-    const tag = lowerFirstChar(componentValues.__typename);
-    const values = componentValues?.spanValues ?? [];
+  const tag = lowerFirstChar(componentValues.__typename);
 
-    /*
-    ((values = componentValues.txtValues) && (tag = 'txtValues')) ||
-      ((values = componentValues.intValues) && (tag = 'intValues')) ||
-      ((values = componentValues.spanValues) && (tag = 'spanValues'));
-   */
+  let values = componentValues?.spanValues ?? undefined;
+  values = values?.map((v) => _iniValue(v, tag === 'spanValues'));
 
-    const result = {
-        request: tag === 'spanValues', // default not requested for anything other than time
-        componentName,
-        displayName,
-        'palette-name': displayName,
-        'canvas-alias': displayName,
-        reduced: tag !== 'spanValues', // default series for time
-        tag,
-        count,
-        values:
-            tag === 'spanValues'
-                ? {
-                    // with a new key = index
-                    ...values.map((v) => _iniValue(v, tag === 'spanValues')),
-                }
-                : { __ALL__: { value: '__ALL__', request: false } },
-    };
-    if (timeProp) {
-        result.timeProp = timeProp;
-    }
-    return result;
+  const selectionModel = newSelectionModel({
+    purpose: tag === 'spanValues' ? PURPOSE_TYPES.MSPAN : PURPOSE_TYPES.MCOMP,
+    rowCountTotal: count,
+  });
+
+  const result = {
+    request: tag === 'spanValues', // default only include mspan in the collection of select fields
+    componentName,
+    displayName,
+    'palette-name': displayName,
+    'canvas-alias': displayName,
+    reduced: selectionModel.computationType === COMPUTATION_TYPES.REDUCE,
+    tag,
+    count,
+    values,
+    selectionModel,
+  };
+  if (timeProp) {
+    result.timeProp = timeProp;
+  }
+  return result;
 }
 
 /**
- *
- * Utilized (Jul 2023)
+ * Used to instantiate the palette tree with the qualities.
  *
  * obsEtl.subject -> qualities used to instantiate the workbench tree
+ *
+ * see also: iniEtlUnitMea
  *
  * @function
  * @param {Subject} subject
  * @returns {Array}
  */
-const iniEtlUnitQual = (subject) => ({
-    qualityName,
-    qualityValues,
-    count,
-}) => {
+const iniEtlUnitQual =
+  (subject) =>
+  ({ qualityName, qualityValues, count }) => {
     // const etlNameLookup = toEtlFieldName(etlFields);
 
     return {
-        request: true,
-        subjectType: subject.subjectType,
-        qualityName,
-        displayName: qualityName,
-        'palette-name': qualityName,
-        'canvas-alias': qualityName,
-        tag: lowerFirstChar(qualityValues.__typename),
-        count,
-        values: { __ALL__: { value: '__ALL__', request: true } },
-        /*
-        values: {
-          ...values.map((v) => _iniValue(v)),
-        }, // generates an index
-        */
+      request: true,
+      subjectType: subject.subjectType,
+      qualityName,
+      displayName: qualityName,
+      'palette-name': qualityName,
+      'canvas-alias': qualityName,
+      tag: lowerFirstChar(qualityValues.__typename),
+      count,
+      values: undefined,
+      selectionModel: newSelectionModel({
+        purpose: PURPOSE_TYPES.QUALITY,
+        rowCountTotal: count,
+      }),
     };
-};
+  };
 
 export { iniEtlUnitMea, iniEtlUnitQual };

@@ -1,0 +1,140 @@
+{
+  "id": "root",
+  "name": "App",
+  "fileName": "App.jsx",
+  "filePath": "/App",
+  "props": {
+    "theme": "dark",
+    "user": "admin"
+  },
+  "children": [
+    {
+      "id": "child1",
+      "name": "Header",
+      "fileName": "Header.jsx",
+      "filePath": "/App/Header",
+      "parentList": ["/App"],
+      "props": {
+        "theme": "dark"
+      },
+      "children": [
+        {
+          "id": "child1-1",
+          "name": "Navigation",
+          "fileName": "Navigation.jsx",
+          "filePath": "/App/Header/Navigation",
+          "parentList": ["/App/Header"],
+          "props": {
+            "theme": "dark"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "child2",
+      "name": "MainContent",
+      "fileName": "MainContent.jsx",
+      "filePath": "/App/MainContent",
+      "parentList": ["/App"],
+      "props": {
+        "theme": "dark",
+        "user": "admin"
+      },
+      "children": [
+        {
+          "id": "child2-1",
+          "name": "Article",
+          "fileName": "Article.jsx",
+          "filePath": "/App/MainContent/Article",
+          "parentList": ["/App/MainContent"],
+          "props": {
+            "theme": "dark"
+          },
+          "children": []
+        },
+        {
+          "id": "child2-2",
+          "name": "UserProfile",
+          "fileName": "UserProfile.jsx",
+          "filePath": "/App/MainContent/UserProfile",
+          "parentList": ["/App/MainContent"],
+          "props": {
+            "user": "admin",
+            "prop9": "dark"
+          },
+          "children": [
+            {
+              "id": "child2-2-1",
+              "name": "ThreeDeep",
+              "fileName": "ThreeDeep.jsx",
+              "filePath": "/App/MainContent/UserProfile/ThreeDeep",
+              "parentList": ["/App/MainContent/UserProfile"],
+              "props": {
+                "prop9": "dark"
+              },
+              "children": [
+                {
+                  "id": "child2-2-1-1",
+                  "name": "FourDeep1",
+                  "fileName": "FourDeep1.jsx",
+                  "filePath": "/App/MainContent/UserProfileFourDeep1",
+                  "parentList": ["/App/MainContent/ThreeDeep"],
+                  "props": {
+                    "prop9": "dark"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "child2-2-2",
+              "name": "ThreeDeep",
+              "fileName": "ThreeDeep.jsx",
+              "filePath": "/App/MainContent/UserProfile/ThreeDeep",
+              "parentList": ["/App/MainContent/UserProfile"],
+              "props": {
+                "prop8": "dark"
+              },
+              "children": [
+                {
+                  "id": "child2-2-2-1",
+                  "name": "FourDeep",
+                  "fileName": "FourDeep.jsx",
+                  "filePath": "/App/MainContent/UserProfile/FourDeep",
+                  "parentList": ["/App/MainContent/UserProfile/ThreeDeep"],
+                  "props": {
+                    "prop8": "dark"
+                  },
+                  "children": [
+                    {
+                      "id": "child2-2-2-1-1",
+                      "name": "FiveDeep",
+                      "fileName": "FiveDeep.jsx",
+                      "filePath": "/App/MainContent/UserProfile/FiveDeep",
+                      "parentList": ["/App/MainContent/UserProfile/FourDeep"],
+                      "props": {
+                        "prop8": "dark"
+                      },
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child3",
+      "name": "Footer",
+      "fileName": "Footer.jsx",
+      "filePath": "/App/Footer",
+      "parentList": ["/App"],
+      "props": {},
+      "children": []
+    }
+  ],
+  "parentList": []
+}

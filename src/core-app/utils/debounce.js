@@ -5,13 +5,13 @@
  * leading edge, instead of the trailing.
  *
  * @function
+ * @returns {Function} The debounced function.
  *
  */
 const debounce = (fn, wait, immediate) => {
   let timeout;
-
-  return (...args) => {
-    const context = this;
+  const debounced = (...args) => {
+    const context = this; // The context might be unnecessary with arrow functions.
     const later = () => {
       timeout = null;
       if (!immediate) fn.apply(context, args);
@@ -21,6 +21,13 @@ const debounce = (fn, wait, immediate) => {
     timeout = setTimeout(later, wait);
     if (callNow) fn.apply(context, args);
   };
+
+  debounced.cancel = () => {
+    clearTimeout(timeout);
+    timeout = null;
+  };
+
+  return debounced;
 };
 
 export default debounce;

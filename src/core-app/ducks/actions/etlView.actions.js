@@ -10,12 +10,12 @@ export const UPDATE_ETL_FIELD = `${ETL_VIEW} UPDATE_ETL_FIELD`; // command
 export const COMPUTE_ETL_VIEW = `${ETL_VIEW} COMPUTE STATE`; // command
 export const SET_ETL_VIEW = `${ETL_VIEW} SET VIEW STATE`; // document
 
-export const MAKE_DERIVED_FIELD = `${ETL_VIEW} MAKE FIELD`; // command
-export const ADD_DERIVED_FIELD = `${ETL_VIEW} ADD FIELD`; // document
+export const MAKE_GROUP_BY_FILE_FIELD = `${ETL_VIEW} MAKE GROUP BY FILE FIEL DFIELD`; // command
+export const ADD_GROUP_BY_FILE_FIELD = `${ETL_VIEW} ADD GROUP BY FILE FIELD`; // document
 
 export const REMOVE_ETL_FIELD = `${ETL_VIEW} REMOVE FIELD`; // command
 export const DELETE_FIELD = `${ETL_VIEW} DELETE FIELD`; // document
-export const DELETE_DERIVED_FIELD = `${ETL_VIEW} DELETE DERIVED FIELD`; // document
+export const DELETE_GROUP_BY_FILE_FIELD = `${ETL_VIEW} DELETE GROUP BY FILE FIELD`; // document
 
 export const RENAME_ETL_FIELD = `${ETL_VIEW} RENAME FIELD`; // command
 
@@ -63,7 +63,7 @@ export const updateEtlField = makeActionCreator(
  */
 export const addDerivedField = ({ payload, normalizer, startTime }) => {
   return {
-    type: ADD_DERIVED_FIELD,
+    type: ADD_GROUP_BY_FILE_FIELD,
     payload,
     meta: {
       normalizer,
@@ -98,7 +98,10 @@ export const removeEtlField = makeActionCreator(
 );
 
 // ::document
-export const deleteDerivedField = makeActionCreator(DELETE_DERIVED_FIELD, 'fieldName');
+export const deleteDerivedField = makeActionCreator(
+  DELETE_GROUP_BY_FILE_FIELD,
+  'fieldName',
+);
 
 // ::command
 export const computeEtlView = (startTime) => ({
@@ -126,7 +129,7 @@ export const setEtlView = (...args) => {
 */
 
 export const makeDerivedField = makeActionCreator(
-  MAKE_DERIVED_FIELD,
+  MAKE_GROUP_BY_FILE_FIELD,
   'payload',
   'meta',
 );

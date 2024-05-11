@@ -1,0 +1,107 @@
+{
+  "antirequest": {
+    "fix": "Allow a series using a select where NOT in the list",
+    "Right": {
+      "request": {
+        "meaReqs": [
+          {
+            "antiRequest": false,
+            "componentName": "Payment Type Group",
+            "componentValues": {
+              "reduced": false,
+              "txtValues": ["MEDICAID", "TOTAL THIRD PARTY"]
+            }
+          }
+        ]
+      }
+    },
+    "Wrong": {
+      "request": {
+        "meaReqs": [
+          {
+            "antiRequest": true,
+            "componentName": "Payment Type Group",
+            "componentValues": { "reduced": false, "txtValues": ["cash", "CASH"] }
+          }
+        ]
+      }
+    }
+  },
+  "reduce-mspan": {
+    "fix": "Read selection model to get reduce = true. Fix user-agent",
+    "variables": {
+      "request": {
+        "meaReqs": [
+          {
+            "measurementType": "Unit Count",
+            "componentMix": [
+              {
+                "antiRequest": false,
+                "componentName": "Year-Month",
+                "componentValues": { "reduced": false, "spanValues": [] }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "default-comp-request": {
+    "variables": {
+      "request": {
+        "subReq": {
+          "subjectType": "SUBJECT",
+          "qualityMix": [
+            {
+              "antiRequest": true,
+              "qualityName": "Customer State",
+              "qualityValues": { "txtValues": ["AL", "AR", "DC"] }
+            }
+          ]
+        },
+        "meaReqs": [
+          {
+            "measurementType": "Unit Count",
+            "componentMix": [
+              {
+                "antiRequest": false,
+                "componentName": "Year-Month",
+                "componentValues": { "reduced": false, "spanValues": [] }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "latest": {
+    "variables": {
+      "request": {
+        "subReq": {
+          "subjectType": "SUBJECT",
+          "qualityMix": [
+            {
+              "antiRequest": true,
+              "qualityName": "Spec Desc",
+              "qualityValues": {
+                "txtValues": ["specialty 10", "specialty 12", "specialty 14"]
+              }
+            }
+          ]
+        },
+        "meaReqs": [
+          {
+            "measurementType": "Unit Count",
+            "componentMix": [
+              {
+                "antiRequest": false,
+                "componentName": "Year-Month",
+                "componentValues": { "reduced": false, "spanValues": [] }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

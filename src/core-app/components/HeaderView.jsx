@@ -76,9 +76,7 @@ import { memoize } from '../lib/filesToEtlUnits/headerview-helpers';
 import { colors, useTraceUpdate } from '../constants/variables';
 
 // context provider
-import ContextProvider, {
-  Context as HeaderViewContext,
-} from './HeaderViewContext';
+import ContextProvider, { Context as HeaderViewContext } from './HeaderViewContext';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_RENDER_HIGH === 'true';
@@ -118,12 +116,10 @@ function HeaderView(props) {
   const headerView = useSelector((state) =>
     selectHeaderViewLeanWithMemo(state, filename),
   );
-  const activeFieldCount = useSelector((state) =>
-    getActiveFieldCount(state, filename),
-  );
+  const activeFieldCount = useSelector((state) => getActiveFieldCount(state, filename));
 
   return (
-    <Card key={`|${filename}|HeaderView`} className={clsx('Luci-HeaderView')}>
+    <Card key={`${filename}|HeaderView`} className={clsx('Luci-HeaderView')}>
       <ContextProvider
         stateId={`${filename}|HeaderView|Context`}
         filename={filename}
@@ -147,16 +143,10 @@ function HeaderView(props) {
                 ) : (
                   <>
                     <Collapse in={showDetail} timeout='auto' unmountOnExit>
-                      <Main
-                        filename={filename}
-                        titleRow={<HeaderViewFieldHeader />}
-                      >
+                      <Main filename={filename} titleRow={<HeaderViewFieldHeader />}>
                         <HeaderViewFields key={`|${filename}|Header}`} />
                       </Main>
-                      <DerivedField
-                        filename={filename}
-                        header={headerView.header}
-                      />
+                      <DerivedField filename={filename} header={headerView.header} />
                     </Collapse>
                     <CollapseErrors filename={filename} />
                   </>
@@ -208,8 +198,7 @@ function Summary() {
           </Grid>
           <Grid item className='fieldCount'>
             <Typography>
-              Active fields:{' '}
-              <span className='count'>{activeFieldCount || null}</span>
+              Active fields: <span className='count'>{activeFieldCount || null}</span>
             </Typography>
           </Grid>
         </Grid>
@@ -257,8 +246,8 @@ function HeaderViewFields() {
 
   return headerView.header.map((_, headerIdx) => (
     <HeaderViewField
-      key={`|${filename}|HeaderViewField|${headerIdx}`}
-      stateId={`|${filename}|HeaderViewField|${headerIdx}`}
+      key={`${filename}|HeaderViewField|${headerIdx}`}
+      stateId={`${filename}|HeaderViewField|${headerIdx}`}
       className={clsx('LuciHeaderViewField')}
       fieldIdx={headerIdx}
     />
@@ -284,8 +273,8 @@ function CollapseErrors({ filename }) {
       <Collapse in={hasErrors && showErrors}>
         <p />
         <ErrorCard
-          key={`|${filename}|Main|ErrorCard`}
-          stateId={`|${filename}|Main|ErrorCard`}
+          key={`${filename}|Main|ErrorCard`}
+          stateId={`${filename}|Main|ErrorCard`}
           errors={fixes}
           viewDetail
           onHide={() => setShowErrors(false)}
@@ -344,8 +333,8 @@ function WideToLongFieldsConfig({ filename }) {
   return (
     <ErrorBoundary message='wideToLongFields: Something went wrong'>
       <WideToLongCard
-        key={`|${filename}|wideToLongFields`}
-        stateId={`|${filename}|wideToLongFields`}
+        key={`${filename}|wideToLongFields`}
+        stateId={`${filename}|wideToLongFields`}
         filename={filename}
       />
     </ErrorBoundary>
@@ -364,8 +353,8 @@ function ImpliedMvalueConfig({ filename }) {
   return (
     <ErrorBoundary message='impliedMvalue: Something went wrong'>
       <ImpliedMvalueCard
-        key={`|${filename}|impliedMvalue`}
-        stateId={`|${filename}|impliedMvalue`}
+        key={`${filename}|impliedMvalue`}
+        stateId={`${filename}|impliedMvalue`}
         impliedMvalueConfig={config}
         filename={filename}
       />

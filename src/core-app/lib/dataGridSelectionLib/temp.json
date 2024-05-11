@@ -1,0 +1,18 @@
+{
+  "type": "RESUME",
+  "selectionModel": {
+    "rowCountTotal": 3,
+    "requestType": "REQUEST",
+    "computationType": "REDUCE",
+    "meta": {
+      "purpose": "mcomp",
+      "reduced": true
+    },
+    "values": {
+      "__ALL__": {
+        "value": "__ALL__",
+        "request": false
+      }
+    }
+  }
+}

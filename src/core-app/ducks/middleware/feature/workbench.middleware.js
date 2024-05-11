@@ -19,9 +19,9 @@
 import {
   // pass-through document
   TOGGLE_VALUE,
-  TOGGLE_REDUCED,
   SET_MSPAN_REQUEST,
   SET_COMP_REDUCED,
+  SET_SELECTION_MODEL,
   //
   WORKBENCH, // feature
   ADD_DERIVED_FIELD, // command
@@ -32,6 +32,9 @@ import {
   REMOVE_NODE, // command from the workbench
   DND_DRAG_START, // event
   DND_DRAG_END, // event
+  setCompReduced, // document
+  setCompRequest, // document
+  setQualRequest, // document
   setTree, // document
   setNodeState, // document
   setChildIds, // document
@@ -63,11 +66,12 @@ import {
   InvalidTreeStateError,
 } from '../../../lib/LuciErrors';
 
+import { deleteKeysWithPrefix } from '../../../hooks/use-persisted-state';
 import { ServiceConfigs, getServiceType } from '../../../services/api';
 
 // 📖 tree state
 import {
-  getProjectId,
+  // getProjectId,
   getTree,
   selectNodeState,
   getEtlObject,
@@ -75,6 +79,11 @@ import {
   isHostedWarehouseStale,
 } from '../../rootSelectors';
 import { Tree } from '../../../lib/obsEtlToMatrix/tree';
+import {
+  COMPUTATION_TYPES,
+  PURPOSE_TYPES,
+  includeCompInSelectFields,
+} from '../../../lib/dataGridSelectionLib';
 import { moveItemInArray, removeProp } from '../../../utils/common';
 // -----------------------------------------------------------------------------
 // normalize obsetl (can include db hosting spec)
@@ -82,7 +91,7 @@ import {
   iniEtlUnitMea,
   iniEtlUnitQual,
 } from '../../../lib/obsEtlToMatrix/display-obsetl';
-//import prepareForTransit from '../../../lib/filesToEtlUnits/transforms/prepare-for-transit';
+
 // -----------------------------------------------------------------------------
 
 import { NODE_TYPES } from '../../../lib/sum-types';
@@ -106,7 +115,9 @@ const { isValid, getData, isValidError, getError } =
 const middleware =
   ({ dispatch, getState }) =>
   (next) =>
-  (action) => {
+  async (action) => {
+    const state = getState();
+    const { projectId } = state.$_projectMeta;
     //
     if (DEBUG) {
       console.info('👉 loaded workbench.middleware');
@@ -156,7 +167,7 @@ const middleware =
         // sagas -> SET_MATRIX_CACHE // document
         dispatch(
           fetchMatrixCache({
-            projectId: getProjectId(getState()),
+            projectId,
             ...nodeState,
           }),
         );
@@ -194,11 +205,11 @@ const middleware =
       //
       // event -> split/map
       case TOGGLE_VALUE:
-      case TOGGLE_REDUCED:
+      case SET_SELECTION_MODEL:
       case SET_COMP_REDUCED:
       case SET_MSPAN_REQUEST: {
         // check if the parent is a group that needs to be updated
-        const state = getState();
+        // const state = getState();
         const { parent } = selectNodeState(state, action.id);
         // reset the parent cache
         const parentState = removeProp('cache', state.workbench.tree[parent].data);
@@ -214,17 +225,22 @@ const middleware =
           });
         }
 
-        // split the action to select comp values when reduced = false
-        // 🦀 Does not seem to work TODO
-        // if (action.type === SET_COMP_REDUCED && action.payload === false) {
-        //     dispatch({
-        //         type: TOGGLE_VALUE,
-        //         id: action.id,
-        //         valueOrId: [],
-        //         identifier: action.identifier,
-        //         isSelected: false
-        //     });
-        // }
+        // split the action to update reduced using selectionModel
+        if (
+          action.type === SET_SELECTION_MODEL &&
+          action.purpose === PURPOSE_TYPES.MCOMP
+        ) {
+          next([
+            setCompReduced({
+              ...action,
+              payload: action.payload.computationType === COMPUTATION_TYPES.REDUCE,
+            }),
+            setCompRequest({
+              ...action,
+              payload: includeCompInSelectFields(action.payload),
+            }),
+          ]);
+        }
 
         next(tagMatrixState('STALE'));
         break;
@@ -291,14 +307,30 @@ const middleware =
       // 🚧 It may reduce re-renders if we compare the tree state before and after;
       // limit the changes/updates accordingly.
       case REMOVE_NODE: {
+        // retrieve ids to clear any locally persisted idb-keyval
+        const { id, childIds = [] } = selectNodeState(state, action.payload);
         // instantiate the Tree instance to compute changes
-        const treeState = getTree(getState()); // flat tree
+        const treeState = getTree(state); // flat tree
         const tree = Tree.fromFlatNodes(treeState);
         try {
           const updatedTree = Tree.removeNode(tree, {
             type: 'remove',
             nodeId: action.payload,
             DEBUG,
+          });
+          // clear any locally persisted idb-keyval
+          // TODO: create a central lookup for how each component
+          // uses use-persisted-state
+          // v0.4.0
+          const keysToDelete = [id, ...childIds];
+
+          keysToDelete.forEach(async (i) => {
+            const key = `EtlUnitBase-${i}`;
+            try {
+              await deleteKeysWithPrefix(key, projectId);
+            } catch (error) {
+              console.error('Error deleting keys with prefix:', key, error);
+            }
           });
 
           next([
@@ -410,9 +442,7 @@ const middleware =
 
         let before = '';
         if (DEBUG) {
-          // debugging
           before = Tree.print(tree);
-
           console.dir(event);
 
           console.assert(tree.type === 'root');
@@ -428,7 +458,6 @@ const middleware =
           });
 
           if (DEBUG) {
-            const state = getState();
             console.debug('📖 before');
             console.debug(before);
 
@@ -499,8 +528,6 @@ const middleware =
           );
         } else {
           try {
-            const state = getState();
-            const projectId = getProjectId(state);
             next([
               setNotification({
                 message: `${WORKBENCH}.middleware: action::feature -> ::api (next: polling-api.sagas)`,
@@ -599,7 +626,6 @@ const middleware =
         }
         try {
           // pull project_id, graphql data, and etlObj
-          const projectId = getProjectId(getState());
           const { id, subject, measurements } = getData(action.event.request);
           const { etlFields, etlUnits } = getEtlObject(getState());
 

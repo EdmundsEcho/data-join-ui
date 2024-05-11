@@ -102,9 +102,6 @@ export const isFileSelected = (state, path) =>
 export const getHvSequence = (state, filename) =>
   getSelected(state).findIndex((filename_) => filename_ === filename);
 
-export const getSelectionModelFile = (state, filename, headerIdx) =>
-  fromHeaderView.getSelectionModelFile(state.headerView, filename, headerIdx);
-
 // 0.3.11
 export const selectSymbolMapHeaderView = (state, filename, headerIdx) => {
   return fromHeaderView.selectSymbolMap(state.headerView, filename, headerIdx);
@@ -237,11 +234,12 @@ export const selectHeaderViewLean = (state, filename) =>
   fromHeaderView.selectHeaderViewLean(state.headerView, filename);
 
 export const selectWideToLongFields = (state, filename) =>
+  // returns the configuration object
   fromHeaderView.selectWideToLongFields(state.headerView, filename);
 
 export const selectWideToLongField = (state, filename, fieldName) =>
-  fromHeaderView.selectWideToLongFields(state.headerView, filename)?.wideToLongFields
-    .fields[fieldName];
+  // returns the configuration object
+  fromHeaderView.selectWideToLongFields(state.headerView, filename).fields[fieldName];
 
 export const selectHasWideToLongFields = (state, filename) =>
   fromHeaderView.selectHasWideToLongFields(state.headerView, filename);
@@ -272,8 +270,20 @@ export const getEtlFields = (state) => fromEtlView.getEtlFields(state.etlView);
 export const etlFieldExists = (state, fieldName) =>
   fromEtlView.etlFieldExists(state.etlView, fieldName);
 
-export const getSelectionModelEtl = (state, fieldName) =>
-  fromEtlView.getSelectionModelEtl(state.etlView, fieldName);
+/**
+ * Predicate that return true when the data is derived
+ * - sources are type WIDE, or IMPLIED
+ * - has a group-by-file prop
+ * @function
+ * @param {Object} state
+ * @param {string} fieldName
+ * @return {bool}
+ */
+export const isEtlFieldDerived = (state, fieldName) =>
+  fromEtlView.isEtlFieldDerived(state.etlView, fieldName);
+
+export const isEtlFieldGroupByFile = (state, fieldName) =>
+  fromEtlView.isEtlFieldGroupByFile(state.etlView, fieldName);
 
 /**
  * Returns the props required to display a date using the span values.
@@ -299,9 +309,6 @@ export const selectEtlUnitsWithFieldName = (state) =>
 
 export const getEtlFieldChanges = (state) =>
   fromEtlView.getEtlFieldChanges(state.etlView);
-
-export const isEtlFieldDerived = (state, fieldName) =>
-  fromEtlView.isEtlFieldDerived(state.etlView, fieldName);
 
 export const selectEtlFieldChanges = (state, fieldName) =>
   fromEtlView.selectEtlFieldChanges(state.etlView, fieldName);
@@ -387,13 +394,6 @@ export const isCanvasDirty = (state) => fromWorkbench.isCanvasDirty(state.workbe
 export const runRequestSpecValidations = (state) =>
   fromWorkbench.runRequestSpecValidations(state.workbench);
 
-/**
- * Seed for graphql levels
- * @function
- */
-export const selectSeedForValues = (state, id, identifier) =>
-  fromWorkbench.selectSeedForValues(state.workbench, id, identifier);
-
 export const selectMaybeNodeSeed = (state, id) =>
   fromWorkbench.selectMaybeNodeSeed(state.workbench, id);
 
@@ -409,8 +409,8 @@ export const selectNodeState = (state, id) => selectMaybeNodeState(state, id);
 export const selectMaybeDerivedFieldConfig = (state, id) =>
   fromWorkbench.selectMaybeDerivedFieldConfig(state.workbench, id);
 
-export const selectEtlUnitDisplayConfig = (state, nodeId, identifyer, mea) =>
-  fromWorkbench.selectEtlUnitDisplayConfig(state.workbench, nodeId, identifyer, mea);
+export const selectEtlUnitDisplayConfig = (state, ...args) =>
+  fromWorkbench.selectEtlUnitDisplayConfig(state.workbench, ...args);
 /**
  * Seed required to display EtlUnit
  */
@@ -426,11 +426,8 @@ export const getIsNoValuesSelected = (state, nodeId, identifier = undefined) =>
 export const getIsTimeSingleton = (state, nodeId) =>
   fromWorkbench.getIsTimeSingleton(state.workbench, nodeId);
 
-export const selectNodeWithoutLevels = (state, id) =>
-  fromWorkbench.selectNodeWithoutLevels(state.workbench, id);
-
-export const getSelectionModel = (state, nodeId, identifyer) =>
-  fromWorkbench.getSelectionModel(state.workbench, nodeId, identifyer);
+export const getMaybeSelectionModel = (state, payload) =>
+  fromWorkbench.getMaybeSelectionModel(state.workbench, payload);
 
 /**
  * Returns the span values with the etlUnit name

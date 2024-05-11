@@ -18,7 +18,7 @@ import {
   ETL_VIEW, // feature
   COMPUTE_ETL_VIEW, // command
   setEtlView as setEtlViewAction, // document
-  MAKE_DERIVED_FIELD, // command
+  MAKE_GROUP_BY_FILE_FIELD, // command
   addDerivedField as addDerivedFieldAction, // document
   REMOVE_ETL_FIELD, // command
   RENAME_ETL_FIELD, // command
@@ -30,12 +30,7 @@ import {
   ADD_UPDATE_SYMBOL_ITEM, // document
   DELETE_SYMBOL_ITEM, // document
 } from '../../actions/etlView.actions';
-import {
-  ADD_UPDATE_SYMBOL_ITEM_WIDE_CONFIG, // document
-  DELETE_SYMBOL_ITEM_WIDE_CONFIG, // document
-  setHeaderViews as setHeaderViewsAction,
-  addOrUpdateSymbolItemWideConfig, // document that triggers a pivot
-} from '../../actions/headerView.actions';
+import { setHeaderViews as setHeaderViewsAction } from '../../actions/headerView.actions';
 import { setUiLoadingState } from '../../actions/ui.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import {
@@ -51,7 +46,7 @@ import {
   getEtlObject,
   getHeaderViews,
   getEtlFieldChanges,
-  isEtlFieldDerived,
+  isEtlFieldGroupByFile,
   etlFieldExists,
   selectEtlField,
 } from '../../rootSelectors';
@@ -180,7 +175,7 @@ const middleware =
       }
 
       /* ✅ All good (no state mutation issues) */
-      case MAKE_DERIVED_FIELD: {
+      case MAKE_GROUP_BY_FILE_FIELD: {
         const state = getState();
         const startTime = action?.meta?.startTime || new Date();
         next([
@@ -221,7 +216,7 @@ const middleware =
           return;
         }
 
-        if (isEtlFieldDerived(state, action.fieldName)) {
+        if (isEtlFieldGroupByFile(state, action.fieldName)) {
           next([
             deleteDerivedField(action.fieldName), // document
             tagWarehouseState('STALE'), // document

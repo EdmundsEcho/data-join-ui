@@ -1,5 +1,15 @@
 import debounce from './debounce.js';
 
+/**
+ * Creates a throttled function that only invokes `func` at most once per
+ * every `wait` milliseconds.
+ *
+ * @function
+ * @param {Function} func The function to throttle.
+ * @param {number} wait The number of milliseconds to throttle invocations to.
+ * @param {Object} options The options object.
+ * @returns {Function} Returns the new throttled function.
+ */
 function throttle(func, wait, options) {
   let leading = true;
   let trailing = true;

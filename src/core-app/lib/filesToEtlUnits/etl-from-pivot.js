@@ -45,10 +45,7 @@ import {
   remakeDerivedEtlField,
   setGroupByFileIdxProp,
 } from './create-etl-field';
-import {
-  fieldNamesFromUnits,
-  tryCreateOrUpdateEtlUnit,
-} from './transforms/etl-units';
+import { fieldNamesFromUnits, tryCreateOrUpdateEtlUnit } from './transforms/etl-units';
 import { setGlobalRef } from './transforms/span/reference';
 import { removeProp, mapFromArray } from './headerview-helpers';
 import { PURPOSE_TYPES as TYPES } from '../sum-types';
@@ -109,12 +106,9 @@ export function etlFromPivot() {
 
     resetEtlObject: (removeField) => {
       if (DEBUG) console.debug(`%cresetEtlObject`, colors.blue);
-      ({ etlObject, etlFieldChanges } = resetEtlObject(
-        etlObject,
-        etlFieldChanges,
-      ));
+      ({ etlObject, etlFieldChanges } = resetEtlObject(etlObject, etlFieldChanges));
       if (typeof removeField !== 'undefined')
-        ({ etlObject, etlFieldChanges } = removeDerivedField(removeField, {
+        ({ etlObject, etlFieldChanges } = removeGroupByFileField(removeField, {
           etlObject,
           etlFieldChanges,
         }));
@@ -125,11 +119,11 @@ export function etlFromPivot() {
       return closure;
     },
 
-    removeDerivedField: (fieldName) => {
+    removeGroupByFileField: (fieldName) => {
       if (DEBUG) {
-        console.debug(`%cremoveDerivedField: ${fieldName}`, colors.blue);
+        console.debug(`%cremoveGroupByFileField: ${fieldName}`, colors.blue);
       }
-      ({ etlObject, etlFieldChanges } = removeDerivedField(fieldName, {
+      ({ etlObject, etlFieldChanges } = removeGroupByFileField(fieldName, {
         etlObject,
         etlFieldChanges,
       }));
@@ -211,10 +205,7 @@ export function etlFromPivot() {
 
     setGlobalSpanRef: () => {
       if (DEBUG) console.debug(`%csetGlobalSpanRef`, colors.blue);
-      ({ etlObject, etlFieldChanges } = setGlobalSpanRef(
-        etlObject,
-        etlFieldChanges,
-      ));
+      ({ etlObject, etlFieldChanges } = setGlobalSpanRef(etlObject, etlFieldChanges));
       if (DEBUG) {
         console.dir(etlObject.etlFields);
         console.dir(etlFieldChanges);
@@ -295,7 +286,7 @@ function applyEtlFieldPropConfigs(etlObject, etlFieldChanges) {
  * @param {{etlFields: {Object}, etlUnits: {Object}}} etlState.etlObject
  * @returns {Object} etlState State with removed field
  */
-export function removeDerivedField(fieldName, { etlFieldChanges, etlObject }) {
+export function removeGroupByFileField(fieldName, { etlFieldChanges, etlObject }) {
   //
   // 🚧 In flux: Can a group-by-file field be a fragment/source
   //    to a non-group-by-file field?
@@ -383,11 +374,8 @@ export const addDerivedField = (fieldData, { etlFieldChanges, etlObject }) => {
     etlObject: {
       etlUnits: {
         ...etlObject.etlUnits,
-        ...(tryCreateOrUpdateEtlUnit(
-          subjectName,
-          etlObject.etlUnits,
-          newEtlField,
-        ) || {}),
+        ...(tryCreateOrUpdateEtlUnit(subjectName, etlObject.etlUnits, newEtlField) ||
+          {}),
       },
       etlFields: {
         ...etlObject.etlFields,
@@ -522,13 +510,10 @@ export function reinstateDerivedFields(etlObject, etlFieldChanges) {
   return Object.values(etlFieldChanges.__derivedFields).reduce(
     /* eslint-disable-next-line */
     ({ etlObject, etlFieldChanges }, derivedField) => {
-      const { etlObject: eo, etlFieldChanges: ec } = addDerivedField(
-        derivedField,
-        {
-          etlFieldChanges,
-          etlObject,
-        },
-      );
+      const { etlObject: eo, etlFieldChanges: ec } = addDerivedField(derivedField, {
+        etlFieldChanges,
+        etlObject,
+      });
       return { etlObject: eo, etlFieldChanges: ec };
     },
     {
@@ -562,8 +547,7 @@ export function reinstateDerivedFields(etlObject, etlFieldChanges) {
 function applySourceReadInSequence(etlObject, etlFieldChanges) {
   const { etlFields, etlUnits } = etlObject;
 
-  if (typeof etlFieldChanges === 'undefined')
-    return { etlObject, etlFieldChanges };
+  if (typeof etlFieldChanges === 'undefined') return { etlObject, etlFieldChanges };
 
   if (!('__derivedFields' in etlFieldChanges)) {
     throw new InvalidStateError(
@@ -577,16 +561,14 @@ function applySourceReadInSequence(etlObject, etlFieldChanges) {
 
   // augment the source changes with the latest sources/files
   const sourceChanges = Object.keys(propFieldChanges)
-    .filter((fieldName) =>
-      Object.keys(propFieldChanges[fieldName]).includes('sources'),
-    )
+    .filter((fieldName) => Object.keys(propFieldChanges[fieldName]).includes('sources'))
     /* eslint-disable-next-line */
     .reduce((sourceChanges, fieldName) => {
       const activeFileNames = new Set(
         etlFields[fieldName].sources.map((source) => source.filename),
       );
-      const sourceChange = propFieldChanges[fieldName].sources.filter(
-        (source) => activeFileNames.has(source.filename),
+      const sourceChange = propFieldChanges[fieldName].sources.filter((source) =>
+        activeFileNames.has(source.filename),
       );
       // keep changes where files are still active
       if (sourceChange.length > 0) {

@@ -9,6 +9,6 @@ GET /login HTTP/1.1
 host: http://localhost:3007
 
 ### relies on /etc/hosts entry
+https://local.lucivia.net
 GET /login HTTP/1.1
-host: http://local.lucivia.net:3007
 

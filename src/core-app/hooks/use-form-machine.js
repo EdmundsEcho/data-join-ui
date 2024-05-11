@@ -20,9 +20,8 @@
  */
 
 import { useMachine, useActor } from '@xstate/react';
-import formMachine, { initialContext } from './form-machine';
+import formMachine, { initialContext } from '../machines/form-machines/form-machine';
 
-/* eslint-disable no-console */
 const formCallbacks = (send) => ({
   send,
   save: () => {
@@ -43,8 +42,7 @@ export const useFieldMachine = (fieldRef) => {
   const isExcluded = () => !getValue('enabled');
 
   /**
-   * @callback
-   * Caches the input
+   * @function
    * @param {object} machineState
    */
   const onChange = (e) => {
@@ -57,8 +55,8 @@ export const useFieldMachine = (fieldRef) => {
     });
   };
   /**
-   * @callback
-   * saveChange: simultaneously add and saves a change.
+   * simultaneously add and saves a change.
+   * @function
    */
   const saveChange = (e) => {
     send({
@@ -70,14 +68,14 @@ export const useFieldMachine = (fieldRef) => {
     });
   };
   /**
-   * @callback
-   * onBlur: commits the non-null/empty input
+   * commits the non-null/empty input
+   * @function
    */
   const onBlur = () => {
     send('COMMIT');
   };
   /**
-   * @callback
+   * @function
    * Enter key: commits the non-null/empty input
    */
   const commit = (e) => {
@@ -86,8 +84,8 @@ export const useFieldMachine = (fieldRef) => {
     }
   };
   /**
-   * @callback
    * resets the content of the field input.
+   * @function
    */
   const clear = (e) => {
     if (e.key === 'Escape' || e.key === 'Esc') {
@@ -95,8 +93,8 @@ export const useFieldMachine = (fieldRef) => {
     }
   };
   /**
-   * @callback
    * Disable/enable field prop: Sets the value of the message type.
+   * @function
    * @param {object} machineState
    */
   const toggleExclude = () => {
@@ -121,14 +119,7 @@ export const useFieldMachine = (fieldRef) => {
 /**
  * Parent, form machine
  */
-export const useFormMachine = ({
-  update,
-  reset,
-  data,
-  dataId,
-  fieldId,
-  debug,
-}) => {
+export const useFormMachine = ({ update, reset, data, dataId, fieldId, debug }) => {
   console.assert(
     typeof update === 'function',
     `useFormMachine did not recieve a valid update function: ${typeof update}`,

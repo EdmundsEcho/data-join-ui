@@ -2,17 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import invariant from 'invariant';
 
-// import clsx from 'clsx';
-
 import Typography from '@mui/material/Typography';
 
-// content
 import ValueGridFileLevels from './ValueGridFileLevels';
 import LevelSpans from '../LevelsView/LevelSpans';
 import StatSummary from './StatSummary';
 
 import { PURPOSE_TYPES, FIELD_TYPES } from '../../lib/sum-types';
 
+/**
+ * Presents one of three views:
+ * * mvalue: StatSummary
+ * * mcomp | quality: ValueGridFileLevels
+ * * mspan: LevelSpans
+ * * subject: one-liner
+ */
 function Levels({ getValue, fieldType, stateId }) {
   invariant(
     getValue instanceof Function && fieldType,

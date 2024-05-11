@@ -9,6 +9,7 @@ import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
 
 import { useThemeMode } from '../hooks/use-theme-mode';
+import { combineFunctions } from '../core-app/utils/common';
 
 //-----------------------------------------------------------------------------
 // const DEBUG = process.env.REACT_APP_DEBUG_DIALOGS === 'true';
@@ -59,8 +60,8 @@ const SlidingPopper = ({
     return (
       <ContentComponent
         {...contentProps}
+        onDone={combineFunctions(handleClick, contentProps.onDone)}
         className={clsx(sharedClassName, contentProps?.className)}
-        onDone={handleClick}
       />
     );
   }, [sharedClassName, slots.content, slotProps?.content, handleClick]);

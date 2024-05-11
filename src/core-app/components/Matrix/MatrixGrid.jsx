@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import LevelsContextProvider, { CONTEXTS } from '../../contexts/LevelsDataContext';
-import ValueGridCore from '../shared/ValueGridCore';
+import ValueGridCore, { SERVICES } from '../shared/ValueGridCore';
 import {
   fetchRenderedMatrixWithProjectId as fetchLevels,
   matrixPaginationNormalizer as normalizer,
@@ -33,6 +33,7 @@ function fromMatrixApi(matrix) {
   /* eslint-disable no-shadow */
   const columns = Object.keys(Object.values(matrix)[0]).map((columnName) => ({
     field: columnName,
+    minWidth: 70,
     flex: 1,
     headerClassName: 'fieldname',
   }));
@@ -47,9 +48,12 @@ function fromMatrixApi(matrix) {
 
 //----------------------------------------------------------------------------
 // Data grid options
-//
+const lineHeight = 18;
+const numberOfLines = 4;
+const padding = 11;
+
 const gridOptions = {
-  headerHeight: 85,
+  columnHeaderHeight: lineHeight * numberOfLines + padding,
   rowHeight: 35,
   disableColumnMenu: true,
   disableSelectionOnClick: true,
@@ -68,18 +72,22 @@ function MatrixGrid({ matrixPage, gridHeight, abortController }) {
 
   return (
     <ValueGridCore
-      className={clsx('Luci-ValueGrid-matrix')}
+      className={clsx('Luci-DataGrid-matrix')}
       columns={columns}
       identifier='matrix'
-      purpose='matrix'
-      fetchFn={fetchLevels(projectId, abortController.signal)}
+      purpose='matrix' // todo: avoid using purpose for this reason
+      fetchFn={fetchLevels({
+        projectId,
+        signal: abortController.signal,
+        limit: PAGE_SIZE,
+      })}
       abortController={abortController}
       normalizer={normalizer(rowsFn)}
       edgeToGridRowFn={identityFn}
       edgeToIdFn={({ subject }) => subject}
-      baseSelectAll={{}}
+      filter={{}}
       limitGridHeight={gridHeight}
-      feature='LIMIT'
+      service={SERVICES.GRAPHQL}
       pageSize={PAGE_SIZE}
       DEBUG={false}
       {...gridOptions}
@@ -99,7 +107,7 @@ MatrixGrid.defaultProps = {};
 
 export default function MatrixGridWithContext(props) {
   return (
-    <LevelsContextProvider context={CONTEXTS.MATRIX}>
+    <LevelsContextProvider purpose='matrix' context={CONTEXTS.MATRIX}>
       <MatrixGrid {...props} />
     </LevelsContextProvider>
   );

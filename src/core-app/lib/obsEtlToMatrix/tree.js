@@ -259,8 +259,7 @@ export class Tree {
       // move Leaf -> SuperGroup; gap 1
       // fill the gap if exists, and append
       case draggedHeight >= toNodeHeight + 1: {
-        const gap =
-          draggedHeight - (toNodeHeight + 1); /* children of destination */
+        const gap = draggedHeight - (toNodeHeight + 1); /* children of destination */
 
         if (DEBUG) {
           console.debug(
@@ -405,9 +404,7 @@ export class Tree {
       case !parent.isRoot && parent.type !== Tree.EMPTY:
         return parent.type;
 
-      case parent.isRoot &&
-        typeof node.type !== 'undefined' &&
-        node !== Tree.EMPTY:
+      case parent.isRoot && typeof node.type !== 'undefined' && node !== Tree.EMPTY:
         return node.type;
 
       case typeof configType !== 'undefined':
@@ -418,9 +415,9 @@ export class Tree {
           `parent type: ${parent.type} node type: ${node.type} configType: ${configType}`,
         );
         throw new WorkbenchError(
-          `Something went wrong when setting the node type: ${
-            parent.type
-          } node: ${node?.type || 'no node type'}`,
+          `Something went wrong when setting the node type: ${parent.type} node: ${
+            node?.type || 'no node type'
+          }`,
         );
     }
   }
@@ -474,12 +471,14 @@ export class Tree {
    * @return {Array<Node>}
    */
   static findNodes(tree, predicate = (id) => id) {
-    const filter = (predicate) => (acc = [], value) => {
-      if (predicate(value)) {
-        acc.push(value);
-      }
-      return acc;
-    };
+    const filter =
+      (predicate) =>
+      (acc = [], value) => {
+        if (predicate(value)) {
+          acc.push(value);
+        }
+        return acc;
+      };
 
     return Tree.foldl(filter(predicate), [], Tree.traverseDF(tree));
   }
@@ -644,9 +643,7 @@ export class Tree {
     return (tree, node) => {
       /* eslint-disable no-console */
       if (DEBUG) {
-        console.group(
-          `👉 ${cloneOrGrow} newBranch tree (acc), node to be copied`,
-        );
+        console.group(`👉 ${cloneOrGrow} newBranch tree (acc), node to be copied`);
         console.debug(Tree.print(tree));
       }
 
@@ -656,7 +653,7 @@ export class Tree {
       switch (cloneOrGrow === 'GROW') {
         // dataMaker not yet applied
         case nodeConfigProp?.dataMaker?.source === node.id:
-          data = nodeConfigProp.dataMaker.maker(node.data);
+          data = nodeConfigProp.dataMaker?.maker(node.data);
           break;
         // dataMaker applied "earlier"
         case typeof nodeConfigProp.data !== 'undefined':
@@ -1068,10 +1065,7 @@ export function createTree(config) {
     },
 
     get maxId() {
-      return [...this.root].reduce(
-        (max, node) => (max > node.id ? max : node.id),
-        0,
-      );
+      return [...this.root].reduce((max, node) => (max > node.id ? max : node.id), 0);
     },
 
     incrementNodeCount() {
@@ -1224,12 +1218,7 @@ export function createTree(config) {
      */
     insertNode(
       node,
-      {
-        pos = this.children.length,
-        moveOrCopy = 'COPY',
-        DEBUG = false,
-        ...nodeConfig
-      },
+      { pos = this.children.length, moveOrCopy = 'COPY', DEBUG = false, ...nodeConfig },
     ) {
       const ref =
         moveOrCopy === 'COPY' // all new ids
@@ -1311,11 +1300,9 @@ export function getNodeIdsFromEvent(event) {
     destination: { droppableId: destinationId },
   } = event;
 
-  [draggableId, sourceId, destinationId] = [
-    draggableId,
-    sourceId,
-    destinationId,
-  ].map((x) => parseInt(x, 10));
+  [draggableId, sourceId, destinationId] = [draggableId, sourceId, destinationId].map(
+    (x) => parseInt(x, 10),
+  );
 
   return {
     draggableId,

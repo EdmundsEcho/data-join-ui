@@ -565,8 +565,6 @@ export function updateFactorProp({ factorId, key, value }, wtlf) {
   // 📖 ui-specific input (not derivable)
   // 💰 new = previous field with user input + newly derived
   //    Retrieve the current field using the prev factor.name
-  // 🦀 nLevels does not consider duplicate values of the
-  //    codomain of the arrows
   const newField = longFieldFromFactor({
     factor: updatedFactor,
     config: updatedConfig,
@@ -826,6 +824,7 @@ function updateMapFieldnameArrows({ factorId, key, value }, wtlf, DEBUG) {
       arrows: updatedArrows,
     },
     levels: updatedLevels,
+    nlevels: updatedLevels.length,
     format: formatIn || fields[factorName].format,
   };
 
@@ -888,11 +887,11 @@ export function updateMeasurementName({ mvalue }, wtlf) {
 }
 
 /**
- * Extract the wide-to-long-fields prop from a headerView
+ * Extract the wideToLongFields config prop from a headerView
  *
  * @function
  * @param {HeaderView} headerView
- * @returns {WideToLongFields}
+ * @returns {WideToLongFields} config
  */
 export const getWideToLongFieldsConfig = (hv) => {
   try {

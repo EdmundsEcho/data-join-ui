@@ -54,6 +54,7 @@ export const colors = {
   purpleDarkGrey: `${lightPurple};background-color:#555555`,
   orangeGrey: `${orange};background-color:#ededed`,
   orangeDarkGrey: `${orange};background-color:#555555`,
+  lightPurple: 'color: #d5a6e6',
 };
 
 // deprecate in favor of colors
@@ -210,14 +211,11 @@ export function equal(a, b) {
           return true;
         }, true);
     }
-    if (a.constructor === RegExp)
-      return a.source === b.source && a.flags === b.flags;
+    if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
 
-    if (a.valueOf !== Object.prototype.valueOf)
-      return a.valueOf() === b.valueOf();
+    if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
 
-    if (a.toString !== Object.prototype.toString)
-      return a.toString() === b.toString();
+    if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
 
     if (Object.keys(a).length !== Object.keys(b).length) return false;
     return Object.entries(a)

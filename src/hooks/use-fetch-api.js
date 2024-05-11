@@ -7,6 +7,7 @@ import {
   STATUS,
   START,
   SUCCESS_NOCHANGE,
+  READING_CACHE,
   RESET,
   SET_FETCH_ARGS,
 } from './shared-action-types';
@@ -74,7 +75,7 @@ const useFetchApi = ({
     state,
     dispatch,
     middlewareWithDispatch: runMiddleware, // fn :: (dispatch, partial state)
-    reset,
+    reset, // passthrough
   } = useSharedFetchApi({
     blockAsyncWithEmptyParams,
     initialCacheValue,
@@ -112,12 +113,21 @@ const useFetchApi = ({
     [dispatch, turnOff, blockAsyncWithEmptyParams],
   );
 
+  // -----------------------------------------------------------------------------
+  // 📥 read the cache; set the status to "consumed"
+  // -----------------------------------------------------------------------------
+  const getCache = useCallback(() => {
+    if (state.status === STATUS.RESOLVED) {
+      dispatch({ type: READING_CACHE });
+    }
+    return state.cache;
+  }, [dispatch, state.cache, state.status]);
   const cancel = useCallback(() => {
     return () => {
       abortController.abort();
-      dispatch({ type: RESET }); // is this required?
+      // dispatch({ type: RESET }); // is this required?
     };
-  }, [dispatch, abortController]);
+  }, [/* dispatch,*/ abortController]);
 
   // ---------------------------------------------------------------------------
   // 💢 async api call
@@ -228,10 +238,11 @@ const useFetchApi = ({
   // hook API
   return {
     execute,
-    status: state.status,
+    status: state.status, // PENDING, RESOLVED, REJECTED, UNINITIALIZED, IDLE, CONSUMED
     cache: state.cache,
     error: state.error,
     fetchArgs: state.fetchArgs,
+    getCache, // will update internal state to CONSUMED
     cancel,
     reset,
     isReady: [STATUS.RESOLVED, STATUS.REJECTED].includes(state.status),
@@ -302,7 +313,7 @@ const equalityFns = {
  * @function
  * @return {bool}
  */
-function compare(cacheRef, response_, equalityFnName) {
+function compare(cacheRef, response_, equalityFnName, DEBUG = false) {
   //
   if (!('data' in response_)) {
     return false;
@@ -350,7 +361,9 @@ function compare(cacheRef, response_, equalityFnName) {
       default:
         isEqual = false;
     }
-
+    if (DEBUG) {
+      console.debug('👉 useFetchApi: isEqual cache and response.data', isEqual);
+    }
     return isEqual;
   } catch (e) {
     if (e instanceof DesignError) {

@@ -494,9 +494,9 @@ export async function fetchRenderedMatrix(
  * @return {Object}
  */
 export const fetchRenderedMatrixWithProjectId =
-  (projectId, signal) =>
-  async (...args) =>
-    fetchRenderedMatrix(projectId, ...args, signal);
+  ({ projectId, signal, limit }) =>
+  async ({ page = 1 } = {}) =>
+    fetchRenderedMatrix(projectId, { page, limit }, signal);
 export const matrixPaginationNormalizer = (edgesFn) => (raw) => {
   return {
     pageInfo: raw.payload.pageInfo,
@@ -692,4 +692,20 @@ export const readDirectory = (request, signal) => {
   }
 
   return apiInstance(axiosOptions);
+};
+
+/**
+ * Experimental
+ * @inspection_blueprint.route("/v1/refetch-levels/<project_id>", methods=["POST"])
+ */
+export const startInspectionTask = async (projectId, params, signal) => {
+  try {
+    const response = await apiInstance.post(`/refetch-levels/${projectId}`, params, {
+      signal,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error starting inspection task:', error);
+    throw error;
+  }
 };

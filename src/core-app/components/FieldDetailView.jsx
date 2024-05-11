@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-import Grid from '@mui/material/Grid';
+import { Div } from '../../luci-styled/Styled';
 
 // content
 import FieldInputDelegate from './FieldDelegate';
@@ -87,22 +87,17 @@ function FieldDetailView(props) {
     console.dir(props);
   }
 
-  /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <>
+    <Div className={clsx('Luci-FieldData', 'detail', 'root', fieldType)}>
       {/* three chunks of information */}
       {/* 1. configuration fields LEFT */}
       {/* 2. levels RIGHT */}
       {/* 3. sources BOTTOM ... when fieldType == ETL */}
 
-      {/* TOP row container: item LEFT + item RIGHT */}
-      <Grid
-        container
-        spacing={5}
-        className={clsx('Luci-FileField', 'detail', 'root', fieldType)}
-      >
+      {/* TOP main row container */}
+      <div className={clsx('main-content')}>
         {/* column 1 */}
-        <Grid item xs={3} container className={clsx('inputGroup')}>
+        <div className={clsx('inputGroup')}>
           <FieldInputDelegate
             fieldType={fieldType}
             getValue={getValue}
@@ -113,25 +108,20 @@ function FieldDetailView(props) {
             hasNullValues={hasNullValues}
             hasImpliedMvalue={hasImpliedMvalue}
           />
-        </Grid>
-        <Grid item flex={0} />
+        </div>
         {/* column 2 */}
-        <Grid
-          item
-          xs
-          className={clsx('Luci-DataContainer levels', getValue('purpose'))}
-        >
+        <div className={clsx('Luci-DataContainer levels', getValue('purpose'))}>
           <Levels
             fieldType={fieldType}
             getValue={getValue}
             stateId={stateId}
             showLevels
           />
-        </Grid>
-      </Grid>
-      {/* BOTTOM row 2 */}
-      {fieldType === FIELD_TYPES.ETL ? (
-        <Grid item xs={12} container>
+        </div>
+      </div>
+      {/* BOTTOM footer row 2 */}
+      {fieldType === FIELD_TYPES.ETL && (
+        <div className='footer'>
           <Sources
             fieldType={fieldType}
             getValue={getValue}
@@ -140,9 +130,9 @@ function FieldDetailView(props) {
             canEditSources={canEditSources}
             handleViewSourceOpen={handleViewSourceOpen}
           />
-        </Grid>
-      ) : null}
-    </>
+        </div>
+      )}
+    </Div>
   );
 }
 

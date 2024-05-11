@@ -10,7 +10,6 @@ export const feature = WORKBENCH;
 
 // Part of the March '20 push
 export const TOGGLE_VALUE = `${WORKBENCH} SET REQUEST VALUE`;
-export const TOGGLE_REDUCED = `${WORKBENCH} SET REDUCED`;
 
 export const UPDATE_ETLUNIT_TEXT = `${WORKBENCH} UPDATE etlUnit TEXT`;
 //
@@ -33,12 +32,16 @@ export const RESET_TREE = `${WORKBENCH} CLEAR`;
 export const SET_CHILDIDS = `${WORKBENCH} SET CHILDIDS`;
 export const SET_DRAGGED_ID = `${WORKBENCH} SET DRAGGED ID`;
 export const SET_MSPAN_REQUEST = `${WORKBENCH} SET MSPAN REQUEST`;
-export const SET_COMP_REDUCED = `${WORKBENCH} SET COMP REDUCED (request)`;
-export const SET_COMP_VALUES = `${WORKBENCH} SET COMP VALUES (model)`;
+export const SET_COMP_REDUCED = `${WORKBENCH} SET COMP REDUCED (bool)`;
+export const SET_COMP_REQUEST = `${WORKBENCH} SET COMP REQUEST (bool)`;
+export const SET_QUAL_REQUEST = `${WORKBENCH} SET QUAL REQUEST (bool)`;
 export const SET_GROUP_SEMANTIC = `${WORKBENCH} SET GROUP SEMANTIC`;
 export const SET_NODE_STATE = `${WORKBENCH} SET NODE STATE`;
 // document the status/need to recompute the project-warehouse
 export const TAG_WAREHOUSE_STATE = `${WORKBENCH} TAG WAREHOUSE STATE`;
+
+// xstate
+export const SET_SELECTION_MODEL = `${WORKBENCH} SET SELECTION MODEL`;
 
 // event
 export const DND_DRAG_END = `${WORKBENCH} DND DRAG END`; // map to event
@@ -69,8 +72,7 @@ export const removeNode = (payload) => ({
 export const fetchWarehouse = (startTime /* { etlObject } */) => ({
   type: FETCH_WAREHOUSE,
   startTime,
-  payload:
-    'middleware to pull etlObject from store (see extraction in network)',
+  payload: 'middleware to pull etlObject from store (see extraction in network)',
 });
 
 // action kind :: command
@@ -115,28 +117,48 @@ export const setChildIds = (payload) => ({
   payload,
 });
 
+/**
+ * xstate output for setting the selectionModel value
+ */
+export const setSelectionModel = ({
+  nodeId,
+  identifier,
+  purpose,
+  measurementType,
+  valueIdx,
+  model,
+}) => ({
+  type: SET_SELECTION_MODEL,
+  id: nodeId,
+  identifier,
+  purpose,
+  measurementType,
+  valueIdx,
+  payload: model,
+});
+
+// action kind :: document
+export const setCompReduced = (payload) => ({
+  ...payload,
+  type: SET_COMP_REDUCED,
+});
+// action kind :: document
+export const setCompRequest = (payload) => ({
+  ...payload,
+  type: SET_COMP_REQUEST,
+});
+// action kind :: document
+export const setQualRequest = (payload) => ({
+  ...payload,
+  type: SET_QUAL_REQUEST,
+});
+
 // action kind :: document
 export const setSpanValue = makeActionCreator(
   SET_MSPAN_REQUEST,
   'id',
   'identifier',
   'valueIdx',
-  'payload',
-);
-
-// action kind :: document
-export const setCompReduced = makeActionCreator(
-  SET_COMP_REDUCED,
-  'id',
-  'identifier',
-  'valueIdx',
-  'payload',
-);
-// action kind :: document
-export const setCompValues = makeActionCreator(
-  SET_COMP_VALUES,
-  'id',
-  'identifier',
   'payload',
 );
 
@@ -207,14 +229,7 @@ export const updateEtlUnitIdentifier = makeActionCreator(
   'text',
 );
 //
-// 🚧 WIP: part of March '20 push
-// scrappy overloaded function to update
-// component, component values, quality values
-//
-// 🔖 The values encode a "selectionModel"; not the values themselves
-//    necessarily. e.g., {__ALL__: { value: __ALL__, request: true }}
-//
-// see also: setCompValues
+// Use for mspan
 //
 export const toggleValue = makeActionCreator(
   TOGGLE_VALUE,
@@ -222,13 +237,6 @@ export const toggleValue = makeActionCreator(
   'valueOrId', // number | number[]
   'identifier', // string
   'isSelected', // bool
-);
-// 🚧 WIP: part of March '20 push
-export const toggleReduced = makeActionCreator(
-  TOGGLE_REDUCED,
-  'id', // nodeId number
-  'valueOrId', // for mspan values; number?
-  'identifier', // string
 );
 
 // END

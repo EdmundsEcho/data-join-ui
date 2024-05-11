@@ -16,6 +16,21 @@ export const range = (start, stop, step = 1) =>
   Array.from({ length: (stop - start) / step }, (_, i) => start + i * step);
 
 /**
+ * will call each function in turn using the same parameters for each.
+ *
+ * @function
+ * @param {Function[]} funcs
+ * @return {Function}
+ */
+export function combineFunctions(...funcs) {
+  return (...args) => {
+    funcs.forEach((func) => {
+      if (func) func(...args);
+    });
+  };
+}
+
+/**
  * Returns a copy of the object without the prop.
  * Returns id when possible.
  *
@@ -36,9 +51,7 @@ export const removeProp = (remove, obj, deepCopy = false) => {
       }
 
       case typeof obj !== 'object': {
-        throw new InputError(
-          `removeProp: called with the wrong type: ${typeof obj}`,
-        );
+        throw new InputError(`removeProp: called with the wrong type: ${typeof obj}`);
       }
 
       case obj === null: {
@@ -155,9 +168,7 @@ export const moveItemInArray = (array, fromIndex, toIndex) => {
  */
 export const getFilenameFromPath = (path) => {
   if (typeof path !== 'string' || path.length === 0) {
-    console.warn(
-      `getFilenameFromPath call with invalid input: ${path || 'empty'}`,
-    );
+    console.warn(`getFilenameFromPath call with invalid input: ${path || 'empty'}`);
     return 'Filename';
   }
   // If we're on a Windows machine we handle the backslash path delimiter
@@ -385,8 +396,7 @@ export const darkenColor = (color, amt) => lightenColor(color, -amt);
 export const listWithEllipsis = (max, list) => {
   const stringList = list.slice(0, max);
 
-  if (typeof list === 'string')
-    return stringList + (list.length > max ? '...' : '');
+  if (typeof list === 'string') return stringList + (list.length > max ? '...' : '');
   return stringList.join(', ') + (list.length > max ? ', ...' : '');
 };
 
@@ -494,4 +504,23 @@ export const dedupObject = (obj, dedupKey = 'key') => {
     acc[key] = dedup(value, dedupKey);
     return acc;
   }, {});
+};
+
+/**
+ * @function
+ * @param {Function} func
+ * @param {number} limit
+ * @returns {Function}
+ */
+export const throttle = (func, limit) => {
+  let inThrottle;
+  return (...args) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
+    }
+  };
 };

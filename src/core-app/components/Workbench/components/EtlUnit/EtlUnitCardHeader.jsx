@@ -15,7 +15,7 @@ import Functions from '@mui/icons-material/Functions';
 
 import { Div } from '../../../../../luci-styled';
 import TextField from '../../../shared/TextField';
-import Tools from './Tools';
+import EtlUnitTools from './EtlUnitTools';
 
 /**
  * className EtlUnit-CardHeader
@@ -50,13 +50,12 @@ function EtlUnitCardHeader({
   tag,
   etlUnitType,
   displayType,
-  handleMenu,
   handleNameChange,
   className,
 }) {
   // required to control styles linked to Box
 
-  // TODO make sure part of custom theme
+  // make sure part of custom theme
   const format = etlUnitType === 'quality' || tag === 'measurement' ? 'large' : 'small';
 
   let IconImg;
@@ -81,9 +80,6 @@ function EtlUnitCardHeader({
       console.error(`Should not be here: ${tag} ${etlUnitType}`);
       break;
   }
-
-  // const { showDetail } = useContext(ToolContext);
-
   // 🔖 Parent is EtlUnit-measurement | -parameter
   return (
     <Div className={`${className} root`}>
@@ -105,19 +101,16 @@ function EtlUnitCardHeader({
         />
       </Div>
       <Div className='EtlUnit-CardHeader-Tools'>
-        <MaybeTools
-          handleMenu={handleMenu}
-          palette={palette}
-          tag={tag}
-          etlUnitType={etlUnitType}
-        />
+        <MaybeTools palette={palette} tag={tag} etlUnitType={etlUnitType} />
       </Div>
     </Div>
   );
 }
 
-/* eslint-disable-next-line */
-const noop = () => console.log(`Not configured`);
+/* eslint-disable no-console */
+function noop() {
+  console.log(`MaybeTools handleMenu is not configured`);
+}
 
 EtlUnitCardHeader.propTypes = {
   palette: PropTypes.bool.isRequired,
@@ -133,24 +126,21 @@ EtlUnitCardHeader.propTypes = {
   displayType: PropTypes.oneOf(['alias', 'none']),
   title: PropTypes.string.isRequired,
   meta: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  handleMenu: PropTypes.func,
   handleNameChange: PropTypes.func,
   className: PropTypes.string.isRequired,
 };
 EtlUnitCardHeader.defaultProps = {
   displayType: 'none',
   meta: undefined,
-  handleMenu: noop,
   handleNameChange: noop,
 };
 
-function MaybeTools({ handleMenu, palette, tag, etlUnitType }) {
+function MaybeTools({ palette, tag, etlUnitType }) {
   return palette ? null : (
-    <Tools onClickMenu={handleMenu} tag={tag} etlUnitType={etlUnitType} />
+    <EtlUnitTools onClickMenu={noop} tag={tag} etlUnitType={etlUnitType} />
   );
 }
 MaybeTools.propTypes = {
-  handleMenu: PropTypes.func.isRequired,
   palette: PropTypes.bool.isRequired,
   tag: PropTypes.oneOf([
     'quality',
@@ -190,9 +180,12 @@ function TextWrap({ handleNameChange, etlUnitType, meta, title, palette }) {
 TextWrap.propTypes = {
   handleNameChange: PropTypes.func.isRequired,
   etlUnitType: PropTypes.oneOf(['quality', 'measurement']).isRequired,
-  meta: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  meta: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   title: PropTypes.string.isRequired,
   palette: PropTypes.bool.isRequired,
+};
+TextWrap.defaultProps = {
+  meta: undefined,
 };
 
 export default EtlUnitCardHeader;

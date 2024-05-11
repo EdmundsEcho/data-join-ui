@@ -4,13 +4,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  createStore,
-  clear as idbClear,
-  set,
-  get,
-  promisifyRequest,
-} from 'idb-keyval';
+import { createStore, clear as idbClear, set, get, promisifyRequest } from 'idb-keyval';
 import { ReadWriteError } from '../lib/LuciErrors';
 
 // -----------------------------------------------------------------------------
@@ -78,9 +72,7 @@ const usePersistedState = (
   // db name using projectId, else default
   const params = useParams();
   const DB =
-    db || 'projectId' in params
-      ? dbNameFromProjectId(params.projectId)
-      : DEFAULT_DB;
+    db || 'projectId' in params ? dbNameFromProjectId(params.projectId) : DEFAULT_DB;
 
   const idbStore = createStore(DB, TBL);
 
@@ -175,6 +167,59 @@ function resolveDbName(maybeDbOrProjectId) {
     : dbNameFromProjectId(maybeDbOrProjectId);
 }
 
-export { dbNameFromProjectId, deleteDb, clearValues, usePersistedState };
+/**
+ * Deletes all keys starting with the given prefix from an IndexedDB store.
+ * @param {string} prefix - The prefix to search for in keys.
+ * @param {string} maybeDbOrProjectId - The database identifier or project ID.
+ */
+const deleteKeysWithPrefix = async (prefix, maybeDbOrProjectId) => {
+  const dbName = resolveDbName(maybeDbOrProjectId);
+  const storeName = TBL;
+
+  return new Promise((resolve, reject) => {
+    // Open the database
+    const request = indexedDB.open(dbName);
+    request.onerror = () => reject(request.error);
+    request.onupgradeneeded = () => {
+      // Create the object store if needed
+      const db = request.result;
+      if (!db.objectStoreNames.contains(storeName)) {
+        db.createObjectStore(storeName);
+      }
+    };
+    request.onsuccess = () => {
+      const db = request.result;
+      const transaction = db.transaction(storeName, 'readwrite');
+      const store = transaction.objectStore(storeName);
+      const cursorRequest = store.openCursor();
+
+      cursorRequest.onerror = () => reject(cursorRequest.error);
+      cursorRequest.onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+          if (cursor.key.startsWith(prefix)) {
+            // Delete the record if the key matches the prefix
+            const deleteRequest = cursor.delete();
+            deleteRequest.onerror = () => reject(deleteRequest.error);
+            deleteRequest.onsuccess = () => cursor.continue(); // Continue only after deletion is successful
+          } else {
+            cursor.continue();
+          }
+        } else {
+          // All entries have been checked
+          resolve();
+        }
+      };
+    };
+  });
+};
+
+export {
+  dbNameFromProjectId,
+  deleteDb,
+  clearValues,
+  deleteKeysWithPrefix,
+  usePersistedState,
+};
 
 export default usePersistedState;

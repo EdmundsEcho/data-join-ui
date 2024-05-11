@@ -1,0 +1,19 @@
+{
+  "id": "XLG1b8tK0Tp7AYFdRVAJ2UQvkZWS5ds7",
+  "name": "Typography",
+  "fileName": "Typography",
+  "filePath": "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/@mui/material/Typography",
+  "importPath": "@mui/material/Typography",
+  "expanded": false,
+  "depth": 1,
+  "thirdParty": true,
+  "reactRouter": false,
+  "reduxConnect": false,
+  "count": 2,
+  "props": {},
+  "children": [],
+  "parentList": [
+    "/Users/edmund/Programming-Local/etl/ui_v2/src/core-app/components/Workbench/components/Node.jsx"
+  ],
+  "error": ""
+}

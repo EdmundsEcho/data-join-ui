@@ -1,0 +1,104 @@
+{
+  "obsEtl": {
+    "id": "a50b902c-46af-42c2-8f76-573ca9d964d8",
+    "subject": {
+      "subjectType": "SUBJECT",
+      "qualities": [
+        {
+          "qualityName": "Spec Desc",
+          "qualityValues": {
+            "txtValues": [
+              "specialty 39",
+              "specialty 7",
+              "specialty 30",
+              "specialty 55",
+              "specialty 23",
+              "specialty 64",
+              "specialty 31",
+              "specialty 17",
+              "specialty 11",
+              "specialty 53",
+              "specialty 19",
+              "specialty 59",
+              "specialty 21",
+              "specialty 22",
+              "specialty 44",
+              "specialty 15",
+              "specialty 58"
+            ]
+          }
+        },
+        {
+          "qualityName": "Customer State",
+          "qualityValues": {
+            "txtValues": [
+              "NJ",
+              "AL",
+              "TN",
+              "UT",
+              "TXs",
+              "AZ",
+              "GA",
+              "NY",
+              "OH",
+              "CA",
+              "FL",
+              "CT",
+              "OK",
+              "VA",
+              "IL",
+              "HI",
+              "IN",
+              "NM",
+              "SC",
+              "KY",
+              "PA",
+              "MD",
+              "CO",
+              "MN",
+              "WV",
+              "MI",
+              "MO",
+              "NC",
+              "WY",
+              "LA",
+              "WI",
+              "MS",
+              "NE",
+              "MA",
+              "AK",
+              "KS",
+              "RI",
+              "NV",
+              "WA",
+              "DC",
+              "AR",
+              "NH",
+              "IA",
+              "SD"
+            ]
+          }
+        }
+      ]
+    },
+    "measurements": [
+      {
+        "measurementType": "Unit Count",
+        "components": [
+          {
+            "componentName": "Year-Month",
+            "componentValues": {
+              "spanValues": [{ "reduced": false, "rangeStart": 0, "rangeLength": 21 }]
+            }
+          },
+          {
+            "componentName": "Payment Type Group",
+            "componentValues": {
+              "txtValues": ["TOTAL THIRD PARTY", "CASH", "MEDICAID"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

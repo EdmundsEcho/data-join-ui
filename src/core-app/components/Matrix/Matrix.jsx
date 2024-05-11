@@ -14,6 +14,7 @@ import { Card } from '@mui/material';
 
 import MatrixGrid from './MatrixGrid';
 import LoadingSplash from '../shared/LoadingSplash';
+import { Div } from '../../../luci-styled/Styled';
 
 // 📖 data
 import {
@@ -100,13 +101,17 @@ const Matrix = () => {
   }
 
   return (
-    <Card className='Luci-matrix'>
-      <MatrixGrid
-        matrixPage={matrixPage}
-        abortController={abortController}
-        gridHeight={coreAppHeight + GRID_HEIGHT_ADJ}
-      />
-    </Card>
+    <Div className='Luci-matrix'>
+      <div className='outer-container'>
+        <div className='inner-make-scrollable-container'>
+          <MatrixGrid
+            matrixPage={matrixPage}
+            abortController={abortController}
+            gridHeight={coreAppHeight + GRID_HEIGHT_ADJ}
+          />
+        </div>
+      </div>
+    </Div>
   );
 };
 

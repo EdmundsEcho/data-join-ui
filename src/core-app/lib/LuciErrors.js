@@ -8,8 +8,12 @@
  * by this application.
  *
  */
+import { colors } from '../constants/variables';
 
-// import { colors } from '../constants/variables';
+//------------------------------------------------------------------------------
+const DEBUG = process.env.NODE_ENV === 'development';
+//------------------------------------------------------------------------------
+/* eslint-disable no-console, no-param-reassign */
 
 //------------------------------------------------------------------------------
 // see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
@@ -20,36 +24,60 @@
  * @return LuciError
  */
 class LuciError extends Error {
-  constructor(error, ...params) {
-    /* eslint-disable no-console */
-    console.debug('%cGENERATING LUCI ERROR', 'color:cyan');
-    console.debug(`error type: ${typeof error}`);
-    console.dir(error);
-
-    const message =
-      typeof error === 'object'
-        ? error?.message ?? error?.data?.message ?? 'No error message'
-        : error;
-
-    const cause = typeof error === 'object' ? error : undefined;
-
-    console.debug(`message: ${message}\ncause: ${cause}`);
-
-    if (cause) {
-      super(message, { cause });
-    } else {
-      super(message, ...params);
+  constructor(input, options = { verbose: DEBUG }) {
+    //
+    // Derive the message depenenton the input type.
+    // Include cause when the input::Error.
+    //
+    let message = typeof input === 'string' ? input : 'No error message'; // first guess message
+    if (input instanceof Error) {
+      message = input.message; // second guess message
+      options.cause = input;
+    } else if (typeof input === 'object') {
+      message = input?.message ?? input.data?.message ?? 'No error message'; // alternative second guess message
+      if (input.data?.cause) options.cause = input.data.cause;
     }
+
+    if (options.verbose && typeof console !== 'undefined' && console.log) {
+      // const color = colors.red.match(/color:\s*(#\w+);?/);
+      console.debug('%cGENERATING LUCI ERROR', colors.purple);
+      console.debug(
+        `\u001b[31mMessage: ${message}\u001b[39m`,
+        '\nCause:',
+        options.cause,
+      );
+    }
+
+    super(message, options);
+    this.verbose = options.verbose || false;
 
     if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     } else {
       this.stack = new Error(message).stack;
     }
-    this.name = this.constructor.name;
-    this.message = message;
-    this.cause = cause || error; // host the error as a fix
+
+    this.name = 'LuciError';
     this.date = new Date();
+  }
+
+  toString() {
+    let result = `${this.name}: ${this.message}`;
+
+    if (this.verbose && this.cause) {
+      let causeStr;
+      try {
+        causeStr =
+          typeof this.cause === 'object'
+            ? JSON.stringify(this.cause, null, 2)
+            : this.cause.toString();
+      } catch (error) {
+        causeStr = `Could not serialize the cause prop: ${error.message}`;
+      }
+      result += `\nCaused by: ${causeStr}`;
+    }
+
+    return result;
   }
 }
 
@@ -71,12 +99,7 @@ class LookupError extends LuciError {}
 class MachineError extends LuciError {}
 class MiddlewareError extends LuciError {}
 class MissingProjectIdError extends LuciError {}
-class ReadWriteError extends LuciError {
-  /*
-constructor(message, error) {
-    super(message, error);
-} */
-}
+class ReadWriteError extends LuciError {}
 class SagasError extends LuciError {}
 class TimeoutError extends LuciError {}
 class ValueError extends LuciError {}

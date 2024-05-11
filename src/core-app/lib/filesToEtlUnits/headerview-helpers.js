@@ -260,15 +260,14 @@ export const intersection = (setA, setB) => {
  * @param {Object.<string, (string|number|Object)>} field
  * @return bool
  */
-export const isEtlFieldDerived = (field) => {
+export const isEtlFieldGroupByFile = (field) => {
   if (typeof field === 'undefined') return undefined;
   if (typeof field === 'object') {
     const { 'map-files': mapFiles = { arrows: {} } } = field;
-    if (mapFiles === null) return false;
-    return Object.keys(mapFiles.arrows).length > 0;
+    return mapFiles !== null && Object.keys(mapFiles.arrows).length > 0;
   }
   throw new Error({
-    message: `isEtlFieldDerived requires an object type: ${typeof field}`,
+    message: `isEtlFieldGroupByFile requires an object type: ${typeof field}`,
   });
 };
 

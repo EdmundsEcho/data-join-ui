@@ -14,6 +14,7 @@ const SUCCESS_NOCHANGE = 'success - no update to cache'; // RESOLVED
 const ERROR = 'error'; // REJECTED
 const IDLE = 'idle'; // UNINITIALIZED
 const RESET = 'reset'; // UNINITIALIZED
+const READING_CACHE = 'reading cache'; // CONSUMED
 
 // other internal actions
 const SET_FETCH_ARGS = 'set fetch args';
@@ -26,6 +27,7 @@ export {
   START,
   SUCCESS,
   SUCCESS_NOCHANGE,
+  READING_CACHE,
   ERROR,
   IDLE,
   RESET,
