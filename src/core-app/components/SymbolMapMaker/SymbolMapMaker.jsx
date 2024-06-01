@@ -188,8 +188,7 @@ function SymbolMapMaker({
           <Table
             className={clsx('Luci-Table', 'symbolMapMaker')}
             size='medium'
-            stickyHeader
-          >
+            stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell sx={{ width: leftWidth }}>

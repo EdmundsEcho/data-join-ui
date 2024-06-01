@@ -572,12 +572,12 @@ const reducer = createReducer(initialState, {
     //
     const updatedHvs = Object.keys(state.headerViews).includes(removeFile)
       ? /* eslint-disable no-param-reassign */
-        Object.values(state.headerViews).reduce((updatedHvs_, hv) => {
-          if (hv.filename !== removeFile) updatedHvs_[hv.filename] = hv;
-          return updatedHvs_;
-        }, {})
+      Object.values(state.headerViews).reduce((updatedHvs_, hv) => {
+        if (hv.filename !== removeFile) updatedHvs_[hv.filename] = hv;
+        return updatedHvs_;
+      }, {})
       : /* eslint-enable no-param-reassign */
-        state.headerViews;
+      state.headerViews;
 
     return {
       ...state,

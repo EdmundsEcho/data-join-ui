@@ -89,7 +89,7 @@ export const fieldFromFileField = (file, field) => {
     'field-alias': uniqueFieldNames[field.idx],
     purpose: field.purpose,
     'null-value': field.purpose === TYPES.MVALUE ? 0 : null,
-    format: null,
+    format: field?.format ?? null,
     'map-symbols': {
       arrows: {},
     },

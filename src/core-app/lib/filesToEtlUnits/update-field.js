@@ -132,9 +132,7 @@ export function updateField({ readOnlyField: field, key, value, DEBUG }) {
           field: setFieldValue(key)(field, value, DEBUG),
         };
       }
-      throw new InputError(
-        `Failed to update a field with inputs: ${key} ${value}`,
-      );
+      throw new InputError(`Failed to update a field with inputs: ${key} ${value}`);
     }
   } catch (e) {
     if (e instanceof InputError) {
@@ -159,9 +157,7 @@ function setPurpose(field, newPurpose, DEBUG) {
     return field;
   }
 
-  return mkPurposeSpecificField(
-    setFieldValue('purpose')(field, newPurpose, DEBUG),
-  );
+  return mkPurposeSpecificField(setFieldValue('purpose')(field, newPurpose, DEBUG));
 }
 /**
  * time -> field

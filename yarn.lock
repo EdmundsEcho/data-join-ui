@@ -5002,6 +5002,11 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
+date-fns@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-3.6.0.tgz#f20ca4fe94f8b754951b24240676e8618c0206bf"
+  integrity sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==
+
 debug@2.6.9, debug@^2.6.0:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -5767,6 +5772,13 @@ eslint-plugin-testing-library@^5.0.1:
   integrity sha512-ELY7Gefo+61OfXKlQeXNIDVVLPcvKTeiQOoMZG9TeuWa7Ln4dUNRv8JdRWBQI9Mbb427XGlVB1aa1QPZxBJM8Q==
   dependencies:
     "@typescript-eslint/utils" "^5.58.0"
+
+eslint-plugin-you-dont-need-momentjs@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-you-dont-need-momentjs/-/eslint-plugin-you-dont-need-momentjs-1.6.0.tgz#c5209783e8a9fa772f8e3c4d4d4a03813d8f9a1e"
+  integrity sha512-u12WanwuAL5B6/Kx6AtMDI04OojkS/twDueDwBgxsnKLy33VM4npP7ZlU2o7pxD1z8LbzPP6Y6/e7cPf6ZhatQ==
+  dependencies:
+    kebab-case "^1.0.0"
 
 eslint-scope@5.1.1, eslint-scope@^5.0.0, eslint-scope@^5.1.1:
   version "5.1.1"
@@ -8541,6 +8553,11 @@ jsonpointer@^5.0.0:
     array.prototype.flat "^1.3.1"
     object.assign "^4.1.4"
     object.values "^1.1.6"
+
+kebab-case@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/kebab-case/-/kebab-case-1.0.2.tgz#5eac97d5d220acf606d40e3c0ecfea21f1f9e1eb"
+  integrity sha512-7n6wXq4gNgBELfDCpzKc+mRrZFs7D+wgfF5WRFLNAr4DA/qtr9Js8uOAVAfHhuLMfAcQ0pRKqbpjx+TcJVdE1Q==
 
 kind-of@^6.0.2:
   version "6.0.3"

@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
-// import moment from 'moment';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -175,8 +174,7 @@ function Result({ status }) {
   return null;
 }
 Result.propTypes = {
-  status: PropTypes.oneOf(['initial', 'success', 'fail', 'uploading'])
-    .isRequired,
+  status: PropTypes.oneOf(['initial', 'success', 'fail', 'uploading']).isRequired,
 };
 
 export default MultipleFileUploader;

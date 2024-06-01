@@ -116,6 +116,7 @@ module.exports = {
    *
    */
   extends: [
+    'plugin:you-dont-need-momentjs/recommended',
     'plugin:redux-saga/recommended',
     // eslint rule settings
     'eslint:recommended',
@@ -149,6 +150,9 @@ module.exports = {
         // packageDir: './',
       },
     ],
+    'you-dont-need-momentjs/no-import-moment': 'warn',
+    'you-dont-need-momentjs/no-moment-constructor': 'warn',
+    'you-dont-need-momentjs/add': 'warn',
     // eslint
     'no-ternary': 'off',
     // get to compile

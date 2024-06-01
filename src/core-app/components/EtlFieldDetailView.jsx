@@ -62,10 +62,7 @@ const EtlFieldDetailView = (props) => {
   useTraceUpdate(props);
 
   if (process.env.REACT_APP_DEBUG_RENDER === 'true') {
-    console.debug(
-      '%crendering EtlFieldForm v1 - specialized',
-      debug.color.green,
-    );
+    console.debug('%crendering EtlFieldForm v1 - specialized', debug.color.green);
   }
   if (DEBUG) {
     console.dir(props);
@@ -87,10 +84,7 @@ const EtlFieldDetailView = (props) => {
   };
 
   const showHeaderViewDialog = (
-    <HeaderViewDialog
-      filename={viewingSource}
-      handleClose={handleViewSourceClose}
-    />
+    <HeaderViewDialog filename={viewingSource} handleClose={handleViewSourceClose} />
   );
 
   return (

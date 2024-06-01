@@ -78,8 +78,7 @@ const nextSpan = (diffs) => {
 
     if (diff > 1) {
       // not continuous, return a new span
-      const flagLastDisjoint =
-        restDiffs.length === 0 ? 'missingLastSpan' : false; // ugly but clear
+      const flagLastDisjoint = restDiffs.length === 0 ? 'missingLastSpan' : false; // ugly but clear
       return {
         spanLength: len + 1, // len diff -> len original array
         diff,
@@ -138,16 +137,12 @@ const mkSpans = (config, moments) => {
       return accSpanValues;
     }
     // generate the span, append to the acc
-    const { spanLength, diff, restDiffs, flagLastDisjoint = false } = nextSpan(
-      difs,
-    );
+    const { spanLength, diff, restDiffs, flagLastDisjoint = false } = nextSpan(difs);
 
     const newAcc = [
       ...accSpanValues,
       mkSpan(spanStart, spanLength),
-      ...(flagLastDisjoint
-        ? [mkSpan(spanStart + spanLength + diff - 1, 1)]
-        : []),
+      ...(flagLastDisjoint ? [mkSpan(spanStart + spanLength + diff - 1, 1)] : []),
     ];
 
     // move the start cursor forward
@@ -205,8 +200,7 @@ const validDates = (format, dates, returnMoments = false) => {
     );
   }
   const moments = dates.map((d) => moment(d, format, true));
-  const areValid =
-    moments.filter((d) => d.format() === 'Invalid date').length === 0;
+  const areValid = moments.filter((d) => d.format() === 'Invalid date').length === 0;
 
   return returnMoments ? areValid && moments : areValid;
 };
@@ -233,9 +227,7 @@ const mspanLevelsWithRef = (levels, format, time) => {
     format,
     time?.interval?.unit,
     time?.interval?.count,
-  ].every(
-    (prop) => typeof prop !== 'undefined' && prop !== null && prop !== '',
-  );
+  ].every((prop) => typeof prop !== 'undefined' && prop !== null && prop !== '');
 
   if (GLOBAL_DEBUG) {
     if (canParseLevels) {
@@ -258,9 +250,7 @@ const mspanLevelsWithRef = (levels, format, time) => {
   // levels :: [[value, count]]
   const dates = levels.map((l) => l[0]).filter((d) => d !== '');
   if (dates.length === 0) {
-    console.warn(
-      `fieldWithSpans: tried to create spans with empty date values`,
-    );
+    console.warn(`fieldWithSpans: tried to create spans with empty date values`);
     return { time };
   }
 
@@ -322,7 +312,7 @@ export const trySpanEnabledField = ({
     if (field.purpose !== 'mspan') {
       throw new DesignWarning(
         `Tried to add 'span-levels' to the wrong field type: ${
-          field.purpose || 'undefined'
+        field.purpose || 'undefined'
         }`,
       );
     }
@@ -352,9 +342,7 @@ export const trySpanEnabledField = ({
     ...Object.values(field.time.interval),
     field.format, // << format spec for the levels
     field.levels,
-  ].every(
-    (entry) => typeof entry !== 'undefined' && entry !== null && entry !== '',
-  );
+  ].every((entry) => typeof entry !== 'undefined' && entry !== null && entry !== '');
 
   if (DEBUG) {
     console.log(`%cisComplete: ${isComplete}`, COLOR);
@@ -365,9 +353,7 @@ export const trySpanEnabledField = ({
   // field with 'span-levels'
   // replace empty values with null-value
   const levelsNoNull = field.levels
-    .map((tuple) =>
-      tuple[0] === '' ? [field['null-value'] || '', tuple[1]] : tuple,
-    )
+    .map((tuple) => (tuple[0] === '' ? [field['null-value'] || '', tuple[1]] : tuple))
     .filter((tuple) => tuple[0] !== '');
 
   const hasValidDates = validDates(field.format, levelsNoNull);
@@ -383,16 +369,14 @@ export const trySpanEnabledField = ({
   const result =
     isComplete && hasValidDates
       ? {
-          ...field,
-          ...mspanLevelsWithRef(levelsNoNull, field.format, field.time),
-        }
+        ...field,
+        ...mspanLevelsWithRef(levelsNoNull, field.format, field.time),
+      }
       : H.removeProp('levels-mspan', field);
 
   if (DEBUG) {
     console.log(
-      `%cResult (levels-mspan when complete and valid: ${
-        hasValidDates && isComplete
-      })`,
+      `%cResult (levels-mspan when complete and valid: ${hasValidDates && isComplete})`,
       COLOR,
     );
     console.dir(result);
@@ -423,9 +407,9 @@ export const buildSpanEnabledFields = (hv) => {
   // add keys to wideToLongFields
   const wideFields = hv.wideToLongFields
     ? goTry(Object.values(hv.wideToLongFields.fields)).reduce((acc, field) => {
-        acc[field['field-alias']] = field;
-        return acc;
-      }, {})
+      acc[field['field-alias']] = field;
+      return acc;
+    }, {})
     : null;
 
   if (wideFields) {
@@ -453,14 +437,8 @@ export const timeRange = (field) => {
   const mkMoment = (str) => moment(str, field.format, true);
   const { time, levels } = field;
   const moments = levels.map((l) => mkMoment(l[0]));
-  const minDate = moments.reduce(
-    (min, m) => (min > m ? m : min),
-    mkMoment(levels[0]),
-  );
-  const maxDate = moments.reduce(
-    (max, m) => (max < m ? m : max),
-    mkMoment(levels[0]),
-  );
+  const minDate = moments.reduce((min, m) => (min > m ? m : min), mkMoment(levels[0]));
+  const maxDate = moments.reduce((max, m) => (max < m ? m : max), mkMoment(levels[0]));
 
   return maxDate.diff(minDate, isoUnit(time.interval.unit));
 };
