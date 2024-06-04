@@ -1,6 +1,7 @@
-#
+################################################################################
 # Two staged build of the React app
 # hosted on nginx
+
 # Local version nginx non-dev version
 # (points services to a localhost)
 #
