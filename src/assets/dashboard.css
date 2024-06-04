@@ -25,10 +25,10 @@
     /* controller main & outlet */
     /* flex-handles */
     --controller-main-flex-handle: .20;
-    --controller-outlet-flex-handle: .74;
+    --controller-outlet-flex-handle: 1;
     /* gap between  */
-    --controller-outlet-gap: 2px;
-    --controller-outlet-radius: 1rem;
+    --controller-outlet-gap: 0px;
+    --controller-outlet-radius: 0rem;
     /* margins and padding */
     --controller-margin: 0.5rem;
     --controller-padding: var(--default-stack-gap);
@@ -40,8 +40,8 @@
     --stepbar-height: 130px;
     --stepbar-nav-width: 100px;
 
-    /* computed value to set the height of main-view */
-    --main-view-height: calc(100vh - var(--app-bar-height) - var(--controller-margin) * 2);
+    /* computed to set the height of main-view */
+    --main-view-height: calc(100vh - var(--app-bar-height) - var(--controller-margin) * 0);
     --core-app-outlet-height: calc(var(--main-view-height) - var(--stepbar-height) - var(--controller-margin) * 4 - 4px);
 }
 
@@ -319,9 +319,15 @@ button.cancel {
     flex: var(--controller-main-flex-handle);
 }
 
+.controller.main.flex-handle>.header {
+    height: 40px;
+}
+
 .controller.main.flex-handle.mini {
     flex: unset;
     width: var(--controller-main-mini-width);
+    padding-left: 8px;
+    /* -4px compared to baseline */
 }
 
 .controller.main.projects .list.toggle svg {
@@ -332,7 +338,7 @@ button.cancel {
     position: absolute;
     background: var(--gradient-controller-overlay);
     transform: translateY(-12px);
-    width: 100%;
+    width: 113%;
     height: 100%;
     pointer-events: none;
     z-index: 1;
@@ -398,9 +404,9 @@ button.cancel {
 }
 
 .Luci-LinearProgress.root {
-    position: 'absolute';
+    position: absolute;
     top: 0;
-    width: '100%';
+    width: 100%;
 }
 
 .side-nav {
@@ -413,6 +419,7 @@ button.cancel {
 }
 
 .Luci-AppBar.show-hide .horizontal-layout.primary-main {
+    display: inline-block;
     background-color: transparent;
 }
 
@@ -470,6 +477,7 @@ button.cancel {
     padding: var(--padding);
     font-family: "Lato";
     color: var(--color-text-primary);
+    border-radius: 0.4rem;
 }
 
 .list.projects>.item:hover {
@@ -486,9 +494,7 @@ button.cancel {
 
 /* ---------------------------------------- */
 /* controller formatting: main & outlet     */
-.controller.main,
-.controller.outlet {
-    margin: var(--controller-margin);
+.controller.main {
     padding: var(--controller-padding);
 }
 

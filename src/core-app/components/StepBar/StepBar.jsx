@@ -159,8 +159,7 @@ const StepBarComponent = () => {
                 disabled: !isPreviousStepEnabled[currentPage.route],
               })}
               startIcon={<PreviousArrow fontSize='small' />}
-              onClick={handlePrevStep}
-            >
+              onClick={handlePrevStep}>
               Previous
             </Button>
             {/* Next */}
@@ -170,8 +169,7 @@ const StepBarComponent = () => {
               })}
               disabled={!isNextStepEnabled[currentPage.route]}
               endIcon={<NextArrow fontSize='small' />}
-              onClick={handleNextStep}
-            >
+              onClick={handleNextStep}>
               Next
             </Button>
           </div>
@@ -179,39 +177,40 @@ const StepBarComponent = () => {
       </div>
 
       {/* Floating functions */}
-      <div
-        className={clsx('floating-actions stack nowrap', {
-          hidden: isLoading,
-        })}
-      >
-        {showResetCanvas && <ResetCanvas />}
+      {false && (
+        <>
+          <div
+            className={clsx('floating-actions stack nowrap', {
+              hidden: isLoading,
+            })}>
+            {showResetCanvas && <ResetCanvas />}
 
-        {showDownloadMatrix && (
-          <a href={mkSaveEndpoint(projectId)} download>
-            <Fab color='secondary' className='matrix download round'>
-              <DownloadIcon />
-            </Fab>
-          </a>
-        )}
+            {showDownloadMatrix && (
+              <a href={mkSaveEndpoint(projectId)} download>
+                <Fab color='secondary' className='matrix download round'>
+                  <DownloadIcon />
+                </Fab>
+              </a>
+            )}
 
-        {showFeedback && <SlidingPopupFeedback />}
+            {showFeedback && <SlidingPopupFeedback />}
 
-        {showFeedback && (
-          <a
-            id='Setmore_button_iframe'
-            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'
-          >
-            <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
-              <EventIcon />
-            </Fab>
-          </a>
-        )}
-      </div>
+            {showFeedback && (
+              <a
+                id='Setmore_button_iframe'
+                href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'>
+                <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
+                  <EventIcon />
+                </Fab>
+              </a>
+            )}
+          </div>
 
-      {/* logo container */}
-      <div className='stepbar logo'>
-        <img src={logo} height='50' width='37' alt='Lucivia' />
-      </div>
+          <div className='stepbar logo'>
+            <img src={logo} height='50' width='37' alt='Lucivia' />
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -223,8 +222,7 @@ function ResetCanvas() {
       color='secondary'
       className='fab feedback'
       onClick={handleResetCanvas}
-      disabled={!isCanvasDirty}
-    >
+      disabled={!isCanvasDirty}>
       <ResetIcon />
     </Fab>
   );

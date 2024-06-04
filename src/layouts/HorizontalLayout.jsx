@@ -68,7 +68,6 @@ function WithSideBar({ children: routesElement }) {
   // 🦀 debugging; does not seems to works
   const [origin] = usePersistedState('origin'); // debugging read-only
 
-  //
   // mobile-dependent display of drawer
   const pageWidth = usePageWidth();
   const isMobile = pageWidth < 770;
@@ -106,8 +105,7 @@ function WithSideBar({ children: routesElement }) {
         })}
         toggleDrawer={toggleDrawer}
         open={showWideMainMenu}
-        isMobile={isMobile}
-      >
+        isMobile={isMobile}>
         {/* Main viewport */}
         {routesElement}
       </HorizontalLayout>
@@ -161,15 +159,13 @@ function HorizontalLayout({
       <AppBar
         position='absolute'
         className={`Luci-AppBar ${theme.palette.mode}-toolbar ${className}`}
-        open={open}
-      >
+        open={open}>
         <Toolbar
           className='Luci-Toolbar app-bar'
           sx={{
             mr: '16px', // keep right padding when drawer closed
             ml: '16px',
-          }}
-        >
+          }}>
           <IconButton
             edge='start'
             color='inherit'
@@ -178,8 +174,7 @@ function HorizontalLayout({
             sx={{
               marginRight: '36px',
               ...(open && { display: 'none' }),
-            }}
-          >
+            }}>
             <MenuIcon />
           </IconButton>{' '}
           <Typography
@@ -187,15 +182,14 @@ function HorizontalLayout({
             variant='h6'
             color='inherit'
             noWrap
-            sx={{ flexGrow: 1 }}
-          ></Typography>
+            sx={{ flexGrow: 1 }}></Typography>
           <ActionItems open={open} isMobile={isMobile} handleLogout={handleLogout} />
         </Toolbar>
       </AppBar>
       <Div className='main main-app-view'>
-        <Toolbar className='Luci-AppBar Luci-Toolbar' />
         <div className='main-view sizing noradius'>
           <Grid container className='horizontal-layout root'>
+            {/* TODO: Find out if we use the secondary element */}
             {secondaryElement && (
               <Grid item xs={12} md={4} className='horizontal-layout secondary-root'>
                 <Paper
@@ -204,8 +198,7 @@ function HorizontalLayout({
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                  }}
-                >
+                  }}>
                   {secondaryElement()}
                 </Paper>
               </Grid>
@@ -214,8 +207,7 @@ function HorizontalLayout({
               item
               xs={12}
               md={secondaryElement ? 8 : 12}
-              className='horizontal-layout primary-root'
-            >
+              className='horizontal-layout primary-root'>
               <Box className='horizontal-layout primary-main nostack nogap'>
                 <div className='main-view route-elements'>{children}</div>
               </Box>
@@ -229,8 +221,7 @@ function HorizontalLayout({
           <SlidingPopupFeedback />
           <a
             id='Setmore_button_iframe'
-            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'
-          >
+            href='https://booking.setmore.com/scheduleappointment/eb6d620f-63d9-42d4-aab0-da01cf7a1762'>
             <Fab color='secondary' className={clsx('fab', 'calendar', 'round')}>
               <EventIcon />
             </Fab>
@@ -268,8 +259,7 @@ function TextWithIcon({ open, handleLogout, isMobile }) {
           className='button-w-text regular logout'
           onClick={handleLogout}
           endIcon={<LogoutIcon />}
-          color='inherit'
-        >
+          color='inherit'>
           Log out
         </Button>
       )}

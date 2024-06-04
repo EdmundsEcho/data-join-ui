@@ -1155,6 +1155,23 @@ export default (mode) => {
           root: ({ theme }) => ({
             backgroundColor: 'inherit',
             //---------------------------------------------------------------------
+            // Workbench
+            //---------------------------------------------------------------------
+            '&.Luci-Workbench-board > .palette-root': {
+              padding: '2px !important',
+              borderRadius: '0.4rem !important',
+            },
+            '&.Luci-Workbench-board > .palette-root > .Node-root.superGroup': {
+              borderRadius: '0.4rem',
+            },
+            '&.Luci-Workbench-board .superGroup': {
+              backgroundColor: theme.palette.themeColors['color-background-paper'],
+            },
+            '&.Luci-Workbench-board .superGroup.palette': {
+              paddingTop: '1rem',
+              borderRadius: '0.4rem',
+            },
+            //---------------------------------------------------------------------
             // HeaderViews
             //---------------------------------------------------------------------
             '&.Luci-HeaderViews.root': {
@@ -1182,13 +1199,17 @@ export default (mode) => {
             // 👉 EtlUnitBase, EtlUnitGroupBase; extends MuiCard
             // 👉 Node-root for superGroup, group and unit; extends MuiContainer
             //
+            // To start, the board is flex with 3 items, the second being a divider
+            // 1. palette-root
+            // 2. canvas-root
             //---------------------------------------------------------------------
-
             '&.Luci-Workbench-board': {
               position: 'relative', // 🦀 ?
               height: '100%',
               overflow: 'hidden',
               display: 'flex',
+              justifyContent: 'stretch',
+              gap: '0',
               padding: '0',
               margin: '0',
               // --
@@ -1196,10 +1217,7 @@ export default (mode) => {
               '& .Node-root': {
                 padding: 0,
               },
-              '& .canvas.superGroup, .palette.superGroup': {
-                backgroundColor: 'inherit',
-              },
-
+              '& .canvas.superGroup, .palette.superGroup': {},
               '& .Node-root.group': {
                 position: 'relative',
                 '& > .fab': {
@@ -1208,8 +1226,8 @@ export default (mode) => {
                   position: 'absolute',
                   '&:hover': isLightMode
                     ? {
-                        backgroundColor: theme.palette.secondary.light,
-                        color: theme.palette.primary.dark,
+                        backgroundColor: theme.palette.secondary.extraLight,
+                        color: theme.palette.primary.extraDark,
                       }
                     : {
                         backgroundColor: theme.palette.primary.main,
@@ -1223,7 +1241,8 @@ export default (mode) => {
               // divider between palette and canvas
               // ⚠️  Width must be specified
               '& > .workbench-split': {
-                margin: `0 ${theme.spacing(0)}`,
+                margin: '0px',
+                borderStyle: 'none', // hide it for now
                 width: 0,
               },
               // ✅ Top & bottom margins must be the same
@@ -1244,23 +1263,30 @@ export default (mode) => {
               },
               // -- starting point for palette
               '& > .palette-root': {
+                flex: '1 1 300px', // grow quickly to prefered size of 270px
                 height: '100%',
                 minWidth: '160px',
                 maxWidth: '20%',
-                padding: theme.spacingFn(5),
-                borderRadius: theme.spacingFn(5),
+                padding: '0.5rem',
+                marginTop: '0.5rem',
+                marginRight: '0',
+                marginLeft: '0',
+                borderRadius: '0.5em',
                 backgroundColor: isLightMode
-                  ? theme.palette.grey[100]
-                  : theme.palette.grey[900],
+                  ? 'rgba(0,0,0,0.1)' // darker
+                  : 'rgba(255,255,255, 0.05)', // brighter
                 '& > .Node-root.superGroup': {
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: `${theme.spacingFn(2)}`,
+                  gap: '1rem',
                   // debug
                   // backgroundColor: 'green',
                   margin: 0,
                   borderRadius: 0,
                   height: '100%',
+                  '& > p': {
+                    margin: 'auto',
+                  },
                   '& > .Node-inner.superGroup': {
                     borderRadius: 0,
                     // debug
@@ -1273,10 +1299,9 @@ export default (mode) => {
                       flexDirection: 'row',
                       alignContent: 'flex-start',
                       flexWrap: 'wrap', // prefer single column
-                      gap: `${theme.spacingFn(3)}`,
+                      gap: '0.5rem',
                       overflow: 'auto',
-                      margin: 0,
-                      padding: 0,
+                      paddingRight: '10px', // push the scrollbar
                       // debug
                       // backgroundColor: 'purple',
                       height: '100%',
@@ -1288,8 +1313,8 @@ export default (mode) => {
               '& > .canvas-root': {
                 // debug
                 // backgroundColor: 'cyan',
+                flex: '1 1 auto',
                 minWidth: '50%',
-                maxWidth: '75%',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'row',
@@ -1312,7 +1337,7 @@ export default (mode) => {
                     // margin helps with dnd
                     margin: `${theme.spacingFn(4)} auto`,
                     height: '2px',
-                    backgroundColor: theme.palette.primary.light,
+                    backgroundColor: theme.palette.primary.extraLight,
                     borderRadius: '3px',
                     border: 'none',
                   },
@@ -1379,6 +1404,7 @@ export default (mode) => {
         styleOverrides: {
           root: ({ theme }) => ({
             boxShadow: 'none',
+            backgroundColor: isLightMode ? theme.palette.light : theme.palette.dark,
             backgroundImage: isLightMode
               ? `linear-gradient(
                     rgba(255, 255, 255, 0.05),
@@ -2177,6 +2203,7 @@ export default (mode) => {
             // main-app-view
             //--------------------------------------------------------------------
             '&.main-app-view': {
+              display: 'inline-block',
               backgroundColor:
                 theme.palette.mode === 'light'
                   ? theme.palette.grey[100]
