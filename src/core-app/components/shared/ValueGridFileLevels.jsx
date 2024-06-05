@@ -66,10 +66,8 @@ import ValueGridCore, { filterOperators, ROW_HEIGHT, SERVICES } from './ValueGri
 import useAbortController from '../../../hooks/use-abort-controller';
 
 //------------------------------------------------------------------------------
-//
 const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 //------------------------------------------------------------------------------
-/* eslint-disable no-console */
 
 //-----------------------------------------------------------------------------
 const PAGE_SIZE =
@@ -230,12 +228,14 @@ const ValueGridFileLevels = () => {
   //
   // baseline filter to retrieve values
   const filter = fileLevelsRequest(getValue, fieldType, false /* includeMapSymbols */);
-  console.debug('filter', filter);
 
   const mapSymbols = useSelector(
     mapSymbolsSelectorCreator({ fieldType, getFieldValue: getValue }),
   );
-  console.debug('mapSymbols', mapSymbols);
+  if (DEBUG) {
+    console.debug('filter', filter);
+    console.debug('mapSymbols', mapSymbols);
+  }
 
   // inject into the fetch function
   const { projectId } = useParams();
@@ -347,8 +347,7 @@ export default function ValueGridFileLevelsWithContext({ fieldType, getValue }) 
         }
         purpose={getValue('purpose')}
         getFieldValue={(prop) => fieldData[prop]}
-        fieldType={fieldType}
-      >
+        fieldType={fieldType}>
         <ValueGridFileLevels />
       </LevelsContextProvider>
     )

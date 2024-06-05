@@ -86,12 +86,12 @@ const usePagination = ({
   turnOff = false, // support for derived data
   DEBUG: debugProp,
 }) => {
-  //
-  // temp debug
-  console.debug('use-pagination service: ', service);
   useEffect(() => {
-    console.log('filter prop changed', filterProp);
-  }, [filterProp]);
+    if (DEBUG) {
+      console.debug('use-pagination service: ', service);
+      console.log('filter prop changed', filterProp);
+    }
+  }, [filterProp, service]);
   //
   // initialize the local state
   const [pageSize, setPageSize] = useState(() => pageSizeProp);
@@ -160,7 +160,10 @@ const usePagination = ({
 */
 
   const reset = useCallback(() => {
-    console.debug('Called reset in usePagination');
+    if (DEBUG) {
+      console.debug('Called reset in usePagination');
+    }
+
     setCurrentPageIdx1(1);
     setCursor(() => {
       return service === SERVICES.LEVELS
@@ -275,9 +278,10 @@ const usePagination = ({
   const onFetchNextPage = () => {
     fetchPageLevels(currentPageIdx1 + 1, false /* isZeroIdx */);
   };
-  const onFetchPreviousPage = () => {
-    fetchPageLevels(currentPageIdx1 - 1, false /* isZeroIdx */);
-  };
+
+  //const onFetchPreviousPage = () => {
+  //  fetchPageLevels(currentPageIdx1 - 1, false /* isZeroIdx */);
+  //};
 
   // when change page size, restart the list
   const onPageSizeChange = useCallback((newPageSize) => {

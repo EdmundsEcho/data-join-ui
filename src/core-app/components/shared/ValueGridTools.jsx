@@ -40,7 +40,6 @@ const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 const ValueGridTools = () => {
   const { getFieldValue, handleUpdateSymbols } = useLevelsApiContext();
   // print the type of handleUpdateSymbols, I want to confirm it's a function
-  console.log('handleUpdateSymbols', typeof handleUpdateSymbols);
   const { purpose, fieldType, context } = useLevelsDataContext();
   const apiRef = useGridApiContext();
 
@@ -64,8 +63,7 @@ const ValueGridTools = () => {
           <IconButton
             className='Luci-IconButton small series'
             tabIndex={-1}
-            size='large'
-          >
+            size='large'>
             <SeriesIcon />
           </IconButton>
         </ToolTip>
@@ -74,8 +72,7 @@ const ValueGridTools = () => {
           <IconButton
             className='Luci-IconButton small rollup'
             tabIndex={-1}
-            size='large'
-          >
+            size='large'>
             <LabelIcon />
           </IconButton>
         </ToolTip>
@@ -85,8 +82,7 @@ const ValueGridTools = () => {
           <IconButton
             className='Luci-IconButton small weight'
             tabIndex={-1}
-            size='large'
-          >
+            size='large'>
             <WeightIcon />
           </IconButton>
         </ToolTip>
@@ -110,7 +106,6 @@ const ValueGridTools = () => {
               if (handleUpdateSymbols) {
                 handleUpdateSymbols();
               }
-              console.log('symbol map onDone');
               if (DEBUG) {
                 console.log('symbol map onDone');
               }
@@ -132,8 +127,7 @@ export function ScrubToolTip({ onClick }) {
         className={clsx('Luci-IconButton', 'small')}
         tabIndex={-1}
         onClick={onClick} // handleClickOpen
-        size='large'
-      >
+        size='large'>
         <EditIcon />
       </IconButton>
     </ToolTip>

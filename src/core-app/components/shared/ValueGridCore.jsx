@@ -154,11 +154,13 @@ const ValueGridCore = ({
     rowToIdFn,
   );
 
-  console.debug('📦 selectionModel Grid selection model', {
-    selectionModel,
-    gridRows,
-    gridSelectionModel: computeGridSelectionModel(gridRows),
-  });
+  if (DEBUG) {
+    console.debug('📦 selectionModel Grid selection model', {
+      selectionModel,
+      gridRows,
+      gridSelectionModel: computeGridSelectionModel(gridRows),
+    });
+  }
   //----------------------------------------------------------------------------
 
   // ---------------------------------------------------------------------------
@@ -187,7 +189,9 @@ const ValueGridCore = ({
   // Initial state to call when hit reset
   //
   const resetState = useCallback(() => {
-    console.debug('🔥 Called Resetting the grid state.');
+    if (DEBUG) {
+      console.debug('🔥 Called Resetting the grid state.');
+    }
     // setMaxRows(rowCountTotalProp);
     setError(undefined);
     setReadyForMore(true);
@@ -375,10 +379,12 @@ const ValueGridCore = ({
         const newRows = toGridRowsFn(data.getCache());
         setMaxRows(() => data.cache.totalCount);
         setGridRows((prevRows) => {
-          console.debug(
-            'Is the new cache in fact new?',
-            prevRows[0]?.id !== newRows[0]?.id,
-          );
+          if (DEBUG) {
+            console.debug(
+              'Is the new cache in fact new?',
+              prevRows[0]?.id !== newRows[0]?.id,
+            );
+          }
 
           // update the rows; validate proper use of the cache.
           const result = [...prevRows, ...newRows];
@@ -390,10 +396,13 @@ const ValueGridCore = ({
               acc[row.id] = (acc[row.id] || 0) + 1;
               return acc;
             }, {});
-            console.error(
-              'The grid rows are not unique. This could be due to copying the cache more than once.',
-              duplicates,
-            );
+
+            if (DEBUG) {
+              console.error(
+                'The grid rows are not unique. This could be due to copying the cache more than once.',
+                duplicates,
+              );
+            }
           }
           // invariant(
           //   result.length === new Set(result.map((row) => row.id)).size,
