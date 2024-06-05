@@ -15,6 +15,7 @@ COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
 WORKDIR /frontend
 RUN  yarn install --silent
+RUN  yarn patch-package
 
 # Stage 2 build app
 COPY public /frontend/public
