@@ -11,6 +11,7 @@
 FROM node:18.10-alpine3.15 as react-build
 
 # Stage 1 build dependencies
+COPY patches /frontend/patches
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
 WORKDIR /frontend
