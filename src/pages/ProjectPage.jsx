@@ -67,7 +67,7 @@ const mkArtifacts = (projectId) => [
   {
     name: 'matrix.feather',
     description:
-      'Hosts the requested data and computed derived fields in the python dataframe format',
+      'Hosts the requested data and computed derived fields in the feather file format',
     endpoint: hitThis(projectId, 'matrix.feather'),
     isReady: (appStatus) => appStatus.isMatrixReady,
   },
@@ -100,8 +100,7 @@ const ProjectMeta = () => {
               key={name}
               className={clsx('project-artifact root', {
                 disabled: !isReady(appStatus),
-              })}
-            >
+              })}>
               <a className='link' href={endpoint} download>
                 <ListItem className='project-artifact item'>
                   <ListItemAvatar className='artifact avatar'>
