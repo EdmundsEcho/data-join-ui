@@ -34,7 +34,7 @@ import {
   DND_DRAG_END, // event
   setCompReduced, // document
   setCompRequest, // document
-  setQualRequest, // document
+  // setQualRequest, // document
   setTree, // document
   setNodeState, // document
   setChildIds, // document
@@ -57,8 +57,9 @@ import {
   apiCancel,
   apiFetch,
 } from '../../actions/api.actions';
+import { bookmark } from '../../actions/stepper.actions';
 import { setNotification } from '../../actions/notifications.actions';
-import { setUiLoadingState } from '../../actions/ui.actions';
+import { setUiLoadingState, addError } from '../../actions/ui.actions';
 import {
   ApiCallError,
   InvalidStateError,
@@ -543,10 +544,7 @@ const middleware =
               apiFetch({
                 /*-----------------------------------------------------------------*/
                 // ::event
-                meta: {
-                  uiKey: 'obsetl',
-                  feature: WORKBENCH,
-                },
+                meta: { uiKey: action.payload, feature: WORKBENCH },
                 request: {
                   project_id: projectId,
                   // etlObject: prepareForTransit(getEtlObject(state)), // config for extraction
@@ -572,16 +570,15 @@ const middleware =
       // take ui perspective -> api perspective
       case CANCEL_WAREHOUSE: {
         try {
-          // ui perspective, obsetl is unique because there is only one
-          // ⚠️  feature -> core; dispatch is not required
+          // feature -> core
           next([
             setNotification({
               message: `${WORKBENCH} middleware: action::feature -> ::api (next: polling-api.sagas)`,
               feature: WORKBENCH,
             }),
             apiCancel({
-              // ::event (machine)
-              meta: { uiKey: 'obsetl', feature: WORKBENCH },
+              // ::eventInterface for the polling-machine
+              meta: { uiKey: action.payload, feature: WORKBENCH },
             }), // map + translation
           ]);
         } catch (e) {
@@ -599,7 +596,7 @@ const middleware =
               message: 'Done cancel warehouse',
             }),
           );
-          next(tagWarehouseState('CURRENT'));
+          next(tagWarehouseState('STALE'));
         }
         break;
       }
@@ -691,27 +688,33 @@ const middleware =
 
       // action :: pollingEventError
       case `${WORKBENCH} ${POLLING_ERROR}`: {
-        // expects event
         if (!isValidError(action?.event?.request)) {
           console.dir(action);
           throw new ApiResponseError(
             'workbench.middleware: unexpected response; see api.ServiceConfigs',
           );
         }
+        // see polling-worker failed to see how sends error
         console.assert(action.event.request?.error, 'The response is not an error');
+
         next([
           setNotification({
-            message: getError(action.event.request) || 'The API polling request failed',
+            message: action.event.request?.data?.message ?? 'Api returned an error',
             feature: WORKBENCH,
+            error: getError(action.event.request) ?? JSON.stringify(action.event),
           }),
-          // 🦀 does not work b/c window is also waiting for data
           setUiLoadingState({
             toggle: false,
             feature: WORKBENCH,
-            message: 'Done workbench',
+            message: 'Done workbench with error',
           }),
+          addError({
+            feature: WORKBENCH,
+            message: action.event.request?.data?.message ?? 'Api returned an error',
+          }),
+          // display the etlUnit fields page
+          bookmark('fields'),
         ]);
-
         break;
       }
       default:

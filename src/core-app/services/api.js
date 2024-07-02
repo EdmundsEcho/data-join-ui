@@ -109,14 +109,10 @@ export function fetchStore(projectId, signal) {
  */
 export const ResponseTypePredicates = {
   RESOLVED: (response) => {
-    return (
-      response?.data?.results === 'stopped' ||
-      response?.data?.results.includes('object is not subscriptable') ||
-      false
-    );
+    return response?.data?.results === 'stopped';
   },
+  ERROR: (response) => response?.data?.error ?? false,
   CANCELLED: (response) => response?.data?.results === 'killed',
-  ERROR: (response) => response?.data?.results?.error ?? false,
 };
 export const ResponseTypes = {
   STATUS: 'status',
@@ -180,7 +176,7 @@ export const ServiceConfigs = {
     middleware: 'workbench',
     response: {
       isValidError: ({ error }) => error,
-      getError: ({ errorMessage }) => errorMessage,
+      getError: ({ data }) => data,
       isValid: (response) => response?.data?.data.data.getObsEtl,
       getData: (response) => response.data.data.data.getObsEtl,
       setData: (value) => ({
@@ -196,7 +192,15 @@ export const ServiceConfigs = {
     middleware: 'matrix',
     response: {
       isValidError: ({ error }) => error,
-      getError: (request) => request?.data ?? 'Undefined error: Matrix',
+      isError: (response) => {
+        console.debug('HERE ERROR');
+        console.debug(response);
+        //const results = response?.data?.data?.results;
+        //return results?.status === 'Error';
+        return false;
+      },
+      //getError: (response) => response.data.data.results,
+      getError: (response) => response,
       isValid: (response) => response?.data?.data?.payload?.data,
       getData: (response) => response?.data?.data?.payload?.data,
       setData: (value) => ({
@@ -324,6 +328,16 @@ export const statusApiService = async (eventInterface) => {
   const { feature } = eventInterface.meta;
   const serviceType = getServiceType(feature);
 
+  // Ensure ServiceConfigs has a valid statusEndpoint function
+  if (
+    !ServiceConfigs[serviceType] ||
+    typeof ServiceConfigs[serviceType].endpoint !== 'function'
+  ) {
+    throw new ApiCallError(
+      `Invalid service type or statusEndpoint function not defined for service type: ${serviceType}`,
+    );
+  }
+
   const response = await apiInstance.get(
     ServiceConfigs[serviceType].endpoint(projectId, jobId),
   );
@@ -349,48 +363,63 @@ export const resultApiService = async (eventInterface) => {
   const { feature } = eventInterface.meta;
   const serviceType = getServiceType(feature);
 
-  let response;
+  // Check job status first
+  const statusResponse = await apiInstance.get(
+    ServiceConfigs[serviceType].endpoint(projectId, jobId),
+  );
 
-  switch (serviceType) {
-    case INSPECTION:
-      response = await apiInstance.get(
-        ServiceConfigs[serviceType].endpoint(projectId, jobId, 'RESULTS'),
-      );
-
-      break;
-
-    case EXTRACTION:
-      // hit the graphql endpoint
-      response = await gqlInstance({
-        url: ServiceConfigs[serviceType].graphql(projectId),
-        data: GQL.viewObsEtl(), // hydrates workbench
-      });
-      break;
-
-    case MATRIX:
-      // pull data from the warehouse
-      response = await fetchRenderedMatrix(projectId); // used both by machine and directly when paging
-      break;
-
-    default:
-      throw new ApiCallError(
-        `services.api: Unsupported serviceType: ${serviceType || 'no service type'}`,
-      );
-  }
-
-  //
-  // 🚧 WIP - update errors
-  //
-  if (response.status > 200) {
+  if (statusResponse.data && statusResponse.data.error) {
     throw new ApiCallError(
-      `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(response)}`,
+      `Job ${jobId} failed with error: ${statusResponse.data.error.message}`,
+      statusResponse.data.error.code || 500,
     );
   }
 
-  return {
-    ...response,
-    responseType: ResponseTypes.RESULT,
-  };
+  // Fetch result artifact when the status is OK
+  let response;
+  try {
+    switch (serviceType) {
+      case INSPECTION:
+        response = await apiInstance.get(
+          ServiceConfigs[serviceType].endpoint(projectId, jobId, 'RESULTS'),
+        );
+
+        break;
+
+      case EXTRACTION:
+        // hit the graphql endpoint
+        response = await gqlInstance({
+          url: ServiceConfigs[serviceType].graphql(projectId),
+          data: GQL.viewObsEtl(), // hydrates workbench
+        });
+        break;
+
+      case MATRIX:
+        // pull data from the warehouse
+        response = await fetchRenderedMatrix(projectId); // used both by machine and directly when paging
+        break;
+
+      default:
+        throw new ApiCallError(
+          `services.api: Unsupported serviceType: ${serviceType || 'no service type'}`,
+        );
+    }
+
+    if (response.status >= 400) {
+      throw new ApiCallError(
+        `resultApiService ${serviceType} ${jobId} failed\n${JSON.stringify(response)}`,
+      );
+    }
+
+    return {
+      ...response,
+      responseType: ResponseTypes.RESULT,
+    };
+  } catch (error) {
+    throw new ApiCallError(
+      `2 resultApiService ${serviceType} ${jobId} failed\n${error}`,
+    );
+  }
 };
 
 //------------------------------------------------------------------------------

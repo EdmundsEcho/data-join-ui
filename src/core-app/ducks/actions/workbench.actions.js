@@ -19,6 +19,10 @@ export const FETCH_WAREHOUSE = `${WORKBENCH} FETCH`; // command from StepBar
 export const CANCEL_WAREHOUSE = `${WORKBENCH} CANCEL`; // command
 export const RESET_CANVAS = `${WORKBENCH} RESET`; // command
 
+// document errors from the api
+export const ADD_ERROR = `${WORKBENCH} ADD_ERROR`;
+export const CLEAR_ERROR = `${WORKBENCH} CLEAR_ERRORS`;
+
 // data-related
 // set the group semantic to generate a derived field
 export const ADD_DERIVED_FIELD = `${WORKBENCH} ADD DERIVED FIELD`; // command
@@ -26,7 +30,7 @@ export const ADD_DERIVED_FIELD = `${WORKBENCH} ADD DERIVED FIELD`; // command
 export const MOVE_TREE = `${WORKBENCH} MOVE TREE`; // command
 export const REMOVE_NODE = `${WORKBENCH} REMOVE NODE`; // command
 
-// document
+// document tree
 export const SET_TREE = `${WORKBENCH} SET TREE`;
 export const RESET_TREE = `${WORKBENCH} CLEAR`;
 export const SET_CHILDIDS = `${WORKBENCH} SET CHILDIDS`;
@@ -39,6 +43,7 @@ export const SET_GROUP_SEMANTIC = `${WORKBENCH} SET GROUP SEMANTIC`;
 export const SET_NODE_STATE = `${WORKBENCH} SET NODE STATE`;
 // document the status/need to recompute the project-warehouse
 export const TAG_WAREHOUSE_STATE = `${WORKBENCH} TAG WAREHOUSE STATE`;
+export const UI_KEY = 'obsEtl';
 
 // xstate
 export const SET_SELECTION_MODEL = `${WORKBENCH} SET SELECTION MODEL`;
@@ -72,13 +77,13 @@ export const removeNode = (payload) => ({
 export const fetchWarehouse = (startTime /* { etlObject } */) => ({
   type: FETCH_WAREHOUSE,
   startTime,
-  payload: 'middleware to pull etlObject from store (see extraction in network)',
+  payload: UI_KEY,
 });
 
 // action kind :: command
 export const cancelWarehouse = () => ({
   type: CANCEL_WAREHOUSE,
-  payload: 'workbench',
+  payload: UI_KEY,
 });
 
 // action kind :: document

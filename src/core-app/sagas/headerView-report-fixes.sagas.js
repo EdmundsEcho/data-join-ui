@@ -12,6 +12,7 @@
 import { call, put, race, select, take, takeEvery } from 'redux-saga/effects';
 
 import {
+  UPDATE_HEADERVIEW, // document
   UPDATE_FILEFIELD, // document
   UPDATE_IMPLIED_MVALUE, // document
   RESET_FILEFIELDS, // document
@@ -55,6 +56,7 @@ if (DEBUG) {
  * (actions :: document)
  */
 const scheduleFixReportActions = [
+  UPDATE_HEADERVIEW,
   UPDATE_FILEFIELD,
   UPDATE_IMPLIED_MVALUE,
   RESET_FILEFIELDS,
@@ -71,16 +73,17 @@ function* _report() {
     const state = yield select();
     // the computation
     const fixes = yield call(reportHvsFixesP, { state, timeout: 200, DEBUG });
-    return fixes; // receiver, informs the race condition
+    return fixes; // receiver, informs the sagas race status
   } catch (error) {
     if (error instanceof TimeoutError) {
       yield put(
-        // receiver, informs the race condition
+        // receiver, informs the race status
         computeEventTimedOut({ message: error.message, feature: HEADER_VIEW }),
       );
     }
     // 🚧 WIP
     throw new SagasError(error);
+    // TODO: addHeaderViewError using put/dispatch
     // yield put(
     // computeEventError({ message: error.message, feature: HEADER_VIEW }),
     // );
@@ -90,10 +93,7 @@ function* _report() {
 function* _scheduleValidation(action = undefined) {
   if (DEBUG) {
     const { type = 'undefined (ok)' } = action;
-    console.debug(
-      `%cheaderView-report.sagas reset timer with: ${type}`,
-      colors.orange,
-    );
+    console.debug(`%cheaderView-report.sagas reset timer with: ${type}`, colors.orange);
   }
 
   try {
@@ -105,10 +105,7 @@ function* _scheduleValidation(action = undefined) {
     ]);
 
     if (DEBUG) {
-      console.debug(
-        '%c🏁 headerView-report-fixes.sagas the race is over',
-        COLOR,
-      );
+      console.debug('%c🏁 headerView-report-fixes.sagas the race is over', COLOR);
     }
     // 🏁 The race finish line
     switch (true) {
@@ -144,9 +141,7 @@ function* _scheduleValidation(action = undefined) {
         break;
 
       default:
-        throw new DesignError(
-          'Sagas race condition ended with unexpected state',
-        );
+        throw new DesignError('Sagas race condition ended with unexpected state');
     }
   } catch (e) {
     console.error(e);

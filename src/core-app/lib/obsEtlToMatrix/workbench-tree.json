@@ -1,0 +1,784 @@
+{
+  "tree": {
+    "0": {
+      "id": 0,
+      "type": "root",
+      "height": 0,
+      "parent": null,
+      "data": {},
+      "index": null,
+      "childIds": [1, 2],
+      "listeners": []
+    },
+    "1": {
+      "id": 1,
+      "type": "palette",
+      "height": 1,
+      "parent": 0,
+      "data": {},
+      "index": 0,
+      "childIds": [3],
+      "listeners": []
+    },
+    "2": {
+      "id": 2,
+      "type": "canvas",
+      "height": 1,
+      "parent": 0,
+      "data": {},
+      "index": 1,
+      "childIds": [12, 13, 14],
+      "listeners": []
+    },
+    "3": {
+      "id": 3,
+      "type": "palette",
+      "height": 2,
+      "parent": 1,
+      "data": {},
+      "index": 0,
+      "childIds": [4, 6, 8, 10],
+      "listeners": []
+    },
+    "4": {
+      "id": 4,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Customer State"
+      },
+      "index": 0,
+      "childIds": [5],
+      "listeners": []
+    },
+    "5": {
+      "id": 5,
+      "type": "palette",
+      "height": 4,
+      "parent": 4,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Customer State",
+          "displayName": "Customer State",
+          "palette-name": "Customer State",
+          "canvas-alias": "Customer State",
+          "tag": "txtValues",
+          "count": 44,
+          "selectionModel": {
+            "rowCountTotal": 44,
+            "requestType": "ANTIREQUEST",
+            "computationType": "SELECT",
+            "meta": {
+              "purpose": "quality"
+            },
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            },
+            "disableAntiRequest": false
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "6": {
+      "id": 6,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Customer Zip Code"
+      },
+      "index": 1,
+      "childIds": [7],
+      "listeners": []
+    },
+    "7": {
+      "id": 7,
+      "type": "palette",
+      "height": 4,
+      "parent": 6,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Customer Zip Code",
+          "displayName": "Customer Zip Code",
+          "palette-name": "Customer Zip Code",
+          "canvas-alias": "Customer Zip Code",
+          "tag": "txtValues",
+          "count": 345,
+          "selectionModel": {
+            "rowCountTotal": 345,
+            "requestType": "ANTIREQUEST",
+            "computationType": "SELECT",
+            "meta": {
+              "purpose": "quality"
+            },
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            },
+            "disableAntiRequest": false
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "8": {
+      "id": 8,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Spec Desc"
+      },
+      "index": 2,
+      "childIds": [9],
+      "listeners": []
+    },
+    "9": {
+      "id": 9,
+      "type": "palette",
+      "height": 4,
+      "parent": 8,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Spec Desc",
+          "displayName": "Spec Desc",
+          "palette-name": "Spec Desc",
+          "canvas-alias": "Spec Desc",
+          "tag": "txtValues",
+          "count": 17,
+          "selectionModel": {
+            "rowCountTotal": 17,
+            "requestType": "ANTIREQUEST",
+            "computationType": "SELECT",
+            "meta": {
+              "purpose": "quality"
+            },
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            },
+            "disableAntiRequest": false
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "10": {
+      "id": 10,
+      "type": "palette",
+      "height": 3,
+      "parent": 3,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "empty",
+        "groupTag": "Unit Count"
+      },
+      "index": 3,
+      "childIds": [11],
+      "listeners": []
+    },
+    "11": {
+      "id": 11,
+      "type": "palette",
+      "height": 4,
+      "parent": 10,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "Unit Count",
+          "displayName": "Unit Count",
+          "palette-name": "Unit Count",
+          "canvas-alias": "Unit Count",
+          "values": {
+            "0": {
+              "request": true,
+              "componentName": "Year-Month",
+              "displayName": "Year-Month",
+              "palette-name": "Year-Month",
+              "canvas-alias": "Year-Month",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": [
+                {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 0,
+                    "reduced": false,
+                    "rangeLength": 21
+                  }
+                }
+              ],
+              "selectionModel": {
+                "rowCountTotal": 1,
+                "requestType": "ANTIREQUEST",
+                "computationType": "SERIES",
+                "meta": {
+                  "purpose": "mspan",
+                  "reduced": false
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": true
+                  }
+                },
+                "disableAntiRequest": true
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2015-02",
+                  "isoFormat": "YYYY-MM"
+                }
+              }
+            },
+            "1": {
+              "request": false,
+              "componentName": "Payment Type Group",
+              "displayName": "Payment Type Group",
+              "palette-name": "Payment Type Group",
+              "canvas-alias": "Payment Type Group",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "selectionModel": {
+                "rowCountTotal": 3,
+                "requestType": "REQUEST",
+                "computationType": "REDUCE",
+                "meta": {
+                  "purpose": "mcomp",
+                  "reduced": true
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": false
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "12": {
+      "id": 12,
+      "type": "canvas",
+      "height": 2,
+      "parent": 2,
+      "data": {},
+      "index": 0,
+      "childIds": [15, 23],
+      "listeners": []
+    },
+    "13": {
+      "id": 13,
+      "type": "canvas",
+      "height": 2,
+      "parent": 2,
+      "data": {},
+      "index": 1,
+      "childIds": [17, 19, 21],
+      "listeners": []
+    },
+    "14": {
+      "id": 14,
+      "type": "canvas",
+      "height": 2,
+      "parent": 2,
+      "data": {},
+      "index": 2,
+      "childIds": [],
+      "listeners": []
+    },
+    "15": {
+      "id": 15,
+      "type": "canvas",
+      "height": 3,
+      "parent": 12,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "derivedField",
+        "groupTag": "Unit Count",
+        "semantic": "derivedField",
+        "cache": [["MeaType::Unit Count.Year-Month::0_20"]],
+        "identifier": "decile"
+      },
+      "index": 0,
+      "childIds": [16],
+      "listeners": []
+    },
+    "16": {
+      "id": 16,
+      "type": "canvas",
+      "height": 4,
+      "parent": 15,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "Unit Count",
+          "displayName": "Unit Count",
+          "palette-name": "Unit Count",
+          "canvas-alias": "Unit Count",
+          "values": {
+            "0": {
+              "request": true,
+              "componentName": "Year-Month",
+              "displayName": "Year-Month",
+              "palette-name": "Year-Month",
+              "canvas-alias": "Year-Month",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": {
+                "0": {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 0,
+                    "rangeLength": 21,
+                    "reduced": true
+                  }
+                }
+              },
+              "selectionModel": {
+                "rowCountTotal": 1,
+                "requestType": "REQUEST",
+                "computationType": "SERIES",
+                "meta": {
+                  "purpose": "mspan",
+                  "reduced": false
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": true
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2015-02",
+                  "isoFormat": "YYYY-MM"
+                }
+              }
+            },
+            "1": {
+              "request": false,
+              "componentName": "Payment Type Group",
+              "displayName": "Payment Type Group",
+              "palette-name": "Payment Type Group",
+              "canvas-alias": "Payment Type Group",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "selectionModel": {
+                "rowCountTotal": 3,
+                "requestType": "REQUEST",
+                "computationType": "REDUCE",
+                "meta": {
+                  "purpose": "mcomp",
+                  "reduced": true
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": false
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "17": {
+      "id": 17,
+      "type": "canvas",
+      "height": 3,
+      "parent": 13,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "empty",
+        "groupTag": "Unit Count"
+      },
+      "index": 0,
+      "childIds": [18],
+      "listeners": []
+    },
+    "18": {
+      "id": 18,
+      "type": "canvas",
+      "height": 4,
+      "parent": 17,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "Unit Count",
+          "displayName": "Unit Count",
+          "palette-name": "Unit Count",
+          "canvas-alias": "Unit Count",
+          "values": {
+            "0": {
+              "request": true,
+              "componentName": "Year-Month",
+              "displayName": "Year-Month",
+              "palette-name": "Year-Month",
+              "canvas-alias": "Year-Month",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": {
+                "0": {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 0,
+                    "rangeLength": 3,
+                    "reduced": false
+                  }
+                }
+              },
+              "selectionModel": {
+                "rowCountTotal": 1,
+                "requestType": "REQUEST",
+                "computationType": "SERIES",
+                "meta": {
+                  "purpose": "mspan",
+                  "reduced": false
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": true
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2015-02",
+                  "isoFormat": "YYYY-MM"
+                }
+              }
+            },
+            "1": {
+              "request": false,
+              "componentName": "Payment Type Group",
+              "displayName": "Payment Type Group",
+              "palette-name": "Payment Type Group",
+              "canvas-alias": "Payment Type Group",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "selectionModel": {
+                "rowCountTotal": 3,
+                "requestType": "REQUEST",
+                "computationType": "REDUCE",
+                "meta": {
+                  "purpose": "mcomp",
+                  "reduced": true
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": false
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "19": {
+      "id": 19,
+      "type": "canvas",
+      "height": 3,
+      "parent": 13,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Customer State"
+      },
+      "index": 1,
+      "childIds": [20],
+      "listeners": []
+    },
+    "20": {
+      "id": 20,
+      "type": "canvas",
+      "height": 4,
+      "parent": 19,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Customer State",
+          "displayName": "Customer State",
+          "palette-name": "Customer State",
+          "canvas-alias": "Customer State",
+          "tag": "txtValues",
+          "count": 44,
+          "selectionModel": {
+            "rowCountTotal": 44,
+            "requestType": "ANTIREQUEST",
+            "computationType": "SELECT",
+            "meta": {
+              "purpose": "quality"
+            },
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              }
+            },
+            "disableAntiRequest": false
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "21": {
+      "id": 21,
+      "type": "canvas",
+      "height": 3,
+      "parent": 13,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::quality",
+        "displayType": "subjectUniverse",
+        "groupTag": "Spec Desc"
+      },
+      "index": 2,
+      "childIds": [22],
+      "listeners": []
+    },
+    "22": {
+      "id": 22,
+      "type": "canvas",
+      "height": 4,
+      "parent": 21,
+      "data": {
+        "type": "etlUnit::quality",
+        "value": {
+          "request": true,
+          "qualityName": "Spec Desc",
+          "displayName": "Spec Desc",
+          "palette-name": "Spec Desc",
+          "canvas-alias": "Spec Desc",
+          "tag": "txtValues",
+          "count": 17,
+          "selectionModel": {
+            "rowCountTotal": 17,
+            "requestType": "ANTIREQUEST",
+            "computationType": "SELECT",
+            "meta": {
+              "purpose": "quality"
+            },
+            "values": {
+              "__ALL__": {
+                "value": "__ALL__",
+                "request": true
+              },
+              "specialty 11": {
+                "value": "specialty 11",
+                "request": false
+              }
+            },
+            "disableAntiRequest": false
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    },
+    "23": {
+      "id": 23,
+      "type": "canvas",
+      "height": 3,
+      "parent": 12,
+      "data": {
+        "source": "palette",
+        "type": "group",
+        "etlUnitType": "etlUnit::measurement",
+        "displayType": "derivedField",
+        "groupTag": "Unit Count",
+        "semantic": "derivedField",
+        "cache": [["MeaType::Unit Count.Year-Month::0_20"]],
+        "identifier": "firstEvent"
+      },
+      "index": 1,
+      "childIds": [24],
+      "listeners": []
+    },
+    "24": {
+      "id": 24,
+      "type": "canvas",
+      "height": 4,
+      "parent": 23,
+      "data": {
+        "type": "etlUnit::measurement",
+        "value": {
+          "request": true,
+          "measurementType": "Unit Count",
+          "displayName": "Unit Count",
+          "palette-name": "Unit Count",
+          "canvas-alias": "Unit Count",
+          "values": {
+            "0": {
+              "request": true,
+              "componentName": "Year-Month",
+              "displayName": "Year-Month",
+              "palette-name": "Year-Month",
+              "canvas-alias": "Year-Month",
+              "reduced": false,
+              "tag": "spanValues",
+              "count": 1,
+              "values": {
+                "0": {
+                  "request": true,
+                  "value": {
+                    "rangeStart": 0,
+                    "rangeLength": 21,
+                    "reduced": true
+                  }
+                }
+              },
+              "selectionModel": {
+                "rowCountTotal": 1,
+                "requestType": "REQUEST",
+                "computationType": "SERIES",
+                "meta": {
+                  "purpose": "mspan",
+                  "reduced": false
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": true
+              },
+              "timeProp": {
+                "interval": {
+                  "unit": "M",
+                  "count": 1
+                },
+                "reference": {
+                  "idx": 0,
+                  "value": "2015-02",
+                  "isoFormat": "YYYY-MM"
+                }
+              }
+            },
+            "1": {
+              "request": false,
+              "componentName": "Payment Type Group",
+              "displayName": "Payment Type Group",
+              "palette-name": "Payment Type Group",
+              "canvas-alias": "Payment Type Group",
+              "reduced": true,
+              "tag": "txtValues",
+              "count": 3,
+              "selectionModel": {
+                "rowCountTotal": 3,
+                "requestType": "REQUEST",
+                "computationType": "REDUCE",
+                "meta": {
+                  "purpose": "mcomp",
+                  "reduced": true
+                },
+                "values": {
+                  "__ALL__": {
+                    "value": "__ALL__",
+                    "request": false
+                  }
+                },
+                "disableAntiRequest": false
+              }
+            }
+          }
+        }
+      },
+      "index": 0,
+      "childIds": [],
+      "listeners": []
+    }
+  }
+}

@@ -8,7 +8,8 @@ import { SnackbarProvider } from 'notistack';
 
 import luciviaTheme from './core-app/lucivia-theme.v2';
 
-import Dashboard from './components/Dashboard.jsx';
+import Dashboard from './components/Dashboard';
+import AppSnackbar from './core-app/components/AppSnackbar';
 import ModalRoot from './core-app/components/ModalRoot';
 
 import { useThemeMode } from './hooks/use-theme-mode';
@@ -54,6 +55,7 @@ const Root = () => {
               <SnackbarProvider maxSnack={3} preventDuplicate>
                 <Dashboard />
                 <ModalRoot themeMode={themeMode} />
+                <AppSnackbar />
               </SnackbarProvider>
             </BrowserRouter>
           </ThemeProvider>

@@ -10,8 +10,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Card } from '@mui/material';
-
 import MatrixGrid from './MatrixGrid';
 import LoadingSplash from '../shared/LoadingSplash';
 import { Div } from '../../../luci-styled/Styled';
@@ -25,6 +23,7 @@ import {
 } from '../../ducks/rootSelectors';
 // cancel action
 import { bookmark } from '../../ducks/actions/stepper.actions';
+import { cancelMatrix } from '../../ducks/actions/matrix.actions';
 import useAbortController from '../../../hooks/use-abort-controller';
 // app size
 import { useAppSizeDataContext } from '../../../contexts/CoreAppSizeContext';
@@ -42,7 +41,11 @@ const withDataAndSizePred = (matrixPage, height) =>
 
 const Matrix = () => {
   // initial state => without data
-  const { isLoading, message: messageWhileLoading } = useSelector(isUiLoading);
+  const {
+    isLoading,
+    inErrorState,
+    message: messageWhileLoading,
+  } = useSelector(isUiLoading);
   const matrixPage = useSelector(getMatrix); // a page of data
   const isWarehouseStale = useSelector(getIsWarehouseStale);
   const isMatrixStale = useSelector(getIsMatrixStale);
@@ -54,6 +57,7 @@ const Matrix = () => {
   const showMatrix = !(
     (
       isLoading || // update with useSelector
+      inErrorState || // update with useSelector
       !withDataAndSize || // update with useEffect
       isWarehouseStale || // update with useSelector
       isMatrixStale
@@ -76,6 +80,7 @@ const Matrix = () => {
   const handleCancel = useCallback(() => {
     abortController.abort();
     dispatch(bookmark('workbench'));
+    dispatch(cancelMatrix());
   }, [dispatch, abortController]);
 
   if (DEBUG) {

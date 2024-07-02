@@ -74,11 +74,12 @@ export const etlFieldExists = (stateFragment, fieldName) =>
 
 /**
  * ⚠️  EtlUnit name uses the user versions of the name (displayName);
+ * v0.5.1 update for etl-unit
  */
 export const getEtlUnitTimeProp = (stateFragment, etlUnitName) => {
   const etlField = Object.values(getEtlFields(stateFragment)).find(
     (field) =>
-      field.purpose === PURPOSE_TYPES.MSPAN && field['etl-unit'] === etlUnitName,
+      field.purpose === PURPOSE_TYPES.MSPAN && field['etl-unit'].includes(etlUnitName),
   );
   return { time: etlField?.time, formatOut: etlField?.format };
 };

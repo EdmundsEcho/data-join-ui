@@ -7,10 +7,24 @@
  *
  */
 
+/**
+ * Deprecate?
+ */
 export const DISPLAY_VERSIONS = ['LARGE', 'BASELINE', 'MINI'].reduce((acc, key) => {
   acc[key] = key;
   return acc;
 }, {});
+
+/**
+ * Multiple measurement values are possible. There are two use-cases.
+ *
+ *   1. Wide data format (where data is in the fieldname)
+ *   2. Multiple, simultaneous measurements (they share date and components)
+ */
+export const MVALUE_MODE = {
+  WIDE: 'wide/single',
+  MULTIPLE: 'multipe',
+};
 
 export const FIELD_TYPES = {
   FILE: 'file-field',

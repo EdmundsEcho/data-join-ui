@@ -26,7 +26,7 @@
  *    👉 ERROR
  *    👉 CANCELLED
  *
- *iWhat gets documented is up to the receiver of the action::events.
+ * What gets documented is up to the receiver of the action::events.
  *
  * @module sagas/files.sagas
  */
@@ -54,7 +54,7 @@ const COLOR = colors.light.blue;
 //------------------------------------------------------------------------------
 const DEBUG =
   process.env.REACT_APP_DEBUG_API === 'true' ||
-  process.env.REACT_APP_DEBUG_MACINE === 'true' ||
+  process.env.REACT_APP_DEBUG_MACHINE === 'true' ||
   process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 // ------------------------------------------------------------------------------
 /* eslint-disable no-console, camelcase, no-underscore-dangle */
@@ -93,10 +93,7 @@ function* _fetch(action) {
     const { uiKey } = commandEvent.meta;
 
     if (DEBUG) {
-      yield console.debug(
-        '%c************* Set Channel ***************',
-        colors.orange,
-      );
+      yield console.debug('%c************* Set Channel ***************', colors.orange);
     }
 
     const channel = yield call(apiChannel, { ...channelSpec, commandEvent });
@@ -113,7 +110,7 @@ function* _fetch(action) {
 
 // -----------------------------------------------------------------------------
 /**
- * Ends when machine is onDone
+ * Ends when machine is onDone (or onError?)
  * ongoing thread provided by while(true)
  * closed when take(END) is reached
  */
@@ -163,7 +160,7 @@ function* _listenForCancel({ uiKey, channel }) {
  * What needs to happen:
  * 1.1 listen for FETCH
  * 1.2 spawn a machine
- * 1.3 provide the machine a capacity to send messages
+ * 1.3 provide the machine a ability to send messages
  * 2.1 fork a spawned thread to listen for CANCEL
  * 2.2 filter for CANCEL events with the same path as machine
  * 2.3 when such an event arrives, cancel the machine

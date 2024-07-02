@@ -41,11 +41,7 @@ class LuciError extends Error {
     if (options.verbose && typeof console !== 'undefined' && console.log) {
       // const color = colors.red.match(/color:\s*(#\w+);?/);
       console.debug('%cGENERATING LUCI ERROR', colors.purple);
-      console.debug(
-        `\u001b[31mMessage: ${message}\u001b[39m`,
-        '\nCause:',
-        options.cause,
-      );
+      console.debug(`Message: ${message}`, '\nCause:', options.cause);
     }
 
     super(message, options);
@@ -104,6 +100,7 @@ class SagasError extends LuciError {}
 class TimeoutError extends LuciError {}
 class ValueError extends LuciError {}
 class WorkbenchError extends LuciError {}
+class StoreMigrationError extends LuciError {}
 
 /* Usage
 try {
@@ -118,6 +115,14 @@ try {
   console.error(e.error.message); // object
   console.error(e.stack); // stacktrace
 }
+
+throw new LuciError('Migration failed', {
+        cause: error,
+        details: {
+          fromVersion: path.from,
+          toVersion: path.to,
+        },
+      });
 */
 
 export {
@@ -144,6 +149,7 @@ export {
   ValueError,
   WorkbenchError,
   ExpiredSessionError,
+  StoreMigrationError,
 };
 
 /**

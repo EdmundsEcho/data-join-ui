@@ -15,8 +15,7 @@ import { range } from '../../utils/common';
 import { InvalidStateError, InputError } from '../LuciErrors';
 
 //------------------------------------------------------------------------------
-// const DEBUG = process.env.REACT_APP_DEBUG_MATRIX === 'true';
-const DEBUG = true;
+const DEBUG = process.env.REACT_APP_DEBUG_MATRIX === 'true';
 //------------------------------------------------------------------------------
 /* eslint-disable no-console */
 
@@ -50,7 +49,7 @@ export function requestFromTree(flatTree) {
   // instantiate the tree
   const tree = Tree.fromFlatNodes(flatTree);
 
-  // derived fields
+  // how to find derived fields in the tree
   const derivedFieldNodes = Tree.findNodes(tree, (node) => {
     return (
       node.type === NODE_TYPES.CANVAS &&
@@ -58,50 +57,68 @@ export function requestFromTree(flatTree) {
       node.data?.displayType === 'derivedField'
     );
   });
-  if (DEBUG) {
-    console.debug(`👉 nodes: ${derivedFieldNodes.length}`);
-    console.dir(derivedFieldNodes);
-  }
   // recipe for processing a derived field
   // 1️⃣   get the identifier in order to retrieve the configuration
   // 2️⃣   determine how to read and dedup the cache from the configuration
   //     (cache: [[fieldName]])
   // 3️⃣   map the inputs to the cache field names
   // 4️⃣   return an Array of derived field configurations
+  //
+  // Specify the required functions to access node specifics
   const getDerivedFieldIdentifier = (node) => node.data.identifier;
-
   // fmap combines all of the inputs prior to processing
   const isFmap = (identifier) => dfConfig[identifier].fmapOrApply === 'fmap';
   // specified arity
   const getDerivedFieldArity = (identifier) => dfConfig[identifier].arity;
   // position, cache -> parameter set at a given position
   const getParameterSet = (position, node) => node.data.cache?.[position] ?? [];
-
   // position, cache -> parameter set at a given position
   const getApplicationParameters = (node) => node.data.cache;
-
+  // true when more than one parameter: node -> bool
   const requiresExpansion = (node) => {
     return (
       (getParameterSet(0, node)?.length === 1 ?? false) &&
       (getParameterSet(1, node)?.length > 1 ?? false)
     );
   };
+  // get the child sources
+  const sources = (node) =>
+    node.children
+      .map((childNode) => childNode.data.value?.measurementType)
+      .filter(Boolean);
 
   const repeatFirstParam = (node) => {
     const [param1] = getParameterSet(0, node);
     return getParameterSet(1, node).flatMap(() => [param1]);
   };
 
+  if (DEBUG) {
+    console.debug(`👉 nodes: ${derivedFieldNodes.length}`);
+    console.dir(derivedFieldNodes);
+  }
+
   // Make the configurations
   // fmap && applicative (like)
   // :: Array [Configuration]
-  const configurations = derivedFieldNodes.flatMap((node) => {
+  const derivedFieldCfgs = derivedFieldNodes.flatMap((node) => {
     //
     const identifier = getDerivedFieldIdentifier(node);
-    //
-    if (isFmap(identifier)) {
-      return fmapPreProcessCache(node).map(dfConfig[identifier].config);
+
+    if (DEBUG) {
+      console.debug(`✅ derived field: ${identifier}`);
+      console.dir(node);
+      console.dir(dfConfig[identifier]);
     }
+
+    // 🦀 🚧 only fmap type computations get augmented with sources
+    if (isFmap(identifier)) {
+      const result = fmapPreProcessCache(node).map((input) =>
+        dfConfig[identifier].config({ metric: input, sources: sources(node) }),
+      );
+      console.dir(result);
+      return result;
+    }
+    // else applicate where we need to know arity
     // now determine what kind of Applicative
     // arity 2: 1 : N
     // arity N?
@@ -147,7 +164,6 @@ export function requestFromTree(flatTree) {
     // arity 2: [a,b,c], [a,b,c] -> [config, config, config]
     // arity 3: [a,b,c], [a,b,c], [a,b,c] -> [config, config, config]
     //
-
     const configs = applicationParameters[0]
       .map((numerator, internalIdx) => {
         const config = range(1, dfConfig[identifier].arity).reduce(
@@ -170,20 +186,20 @@ export function requestFromTree(flatTree) {
     return configs;
   });
   if (DEBUG) {
-    console.debug(`👉 Configurations`);
-    console.dir(configurations);
+    console.debug(`👉 Derived Field Configurations`);
+    console.dir(derivedFieldCfgs);
   }
 
   /* eslint-enable no-shadow */
 
-  // instantiate the tree
+  // instantiate the request
   return {
     fields: buildRequest(
       Tree.findNodes(tree, (node) => {
         return node.type === NODE_TYPES.CANVAS && node.height === 4;
       }).map((node) => node.data),
     ),
-    derivedFields: configurations,
+    derivedFields: derivedFieldCfgs,
     /*
      * Derived field:
      * group x cache

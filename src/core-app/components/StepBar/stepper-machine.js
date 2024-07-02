@@ -68,7 +68,7 @@ const pagesMachine = {
     prevPage: 'meta',
     nextPage: 'fields',
     entry: {
-      actions: [bookmark('files'), runFixReport(), 'saveProject'], // refresh the report
+      actions: [bookmark('files'), 'saveProject', runFixReport(), 'saveProject'], // refresh the report
     },
     exit: {
       actions: ['saveProject'],
@@ -131,7 +131,6 @@ const pagesMachine = {
     prevPage: 'workbench',
     nextPage: undefined,
     entry: {
-      // 🦀 bookmark is being set before fetchMatrix has completed
       actions: ['fetchMatrix', bookmark('matrix'), 'saveProject'],
     },
     on: {
@@ -214,10 +213,7 @@ export default ((machine) => (dispatch, projectId) => {
   // depends on dispatch in context
   const emit = (action) => {
     if (DEBUG) {
-      console.debug(
-        `%cemitting action of type: ${typeof action}`,
-        colors.yellow,
-      );
+      console.debug(`%cemitting action of type: ${typeof action}`, colors.yellow);
       console.dir(action);
     }
     let actionObj = action;

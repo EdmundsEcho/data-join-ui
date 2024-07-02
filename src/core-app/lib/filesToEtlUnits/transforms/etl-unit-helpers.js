@@ -21,51 +21,25 @@ import { colors } from '../../../constants/variables';
  * search routine that returns the name(s) of the etlUnits that utilizes
  * the field name.
  *
+ * 0.5.1
+ * Returns null when subject, otherwise an Array
+ * WIP: Consider using an empty list for subject
  *
- *      name, etlUnits -> [ codomain ] | codomain
- *
- *
- * 🔖 A subject is only field type in more than one etlUnit
- *
- * 🚧 WIP This requires that a field, other than subject, be used in
- *    only one etlUnit.
- *
- * ⬜ once this invariant is confirmed, this function can be simplified.
+ *      name, etlUnits -> null | [ codomain ]
  *
  * @function
  * @param {string} fieldName
  * @param {Object<string,EtlUnit>} etlUnits
- * @param {?(Object | boolean)} options boolean -> DEBUG
- * @return {(string | Array<string>)}
+ * @return {?Array<string>}
  *
  */
-export function selectEtlUnitsWithFieldName(fieldName, etlUnits, options) {
-  // maintain compatibility when using the function without options
-  let DEBUG = false;
-  let singleton = false;
-
-  if (typeof options === 'boolean') {
-    DEBUG = options;
-  } else if (typeof options !== 'undefined') {
-    ({ DEBUG, singleton } = options);
-  }
-
+export function selectEtlUnitsWithFieldName(fieldName, etlUnits) {
   const result =
     Object.keys(etlUnits).filter((codomainKey) =>
       isNameInEtlUnit(fieldName, etlUnits[codomainKey]),
     ) || [];
 
-  if (DEBUG) {
-    if (result.length > 0) {
-      const etlUnit = etlUnits[result[0]];
-      const fieldPurpose = getPurpose(fieldName, etlUnit);
-
-      fieldPurpose === TYPES.SUBJECT
-        ? console.assert(result.length >= 1)
-        : console.assert(result.length === 1);
-    }
-  }
-  return singleton ? result[0] : result;
+  return getPurpose(fieldName, etlUnits[result[0]]) === TYPES.SUBJECT ? null : result;
 }
 
 /**
@@ -80,9 +54,7 @@ export function selectEtlUnitsWithFieldName(fieldName, etlUnits, options) {
  */
 export function isEtlUnitSubject(name, collection) {
   if (Array.isArray(collection)) {
-    throw new InputError(
-      `isEtlUnitSubject expects an object (etlUnit or etlUnits)`,
-    );
+    throw new InputError(`isEtlUnitSubject expects an object (etlUnit or etlUnits)`);
   }
   // ...mark for etlUnit vs etlUnits
   return 'type' in collection && 'codomain' in collection
@@ -236,16 +208,12 @@ export function selectRelatedRemovableFields(removeName, etlUnit, DEBUG) {
 export function selectEtlUnitWithName(fieldName, etlUnits) {
   return Object.values(etlUnits).find((etlUnit) => {
     if (fieldName === etlUnit.subject) {
-      throw new InputError(
-        `Cannot retrieve a single etlUnit using a ${TYPES.SUBJECT}`,
-      );
+      throw new InputError(`Cannot retrieve a single etlUnit using a ${TYPES.SUBJECT}`);
     }
     if (etlUnit.type === 'quality') {
       return etlUnit.codomain === fieldName;
     }
-    return [etlUnit.codomain, etlUnit.mspan, ...etlUnit.mcomps].includes(
-      fieldName,
-    );
+    return [etlUnit.codomain, etlUnit.mspan, ...etlUnit.mcomps].includes(fieldName);
   });
 }
 /**
@@ -271,9 +239,7 @@ export function isTheOnlyEtlUnit(removeName, etlUnits) {
  * @return {boolean}
  */
 export function isMspan(removeName, etlUnits) {
-  return Object.values(etlUnits).find(
-    (etlUnit) => etlUnit?.mspan === removeName,
-  );
+  return Object.values(etlUnits).find((etlUnit) => etlUnit?.mspan === removeName);
 }
 
 /**
@@ -307,12 +273,7 @@ export function isMspan(removeName, etlUnits) {
  * @param {Object<string,EtlUnit>} etlUnits keyed by the name of the codomain
  * @return number cursor/index in the listOfFieldNames
  */
-export const getNextDisplayField = (
-  fieldName,
-  listOfFieldNames,
-  etlUnits,
-  DEBUG,
-) => {
+export const getNextDisplayField = (fieldName, listOfFieldNames, etlUnits, DEBUG) => {
   // object literal keyed with fieldName, value purpose
   const namePurposeMap = mapUnitsToPurpose(etlUnits);
   // subroutine
@@ -344,9 +305,7 @@ export const getNextDisplayField = (
   // const moveUp = matchPrevious || !matchNext;
   const moveDown = matchNext;
 
-  const result = moveDown
-    ? listOfFieldNames[cursor + 1]
-    : listOfFieldNames[cursor - 1];
+  const result = moveDown ? listOfFieldNames[cursor + 1] : listOfFieldNames[cursor - 1];
 
   if (DEBUG) {
     console.group(`%cPlanning to remove field: ${fieldName}`, colors.red);

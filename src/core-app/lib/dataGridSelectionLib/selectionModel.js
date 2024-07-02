@@ -566,4 +566,23 @@ function validateSelectionModel(model, state = { allState: undefined }) {
   return { valid, errors };
 }
 
+/**
+ * Tests for equality between two Selection Models
+ * @param {Object} a - The first selection model.
+ * @param {Object} b - The second selection model.
+ * @returns {boolean} True if the selection models are equal.
+ * @function
+ */
+export const eqSelectionModels = (a, b) => {
+  if (a.requestType !== b.requestType) return false;
+  if (a.computationType !== b.computationType) return false;
+  if (a.disableAntiRequest !== b.disableAntiRequest) return false;
+
+  const aValues = a.values;
+  const bValues = b.values;
+
+  if (Object.keys(aValues).length !== Object.keys(bValues).length) return false;
+
+  return true;
+};
 // END

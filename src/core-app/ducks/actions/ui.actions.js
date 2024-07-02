@@ -15,6 +15,18 @@ export const REDIRECT = `${feature} REDIRECT`; // document (state read by REDUX 
 export const CLEAR_REDIRECT = `${feature} CLEAR_REDIRECT`; // document (state read by REDUX INIT)
 export const CLEAR_BOOKMARK = `${feature} CLEAR_BOOKMARK`; // document (state read by REDUX INIT)
 
+export const ADD_ERROR = `${feature} ADD_ERROR`; // document
+export const CLEAR_ERRORS = `${feature} CLEAR_ERRORS`; // document (see AppSnackbar)
+
+// action kind :: command
+export const addError = (payload) => ({
+  type: ADD_ERROR,
+  payload,
+});
+export const clearErrors = () => ({
+  type: CLEAR_ERRORS,
+});
+
 // These impact the reducers
 // loader = true means loading
 /* eslint-disable no-shadow */

@@ -8,7 +8,7 @@ import {
   START,
   SUCCESS_NOCHANGE,
   READING_CACHE,
-  RESET,
+  //RESET,
   SET_FETCH_ARGS,
 } from './shared-action-types';
 

@@ -2,9 +2,14 @@
 
 import React, { useMemo, useCallback, createContext } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 
 import usePersistedState from '../hooks/use-persisted-state';
 import { headerView as prefs } from '../display.config';
+import { selectMvalueMode } from '../ducks/rootSelectors';
+
+import { updateHeaderView } from '../ducks/actions/headerView.actions';
+import { MVALUE_MODE } from '../lib/sum-types';
 
 /* eslint-disable no-console */
 const noop = () => {};
@@ -22,6 +27,7 @@ export const Context = createContext({
   setSwitchOn: () => noop,
   disableSwitch: false,
 });
+Context.displayName = 'Context - HeaderView';
 
 /**
  * 📌  Default export
@@ -32,9 +38,13 @@ const Provider = ({
   children,
   showDetail: showDetailProp,
   hideInactive: hideInactiveProp,
+  filename,
   stateId,
   ...rest
 }) => {
+  // set the mvalueMode
+  const dispatch = useDispatch();
+
   const [showDetail, setShowDetail] = usePersistedState(
     `${stateId}|showDetail|Context`,
     showDetailProp,
@@ -43,6 +53,33 @@ const Provider = ({
     `${stateId}|hideInactive|Context`,
     hideInactiveProp,
   );
+
+  //-------------------------------------------------------------------------------
+  // mvalueMode read here; wideMode sets the switch position where wideMode
+  // aligns with the second-label in the switch.
+  const mvalueMode = useSelector((state) => selectMvalueMode(state, filename));
+  const wideMode = mvalueMode === MVALUE_MODE.WIDE;
+  const last = filename.lastIndexOf('/');
+  console.debug('Context', filename.substring(last), mvalueMode, wideMode);
+
+  // mvalueMode set here; switch toggle dispatches the new value
+  // (which triggers a new read)
+  const toggleMvalueMode = useCallback(
+    (switchValue) => {
+      dispatch(
+        updateHeaderView({
+          filename,
+          key: 'mvalueMode',
+          value:
+            switchValue === 'multi-value-wide'
+              ? MVALUE_MODE.WIDE
+              : MVALUE_MODE.MULTIPLE,
+        }),
+      );
+    },
+    [dispatch, filename],
+  );
+  //-------------------------------------------------------------------------------
 
   const toggleShowDetail = useCallback(() => {
     setShowDetail(!showDetail);
@@ -54,21 +91,29 @@ const Provider = ({
 
   const state = useMemo(
     () => ({
+      filename,
+      mvalueMode,
       stateId,
       showDetail,
       toggleShowDetail,
       toggleHideInactive,
+      toggleMvalueMode,
       hideInactive,
+      wideMode,
       setHideInactive,
       setShowDetail,
       ...rest,
     }),
     [
+      filename,
+      mvalueMode,
       stateId,
       showDetail,
       toggleShowDetail,
       toggleHideInactive,
+      toggleMvalueMode,
       hideInactive,
+      wideMode,
       setHideInactive,
       setShowDetail,
       rest,
@@ -77,6 +122,7 @@ const Provider = ({
 
   return <Context.Provider value={state}>{children}</Context.Provider>;
 };
+Provider.displayName = 'Provider - HeaderView';
 
 Provider.propTypes = {
   hideInactive: PropTypes.bool,
@@ -84,6 +130,7 @@ Provider.propTypes = {
   switchCallback: PropTypes.func,
   showSwitch: PropTypes.bool,
   stateId: PropTypes.string.isRequired,
+  filename: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 };
 Provider.defaultProps = {

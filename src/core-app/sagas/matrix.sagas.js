@@ -24,8 +24,7 @@ import { setNotification } from '../ducks/actions/notifications.actions';
 import { getProjectId, isHostedMatrixStale } from '../ducks/rootSelectors';
 import { initAbortController } from '../../hooks/use-abort-controller';
 // -----------------------------------------------------------------------------
-// 📡
-// direct calls to fetch (see api MATRIX)
+// 📡 direct calls to fetch (see api MATRIX)
 //
 import {
   fetchMatrixSpec as fetchMatrixSpecInner, // generates the matrix request
@@ -164,8 +163,8 @@ function* _queueMatrixRequest(action) {
         yield put(
           apiFetch(
             {
-              // ::event
-              meta: { uiKey: 'matrix', feature: MATRIX },
+              // ::event (see middleware CANCEL to aligh uiKey)
+              meta: { uiKey: action.payload, feature: MATRIX },
               request: {
                 project_id: requestedProject,
                 spec: request,

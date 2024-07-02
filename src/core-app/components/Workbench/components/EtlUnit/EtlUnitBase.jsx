@@ -16,8 +16,8 @@ import { useTraceUpdate } from '../../../../constants/variables';
 // 📖
 import {
   getNodeDataSeed,
-  getIsCompReducedMap,
-  getMaybeSelectionModel,
+  // getIsCompReducedMap,
+  // getMaybeSelectionModel,
   getIsTimeSingleton,
   selectEtlUnitDisplayConfig,
 } from '../../../../ducks/rootSelectors';
@@ -163,7 +163,9 @@ export function CanvasEtlUnitMain({
   configs,
   displayType,
 }) {
-  console.debug('CanvasEtlUnitMain', configs);
+  if (DEBUG) {
+    console.debug('CanvasEtlUnitMain', configs);
+  }
   //----------------------------------------------------------------------------
   // MAP
   return configs.map((config) => {
@@ -207,8 +209,7 @@ export function CanvasEtlUnitMain({
         key={`$EtlUnitDisplayContext-${config.nodeId}-${config.identifier}`}
         stateId={`$EtlUnitBase-${config.nodeId}-${config.identifier}`}
         identifier={config.identifier}
-        data={data}
-      >
+        data={data}>
         <MaybeContextProvider
           props={{ config }}
           Context={SelectionModelContextProvider}
@@ -216,8 +217,7 @@ export function CanvasEtlUnitMain({
             PURPOSE_TYPES.QUALITY,
             PURPOSE_TYPES.MCOMP,
             PURPOSE_TYPES.MSPAN,
-          ].includes(config.purpose)}
-        >
+          ].includes(config.purpose)}>
           <EtlUnitDisplayDataContext.Consumer>
             {({ showDetail, showSwitch }) => (
               <CardContent
@@ -227,8 +227,7 @@ export function CanvasEtlUnitMain({
                   quality: config.etlUnitType === 'quality',
                   measurement: config.etlUnitType !== 'quality',
                   'no-border': config.tag === 'measurement',
-                })}
-              >
+                })}>
                 <EtlUnitCardHeader
                   className='EtlUnit-CardHeader'
                   title={config.title}
@@ -246,8 +245,7 @@ export function CanvasEtlUnitMain({
                     config.tag,
                     'Luci-Collapse-prerender',
                     { hidden: !showDetail },
-                  )}
-                >
+                  )}>
                   {displayType !== 'alias' ? (
                     <DetailView
                       nodeId={nodeId}
@@ -295,8 +293,7 @@ function PaletteEtlUnitMain({ parameterOrMeasurement, config }) {
         quality: config.purpose === PURPOSE_TYPES.QUALITY,
         measurement: config.purpose !== PURPOSE_TYPES.QUALITY,
         'no-border': config.tag === 'measurement',
-      })}
-    >
+      })}>
       <EtlUnitCardHeader
         className='EtlUnit-CardHeader'
         title={config.title}

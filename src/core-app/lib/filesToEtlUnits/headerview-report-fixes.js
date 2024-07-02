@@ -46,7 +46,7 @@ const COLOR = colors.blue;
  * @return {Object<string,Fixes>}
  */
 export function reportHvsFixes(hvs, debug = false) {
-  // ⚠️  initialize the hvsFixes object
+  // initialize the hvsFixes object accumulator
   const hvsFixes = {};
   const DEBUG = debug || GLOBAL_DEBUG;
 
@@ -75,11 +75,14 @@ export function reportHvsFixes(hvs, debug = false) {
     },
 
     // RAW
+    // includes etlUnit analysis that considers all SOURCE types
+    // to determine the integrity of the etlUnit.  The results get combined
+    // with the Hvs1 report stored on the RAW key.
     reportHvs2: () => {
       // valid etlUnits in each hv
       hvsFixes[SOURCE_TYPES.RAW] = combine(
         hvsFixes[SOURCE_TYPES.RAW],
-        reportHvsEtlUnitFixes(hvs, DEBUG),
+        reportHvsEtlUnitFixes(hvs, DEBUG), // considers RAW, WIDE, IMPLIED
       );
       if (DEBUG) {
         console.log(
@@ -124,9 +127,7 @@ export function reportHvsFixes(hvs, debug = false) {
       coordinateHvsFixes(hvsFixes); // side-effect on hvsFixes
       if (DEBUG) {
         console.log(
-          `%chvsFixes following the coordination process: ${errorCount(
-            hvsFixes,
-          )} `,
+          `%chvsFixes following the coordination process: ${errorCount(hvsFixes)} `,
           COLOR,
         );
         console.dir(hvsFixes);
@@ -147,9 +148,7 @@ export function reportHvsFixes(hvs, debug = false) {
       );
       if (DEBUG) {
         console.log(
-          `%c👉 hvsFixes count following setLazyFixes: ${errorCount(
-            hvsFixes,
-          )} `,
+          `%c👉 hvsFixes count following setLazyFixes: ${errorCount(hvsFixes)} `,
           COLOR,
         );
         console.dir(hvsFixes[SOURCE_TYPES.RAW]);
@@ -213,15 +212,12 @@ function errorCount(hvsFixes) {
 function removeDanglingValues(hvsFixes) {
   /* eslint-disable no-shadow, no-param-reassign */
   const go = (sourceTypeErrors) =>
-    Object.entries(sourceTypeErrors).reduce(
-      (errors, [source, sourceErrors]) => {
-        if (sourceErrors?.length > 0) {
-          errors[source] = sourceErrors;
-        }
-        return errors;
-      },
-      {},
-    );
+    Object.entries(sourceTypeErrors).reduce((errors, [source, sourceErrors]) => {
+      if (sourceErrors?.length > 0) {
+        errors[source] = sourceErrors;
+      }
+      return errors;
+    }, {});
   Object.keys(hvsFixes).forEach((key) => {
     hvsFixes[key] = go(hvsFixes[key]);
   }); // side-effect on hvsFixes
@@ -352,7 +348,7 @@ function wtlfFixes(hv, DEBUG) {
  *  👉 base case: Array + Array => dedup Array
  *  👉 Object + Object => combine values :: Array
  *                     => combine values :: Object
- *                     => 🚨 :)
+ *                     => mix of types 🚨 :)
  *
  */
 function combine(left, right) {
@@ -376,3 +372,5 @@ function combine(left, right) {
   }
 }
 export default reportHvsFixes;
+
+// END

@@ -53,6 +53,7 @@ export const UPDATE_WIDE_TO_LONG_FIELDS = `${HEADER_VIEW} ${COMPUTE} WIDE_TO_LON
 export const SET_WIDE_TO_LONG_FIELDS_IN_HV = `${HEADER_VIEW} SET/wide-to-long-fields (in HV)`;
 
 // ui command -> middleware compute action interface
+export const UPDATE_HEADERVIEW = `${HEADER_VIEW} UPDATE_HEADERVIEW`;
 export const UPDATE_FILEFIELD = `${HEADER_VIEW} UPDATE_FILEFIELD`;
 export const UPDATE_IMPLIED_MVALUE = `${HEADER_VIEW} UPDATE_IMPLIED_MVALUE`;
 
@@ -204,7 +205,13 @@ export const setDisabledFieldStack = setHeaderViews;
   provide the key values; right now based on the parameter sequence.
 ---------------------------------------------------------------------------*/
 
-// user input/configuration
+/**
+ * @param {Object} { filename, key, value }
+ * @return {Object} action UPDATE_HEADERVIEW
+ */
+export const updateHeaderView = (payload) => ({ type: UPDATE_HEADERVIEW, ...payload });
+
+//export const updateFielField = (payload) => ({ type: UPDATE_FILEFIELD, payload });
 export const updateFileField = makeActionCreator(
   UPDATE_FILEFIELD,
   'filename',

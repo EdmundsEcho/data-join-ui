@@ -7,7 +7,7 @@
  */
 import { apiInstance } from '../core-app/services/api';
 
-import { ApiCallError } from '../errors';
+import { ApiCallError } from '../core-app/lib/LuciErrors';
 
 //------------------------------------------------------------------------------
 // Read the .env
@@ -190,10 +190,7 @@ export async function fetchUserDrives(signal) {
     signal,
   };
   if (DEBUG) {
-    console.debug(
-      `%c testing "users/user_drives_tokens" endpoint`,
-      'color:orange',
-    );
+    console.debug(`%c testing "users/user_drives_tokens" endpoint`, 'color:orange');
   }
   return apiInstance(axiosOptions);
 }

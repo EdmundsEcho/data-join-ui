@@ -43,15 +43,15 @@ import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
 
-import WideToLongCard from './WideToLongCard';
-import ImpliedMvalueCard from './ImpliedMvalueCard';
+import CardHeaderWithToggle from './shared/CardHeaderWithToggle';
 import HeaderViewFieldHeader from './HeaderViewFieldHeader';
 import HeaderViewField from './HeaderViewField';
-
-import CardHeaderWithToggle from './shared/CardHeaderWithToggle';
 import ErrorCard from './shared/ErrorCard';
 import ErrorBoundary from './shared/ErrorBoundary';
 import ErrorFlag from './shared/ErrorFlag';
+
+import WideToLongCard from './WideToLongCard';
+import ImpliedMvalueCard from './ImpliedMvalueCard';
 // import ConfirmAlert from './shared/ConfirmModal';
 
 // 📖 data selectors
@@ -128,8 +128,7 @@ function HeaderView(props) {
         handleRemove={removeFile}
         hideInactive
         status={headerView ? 'success' : 'loading'}
-        activeFieldCount={activeFieldCount}
-      >
+        activeFieldCount={activeFieldCount}>
         <HeaderViewContext.Consumer>
           {({ showDetail }) => {
             return (
@@ -219,8 +218,7 @@ function Main({ titleRow, children }) {
   return (
     <Table
       className={clsx('Luci-HeaderView', 'Luci-Table', 'headerView', 'detail')}
-      size='medium'
-    >
+      size='medium'>
       {/* Row of field titles */}
       <TableHead>{titleRow}</TableHead>
 

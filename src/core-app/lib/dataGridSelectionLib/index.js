@@ -8,13 +8,14 @@ import { noopMachine, createSelectionModelMachine } from './xstate-machine';
 
 export {
   COMPUTATION_TYPES,
-  REQUEST_TYPES,
   EVENT_TYPES,
-  newSelectionModel,
+  REQUEST_TYPES,
+  eqSelectionModels,
+  includeCompInSelectFields,
   isSingleValue,
   mkGridSelectionModelFilter,
   mkQualOrCompRequest,
-  includeCompInSelectFields,
+  newSelectionModel,
 } from './selectionModel';
 
 export { PURPOSE_TYPES } from '../sum-types';

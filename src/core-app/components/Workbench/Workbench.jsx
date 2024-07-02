@@ -13,7 +13,9 @@ import {
 
 // cancel action
 import { bookmark } from '../../ducks/actions/stepper.actions';
-// import { fetchWarehouse } from '../../ducks/actions/workbench.actions';
+import {
+  cancelWarehouse /* fetchWarehouse */,
+} from '../../ducks/actions/workbench.actions';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_WORKBENCH === 'true';
@@ -48,19 +50,8 @@ const Workbench = () => {
 
   const handleCancel = useCallback(() => {
     dispatch(bookmark('fields'));
+    dispatch(cancelWarehouse());
   }, [dispatch]);
-
-  // coordinate component with data using status
-  // re-render when stopped loading
-  /*
-  useEffect(() => {
-    if (!withData || isStale) {
-      dispatch(fetchWarehouse()); // uses tree if CURRENT
-    }
-  }, [withData, isStale, dispatch]);
-*/
-
-  /* get data to feed to the workbench */
 
   if (DEBUG) {
     console.debug('%c----------------------------------------', 'color:orange');

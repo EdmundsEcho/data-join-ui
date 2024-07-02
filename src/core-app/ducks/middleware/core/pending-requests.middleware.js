@@ -13,8 +13,6 @@
  * middleware type: core, but has feature-like qualities
  * e.g., uses the apiResume action
  *
- * ⚠️  Unify with to be deprecated jobs.actions
- *
  */
 import { REHYDRATE } from 'redux-persist';
 import {
@@ -35,10 +33,7 @@ import {
   apiFetch,
 } from '../../actions/api.actions';
 
-import {
-  getPendingRequests,
-  getNumberOfPendingRequests,
-} from '../../rootSelectors';
+import { getPendingRequests, getNumberOfPendingRequests } from '../../rootSelectors';
 import { setNotification } from '../../actions/notifications.actions';
 
 import { colors } from '../../../constants/variables';

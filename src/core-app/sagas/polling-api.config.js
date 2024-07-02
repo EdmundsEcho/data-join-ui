@@ -49,6 +49,7 @@ export const channelSpec = {
     pollingEventError,
   },
   guards: {
+    isError: ResponseTypePredicates.ERROR,
     isResolved: ResponseTypePredicates.RESOLVED,
     isCancelled: ResponseTypePredicates.CANCELLED,
   },

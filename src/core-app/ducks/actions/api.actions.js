@@ -1,4 +1,5 @@
 // /src/ducks/actions/api.actions.js
+// @ts-nocheck
 
 /**
  * @module actions/api.actions
@@ -53,15 +54,7 @@ const create = (type, event) => ({
   type: `${event?.meta?.feature} ${type}`,
   event,
 });
-const createT = (type, event) => {
-  const result = {
-    type: `${event?.meta?.feature} ${type}`,
-    event,
-  };
-  console.debug(`__ action creator`);
-  console.dir(result);
-  return result;
-};
+
 // :: command
 // receiver: polling-api.sagas
 // the machine event:: request, meta
@@ -71,8 +64,7 @@ export const pollingEventStart = (event) => create(POLLING_START, event);
 export const pollingEventEnd = (event) => create(POLLING_END, event);
 export const pollingEventResolved = (event) => create(POLLING_RESOLVED, event);
 export const pollingEventError = (event) => create(POLLING_ERROR, event);
-export const pollingEventCancelled = (event) =>
-  create(POLLING_CANCELLED, event);
+export const pollingEventCancelled = (event) => create(POLLING_CANCELLED, event);
 
 // Actions for the times when the middleware calls the api directly
 // i.e., when does not need to poll
@@ -84,8 +76,39 @@ export const apiEventError = ({ feature, ...args }) => ({
 });
 
 //------------------------------------------------------------------------------
+/* eslint-disable no-unused-vars */
+//------------------------------------------------------------------------------
+// @flow
+//
+type Meta = {
+  feature: string,
+  uiKey?: string,
+};
+
+type Request = {
+  project_id: string,
+  jobId?: string,
+  processId?: string,
+  signal?: AbortSignal,
+  [key: string]: any,
+};
+
+type Event = {
+  meta: Meta,
+  [key: string]: any,
+};
+
+type EventInterface = {
+  request: Request,
+  meta: Meta,
+  [key: string]: any,
+};
+
 /**
  * Enforces the eventInterface contract
+ * The interface is required to coordinate pending requests and the
+ * core api service (polling).
+ *
  * @function
  * @throws ApiCallError
  *

@@ -20,7 +20,8 @@ import createReducer from '../utils/createReducer';
 // actions :: document
 import {
   UPDATE_IMPLIED_MVALUE,
-  UPDATE_FILEFIELD,
+  UPDATE_HEADERVIEW, // prop-specific
+  UPDATE_FILEFIELD, // header-idx and prop-specific
   RESET_FILEFIELDS,
   ADD_SELECTED,
   REMOVE_SELECTED,
@@ -43,7 +44,7 @@ import { RESET } from './actions/project-meta.actions';
 import { updateField } from '../lib/filesToEtlUnits/update-field';
 import { getWideToLongFieldsConfig } from '../lib/filesToEtlUnits/transforms/wide-to-long-fields';
 
-import { SOURCE_TYPES, PURPOSE_TYPES } from '../lib/sum-types';
+import { MVALUE_MODE, SOURCE_TYPES, PURPOSE_TYPES } from '../lib/sum-types';
 
 // ⚠️  This function can generate a new hv reference
 import { findAndSeedDerivedFields } from '../lib/filesToEtlUnits/transforms/find-derived-fields';
@@ -74,13 +75,9 @@ export const initialState = {
     return emptyFixes;
   }, {}),
 };
-// -----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 // Reducer-specific selectors
-//
-// ⬜ Which of these could be converted to function as value?
-//    👍 reduce need for GC; net benefit?
-//
 // These functions should reflect what is defined in the `initialState`.
 //------------------------------------------------------------------------------
 export const getHeaderViews = (stateFragment) => stateFragment.headerViews;
@@ -96,6 +93,13 @@ export const isFileSelected = (stateFragment, path) => {
 };
 
 export const getHasSelectedFiles = (stateFragment) => stateFragment.selected.length > 0;
+
+/**
+ * v0.5.0
+ * @return {String} mvalueMode enum
+ */
+export const selectMvalueMode = (stateFragment, filename) =>
+  stateFragment.headerViews?.[filename]?.mvalueMode;
 
 /**
  * v0.3.11
@@ -572,12 +576,12 @@ const reducer = createReducer(initialState, {
     //
     const updatedHvs = Object.keys(state.headerViews).includes(removeFile)
       ? /* eslint-disable no-param-reassign */
-      Object.values(state.headerViews).reduce((updatedHvs_, hv) => {
-        if (hv.filename !== removeFile) updatedHvs_[hv.filename] = hv;
-        return updatedHvs_;
-      }, {})
+        Object.values(state.headerViews).reduce((updatedHvs_, hv) => {
+          if (hv.filename !== removeFile) updatedHvs_[hv.filename] = hv;
+          return updatedHvs_;
+        }, {})
       : /* eslint-enable no-param-reassign */
-      state.headerViews;
+        state.headerViews;
 
     return {
       ...state,
@@ -644,12 +648,10 @@ const reducer = createReducer(initialState, {
     };
   },
 
-  //
+  // -------------------------------------------------------------------------
   // 1️⃣  update the field value
   // 2️⃣  assess the need to add/remove configuration props
   // 3️⃣  document the headerViews
-  //
-  // 👍 State changes occur here in the reducer (updateField)
   //
   // ⚠️  A separate error/fix checking is a side-effect triggered in the saga
   //    Saga will take the array of actions that need to schedule
@@ -707,7 +709,31 @@ const reducer = createReducer(initialState, {
       headerViews,
     };
   },
-  //
+  // 0.5.0
+  // Only relevant for mvalueMode (as of 0.5.0)
+  [UPDATE_HEADERVIEW]: (state, { filename, key, value }) => {
+    if (value == null || key !== 'mvalueMode') return state;
+
+    if (!Object.values(MVALUE_MODE).includes(value)) {
+      throw new InputError(`Invalid mvalueMode: ${value}`);
+    }
+
+    const newHv = { ...selectHeaderView(state, filename), [key]: value };
+    console.debug(newHv);
+
+    return {
+      ...state,
+      headerViews: {
+        ...state.headerViews,
+        [filename]: findAndSeedDerivedFields({
+          hv: newHv,
+          previousHvFields: [], // remove the heuristic to ensure a fresh analysis
+          DEBUG,
+        }),
+      },
+    };
+  },
+  //--------------------------------------------------------------------------------
   // 👍 document the async request for a field's levels
   // 🔖 only relevant for mspan
   //

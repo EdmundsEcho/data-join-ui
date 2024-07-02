@@ -7,7 +7,8 @@
  * @description
  * The data structure for a field within a header-view.
  *
- * @todo UI configuration of codomain-reducer needs to be
+ * @todo This note may be outdated.
+ * UI configuration of codomain-reducer needs to be
  * implemented; issue: 1:1 with a codomain, where more than one can
  * exist in a header view. For now, the prop is present at the source-level
  * as a placeholder. Defaults will be implemented by the backend.

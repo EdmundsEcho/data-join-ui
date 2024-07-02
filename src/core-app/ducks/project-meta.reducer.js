@@ -12,7 +12,6 @@
 
 // import { PURGE } from 'redux-persist';
 
-import { MissingProjectIdError } from '../lib/LuciErrors';
 import createReducer from '../utils/createReducer';
 
 import {
@@ -90,6 +89,11 @@ const resetState = {
 const reducer = createReducer(resetState, {
   // do not change meta data
   RESET: () => resetState,
+  // for dev purposes
+  SET_VERSION: (state, { payload }) => ({
+    ...state,
+    version: payload,
+  }),
   [CLEAR_INITIALIZING_ACTIONS]: (state) => ({
     ...state,
     meta: {

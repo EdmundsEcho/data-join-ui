@@ -4,6 +4,8 @@
  * @module file-to-header
  *
  * @description
+ * response from INSPECTION service -> headerView
+ *
  * The module exports `addFileToHeaderViews`
  *
  * Part 1 of 2 in
@@ -25,12 +27,10 @@
  * 3. injects the "enabled" property to track user selection of fields
  * 4. is configurable
  *
- * TODO purpose-specific processing
- * 1. mvalue (automated when we pivot... mvalue purpose is confirmed)
- *
  */
 import { fieldFromFileField } from './transforms/headerview-field';
 import { findAndSeedDerivedFields } from './transforms/find-derived-fields';
+import { MVALUE_MODE } from '../sum-types';
 
 //------------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
@@ -38,6 +38,8 @@ const DEBUG = process.env.REACT_APP_DEBUG_REDUCERS === 'true';
 
 /**
  * Configuration
+ *
+ * v0.5.0 added mvalueMode
  *
  * This module operates on :: hv
  *
@@ -74,6 +76,7 @@ const defaultConfig = {
     enabled: true,
     nrows: file.nrows,
     fields: file.fields,
+    mvalueMode: MVALUE_MODE.MULTIPLE,
   }),
   // (file, field) -> field
   configField: fieldFromFileField,
@@ -97,12 +100,13 @@ export const normalizer = (file) => {
 };
 
 /**
- * raw api file (inspection result) -> headerView
+ * 📌 raw api file (inspection result) -> headerView
  *
  * Transform the data using configFile and configField functions provided
  * as configuration objects.
  *
  * @function
+ * @returns {function}
  *
  */
 function fileToHeaderView({ configFile, configField } = defaultConfig) {

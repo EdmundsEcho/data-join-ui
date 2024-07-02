@@ -9,7 +9,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 
-import RefetchLevels from './RefetchLevels';
+// import RefetchLevels from './RefetchLevels';
+import { Div } from '../../../luci-styled';
 
 import { Context as HeaderViewContext } from '../HeaderViewContext';
 import Switch from './Switch';
@@ -35,7 +36,9 @@ const CardHeaderWithToggle = (props) => {
     toggleShowDetail,
     showDetail,
     hideInactive,
+    wideMode,
     toggleHideInactive,
+    toggleMvalueMode,
     status,
   } = useContext(HeaderViewContext);
 
@@ -52,38 +55,34 @@ const CardHeaderWithToggle = (props) => {
       subheader={subheader}
       subheaderTypographyProps={{ variant: 'subtitle2' }}
       action={
-        <Grid container className='Luci-HeaderView-Actions'>
-          <Grid item xs={12} container>
-            <Grid item xs={4} />
-            <Grid item xs={4}>
-              <IconButton
-                className={clsx('expandIcon', { expandOpen: showDetail })}
-                onClick={handleShowDetail}
-                tabIndex={-1}
-                size='large'
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={4}>
-              <IconButton
-                className={clsx('closeIcon')}
-                onClick={handleRemove}
-                size='large'
-              >
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} container>
-            <Grid
-              item
-              className={clsx('Luci-HeaderView', 'switch')}
-              style={{ marginLeft: 'auto', marginRight: '14px' }}
-            >
-              {showDetail && status !== 'loading' ? (
+        <Div className='Luci-HeaderView-actions'>
+          <div className='luci-action-row'>
+            <IconButton
+              className={clsx('expandIcon', { expandOpen: showDetail })}
+              onClick={handleShowDetail}
+              tabIndex={-1}
+              size='large'>
+              <ExpandMoreIcon />
+            </IconButton>
+            <IconButton className='closeIcon' onClick={handleRemove} size='large'>
+              <CloseIcon />
+            </IconButton>
+          </div>
+
+          <div className='luci-action-row'>
+            {showDetail && status !== 'loading' && (
+              <>
                 <Switch
-                  className='show-hide'
+                  className='mvalue-mode-switch'
+                  labelOne='multiple-values'
+                  labelTwo='multi-value-wide' // sync with context toggle
+                  checked={!wideMode}
+                  onChange={toggleMvalueMode}
+                  labelPlacement='start'
+                  fontSize='medium'
+                />
+                <Switch
+                  className='show-all-fields-switch'
                   labelOne='show all'
                   labelTwo='hide disabled'
                   checked={hideInactive}
@@ -91,10 +90,10 @@ const CardHeaderWithToggle = (props) => {
                   labelPlacement='start'
                   fontSize='medium'
                 />
-              ) : null}
-            </Grid>
-          </Grid>
-        </Grid>
+              </>
+            )}
+          </div>
+        </Div>
       }
     />
   );

@@ -18,7 +18,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { getMaybeSelectionModel } from '../ducks/rootSelectors';
-import { useSelectionModel, COMPUTATION_TYPES } from '../hooks/use-selection-model';
+import {
+  COMPUTATION_TYPES,
+  eqSelectionModels,
+  useSelectionModel,
+} from '../hooks/use-selection-model';
 import { setSelectionModel } from '../ducks/actions/workbench.actions';
 import { PURPOSE_TYPES } from '../lib/sum-types';
 import { colors } from '../constants/variables';
@@ -90,7 +94,7 @@ const Provider = ({ children, config }) => {
       if (DEBUG) {
         console.debug('👉 handle set selection model with model:', model);
       }
-      if (model) {
+      if (model && !eqSelectionModels(selectionModel, model)) {
         dispatch(
           setSelectionModel({
             ...config,
@@ -99,7 +103,7 @@ const Provider = ({ children, config }) => {
         );
       }
     },
-    [config, dispatch],
+    [config, dispatch, selectionModel],
   );
 
   // ---------------------------------------------------------------------------

@@ -20,6 +20,7 @@ import {
 } from '../headerview-helpers';
 import ERRORS from '../../../constants/error-messages';
 import { DesignError } from '../../LuciErrors';
+import { MVALUE_MODE } from '../../sum-types';
 import { colors } from '../../../constants/variables';
 
 const COLOR = colors.blue;
@@ -39,8 +40,8 @@ const COLOR = colors.blue;
  *    the report exploits the etlUnit construct to assess the integrity
  *    of a headerView (and how to fix it).
  *
- * ⚠️  Each report is a 'standalone'; i.e., not in context of hvs.
- *
+ * 🔖 Each report is generated without considering other hv in the hvs
+ *    collection (they are 'standalone')
  *
  * @function
  * @param {Array<HeaderView>} hvs
@@ -85,8 +86,8 @@ export function reportHvsEtlUnitFixes(hvs, DEBUG = false) {
  * that specific headerView (i.e., ignoring other headerViews).
  *
  *
- * 👍 processes all of fields regardless of source type
- *    (i.e., RAW, WIDE and IMPLIED)
+ * 👍 considers all of fields regardless of source type to get a full
+ *    view of the etlUnit (i.e., RAW, WIDE and IMPLIED)
  *
  * @function
  * @param {Object} hv
@@ -102,15 +103,12 @@ function headerViewEtlUnitFixes(hv, DEBUG) {
     console.table(fieldCounts);
   }
 
-  // Invalid state
-  // True because we count fields in context of the derived fields (i.e., so
-  // ignore RAW field values when required)
-  if (fieldCounts.mvalue > 1) {
-    throw new DesignError(
-      `This headerview has more than one mvalue: ${hv.filename}\n` +
-        `(failed to call findAndSeedDerivedFields)`,
-    );
-  }
+  // if (fieldCounts.mvalue > 1) {
+  //   throw new DesignError(
+  //     `This headerview has more than one mvalue: ${hv.filename}\n` +
+  //       `(failed to call findAndSeedDerivedFields)`,
+  //   );
+  // }
 
   const fixes = [];
 
@@ -156,11 +154,9 @@ function headerViewEtlUnitFixes(hv, DEBUG) {
     // how to parse a string -> date
     if (!mspanField.format || !mspanField.time?.interval?.unit)
       fixes.push(ERRORS.missingTimeFormatAndInterval);
-    else if (!mspanField?.time?.interval?.unit)
-      fixes.push(ERRORS.missingTimeInterval);
+    else if (!mspanField?.time?.interval?.unit) fixes.push(ERRORS.missingTimeInterval);
     // how to parse a string -> date
-    if (!mspanField?.time?.interval.count)
-      fixes.push(ERRORS.missingTimeInterval);
+    if (!mspanField?.time?.interval.count) fixes.push(ERRORS.missingTimeInterval);
     // evidence the system wasn't able to parse the string
     if (!mspanField?.['levels-mspan']?.length > 0)
       fixes.push(ERRORS.unsupportedTimeFormat);

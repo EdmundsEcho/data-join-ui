@@ -96,9 +96,7 @@ export function buildWideToLongFields(hv, previousHvFields = [], DEBUG = GLOBAL_
 
   // 💰 wide-to-long depends on mvalues.
   //    Nothing to do in the event the set of mvalue names has not changed
-  if (previousHvFields.length === 0) {
-    if (DEBUG) console.warn(`wide-to-long-fields: failed to provide a valid heuristic`);
-  } else if (
+  if (
     areSetsEqual(
       new Set(
         readOnly.fields

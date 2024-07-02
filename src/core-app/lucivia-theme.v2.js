@@ -907,7 +907,7 @@ export default (mode) => {
               justifyContent: 'flex-end',
               alignContent: 'space-between',
               height: '80px',
-              width: '130px',
+              //width: '130px',
               '&.switch': {
                 marginLeft: 'auto',
               },
@@ -2211,6 +2211,15 @@ export default (mode) => {
               flexGrow: 1,
               height: 'calc(100vh - var(--app-bar-height))',
               marginTop: 'var(--app-bar-height)',
+            },
+            '&.Luci-HeaderView-actions': {
+              flexDirection: 'column',
+              width: '100%',
+              justifyContent: 'flex-end',
+              '& > .luci-action-row': {
+                marginLeft: 'auto',
+                '& > .mvalue-mode-switch': { width: '112px' },
+              },
             },
             //---------------------------------------------------------------------
             // Luci-matrix

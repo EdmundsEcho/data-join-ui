@@ -32,33 +32,16 @@ const GLOBAL_DEBUG = process.env.REACT_APP_DEBUG_ERROR_FIX === 'true';
  *
  * Returns the key for the etl-unit for a given etlField
  *
- * ⬜ find a way to determine if the field is purpose::subject to return null.
- * ⬜ throw an error if more than one value returns for this version of the
- * function.
+ * 0.5.1
+ * string -> [string]
  *
  * @function
  * @param {string} etlFieldName
  * @param {Array<Object>} ppHvs
- * @return {EtlUnit}
+ * @return {Array<String>} etlUnit name(s)
  */
-export const maybeEtlUnitFromName = (
-  etlFieldName,
-  ppHvs,
-  DEBUG = GLOBAL_DEBUG,
-) => {
-  const result = selectEtlUnitsWithFieldName(
-    etlFieldName,
-    etlUnitsFromPrePivot(ppHvs),
-    DEBUG,
-  );
-  // ⚠️  encode subject with null
-  // The concept of a single etlUnit for subject makes less sense
-  if (result.length > 1) {
-    return null;
-  }
-  const [singleton] = result;
-
-  return singleton;
+export const maybeEtlUnitFromName = (etlFieldName, ppHvs) => {
+  return selectEtlUnitsWithFieldName(etlFieldName, etlUnitsFromPrePivot(ppHvs));
 };
 /**
  * Estimate based on current hvs value.
@@ -69,10 +52,7 @@ export const maybeEtlUnitFromName = (
  * @param {boolean} DEBUG
  * @return {Object} etlUnits
  */
-export const predictEtlUnitsFromHeaderViews = (
-  headerViews,
-  DEBUG = GLOBAL_DEBUG,
-) => {
+export const predictEtlUnitsFromHeaderViews = (headerViews, DEBUG = GLOBAL_DEBUG) => {
   if (DEBUG) {
     console.group(`combine hv EtlUnits -> EtlUnits for other hvs`);
   }
@@ -196,11 +176,7 @@ export const fieldNamesFromUnits = (etlUnits) => {
  * @param {Object} newEtlField EtlField.
  * @return {etlUnit} Returns null if updated a etlUnit that does not exist
  */
-export const tryCreateOrUpdateEtlUnit = (
-  subFieldName,
-  etlUnits,
-  newEtlField,
-) => {
+export const tryCreateOrUpdateEtlUnit = (subFieldName, etlUnits, newEtlField) => {
   if (!newEtlField) return null;
   if (!Object.values(TYPES).includes(newEtlField.purpose)) {
     throw new InvalidStateError(
@@ -251,10 +227,8 @@ export const tryCreateOrUpdateEtlUnit = (
  * @function
  *
  */
-export const predictEtlUnitsFromHeaderView = (
-  headerView,
-  DEBUG = GLOBAL_DEBUG,
-) => etlUnitsFromFields(getActiveHvFields(headerView), DEBUG);
+export const predictEtlUnitsFromHeaderView = (headerView, DEBUG = GLOBAL_DEBUG) =>
+  etlUnitsFromFields(getActiveHvFields(headerView), DEBUG);
 
 /**
  * 📌
@@ -278,10 +252,9 @@ function etlUnitsFromFields(fields_, DEBUG) {
     console.groupCollapsed(`👉 etlUnitsFromFields: ${fields_[0].filename}`);
     /* eslint-disable no-param-reassign, no-shadow */
     const report = Object.keys(fields).reduce((report, purposeKey) => {
-      report[purposeKey] = selectPropsInObj(
-        ['field-alias'],
-        fields[purposeKey],
-      ).map((entry) => entry['field-alias']);
+      report[purposeKey] = selectPropsInObj(['field-alias'], fields[purposeKey]).map(
+        (entry) => entry['field-alias'],
+      );
       return report;
       /* eslint-enable no-param-reassign, no-shadow */
     }, {});
@@ -329,11 +302,7 @@ function etlUnitsFromFields(fields_, DEBUG) {
   return result;
 }
 
-function mkQualityUnit({
-  codomain,
-  subject = null,
-  codomainReducer = 'FIRST',
-}) {
+function mkQualityUnit({ codomain, subject = null, codomainReducer = 'FIRST' }) {
   return {
     type: TYPES.QUALITY,
     subject,

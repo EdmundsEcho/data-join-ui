@@ -96,13 +96,22 @@ export const getSelected = (state) => fromHeaderView.getSelected(state.headerVie
 
 export const getCountSelectedFiles = (state) => getSelected(state).length;
 
-export const isFileSelected = (state, path) =>
-  fromHeaderView.isFileSelected(state.headerView, path);
+export const isFileSelected = (state, filename) =>
+  fromHeaderView.isFileSelected(state.headerView, filename);
 
 export const getHvSequence = (state, filename) =>
   getSelected(state).findIndex((filename_) => filename_ === filename);
 
-// 0.3.11
+/**
+ * 0.5.0
+ * @return {String} mvalueMode enum
+ */
+export const selectMvalueMode = (state, filename) =>
+  fromHeaderView.selectMvalueMode(state.headerView, filename);
+
+/**
+ * 0.3.11
+ */
 export const selectSymbolMapHeaderView = (state, filename, headerIdx) => {
   return fromHeaderView.selectSymbolMap(state.headerView, filename, headerIdx);
 };

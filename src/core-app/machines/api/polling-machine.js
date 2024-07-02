@@ -48,10 +48,7 @@ const pollingMachineInitialContext = () => {
  * input: request & meta
  * output: data from api
  */
-const pollingMachineConfig = ({
-  initialContext,
-  pollingWorker: childMachine,
-}) => ({
+const pollingMachineConfig = ({ initialContext, pollingWorker: childMachine }) => ({
   id: 'polling-machine',
   strict: true,
   initial: 'idle',
@@ -210,9 +207,7 @@ const pollingMachineConfig = ({
             actions.log(
               (context, event) =>
                 `spawning polling-worker: ${
-                  event.data?.jobId ??
-                  context?.request?.jobId ??
-                  "Can't read jobId"
+                  event.data?.jobId ?? context?.request?.jobId ?? "Can't read jobId"
                 }`,
             ),
             actions.assign({
@@ -220,9 +215,7 @@ const pollingMachineConfig = ({
                 return spawn(
                   childMachine.withContext({
                     id: `poll-${
-                      event.data?.jobId ??
-                      context?.request?.jobId ??
-                      'Cant read jobId'
+                      event.data?.jobId ?? context?.request?.jobId ?? 'Cant read jobId'
                     }`,
                     ...initialWorkerContext({
                       request: {
@@ -234,9 +227,7 @@ const pollingMachineConfig = ({
                     }),
                   }),
                   `poll-${
-                    event.data?.jobId ??
-                    context?.request?.jobId ??
-                    'Cant read jobId'
+                    event.data?.jobId ?? context?.request?.jobId ?? 'Cant read jobId'
                   }`,
                 );
               },
@@ -417,15 +408,12 @@ const pollingMachineOptions = ({
       services[name] = makeEventForApi(fn, DEBUG);
       return services;
     }, {}), // all receive (context, event)
-    actions: Object.entries(apiActions).reduce(
-      (withEmitActions, [name, fn]) => {
-        withEmitActions[name] = (context, event) => {
-          return emit(fn(makeOutgoingEvent(context, event, name, DEBUG)));
-        };
-        return withEmitActions;
-      },
-      {},
-    ),
+    actions: Object.entries(apiActions).reduce((withEmitActions, [name, fn]) => {
+      withEmitActions[name] = (context, event) => {
+        return emit(fn(makeOutgoingEvent(context, event, name, DEBUG)));
+      };
+      return withEmitActions;
+    }, {}),
     /* eslint-enable no-param-reassign, no-shadow */
   };
 };
@@ -468,10 +456,7 @@ function makeOutgoingEvent(context, event, fnName, DEBUG = false) {
     },
   };
   if (DEBUG) {
-    console.debug(
-      `%cMachine outgoing to Sagas -> Redux: ${fnName}`,
-      colors.yellow,
-    );
+    console.debug(`%cMachine outgoing to Sagas -> Redux: ${fnName}`, colors.yellow);
     console.dir(result);
   }
   return result;

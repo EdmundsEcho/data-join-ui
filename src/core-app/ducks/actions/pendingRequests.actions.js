@@ -19,14 +19,29 @@ export const ADD = 'ADD PENDING REQUEST'; // document
 export const UPDATE = 'UPDATE PENDING STATUS'; // document
 export const REMOVE = 'REMOVE PENDING REQUEST'; // document
 
-// document (core command to document)
-// feature middleware should not know about this service
+/**
+ * In the app system:
+ *   - feature middleware should not know about this service
+ *   - document (core command to document)
+ *
+ * REMOVE, UPDATE: requires action.meta (does not require action.request).
+ * ADD sets the matching meta, but also includes `request` to enable
+ * restoring the request following a reload, or otherwise needed.
+ *
+ * This spec is part of the polling-machine event-interface.
+ *
+ *      {
+ *          meta: { uiKey, feature },
+ *          request: { Any }
+ *      }
+ *
+ * @function
+ * @returns {object} action
+ */
 const create = (type, action) => {
   if (!action?.event?.meta?.feature) {
     console.error(action);
-    throw new ApiCallError(
-      'Pending requests action expects { event: meta, request }',
-    );
+    throw new ApiCallError('Pending requests action expects { event: meta, request }');
   }
   const { event } = action;
   const { feature } = event.meta;

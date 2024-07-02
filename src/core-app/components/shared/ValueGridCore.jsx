@@ -201,7 +201,7 @@ const ValueGridCore = ({
     // resetSelectionModel();
     resetPagination();
     // fetchPage({reset: true});
-  }, [resetPagination]);
+  }, [DEBUG, resetPagination]);
 
   if (typeof pageSizeProp === 'undefined') {
     throw new InvalidStateError(

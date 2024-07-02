@@ -28,11 +28,7 @@ import SummaryDetailRow from './shared/SummaryDetailRow';
 import EtlUnitsTitleRow from './EtlUnitMeas/MeaUnitTitleRow';
 import DetailView from './EtlUnitMeas/DetailView';
 
-import {
-  timeIntervalUnitOptions,
-  debug,
-  useTraceUpdate,
-} from '../constants/variables';
+import { timeIntervalUnitOptions, debug, useTraceUpdate } from '../constants/variables';
 import { FIELD_TYPES } from '../lib/sum-types';
 import { InvalidStateError } from '../lib/LuciErrors';
 
@@ -95,9 +91,7 @@ const EtlUnitMeas = (props) => {
   const mkTimeSpan = ({ time }) => {
     try {
       if (time == null || time.interval == null) return '';
-      return `${time.interval.count} ${
-        timeIntervalUnitOptions[time.interval.unit]
-      }`;
+      return `${time.interval.count} ${timeIntervalUnitOptions[time.interval.unit]}`;
     } catch (e) {
       return console.warn('Failed mspan creation attempt');
     }
@@ -133,13 +127,7 @@ EtlUnitMeas.propTypes = {
       mspan: PropTypes.string,
       mcomps: PropTypes.arrayOf(PropTypes.string),
       codomain: PropTypes.string,
-      'codomain-reducer': PropTypes.oneOf([
-        'SUM',
-        'AVG',
-        'FIRST',
-        'LAST',
-        'COUNT',
-      ]),
+      'codomain-reducer': PropTypes.oneOf(['SUM', 'AVG', 'FIRST', 'LAST', 'COUNT']),
       'slicing-reducer': PropTypes.oneOf(['SUM', 'AVG', 'COUNT']),
     }),
   ).isRequired,
@@ -200,9 +188,9 @@ function EtlUnits({
   return meaEtlFields.map((mvalue) => {
     return (
       <SummaryDetailRow
-        key={`${mvalue.name}`}
+        key={mvalue.name}
         className='Luci-EtlFieldView'
-        stateId={`${mvalue.name}`}
+        stateId={mvalue.name}
         fieldType={FIELD_TYPES.ETL}
         isSelected={mvalue.name === selectedFieldName}
         viewDetail={false}
@@ -217,8 +205,7 @@ function EtlUnits({
             tableCellTrash={tableCellTrash}
             hover
           />
-        }
-      >
+        }>
         {/* Field Name */}
         <TableCell onClick={() => onRowSelect(mvalue.name)}>
           <Typography variant='body1' noWrap>
@@ -237,7 +224,7 @@ function EtlUnits({
                 <IconButton
                   className={clsx('Luci-Icon', 'addMeaImpliedFieldButton')}
                   onClick={() => handleOpenNewCompDialog(mvalue.name)}
-                  size="large">
+                  size='large'>
                   <AddIcon fontSize='small' />
                 </IconButton>
               </Grid>

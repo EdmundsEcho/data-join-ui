@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { PURPOSE_TYPES } from '../lib/sum-types';
@@ -22,6 +22,7 @@ const DEBUG_MODULE =
 
 export { mkGridSelectionModelFilter };
 export { COMPUTATION_TYPES };
+export { eqSelectionModels } from '../lib/dataGridSelectionLib';
 
 const noop = () => {};
 
@@ -94,7 +95,7 @@ export function useSelectionModel({
       if (rowCountTotal && !hasReadInitialSelectionModel.current) {
         if (DEBUG) {
           console.debug(
-            `🦀 ${
+            `${
               initialSelectionModel ? 'RESUME' : 'INIT'
             } the selectionModel with rowCountTotal`,
             initialSelectionModel?.rowCountTotal ?? rowCountTotal,

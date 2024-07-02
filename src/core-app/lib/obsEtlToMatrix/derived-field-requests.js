@@ -1,14 +1,15 @@
+// src/core-app/lib/obsEtlToMatrix/derived/derived-field-requests.js
 //------------------------------------------------------------------------------
+
+import { PURPOSE_TYPES } from '../sum-types';
+
 /**
- * database
  *
  * The inputs are limited by the fields included in the group.
  *
  * Call the config when we generate the request.
- *
- * Provides a unified ref over two phases of the configuration.
- * 👉 user-input support
- * 👉 request configuration support
+ * The config is all that is required by the backend.  Everything else is to
+ * specify how to recruit user input when making a request for the derived field.
  *
  */
 export const derivedFields = {
@@ -21,16 +22,43 @@ export const derivedFields = {
   decile: {
     id: 'decile',
     menuItem: 'decile',
-    config: configDecileRequest,
+    config: configDecileRequest, // Fn
     fmapOrApply: 'fmap',
     arity: 1,
     userInput: {
       metric: { name: 'metric', type: 'fieldName', displayType: 'none' },
     },
     meta: {
-      description:
-        'Qualifies each subject based on a ranked decile (10 highest)',
+      description: 'Qualifies each subject based on a ranked decile (10 highest)',
       instructions: 'Choose a measurement and time period.',
+    },
+  },
+  firstEvent: {
+    id: 'firstEvent',
+    menuItem: 'first-event',
+    config: configFirstEvent,
+    fmapOrApply: 'fmap',
+    arity: 1,
+    userInput: {
+      event: { name: 'event-timing', type: 'fieldName', displayType: 'none' },
+    },
+    meta: {
+      description: 'Report the date(indexed) for the first occurence of the event',
+      instructions: 'Place a single measurement in the group.',
+    },
+  },
+  lastEvent: {
+    id: 'lastEvent',
+    menuItem: 'last-event',
+    config: configLastEvent,
+    fmapOrApply: 'fmap',
+    arity: 1,
+    userInput: {
+      event: { name: 'event-timing', type: 'fieldName', displayType: 'none' },
+    },
+    meta: {
+      description: 'Report the date(indexed) for the last occurence of the event',
+      instructions: 'Place a single measurement in the group.',
     },
   },
   ratio: {
@@ -49,8 +77,7 @@ export const derivedFields = {
     },
     meta: {
       description: 'Compute the ratio of two fields (or sets of fields)',
-      instructions:
-        'Place two measurements in the group; the numerator at the top.',
+      instructions: 'Place two measurements in the group; the numerator at the top.',
     },
   },
   ratioWithUniverse: {
@@ -80,10 +107,8 @@ export const derivedFields = {
             key: 'notTheSameMetric',
             level: 'WARNING',
             message: `The subject and universe ratio is using different values`,
-            fix:
-              'Make sure the fields in the numerator match those of the denominator',
-            doc:
-              'This is a normalizing ratio: subject values / universe; to normalize with apples to apples, they should be the same',
+            fix: 'Make sure the fields in the numerator match those of the denominator',
+            doc: 'This is a normalizing ratio: subject values / universe; to normalize with apples to apples, they should be the same',
           },
         ];
       }
@@ -122,20 +147,6 @@ export const derivedFields = {
         'Add any number of factors to the group.  Place the binary factor at the top.',
     },
   },
-  timeAlignEvent: {
-    id: 'timeAlignEvent',
-    menuItem: 'time align event',
-    config: configTimeAlignEventFn,
-    fmapOrApply: 'fmap',
-    arity: 1,
-    userInput: {
-      metric: { name: 'metric', type: 'fieldName', displayType: 'none' },
-    },
-    meta: {
-      description: 'Mark the earliest data to mark the event',
-      instructions: 'Select a field that marks an event',
-    },
-  },
   identity: {
     id: 'identity',
     menuItem: 'identity fn',
@@ -152,6 +163,13 @@ export const derivedFields = {
   },
 };
 
+/**
+ * Converts a node -> array using the node.data.cache that can then
+ * be mapped over using a function
+ *
+ *     fieldName -> derived field configuration
+ *
+ */
 export const fmapPreProcessCache = (node) => [
   ...new Set(node.data.cache.flatMap((x) => x)),
 ];
@@ -175,22 +193,36 @@ export const fmapPreProcessCache = (node) => [
 //------------------------------------------------------------------------------
 //
 /**
- * ⚠️  This needs a formal interface definition
- *
- * As of Aug 14, 2021:
+ * TODO:  Specify an interface definition
+ * see matrix-derived-field.md in tnc-py
  *
  * configuration read-in by tnc-py: tnc.data.matrix.py (def go)
- * requires:
  *
- *    fieldName
- *     config
- *       name,
- *       inputs,
- *       function
- *          name
  *
- * Spec set by the backend.
- * Returns a derived field request
+ * {
+ *  "derived": [
+ *    {
+ *      "fieldName": "NewFieldName",
+ *      "inputs": [
+ *        {
+ *          "source": "MatrixField" | "EtlUnit",
+ *          "identifier": "ExistingFieldName" | "EtlUnitName",
+ *          "dataType": "number" | "date" | "string" | "boolean"
+ *        }
+ *        // ... (more inputs if needed)
+ *      ],
+ *      "function": {
+ *        "name": "FunctionName",
+ *        "output": { "type": "number" | "date" | "string" | "boolean" },
+ *        "config": {
+ *          // ... (function-specific configuration parameters)
+ *        }
+ *      }
+ *    }
+ *    // ...
+ *  ]
+ * }
+ *
  *
  * @function
  * @param {string} fieldName what to name the field
@@ -198,21 +230,83 @@ export const fmapPreProcessCache = (node) => [
  * @return {Object} with props fieldName and config
  */
 function configDecileRequest(input) {
-  const { metric = input, fieldName = null } = input;
+  const { metric, fieldName: fieldName_ = null } = input;
+
+  const fieldName = fieldName_ || `${metric}.derivedField::decile`;
 
   return {
-    fieldName: fieldName || `${input}.derivedField::decile`,
+    fieldName,
     config: {
-      name: fieldName || `${input}.derivedField::decile`,
-      inputs: {
-        metric,
-      },
+      fieldName,
+      inputs: [
+        {
+          sourceType: 'MatrixField', // or EtlUnit
+          identifier: metric,
+          dataType: 'number',
+          scope: 'subject',
+        },
+      ],
       function: {
         name: 'decile',
-        input: [{ type: 'number', scope: 'subject' }],
         output: { type: 'number' },
         config: {
           levels: 10,
+        },
+      },
+    },
+  };
+}
+function configFirstEvent(input) {
+  const { metric, fieldName: fieldName_ = null, sources = [] } = input;
+
+  const fieldName = fieldName_ || `${metric}.derivedField::firstEvent`;
+
+  return {
+    fieldName,
+    config: {
+      fieldName,
+      inputs: [
+        {
+          sourceType: 'EtlUnit::measurement',
+          identifier: sources[0],
+          dataType: 'date',
+          purpose: PURPOSE_TYPES.MSPAN,
+          scope: 'subject',
+        },
+      ],
+      function: {
+        name: 'first_event',
+        output: { type: 'date_idx' },
+        config: {
+          date_type: 'indexed',
+        },
+      },
+    },
+  };
+}
+function configLastEvent(input) {
+  const { metric, fieldName: fieldName_ = null, sources = [] } = input;
+
+  const fieldName = fieldName_ || `${metric}.derivedField::lastEvent`;
+
+  return {
+    fieldName,
+    config: {
+      fieldName,
+      inputs: [
+        {
+          sourceType: 'EtlUnit::measurement',
+          identifier: sources[0],
+          dataType: 'date',
+          purpose: PURPOSE_TYPES.MSPAN,
+          scope: 'subject',
+        },
+      ],
+      function: {
+        name: 'last_event',
+        output: { type: 'date_idx' },
+        config: {
+          date_type: 'indexed',
         },
       },
     },
@@ -231,27 +325,35 @@ function configDecileRequest(input) {
  * @return {Object} with props fieldName and config
  */
 function configRatioRequest(input) {
-  const [numerator, denominator, fieldName = null] = input;
+  const [numerator, denominator, fieldName_ = null] = input;
+
+  const fieldName = fieldName_ || `${numerator}-div-${denominator}.derivedField::ratio`;
 
   return {
-    fieldName:
-      fieldName || `${numerator}-div-${denominator}.derivedField::ratio`,
+    fieldName,
     config: {
-      // requires name, inputs, function: {name}
-      name: fieldName || `${input}.derivedField::ratio`,
-      inputs: {
-        numerator,
-        denominator,
-      },
+      fieldName,
+      inputs: [
+        {
+          name: 'numerator',
+          identifier: numerator,
+          sourceType: 'MatrixField',
+          dataType: 'number',
+          scope: 'subject',
+        },
+        {
+          name: 'denominator',
+          identifier: denominator,
+          sourceType: 'MatrixField',
+          dataType: 'number',
+          scope: 'subject',
+        },
+      ],
       function: {
         name: 'ratio',
-        input: [
-          { type: 'number', scope: 'subject' },
-          { type: 'number', scope: 'subject' },
-        ],
         output: { type: 'number' },
         config: {
-          divZeroValue: 0, // consistent when measurement = 0 when null
+          divZeroValue: 0,
         },
       },
     },
@@ -274,14 +376,14 @@ function configRatioWithUniverse(input) {
 
   return {
     fieldName:
-      fieldName ||
-      `${numerator}-div-${denominator}.derivedField::ratioWithUniv`,
+      fieldName || `${numerator}-div-${denominator}.derivedField::ratioWithUniv`,
     config: {
       name: fieldName || `${input}.derivedField::ratioWithUniv`,
       inputs: {
         numerator,
         denominator,
       },
+      sources: [],
       function: {
         // name to match py class name prop
         name: 'ratioWithUniverse',
@@ -304,30 +406,6 @@ function configRatioWithUniverse(input) {
  * @param {string} etlUnitFieldName
  * @return {Object} with props fieldName and config
  */
-function configTimeAlignEventFn(input) {
-  const { metric = input, fieldName = null } = input;
-
-  return {
-    fieldName: fieldName || `${input}.derivedField::timeAlignEvent`,
-    config: {
-      name: fieldName || `${input}.derivedField::timeAlignEvent`,
-      inputs: {
-        metric,
-      },
-      function: {
-        input: [{ type: 'number', scope: 'subject' }],
-        output: { type: 'number' },
-        name: 'timeAlignEvent',
-      },
-    },
-  };
-}
-/**
- * spec is set by the backend
- *
- * @param {string} etlUnitFieldName
- * @return {Object} with props fieldName and config
- */
 function configIdentityFn(input) {
   const { metric = input, fieldName = null } = input;
 
@@ -338,6 +416,7 @@ function configIdentityFn(input) {
       inputs: {
         metric,
       },
+      sources: [],
       function: {
         input: [{ type: 'number', scope: 'subject' }],
         output: { type: 'number' },

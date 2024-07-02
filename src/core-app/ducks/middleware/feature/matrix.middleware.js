@@ -12,12 +12,14 @@
 import {
   MATRIX,
   FETCH_MATRIX,
+  CANCEL_MATRIX,
   setMatrix,
   tagMatrixState,
 } from '../../actions/matrix.actions';
 
-import { POLLING_RESOLVED, POLLING_ERROR } from '../../actions/api.actions';
-import { setUiLoadingState } from '../../actions/ui.actions';
+import { POLLING_RESOLVED, POLLING_ERROR, apiCancel } from '../../actions/api.actions';
+import { bookmark } from '../../actions/stepper.actions';
+import { setUiLoadingState, addError } from '../../actions/ui.actions';
 import { setNotification } from '../../actions/notifications.actions';
 import { ApiResponseError } from '../../../lib/LuciErrors';
 import { ServiceConfigs, getServiceType } from '../../../services/api';
@@ -32,7 +34,7 @@ const DEBUG = process.env.REACT_APP_DEBUG_MIDDLEWARE === 'true';
 //------------------------------------------------------------------------------
 // Global values
 // const MAX_TRIES = 20;
-const { isValid, getData, isValidError, getError } =
+const { isValid, isError, getData, isValidError, getError } =
   ServiceConfigs[getServiceType(MATRIX)].response;
 //------------------------------------------------------------------------------
 
@@ -82,9 +84,7 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
           `matrix.middleware: unexpected response; see ServiceConfigs`,
         );
       }
-
-      const recordCount =
-        getData(action.event.request)?.totalCount || 'unknown';
+      const recordCount = getData(action.event.request)?.totalCount || 'unknown';
       next([
         setNotification({
           message: `Matrix record count: ${recordCount}`,
@@ -93,9 +93,7 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
 
         // 🔖 this is just the first 100 or so records used to configure/seed
         //    Subsequent records are served using a pagination strategy.
-        setMatrix(
-          JSON.parse(getData(action.event.request)) || 'error parsing data',
-        ),
+        setMatrix(JSON.parse(getData(action.event.request)) || 'error parsing data'),
 
         setUiLoadingState({
           toggle: false,
@@ -110,31 +108,71 @@ const middleware = (/* { dispatch  getState } */) => (next) => (action) => {
     // action :: pollingEventError
     // dispatched by sagas
     case `${MATRIX} ${POLLING_ERROR}`: {
+      console.debug('POLLING ERROR');
+      console.debug(action);
+
       if (!isValidError(action?.event?.request)) {
         console.dir(action);
         throw new ApiResponseError(
-          `matrix.middleware: unexpected response; see ServiceConfigs`,
+          `matrix.middleware: unexpected polling-error response; see ServiceConfigs`,
         );
       }
-      console.assert(
-        getError(action.event.request)?.error,
-        'The response is not an error',
-      );
+      // see polling-worker failed to see how sends error
+      console.assert(action.event.request.error, 'The response is not an error');
+
       next([
         setNotification({
-          message:
-            getError(action.event.request)?.message ||
-            'The API polling request failed',
+          message: action.event.request?.data?.message ?? 'Api returned an error',
           feature: MATRIX,
+          error: getError(action.event.request) ?? JSON.stringify(action.event),
         }),
-        // 🦀 ? does not work b/c window is also waiting for data
         setUiLoadingState({
           toggle: false,
           feature: MATRIX,
-          message: 'Done matrix',
+          message: 'Done matrix with error',
         }),
+        addError({
+          feature: MATRIX,
+          message: action.event.request?.data?.message ?? 'Api returned an error',
+        }),
+        // display the workbench
+        bookmark('workbench'),
       ]);
+      break;
+    }
 
+    // take ui perspective -> api perspective
+    // ::command
+    case CANCEL_MATRIX: {
+      try {
+        // feature -> core
+        next([
+          setNotification({
+            message: `${MATRIX} middleware: action::feature -> ::api (next: polling-api.config.sagas)`,
+            feature: MATRIX,
+          }),
+          apiCancel({
+            // ::eventInterface for the polling-machine
+            meta: { uiKey: action.payload, feature: MATRIX },
+          }),
+        ]);
+      } catch (e) {
+        next(
+          setNotification({
+            message: `${MATRIX} middleware: ${e?.message ?? e}`,
+            feature: MATRIX,
+          }),
+        );
+      } finally {
+        next(
+          setUiLoadingState({
+            toggle: false,
+            feature: MATRIX,
+            message: 'Done cancel matrix',
+          }),
+        );
+        next(tagMatrixState('STALE'));
+      }
       break;
     }
     default:

@@ -19,7 +19,7 @@ import {
   META,
   SAVE_PROJECT, // flush the save machine
   Actions as MetaActions,
-  setInitializingActions,
+  // setInitializingActions,
   saveProject,
   resetMeta,
 } from '../../actions/project-meta.actions';

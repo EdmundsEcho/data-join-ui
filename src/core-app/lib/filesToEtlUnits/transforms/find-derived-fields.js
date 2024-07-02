@@ -34,13 +34,11 @@
 import { buildImpliedMvalue } from './implied-mvalue';
 import { buildWideToLongFields } from './wide-to-long-fields';
 import * as H from '../headerview-helpers';
-import { SOURCE_TYPES } from '../../sum-types';
+import { MVALUE_MODE, SOURCE_TYPES } from '../../sum-types';
 import { InvalidStateError } from '../../LuciErrors';
 import { colors } from '../../../constants/variables';
 
 /* eslint-disable no-console */
-
-const { RAW } = SOURCE_TYPES;
 
 /**
  * 📌
@@ -85,11 +83,11 @@ export const findAndSeedDerivedFields = ({
   }
   // 👍 To indentify when we need either implied or wide-to-long configurations,
   //    start from the active RAW fields.
-  const fields = H.getActiveHvFields(hv, [RAW]);
+  const fields = H.getActiveHvFields(hv, [SOURCE_TYPES.RAW]);
   const mvalues = fields.filter((f) => f.purpose === 'mvalue');
   const mspans = fields.filter((f) => f.purpose === 'mspan');
 
-  const hasWideFields = mvalues.length > 1;
+  const hasWideFields = hv.mvalueMode === MVALUE_MODE.WIDE && mvalues.length > 1;
   const hasImpliedMvalueField = mvalues.length === 0 && mspans.length > 0;
 
   if (DEBUG) {

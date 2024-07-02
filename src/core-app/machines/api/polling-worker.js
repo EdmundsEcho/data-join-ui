@@ -80,6 +80,7 @@ const pollingWorkerConfig = {
       ],
       always: [
         { target: 'done.stopped', cond: (context) => context.cancel },
+        { target: 'done.failed', cond: 'isError' },
         { target: 'done.failed', cond: 'isMaxTries' },
         { target: 'done.resolved', cond: 'isRequestReady' },
         { target: 'waiting' },
@@ -100,9 +101,7 @@ const pollingWorkerConfig = {
         onError: {
           target: 'done.failed',
           actions: [
-            actions.log(
-              (context) => `polling failed: ${context.request.jobId}`,
-            ),
+            actions.log((context) => `polling failed: ${context.request.jobId}`),
             actions.assign({
               error: (_, event) => event,
             }),
@@ -159,12 +158,17 @@ const pollingWorkerConfig = {
               (context) =>
                 `worker send parent POLLING_FAILED: ${context.request.jobId}`,
             ),
-            actions.sendParent((context, event) => ({
-              type: 'POLLING_FAILED',
-              tries: context.request.tries,
-              message: `Polling for status failed after ${context.request.tries} tries`,
-              event,
-            })),
+            actions.sendParent((context, event) => {
+              const message = event.data?.results?.error
+                ? event.data.results.error.message
+                : `Polling for status failed after ${context.request.tries} tries`;
+              return {
+                type: 'POLLING_FAILED',
+                tries: context.request.tries,
+                message,
+                ...event.data,
+              };
+            }),
           ],
         },
       },
@@ -183,7 +187,7 @@ const pollingWorkerConfig = {
  */
 const pollingWorkerOptions = ({
   services: { statusApiService },
-  guards: { isResolved },
+  guards: { isResolved, isError },
 }) => ({
   services: {
     // expose event: { meta, request }
@@ -210,6 +214,7 @@ const pollingWorkerOptions = ({
   },
   guards: {
     isRequestReady: (context) => context.request.resolved, // :: fn
+    isError: (_, event) => isError(event.data),
     isMaxTries: (context) => {
       return context.request.tries > context.request.maxTries; // :: fn
     },
@@ -232,5 +237,4 @@ function pollingPause(context) {
   );
 }
 /* eslint-disable-next-line */
-export default (options) =>
-  Machine(pollingWorkerConfig, pollingWorkerOptions(options));
+export default (options) => Machine(pollingWorkerConfig, pollingWorkerOptions(options));
