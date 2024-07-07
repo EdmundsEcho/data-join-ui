@@ -1,5 +1,8 @@
 // src/store/migrations/index.js
-
+/**
+ * Redux store version migration tool.
+ * see SubApp.jsx
+ */
 import migrateFrom036To0311 from './0.3.6_to_0.3.11';
 import migrateFrom040To050 from './0.4.0_to_0.5.0';
 import migrateFrom050To051 from './0.5.0_to_0.5.1';
@@ -34,7 +37,7 @@ function findMigrationPath(currentVersion) {
 }
 
 function applyMigration(store) {
-  let currentVersion = store.$_projectMeta.version || '0.0.0';
+  let currentVersion = store.$_projectMeta.version;
   const timestamp = new Date().toISOString();
   let path;
 

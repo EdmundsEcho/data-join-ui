@@ -1,0 +1,442 @@
+{
+  "$_projectMeta": {
+    "projectId": "0d2aa403-eadc-489a-9931-82d3a4ff890b",
+    "version": "0.5.1",
+    "meta": {
+      "loadingStatus": "empty",
+      "initializingActions": []
+    }
+  },
+  "etlView": {
+    "etlObject": {
+      "etlUnits": {},
+      "etlFields": {}
+    },
+    "etlFieldChanges": {
+      "__derivedFields": {}
+    },
+    "etlViewErrors": []
+  },
+  "fileView": {
+    "count": 3,
+    "files": [
+      {
+        "created_at": null,
+        "display_name": "target_list_short.csv",
+        "file_id": "lE0WdposqDkAAAAAABpqCA",
+        "is_directory": false,
+        "is_drive": false,
+        "modified_at": "2021-11-12T16:52:17Z",
+        "path": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+        "size": 111198,
+        "token_id": null
+      },
+      {
+        "created_at": null,
+        "display_name": "target_list.csv",
+        "file_id": "lE0WdposqDkAAAAAABpqBg",
+        "is_directory": false,
+        "is_drive": false,
+        "modified_at": "2021-11-12T16:52:17Z",
+        "path": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqBg/target_list.csv",
+        "size": 2211054,
+        "token_id": null
+      },
+      {
+        "created_at": null,
+        "display_name": "productA_target_list_vSmall.xlsx",
+        "file_id": "lE0WdposqDkAAAAAABpp0Q",
+        "is_directory": false,
+        "is_drive": false,
+        "modified_at": "2021-07-07T21:29:06Z",
+        "path": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpp0Q/productA_target_list_vSmall.xlsx",
+        "size": 4072173,
+        "token_id": null
+      }
+    ],
+    "filteredFiles": [
+      {
+        "created_at": null,
+        "display_name": "target_list_short.csv",
+        "file_id": "lE0WdposqDkAAAAAABpqCA",
+        "is_directory": false,
+        "is_drive": false,
+        "modified_at": "2021-11-12T16:52:17Z",
+        "path": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+        "size": 111198,
+        "token_id": null
+      },
+      {
+        "created_at": null,
+        "display_name": "target_list.csv",
+        "file_id": "lE0WdposqDkAAAAAABpqBg",
+        "is_directory": false,
+        "is_drive": false,
+        "modified_at": "2021-11-12T16:52:17Z",
+        "path": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqBg/target_list.csv",
+        "size": 2211054,
+        "token_id": null
+      },
+      {
+        "created_at": null,
+        "display_name": "productA_target_list_vSmall.xlsx",
+        "file_id": "lE0WdposqDkAAAAAABpp0Q",
+        "is_directory": false,
+        "is_drive": false,
+        "modified_at": "2021-07-07T21:29:06Z",
+        "path": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpp0Q/productA_target_list_vSmall.xlsx",
+        "size": 4072173,
+        "token_id": null
+      }
+    ],
+    "filterText": "",
+    "readdirErrors": [],
+    "status": "resolved",
+    "requests": [
+      {
+        "project_id": "0d2aa403-eadc-489a-9931-82d3a4ff890b",
+        "token_id": "4bdff8",
+        "path_query": "lE0WdposqDkAAAAAABppzA",
+        "display_name": "dropbox"
+      },
+      {
+        "project_id": "0d2aa403-eadc-489a-9931-82d3a4ff890b",
+        "token_id": "4bdff8",
+        "path_query": "lE0WdposqDkAAAAAABppyA",
+        "display_name": "dropbox"
+      },
+      {
+        "project_id": "0d2aa403-eadc-489a-9931-82d3a4ff890b",
+        "token_id": "4bdff8",
+        "path_query": null,
+        "display_name": "dropbox"
+      },
+      {
+        "project_id": "0d2aa403-eadc-489a-9931-82d3a4ff890b",
+        "token_id": null,
+        "path_query": null,
+        "display_name": "Data sources"
+      }
+    ],
+    "token_id": "4bdff8"
+  },
+  "headerView": {
+    "selected": [
+      [
+        "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+        "target_list_short.csv"
+      ]
+    ],
+    "fileInspectionErrors": [],
+    "headerViews": {
+      "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv": {
+        "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+        "header": [
+          "npi",
+          "specialty",
+          "state",
+          "zip",
+          "sf",
+          "sf_calls",
+          "brand_seg",
+          "in-network",
+          "MM-YYYY"
+        ],
+        "enabled": true,
+        "nrows": 2634,
+        "fields": [
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 0,
+            "header-name": "npi",
+            "field-alias": "npi",
+            "purpose": "subject",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2617,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 17
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 1,
+            "header-name": "specialty",
+            "field-alias": "specialty",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 17,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 2,
+            "header-name": "state",
+            "field-alias": "state",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 52,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 3,
+            "header-name": "zip",
+            "field-alias": "zip",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 1974,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 4,
+            "header-name": "sf",
+            "field-alias": "sf",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 4,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 5,
+            "header-name": "sf_calls",
+            "field-alias": "sf_calls",
+            "purpose": "mspan",
+            "null-value": null,
+            "format": "DD",
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [
+              ["12", 277],
+              ["15", 210],
+              ["3", 1011],
+              ["6", 765],
+              ["9", 371]
+            ],
+            "nlevels": 5,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "time": {
+              "reference": {
+                "value": "",
+                "isoFormat": ""
+              },
+              "interval": {
+                "unit": "",
+                "count": 1
+              }
+            }
+          },
+          {
+            "enabled": false,
+            "source-type": "RAW",
+            "header-idx": 6,
+            "header-name": "brand_seg",
+            "field-alias": "brand_seg",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 3,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 7,
+            "header-name": "in-network",
+            "field-alias": "in-network",
+            "purpose": "quality",
+            "null-value": null,
+            "format": null,
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [],
+            "nlevels": 2,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 0,
+            "codomain-reducer": "FIRST",
+            "map-weights": {
+              "arrows": {}
+            }
+          },
+          {
+            "enabled": true,
+            "source-type": "RAW",
+            "header-idx": 8,
+            "header-name": "MM-YYYY",
+            "field-alias": "MM-YYYY",
+            "purpose": "mspan",
+            "null-value": null,
+            "format": "YY-MMM",
+            "map-symbols": {
+              "arrows": {}
+            },
+            "levels": [
+              ["16-Apr", 121],
+              ["16-Aug", 6],
+              ["16-Feb", 146],
+              ["16-Jan", 9],
+              ["16-Jul", 23],
+              ["16-Jun", 44],
+              ["16-Mar", 149],
+              ["16-May", 91]
+            ],
+            "nlevels": 8,
+            "nrows": 2634,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-count": 2045,
+            "time": {
+              "interval": {
+                "unit": "M",
+                "count": 1
+              },
+              "reference": {
+                "idx": 0,
+                "value": "16-Jan",
+                "isoFormat": "YY-MMM"
+              }
+            },
+            "levels-mspan": [
+              {
+                "rangeStart": 0,
+                "rangeLength": 8,
+                "reduced": false
+              }
+            ]
+          }
+        ],
+        "mvalueMode": "multipe",
+        "implied-mvalue": {
+          "config": {
+            "mvalue": "reach",
+            "mspan": "sf_calls",
+            "null-value-count": 0,
+            "nrows": 2634
+          },
+          "field": {
+            "enabled": true,
+            "source-type": "IMPLIED",
+            "field-alias": "reach",
+            "header-idx": null,
+            "purpose": "mvalue",
+            "format": null,
+            "null-value": null,
+            "map-implied": {
+              "domain": "sf_calls",
+              "codomain": 1
+            },
+            "levels": [],
+            "nlevels": 1,
+            "filename": "/shared/datafiles/0d2aa403-eadc-489a-9931-82d3a4ff890b/dropbox/4bdff8/lE0WdposqDkAAAAAABpqCA/target_list_short.csv",
+            "null-value-expansion": 0,
+            "null-value-count": 0,
+            "nrows": 2634,
+            "codomain-reducer": "SUM",
+            "slicing-reducer": "SUM"
+          }
+        }
+      }
+    },
+    "headerViewFixes": {
+      "RAW": {},
+      "WIDE": {},
+      "IMPLIED": {}
+    }
+  },
+  "modal": {
+    "modalType": null,
+    "modalProps": {},
+    "modalActions": {}
+  },
+  "notifications": [],
+  "pendingRequests": {
+    "INSPECTION": {}
+  },
+  "stepper": {
+    "isHidden": false,
+    "bookmark": "files"
+  },
+  "ui": {
+    "loading": false,
+    "inErrorState": false,
+    "message": null,
+    "errors": []
+  },
+  "workbench": {
+    "tree": {},
+    "matrix": null,
+    "nowDragging": null,
+    "hostedWarehouseState": "STALE",
+    "hostedMatrixState": "STALE"
+  }
+}

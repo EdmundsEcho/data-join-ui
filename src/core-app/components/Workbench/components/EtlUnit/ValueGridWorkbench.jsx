@@ -236,8 +236,7 @@ export default function ValueGridWorkbenchWithContext(props) {
       context={CONTEXTS.WORKBENCH}
       purpose={purpose}
       fieldType='etl-field'
-      getFieldValue={getFieldValue}
-    >
+      getFieldValue={getFieldValue}>
       <ValueGridWorkbench {...props} />
     </LevelsContextProvider>
   );
@@ -247,7 +246,7 @@ ValueGridWorkbenchWithContext.propTypes = {
   nodeId: PropTypes.number.isRequired,
   identifier: PropTypes.string.isRequired,
   valueIdx: PropTypes.number, // not required for quality
-  type: PropTypes.oneOf(['txtValues', 'intValues']).isRequired,
+  tag: PropTypes.oneOf(['txtValues', 'intValues']).isRequired,
   measurementType: PropTypes.string,
   purpose: PropTypes.oneOf([PURPOSE_TYPES.MCOMP, PURPOSE_TYPES.QUALITY]).isRequired,
 };

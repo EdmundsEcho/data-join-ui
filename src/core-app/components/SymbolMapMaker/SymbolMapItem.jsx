@@ -22,7 +22,11 @@ const SymbolMapItem = ({
   const [rightValue, setRightValue] = useState(rightValueProp);
 
   const handleUpdate = () => {
-    rightValue ? onUpdate(rightValue) : onDelete();
+    if (rightValue) {
+      onUpdate(rightValue);
+    } else {
+      onDelete();
+    }
     onUpdateEnd();
   };
   return (

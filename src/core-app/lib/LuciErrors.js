@@ -25,27 +25,20 @@ const DEBUG = process.env.NODE_ENV === 'development';
  */
 class LuciError extends Error {
   constructor(input, options = { verbose: DEBUG }) {
-    //
-    // Derive the message depenenton the input type.
-    // Include cause when the input::Error.
-    //
-    let message = typeof input === 'string' ? input : 'No error message'; // first guess message
-    if (input instanceof Error) {
-      message = input.message; // second guess message
-      options.cause = input;
-    } else if (typeof input === 'object') {
-      message = input?.message ?? input.data?.message ?? 'No error message'; // alternative second guess message
-      if (input.data?.cause) options.cause = input.data.cause;
+    let message;
+    let cause;
+
+    if (options.cause === undefined) {
+      ({ message, cause } = LuciError.getMessageAndCause(input, 'error'));
+    } else {
+      // Use provided message and cause
+      message = input;
+      cause = options.cause;
     }
 
-    if (options.verbose && typeof console !== 'undefined' && console.log) {
-      // const color = colors.red.match(/color:\s*(#\w+);?/);
-      console.debug('%cGENERATING LUCI ERROR', colors.purple);
-      console.debug(`Message: ${message}`, '\nCause:', options.cause);
-    }
-
-    super(message, options);
+    super(message);
     this.verbose = options.verbose || false;
+    this.cause = cause;
 
     if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
@@ -53,8 +46,33 @@ class LuciError extends Error {
       this.stack = new Error(message).stack;
     }
 
-    this.name = 'LuciError';
     this.date = new Date();
+    this.name = this.constructor.name;
+
+    this.logMessage(message, options.cause);
+  }
+
+  static getMessageAndCause(input, type /* error or warning */) {
+    let message = typeof input === 'string' ? input : `No ${type} message`;
+    let cause = null;
+
+    if (input instanceof Error) {
+      message = input.message;
+      cause = input;
+    } else if (typeof input === 'object') {
+      message = input?.message ?? input.data?.message ?? `No ${type} message`;
+      if (input.data?.cause) cause = input.data.cause;
+    }
+
+    return { message, cause };
+  }
+
+  logMessage(message, cause) {
+    console.debug(
+      `%cGENERATING ${this.constructor.name.toUpperCase()}`,
+      colors.purpose,
+    );
+    console.debug(`Message: ${message}`, '\nCause:', cause);
   }
 
   toString() {
@@ -68,7 +86,7 @@ class LuciError extends Error {
             ? JSON.stringify(this.cause, null, 2)
             : this.cause.toString();
       } catch (error) {
-        causeStr = `Could not serialize the cause prop: ${error.message}`;
+        causeStr = `Could not serialize the cause: ${error.message}`;
       }
       result += `\nCaused by: ${causeStr}`;
     }
@@ -125,6 +143,7 @@ throw new LuciError('Migration failed', {
       });
 */
 
+export default LuciError;
 export {
   ActionError,
   ApiTncError,

@@ -97,8 +97,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
       data={data}
       showDetail={showDetailInit}
       stateId={stateId}
-      showMoreMenu={false}
-    >
+      showMoreMenu={false}>
       {/* only use class to show/hide header 🦀 ? */}
       <EtlUnitGroupContext.Consumer>
         {({ showDetail, handleClickFab }) => (
@@ -106,8 +105,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
             <Card className={clsx('EtlUnitGroupBase-root', context)}>
               {/* Header */}
               <CardContent
-                className={clsx('header-wrapper', displayType === 'shell' && 'shell')}
-              >
+                className={clsx('header-wrapper', displayType === 'shell' && 'shell')}>
                 <Header
                   className={clsx('header')}
                   type={displayType}
@@ -130,8 +128,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
 
               {/* Footer */}
               <div
-                className={clsx('footer-wrapper', displayType === 'shell' && 'shell')}
-              >
+                className={clsx('footer-wrapper', displayType === 'shell' && 'shell')}>
                 <Footer type={displayType} showFab={displayType === 'empty'} />
               </div>
             </Card>
@@ -142,8 +139,7 @@ function EtlUnitGroupBase({ nodeId, context, children }) {
                   className='fab'
                   size='small'
                   color='secondary'
-                  onClick={handleClickFab}
-                >
+                  onClick={handleClickFab}>
                   <AddIcon fontSize='small' />
                 </Fab>
                 <div className={clsx('spacer')} />

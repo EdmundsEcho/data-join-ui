@@ -1,40 +1,51 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect, useState } from 'react';
 import { throttle } from '../core-app/utils/common';
+
+const computeDistanceFromBottom = (scrollWindowSpec) => {
+  const { scrollTop, clientHeight, scrollHeight } = scrollWindowSpec;
+  const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+  return distanceFromBottom;
+};
 
 export const useScrollListener = ({
   bufferRowCount = 50,
   rowHeight,
-  callback,
+  callback: callbackProp,
   className,
   throttleInterval = 200,
 }) => {
-  // Use a ref for the latch so its state persists across renders without causing re-renders
   const latch = useRef('OPEN');
-  const virtualScrollerRef = useRef(null); // Store the element reference to ensure consistent access
+  const virtualScrollerRef = useRef(null);
 
-  // Memoize the reset function
+  // derived from props
+  const threshold = bufferRowCount * rowHeight;
+
+  const callback = useCallback(() => callbackProp(), [callbackProp]);
+
   const reset = useCallback(() => {
     latch.current = 'OPEN';
   }, []);
 
-  const handler = useCallback(
-    throttle((event) => {
-      const { scrollTop, clientHeight, scrollHeight } = event.target;
-      const threshold = bufferRowCount * rowHeight;
-      // Calculate the distance from the bottom
-      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+  const throttledCallback = useCallback(() => {
+    throttle(callback, throttleInterval)();
+  }, [callback, throttleInterval]);
 
-      // Check if we're within the threshold of the bottom
+  const handler = useCallback(
+    (event) => {
+      // Calculate the distance from the bottom. The values changes both when
+      // the user scrolls, and when more records are loaded into the component.
+      const distanceFromBottom = computeDistanceFromBottom(event.target);
       if (distanceFromBottom < threshold && latch.current === 'OPEN') {
         latch.current = 'CLOSED';
-        throttle(callback(), 1000);
+        throttledCallback();
       }
-    }, throttleInterval),
-    [throttleInterval, bufferRowCount, rowHeight, callback],
+    },
+    [throttledCallback, threshold],
   );
 
   // ---------------------------------------------------------------------------
-  // 💥 Register scrolling listener; Get access to the virtual scroller
+  // Register scrolling listener; Get access to the virtual scroller
+  // 🔑 MuiDataGrid-virtualScroller
   //
   useEffect(() => {
     // register a scroll listener
@@ -45,7 +56,6 @@ export const useScrollListener = ({
     }
     const virtualScroller = virtualScrollerRef.current;
     if (virtualScroller) {
-      // Do something with the virtualScroller, e.g., add an event listener
       virtualScroller.addEventListener('scroll', handler);
     }
 

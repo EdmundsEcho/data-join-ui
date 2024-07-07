@@ -7,7 +7,6 @@ import CardHeader from '@mui/material/CardHeader';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
-import Grid from '@mui/material/Grid';
 
 // import RefetchLevels from './RefetchLevels';
 import { Div } from '../../../luci-styled';
@@ -17,7 +16,7 @@ import Switch from './Switch';
 
 /**
  * Dumb component
- * No local state.
+ * No local state. Uses HeaderViewContext.
  *
  * User capacity:
  * 👉 remove the card

@@ -19,7 +19,7 @@ import { colors } from '../../../constants/variables';
 /**
  *
  * search routine that returns the name(s) of the etlUnits that utilizes
- * the field name.
+ * the field name. The etlUnits are all etlUnits in the etlObj.
  *
  * 0.5.1
  * Returns null when subject, otherwise an Array
@@ -33,13 +33,23 @@ import { colors } from '../../../constants/variables';
  * @return {?Array<string>}
  *
  */
-export function selectEtlUnitsWithFieldName(fieldName, etlUnits) {
-  const result =
-    Object.keys(etlUnits).filter((codomainKey) =>
-      isNameInEtlUnit(fieldName, etlUnits[codomainKey]),
-    ) || [];
+export function selectEtlUnitsWithFieldName(fieldName, etlUnits = {}) {
+  const result = Object.keys(etlUnits).filter((codomainKey) =>
+    isNameInEtlUnit(fieldName, etlUnits[codomainKey]),
+  );
 
-  return getPurpose(fieldName, etlUnits[result[0]]) === TYPES.SUBJECT ? null : result;
+  if (result.length === 0) {
+    return [];
+  }
+
+  const firstEtlUnit = etlUnits[result[0]];
+  const fieldPurpose = getPurpose(fieldName, firstEtlUnit);
+
+  if (fieldPurpose === TYPES.SUBJECT) {
+    return [];
+  }
+
+  return result;
 }
 
 /**
@@ -74,10 +84,12 @@ export function isEtlUnitSubject(name, collection) {
  */
 export function isNameInEtlUnit(name, etlUnit) {
   /* eslint-disable no-shadow */
+  // etlUnit keys = subject, codomain, mspan, mcomps
   const fieldNames = Object.keys(etlUnit).reduce((fieldNames, key) => {
     return ETL_UNIT_FIELDS.includes(key)
       ? [
           ...fieldNames,
+          // mcomps is an Array
           ...(Array.isArray(etlUnit[key]) ? etlUnit[key] : [etlUnit[key]]),
         ]
       : fieldNames;
@@ -101,6 +113,11 @@ export function isNameInEtlUnit(name, etlUnit) {
  *
  */
 export function getPurpose(fieldName, etlUnit) {
+  if (!etlUnit) {
+    throw new InputError(
+      `Missing etlUnit when searching purpose for field name (${fieldName})`,
+    );
+  }
   if (!isNameInEtlUnit(fieldName, etlUnit)) {
     throw new InputError(
       `The field name (${fieldName}) does not exist in the etlUnit (${

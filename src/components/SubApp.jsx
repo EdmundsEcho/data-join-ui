@@ -17,11 +17,15 @@ import CoreApp from '../core-app/Main';
 import { Spinner } from './shared';
 
 import { useFetchApi, STATUS } from '../hooks/use-fetch-api';
-import { loadProject } from '../core-app/ducks/actions/project-meta.actions';
+import {
+  loadProject,
+  saveProject,
+} from '../core-app/ducks/actions/project-meta.actions';
 import { fetchStore as fetchServerStore } from '../core-app/services/api';
 import { loadStore as loadNewOrSavedStore } from '../core-app/ducks/project-meta.reducer';
 import { getProjectId } from '../core-app/ducks/rootSelectors';
 import { applySequentialMigrations } from '../core-app/store-migrations';
+import { AssertionWarning } from '../core-app/lib/LuciWarnings';
 
 // -----------------------------------------------------------------------------
 const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
@@ -33,23 +37,29 @@ const DEBUG = process.env.REACT_APP_DEBUG_DASHBOARD === 'true';
  */
 const SubApp = () => {
   //
+  const dispatch = useDispatch(); // redux load the fetched store
   const { projectId: requestedProject } = useParams();
   const projectInReduxIsNull = useSelector((state) => getProjectId(state) === null);
   const previousProjectRef = useRef(undefined);
-  const dispatch = useDispatch(); // redux load the fetched store
 
   validateState(requestedProject);
 
   // ---------------------------------------------------------------------------
   // 💢 Side-effect
+  //    Sent to the useFetchApi to process and store the backend response.
   //    consumeDataFn: dispatch action required to load the redux store
   //    Note: memoization required b/c used in effect
   const consumeDataFn = useMemo(
     () => (respData) => {
-      let loadThisStore = loadNewOrSavedStore(respData);
-      // Apply migrations if needed
-      loadThisStore = applySequentialMigrations(loadThisStore);
-      dispatch(loadProject(loadThisStore));
+      let store = loadNewOrSavedStore(respData);
+      const initialVersion = store.$_projectMeta.version;
+      // Apply migrations as needed
+      store = applySequentialMigrations(store);
+      const updatedVersion = store.$_projectMeta.version;
+      dispatch(loadProject(store));
+      if (initialVersion !== updatedVersion) {
+        dispatch(saveProject());
+      }
     },
     [dispatch],
   );

@@ -38,7 +38,7 @@
  *    materialized in the warehouse as part of the graphql configuration.
  *
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -216,8 +216,10 @@ const maybeTotalRowCountValue = ({ fieldType, getFieldValue: getValue }) => {
 // 📌 The main component
 //------------------------------------------------------------------------------
 /**
- *
  * @component
+ *
+ * BUG: This may be rendering a whole lot more often than makes sense.
+ * e.g., when with derived data, called the console about 50 times.
  *
  */
 const ValueGridFileLevels = () => {
@@ -257,14 +259,19 @@ const ValueGridFileLevels = () => {
   // two paths to being a derived field
   const isDerivedField = hasGroupByFileValues || fieldType === FIELD_TYPES.WIDE;
 
-  const derivedRowsWithTotal = isDerivedField
-    ? {
-        totalCount: getValue('levels').length,
-        rows: getValue('levels').map(rowFromLevel),
-      }
-    : undefined;
+  // memoize the derived field data
+  const derivedRowsWithTotal = useMemo(() => {
+    if (isDerivedField) {
+      const levels = getValue('levels');
+      return {
+        totalCount: levels.length,
+        rows: levels.map(rowFromLevel),
+      };
+    }
+    return undefined;
+  }, [isDerivedField, getValue]);
 
-  if (derivedRowsWithTotal) {
+  if (DEBUG && derivedRowsWithTotal) {
     console.debug('📥 DERIVED data', derivedRowsWithTotal.rows);
   }
 

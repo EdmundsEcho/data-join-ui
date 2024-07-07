@@ -52,11 +52,7 @@ const GLOBAL_COLOR = colors.light.blue;
  * @returns {Array.<Object>}                    - Array of error objects
  *
  */
-export const validateFieldStack = (
-  hvs,
-  DEBUG = GLOBAL_DEBUG,
-  COLOR = GLOBAL_COLOR,
-) => {
+export const validateFieldStack = (hvs, DEBUG = GLOBAL_DEBUG, COLOR = GLOBAL_COLOR) => {
   // ---------------------------------------------------------------------------
   //
   // closure
@@ -173,9 +169,7 @@ function purposeSpecificValidations(name, etlUnits, otherEtlUnits /* DEBUG */) {
 
     [TYPES.MVALUE]: () =>
       // 🔖 io interface
-      !inRelatedUnit(name, etlUnits, otherEtlUnits)
-        ? [ERRORS.inRelatedUnit]
-        : [],
+      !inRelatedUnit(name, etlUnits, otherEtlUnits) ? [ERRORS.inRelatedUnit] : [],
   };
 }
 /**
@@ -203,9 +197,7 @@ function hasSinglePuposeAlias(field, otherHvsEtlUnits) {
 
   const predicate = (etlUnit) => {
     const purposeTbl = mklookup(etlUnit);
-    return fieldName in purposeTbl
-      ? field.purpose === purposeTbl[fieldName]
-      : true;
+    return fieldName in purposeTbl ? field.purpose === purposeTbl[fieldName] : true;
   };
 
   return Object.values(otherHvsEtlUnits).every(predicate);
@@ -225,9 +217,7 @@ function hasSinglePuposeAlias(field, otherHvsEtlUnits) {
 function sameAsOtherSubjects(subjectName, otherEtlUnits) {
   // predicate
   const sameSubject = (etlUnit) => {
-    return (
-      etlUnit?.subject === null || (etlUnit?.subject === subjectName ?? true)
-    );
+    return etlUnit?.subject === null || (etlUnit?.subject === subjectName ?? true);
   };
   return Object.values(otherEtlUnits).every(sameSubject);
 }
@@ -238,6 +228,8 @@ function sameAsOtherSubjects(subjectName, otherEtlUnits) {
  * mspan validation; returns true when mspan fields have the same field-alias
  *
  * 🔖 interface hv, otherHvs
+ *
+ * depends on etlUnits by v0.5.1
  *
  * @function
  */
@@ -271,6 +263,7 @@ function spanWorksWithCurrentUnits(fieldName, etlUnits, otherEtlUnits) {
  *
  * 🔖 interface hv, otherHvs
  *
+ * depends on etlUnits by v0.5.1
  *
  * @function
  */
@@ -282,8 +275,7 @@ function mcompWorksWithCurrentUnits(fieldName, etlUnits, otherEtlUnits) {
   return lookupKeys(fieldName, potentialUnits) // name -> [p codomain]
     .reduce(
       (acc, punitKey) =>
-        acc &&
-        hasRelatedComps(potentialUnits[punitKey], currentUnits[punitKey]),
+        acc && hasRelatedComps(potentialUnits[punitKey], currentUnits[punitKey]),
       true,
     ); // [p codomain] -> (unit -> unit -> Bool) -> Bool
 }

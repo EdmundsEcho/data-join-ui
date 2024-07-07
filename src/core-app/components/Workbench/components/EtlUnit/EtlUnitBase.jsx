@@ -1,6 +1,6 @@
 // src/components/Workbench/components/EtlUnit/EtlUnitBase.jsx
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -69,9 +69,8 @@ const DEBUG =
  *
  */
 function EtlUnitBase({ nodeId, context }) {
-  const { etlUnitType, identifier, displayType } = useSelector(
-    (state) => getNodeDataSeed(state, nodeId),
-    shallowEqual,
+  const { etlUnitType, identifier, displayType } = useSelector((state) =>
+    getNodeDataSeed(state, nodeId),
   );
   /* eslint-disable react/jsx-props-no-spreading */
   return (
@@ -109,16 +108,14 @@ EtlUnitBase.defaultProps = {};
  */
 function EtlUnitInner({ nodeId, palette, etlUnitType, identifier, displayType }) {
   // get the configs to render multipe nodes
-  const configs = useSelector(
-    (state) =>
-      selectEtlUnitDisplayConfig(
-        state,
-        nodeId,
-        identifier,
-        etlUnitType === 'measurement', // meaFlag
-        'EtlUnitRoot',
-      ),
-    shallowEqual,
+  const configs = useSelector((state) =>
+    selectEtlUnitDisplayConfig(
+      state,
+      nodeId,
+      identifier,
+      etlUnitType === 'measurement', // meaFlag
+      'EtlUnitRoot',
+    ),
   );
 
   return palette ? (

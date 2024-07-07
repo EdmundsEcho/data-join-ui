@@ -19,6 +19,7 @@
  *   * reserved for high-level unique qualities about the app
  *
  */
+import { createSelector } from 'reselect';
 import * as fromProjectMeta from './project-meta.reducer';
 import * as fromFileView from './fileView.reducer';
 import * as fromHeaderView from './headerView.reducer';
@@ -38,6 +39,7 @@ import * as fromModal from './modal.reducer';
  *
  */
 
+/* eslint-disable no-shadow */
 // -----------------------------------------------------------------------------
 /**
  *   $_projectMeta
@@ -224,8 +226,12 @@ export const getActiveFieldCount = (state, filename) =>
  * @param {number} fieldIdx
  * @return {field}
  */
-export const selectFieldInHeader = (state, filename, fieldIdx) =>
-  fromHeaderView.selectFieldInHeader(state.headerView, filename, fieldIdx);
+export const selectFieldInHeader = createSelector(
+  (state) => state.headerView,
+  (_, filename, fieldIdx) => [filename, fieldIdx],
+  (fragment, [filename, fieldIdx]) =>
+    fromHeaderView.selectFieldInHeader(fragment, filename, fieldIdx),
+);
 
 export const selectHeaderView = (state, filename) =>
   fromHeaderView.selectHeaderView(state.headerView, filename);
@@ -236,25 +242,37 @@ export const selectHeader = (state, filename) =>
 export const getHasImpliedMvalue = (state, filename) =>
   fromHeaderView.getHasImpliedMvalue(state.headerView, filename);
 
-export const selectHeaderExFields = (state, filename) =>
-  fromHeaderView.selectHeaderExFields(state.headerView, filename);
+export const selectHeaderExFields = createSelector(
+  (state) => state.headerView,
+  (_, filename) => filename,
+  (fragment, filename) => fromHeaderView.selectHeaderExFields(fragment, filename),
+);
 
 export const selectHeaderViewLean = (state, filename) =>
   fromHeaderView.selectHeaderViewLean(state.headerView, filename);
 
-export const selectWideToLongFields = (state, filename) =>
-  // returns the configuration object
-  fromHeaderView.selectWideToLongFields(state.headerView, filename);
+// returns the configuration object
+export const selectWideToLongFields = createSelector(
+  (state) => state.headerView,
+  (_, filename) => filename,
+  (fragment, filename) => fromHeaderView.selectWideToLongFields(fragment, filename),
+);
 
-export const selectWideToLongField = (state, filename, fieldName) =>
-  // returns the configuration object
-  fromHeaderView.selectWideToLongFields(state.headerView, filename).fields[fieldName];
+export const selectWideToLongField = createSelector(
+  (state) => state.headerView,
+  (_, filename, fieldName) => [filename, fieldName],
+  (fragment, [filename, fieldName]) =>
+    fromHeaderView.selectWideToLongField(fragment, filename, fieldName),
+);
 
 export const selectHasWideToLongFields = (state, filename) =>
   fromHeaderView.selectHasWideToLongFields(state.headerView, filename);
 
-export const selectImpliedMvalue = (state, filename) =>
-  fromHeaderView.selectImpliedMvalue(state.headerView, filename);
+export const selectImpliedMvalue = createSelector(
+  (state) => state.headerView,
+  (_, filename) => filename,
+  (fragment, filename) => fromHeaderView.selectImpliedMvalue(fragment, filename),
+);
 
 export const selectHasImpliedMvalue = (state, filename) =>
   fromHeaderView.selectHasImpliedMvalue(state.headerView, filename);
@@ -270,6 +288,11 @@ export const scrubHeaderViews = (state) =>
  */
 export const getEtlObject = (state) => fromEtlView.getEtlObject(state.etlView);
 export const getEtlFields = (state) => fromEtlView.getEtlFields(state.etlView);
+
+export const getEtlUnits = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getEtlUnits(fragment),
+);
 
 /**
  * Predicate to confirm presence of etlField
@@ -305,28 +328,46 @@ export const isEtlFieldGroupByFile = (state, fieldName) =>
  * @param {string} etlUnitName (codomain)
  * @return {Object}
  */
-export const getEtlUnitTimeProp = (state, etlUnitName /* displayName */) =>
-  fromEtlView.getEtlUnitTimeProp(state.etlView, etlUnitName);
+export const getEtlUnitTimeProp = createSelector(
+  (state) => state.etlView,
+  (_, etlUnitName) => etlUnitName, // display name
+  (fragment, etlUnitName) => fromEtlView.getEtlUnitTimeProp(fragment, etlUnitName),
+);
 
 export const getEtlFieldCount = (state) => fromEtlView.getEtlFieldCount(state.etlView);
-export const getFieldsKeyedOnPurpose = (state) =>
-  fromEtlView.getFieldsKeyedOnPurpose(state.etlView);
 
-export const getEtlUnits = (state) => fromEtlView.getEtlUnits(state.etlView);
-export const selectEtlUnitsWithFieldName = (state) =>
-  fromEtlView.selectEtlUnitsWithFieldName(state.etlView);
+export const getFieldsKeyedOnPurpose = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getFieldsKeyedOnPurpose(fragment),
+);
 
-export const getEtlFieldChanges = (state) =>
-  fromEtlView.getEtlFieldChanges(state.etlView);
+export const selectEtlUnitsWithFieldName = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.selectEtlUnitsWithFieldName(fragment),
+);
 
-export const selectEtlFieldChanges = (state, fieldName) =>
-  fromEtlView.selectEtlFieldChanges(state.etlView, fieldName);
+export const getEtlFieldChanges = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getEtlFieldChanges(fragment),
+);
 
-export const selectEtlField = (state, fieldName) =>
-  fromEtlView.selectEtlField(state.etlView, fieldName);
+export const selectEtlFieldChanges = createSelector(
+  (state) => state.etlView,
+  (_, fieldName) => fieldName,
+  (fragment, fieldName) => fromEtlView.selectEtlFieldChanges(fragment, fieldName),
+);
 
-export const selectEtlUnit = (state, qualOrMeaName) =>
-  fromEtlView.selectEtlUnit(state.etlView, qualOrMeaName);
+export const selectEtlField = createSelector(
+  (state) => state.etlView,
+  (_, fieldName) => fieldName,
+  (fragment, fieldName) => fromEtlView.selectEtlField(fragment, fieldName),
+);
+
+export const selectEtlUnit = createSelector(
+  (state) => state.etlView,
+  (_, qualOrMeaName) => qualOrMeaName,
+  (fragment, qualOrMeaName) => fromEtlView.selectEtlUnit(fragment, qualOrMeaName),
+);
 
 export const getIsEtlProcessing = (state) =>
   fromEtlView.getIsEtlProcessing(state.etlView);
@@ -334,32 +375,53 @@ export const getIsEtlProcessing = (state) =>
 /**
  * state => [[name, purpose]]
  */
-export const listOfFieldNameAndPurposeValues = (state, purpose) =>
-  fromEtlView.listOfFieldNameAndPurposeValues(state.etlView, purpose);
+export const listOfFieldNameAndPurposeValues = createSelector(
+  (state) => state.etlView,
+  (_, purpose) => purpose,
+  (fragment, purpose) => fromEtlView.listOfFieldNameAndPurposeValues(fragment, purpose),
+);
 
 /* derived etlView fields */
-export const getEtlFieldViewData = (state) =>
-  fromEtlView.getEtlFieldViewData(state.etlView);
+export const getEtlFieldViewData = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getEtlFieldViewData(fragment),
+);
 
 // EtlField/Unit subsets
-export const getSubEtlField = (state) => fromEtlView.getSubEtlField(state.etlView);
+export const getSubEtlField = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getSubEtlField(fragment),
+);
 
-export const getQualEtlFields = (state) => fromEtlView.getQualEtlFields(state.etlView);
+export const getQualEtlFields = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getQualEtlFields(fragment),
+);
 
-export const getMeaRelatedEtlFields = (state) =>
-  fromEtlView.getMeaRelatedEtlFields(state.etlView);
+export const getMeaRelatedEtlFields = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getMeaRelatedEtlFields(fragment),
+);
 
-export const getMeaEtlUnits = (state) => fromEtlView.getMeaEtlUnits(state.etlView);
+export const getMeaEtlUnits = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getMeaEtlUnits(fragment),
+);
 
 // Errors (user to fix)
-export const getEtlViewErrors = (state) => fromEtlView.getEtlViewErrors(state.etlView);
+export const getEtlViewErrors = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.getEtlViewErrors(fragment),
+);
+
 export const getHasEtlViewErrors = (state) =>
   fromEtlView.getHasEtlViewErrors(state.etlView);
 
 // 0.3.11
-export const selectSymbolMapEtlView = (state, fieldName) => {
-  return fromEtlView.selectSymbolMap(state.etlView, fieldName);
-};
+export const selectSymbolMapEtlView = createSelector(
+  (state) => state.etlView,
+  (fragment) => fromEtlView.selectSymbolMap(fragment),
+);
 
 //------------------------------------------------------------------------------
 /**
@@ -367,8 +429,11 @@ export const selectSymbolMapEtlView = (state, fieldName) => {
  * scope: obsEtl -> request/matrix
  */
 
-export const getSelectedEtlUnits = (state) =>
-  fromWorkbench.getSelectedEtlUnits(state.workbench);
+const getWorkbench = (state) => state.workbench;
+
+export const getSearchedField = createSelector([getWorkbench], (fragment) =>
+  fromWorkbench.getSelectedEtlUnits(fragment),
+);
 
 export const isHostedWarehouseStale = (state) =>
   fromWorkbench.isHostedWarehouseStale(state.workbench);
@@ -385,10 +450,13 @@ export const getRequest = (state) => fromWorkbench.getRequest(state.workbench);
 
 export const getTree = (state) => fromWorkbench.getTree(state.workbench);
 
+// deprecate?
 export const getPalette = (state) => fromWorkbench.getPalette(state.workbench);
 
-export const selectPaletteGroup = (state) =>
-  fromWorkbench.selectPaletteGroup(state.workbench);
+export const selectPaletteGroup = createSelector(
+  (state) => state.workbench,
+  (fragment) => fromWorkbench.selectPaletteGroup(fragment),
+);
 
 /**
  * Predicate - computed tree
@@ -403,28 +471,51 @@ export const isCanvasDirty = (state) => fromWorkbench.isCanvasDirty(state.workbe
 export const runRequestSpecValidations = (state) =>
   fromWorkbench.runRequestSpecValidations(state.workbench);
 
-export const selectMaybeNodeSeed = (state, id) =>
-  fromWorkbench.selectMaybeNodeSeed(state.workbench, id);
-
+// deprecate
 export const selectNodeMeta = (state, id) =>
   fromWorkbench.selectNodeMeta(state.workbench, id);
 
-export const selectMaybeNodeState = (state, id) =>
-  fromWorkbench.selectMaybeNodeState(state.workbench, id);
+export const selectMaybeNodeSeed = createSelector(
+  (state) => state.workbench,
+  (_, id) => id,
+  (fragment, id) => fromWorkbench.selectMaybeNodeSeed(fragment, id),
+);
 
-// deprecate alias
-export const selectNodeState = (state, id) => selectMaybeNodeState(state, id);
+export const selectMaybeNodeState = createSelector(
+  (state) => state.workbench,
+  (_, id) => id,
+  (fragment, id) => fromWorkbench.selectMaybeNodeState(fragment, id),
+);
+export const selectNodeState = selectMaybeNodeState;
 
-export const selectMaybeDerivedFieldConfig = (state, id) =>
-  fromWorkbench.selectMaybeDerivedFieldConfig(state.workbench, id);
+export const selectMaybeDerivedFieldConfig = createSelector(
+  (state) => state.workbench,
+  (_, id) => id,
+  (fragment, id) => fromWorkbench.selectMaybeDerivedFieldConfig(fragment, id),
+);
 
-export const selectEtlUnitDisplayConfig = (state, ...args) =>
-  fromWorkbench.selectEtlUnitDisplayConfig(state.workbench, ...args);
+// id is the node id, identifier to identify the component therein.
+export const selectEtlUnitDisplayConfig = createSelector(
+  (state) => state.workbench,
+  (_, id, identifier, isMeaFlag, nodeTag) => [id, identifier, isMeaFlag, nodeTag],
+  (fragment, [id, identifier, isMeaFlag, nodeTag]) =>
+    fromWorkbench.selectEtlUnitDisplayConfig(
+      fragment,
+      id,
+      identifier,
+      isMeaFlag,
+      nodeTag,
+    ),
+);
+
 /**
  * Seed required to display EtlUnit
  */
-export const getNodeDataSeed = (state, nodeId) =>
-  fromWorkbench.getNodeDataSeed(state.workbench, nodeId);
+export const getNodeDataSeed = createSelector(
+  (state) => state.workbench,
+  (_, id) => id,
+  (fragment, id) => fromWorkbench.getNodeDataSeed(fragment, id),
+);
 
 export const getIsCompReducedMap = (state, nodeId, identifier = undefined) =>
   fromWorkbench.getIsCompReducedMap(state.workbench, nodeId, identifier);
@@ -435,8 +526,11 @@ export const getIsNoValuesSelected = (state, nodeId, identifier = undefined) =>
 export const getIsTimeSingleton = (state, nodeId) =>
   fromWorkbench.getIsTimeSingleton(state.workbench, nodeId);
 
-export const getMaybeSelectionModel = (state, payload) =>
-  fromWorkbench.getMaybeSelectionModel(state.workbench, payload);
+export const getMaybeSelectionModel = createSelector(
+  (state) => state.workbench,
+  (_, id) => id,
+  (fragment, id) => fromWorkbench.getMaybeSelectionModel(fragment, id),
+);
 
 /**
  * Returns the span values with the etlUnit name
@@ -447,25 +541,31 @@ export const getMaybeSelectionModel = (state, payload) =>
  * @param {number} nodeId
  * @return {Object}
  */
-export const getSpanLevelsFromNode = (state, nodeId) =>
-  fromWorkbench.getSpanLevelsFromNode(state.workbench, nodeId);
+export const getSpanLevelsFromNode = createSelector(
+  (state) => state.workbench,
+  (_, id) => id,
+  (fragment, id) => fromWorkbench.getSpanLevelsFromNode(fragment, id),
+);
 
-export const selectSpanValueFromNode = (state, nodeId, identifyer, spanValueIdx) =>
-  fromWorkbench.selectSpanValueFromNode(
-    state.workbench,
-    nodeId,
-    identifyer,
-    spanValueIdx,
-  );
+export const selectSpanValueFromNode = createSelector(
+  (state) => state.workbench,
+  (_, id, identifyer, spanValueIdx) => [id, identifyer, spanValueIdx],
+  (fragment, [id, identifyer, spanValueIdx]) =>
+    fromWorkbench.selectSpanValueFromNode(fragment, id, identifyer, spanValueIdx),
+);
 
 export const getAmIDropDisabled = (state, id) =>
   fromWorkbench.getAmIDropDisabled(state.workbench, id);
 
 export const getDraggedId = (state) => fromWorkbench.getDraggedId(state.workbench);
 
+// deprecate
 export const getDraggedNode = (state) => fromWorkbench.getDraggedNode(state.workbench);
 
-export const getCanvasLists = (state) => fromWorkbench.getCanvasLists(state.workbench);
+export const getCanvasLists = createSelector(
+  (state) => state.workbench,
+  (fragment) => fromWorkbench.getCanvasLists(fragment),
+);
 
 export const resetCanvas = (state) => fromWorkbench.resetCanvas(state.workbench);
 //------------------------------------------------------------------------------
@@ -547,7 +647,10 @@ export const getBookmark = (state) => fromStepper.getBookmark(state.stepper);
  * @function
  * @return {Object}
  */
-export const isUiLoading = (state) => fromUi.isUiLoading(state.ui);
+const getUiState = (state) => state.ui;
+export const isUiLoading = createSelector([getUiState], (stateFragment) =>
+  fromUi.isUiLoading(stateFragment),
+);
 
 //------------------------------------------------------------------------------
 /**

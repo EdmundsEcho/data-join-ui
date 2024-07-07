@@ -11,7 +11,14 @@ import { selectMvalueMode } from '../ducks/rootSelectors';
 import { updateHeaderView } from '../ducks/actions/headerView.actions';
 import { MVALUE_MODE } from '../lib/sum-types';
 
+//------------------------------------------------------------------------------
+const DEBUG =
+  process.env.REACT_APP_DEBUG_HEADER_VIEWS === 'true' ||
+  process.env.REACT_APP_DEBUG_ETL_FIELD_VIEW === 'true' ||
+  process.env.REACT_APP_DEBUG_ERROR_FIX === 'true';
+//------------------------------------------------------------------------------
 /* eslint-disable no-console */
+
 const noop = () => {};
 /**
  * Context
@@ -60,7 +67,9 @@ const Provider = ({
   const mvalueMode = useSelector((state) => selectMvalueMode(state, filename));
   const wideMode = mvalueMode === MVALUE_MODE.WIDE;
   const last = filename.lastIndexOf('/');
-  console.debug('Context', filename.substring(last), mvalueMode, wideMode);
+  if (DEBUG) {
+    console.debug('Context', filename.substring(last), mvalueMode, wideMode);
+  }
 
   // mvalueMode set here; switch toggle dispatches the new value
   // (which triggers a new read)

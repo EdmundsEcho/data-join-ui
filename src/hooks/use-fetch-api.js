@@ -367,7 +367,7 @@ function compare(cacheRef, response_, equalityFnName, DEBUG = false) {
     return isEqual;
   } catch (e) {
     if (e instanceof DesignError) {
-      console.warn(`fetch-api equaity function failed (data -> error?)`);
+      console.warn(`fetch-api equality function failed (data -> error?)`);
       console.warn(e);
       return false;
     }

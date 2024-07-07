@@ -115,7 +115,7 @@ const reducer = createReducer(resetState, {
       loadingStatus: payload,
     },
   }),
-  // temp non-core functionality
+  // tmp? Version management record
   ADD_UPDATE_HISTORY: (state, action) => ({
     ...state,
     updateHistory: [...(state.updateHistory || []), action.payload],

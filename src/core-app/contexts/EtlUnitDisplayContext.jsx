@@ -17,8 +17,6 @@ const DEBUG = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 // -----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
-const noop = () => {};
-
 /**
  * Declare and provide initializing props to the contexts.
  *

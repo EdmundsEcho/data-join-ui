@@ -215,9 +215,14 @@ export const selectMaybeNodeState = (stateFragment, id) => {
 };
 
 export const selectMaybeDerivedFieldConfig = (stateFragment, id) => {
-  return stateFragment.tree?.[id].data?.semantic === 'derivedField'
-    ? stateFragment.tree?.[id].data?.identifier ?? null
-    : null;
+  if (!stateFragment.tree || !stateFragment.tree[id]) {
+    return null;
+  }
+  const node = stateFragment.tree[id];
+  if (node.data.semantic !== 'derivedField') {
+    return null;
+  }
+  return node.data.identifier ?? null;
 };
 
 /**

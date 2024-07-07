@@ -40,8 +40,7 @@ const TextField = ({
     <FormControl
       variant='standard'
       className='Luci-TextField'
-      error={required && value === ''}
-    >
+      error={required && value === ''}>
       {label ? <InputLabel {...InputLabelProps}>{label}</InputLabel> : null}
       <TextInput
         saveChange={saveChange}
@@ -64,7 +63,7 @@ TextField.propTypes = {
   InputLabelProps: PropTypes.shape({}),
   FormHelperTextProps: PropTypes.shape({}),
   saveChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   required: PropTypes.bool,
 };
 TextField.defaultProps = {

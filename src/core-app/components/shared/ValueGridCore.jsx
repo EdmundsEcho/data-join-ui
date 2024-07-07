@@ -48,7 +48,7 @@ import ErrorBoundary from './ErrorBoundary';
 
 // api interface
 import { usePagination, STATUS, SERVICES } from '../../hooks/use-pagination';
-import { useScrollListener } from '../../../hooks/use-scroll-listener';
+import { useScrollListener, useSelectMemoization } from '../../../hooks';
 import { InvalidStateError } from '../../lib/LuciErrors';
 import { PURPOSE_TYPES } from '../../lib/sum-types';
 
@@ -64,7 +64,9 @@ export { filterOperators, ROW_HEIGHT };
 export { SERVICES };
 
 //-----------------------------------------------------------------------------
-const DEBUG_MODULE = process.env.REACT_APP_DEBUG_LEVELS === 'true';
+//const DEBUG_MODULE = process.env.REACT_APP_DEBUG_LEVELS === 'true';
+const DEBUG_MODULE = true;
+//-----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
 /**
@@ -80,7 +82,7 @@ const ValueGridCore = ({
   derivedDataRows,
   rowCountTotal: rowCountTotalProp, // available when derived & single source
   purpose,
-  filter, // filter, interface for using the key (populates the request e.g., sources)
+  filter: filterProp, // filter, interface for using the key (populates the request e.g., sources)
   fetchFn, // api fetch with project_id and abortController
   abortController,
   normalizer, // raw api -> fodder for edgeToGridRowFn
@@ -132,6 +134,10 @@ const ValueGridCore = ({
   const [filterModel, setFilterModel] = useState(() => filterModelProp);
   // sortModel for the grid
   const [sortModel, setSortModel] = useState(() => sortModelProp);
+
+  // Memoize the filter object
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  const filter = useSelectMemoization(filterProp, ['null-value-expansion']);
 
   /** --------------------------------------------------------------------------
    * @function
@@ -186,22 +192,30 @@ const ValueGridCore = ({
   });
 
   // ---------------------------------------------------------------------------
-  // Initial state to call when hit reset
+  // Initial state set when when hit reset
   //
-  const resetState = useCallback(() => {
-    if (DEBUG) {
-      console.debug('🔥 Called Resetting the grid state.');
-    }
-    // setMaxRows(rowCountTotalProp);
-    setError(undefined);
-    setReadyForMore(true);
-    setInNewClearedState(true);
-    setInGridHasAllValuesState(false);
-    setInFilterState(false);
-    // resetSelectionModel();
-    resetPagination();
-    // fetchPage({reset: true});
-  }, [DEBUG, resetPagination]);
+  const resetState = useCallback(
+    (derivedDataRowsIn) => {
+      if (DEBUG) {
+        console.debug('🔥 Called Resetting the grid state.');
+      }
+      // setMaxRows(rowCountTotalProp);
+      setError(undefined);
+      setReadyForMore(true);
+      setInNewClearedState(true);
+      setInGridHasAllValuesState(false);
+      setInFilterState(false);
+      // resetSelectionModel();
+      resetPagination();
+      if (derivedDataRowsIn) {
+        setGridRows(derivedDataRowsIn);
+      } else {
+        setGridRows([]);
+      }
+      // fetchPage({reset: true});
+    },
+    [DEBUG, resetPagination],
+  );
 
   if (typeof pageSizeProp === 'undefined') {
     throw new InvalidStateError(
@@ -243,11 +257,9 @@ const ValueGridCore = ({
   }, [MAX_ROWS, pageSizeProp, fetchPage, gridRows, service, inNewClearedState]);
 
   // register the handler with useScrollListener
-  //
-  //
   const { reset: reactivateScrollListener } = useScrollListener({
     rowHeight: ROW_HEIGHT,
-    bufferRowCount: 75,
+    bufferRowCount: 200,
     callback: handleFetchRows,
     className,
   });
@@ -278,10 +290,12 @@ const ValueGridCore = ({
   // Reset the state of the grid
   //
   const reset = useCallback(() => {
-    setGridRows(() => derivedDataRows || []);
-    resetState();
+    resetState(derivedDataRows || []);
   }, [resetState, derivedDataRows]);
 
+  //
+  // Changes in the filterModel (how we display what's in the grid)
+  // NOTE: Different than the filter used to get row data.
   //
   // hidden + visible -> all visible
   //
@@ -440,9 +454,9 @@ const ValueGridCore = ({
   // 🔗 changes to filter -> readyForMore
   //
   useEffect(() => {
-    setReadyForMore(true);
+    reset();
     return () => {};
-  }, [filter]);
+  }, [filter, reset]);
 
   // ---------------------------------------------------------------------------
   // gridHasAllValuesState
@@ -467,8 +481,8 @@ const ValueGridCore = ({
       readyForMore,
       inNewClearedState,
       inGridHasAllValuesState: inGridHasAllValuesState
-        ? `🎉  ${inGridHasAllValuesState}`
-        : `⬜  ${inGridHasAllValuesState}`,
+        ? `🎉 ${inGridHasAllValuesState}`
+        : `⬜ ${inGridHasAllValuesState}`,
       inFilterState,
       dataPreloaded: Boolean(derivedDataRows),
       selectionModel,
@@ -600,6 +614,8 @@ function hasAllRecords(MAX_ROWS, rowsInState, inFilterState) {
 
 /**
  * Apply a filter to the baseline select all filter
+ *
+ * NOTE: Different than the filter used to get row data.
  *
  * @function
  * @param {Object} filter
