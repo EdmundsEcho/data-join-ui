@@ -70,7 +70,9 @@ export const buildImpliedMvalue = (hv, DEBUG = GLOBAL_DEBUG) => {
 
   // get the latest mspan value (take the first;
   // more than one mspan error is caught elsewhere)
-  const mspan = readOnly.fields.find((f) => f.purpose === PURPOSE_TYPES.MSPAN);
+  const mspan = readOnly.fields.find(
+    (f) => f.enabled && f.purpose === PURPOSE_TYPES.MSPAN,
+  );
   if (!mspan) {
     throw new DesignError(
       'buildImpliedMvalue: Tried to build an impliedMvalue without a mspan field',

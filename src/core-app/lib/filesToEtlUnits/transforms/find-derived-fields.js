@@ -49,7 +49,7 @@ import { colors } from '../../../constants/variables';
  *
  * There are two types of derived fields in this header/file context.
  *
- *   👉 implied-mvalue; inidcated when mspan exists but no mvalue
+ *   👉 implied-mvalue; indicated when mspan exists but no mvalue
  *   👉 wideToLongFields; indicated when mvalue count > 1
  *
  * The presence of derived fields depends on the active fields in the

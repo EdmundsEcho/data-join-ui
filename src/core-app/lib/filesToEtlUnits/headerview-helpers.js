@@ -558,7 +558,7 @@ function validateDerivedFields(hv) {
   let factorCount;
 
   if (hasWideFields && hasImpliedMvalue) {
-    throw new ValueError(
+    throw new InvalidStateError(
       '🚧 The headerview should not have both implied and wide-field configurations',
     );
   }
