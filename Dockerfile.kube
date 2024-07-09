@@ -15,8 +15,8 @@ COPY patches /frontend/patches
 COPY package.json /frontend/package.json
 COPY yarn.lock /frontend/yarn.lock
 WORKDIR /frontend
-RUN  yarn install --silent
-RUN  yarn patch-package
+RUN yarn install --silent
+RUN yarn patch-package
 
 # Stage 2 build app
 COPY public /frontend/public
@@ -31,7 +31,15 @@ ENV NODE_ENV=production
 ENV REACT_APP_ENV=production
 ENV PORT=3007
 
-RUN yarn build
+# Debug: print the environment variables
+RUN env
+
+# Debug: check yarn version and installed packages
+RUN yarn --version
+RUN yarn list
+
+# Attempt to build the app with verbose output
+RUN yarn build --verbose
 
 ################################################################################
 # production environment
