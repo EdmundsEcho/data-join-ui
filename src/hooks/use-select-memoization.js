@@ -16,7 +16,7 @@ export const useSelectMemoization = (filter, ignoredProperties = []) => {
     return newFilter;
   }, [filter, ignoredProperties]);
 
-  /* eslint-disable react-hooks/exhaustive-deps */
+  /* eslint-disable-next-line */
   return useMemo(() => filteredFilter, [JSON.stringify(filteredFilter)]);
 };
 
