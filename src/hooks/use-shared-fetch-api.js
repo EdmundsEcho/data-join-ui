@@ -426,6 +426,18 @@ function middleware(dispatch, state) {
         dispatch({ type: SUCCESS_NOCHANGE });
         break;
 
+      case 400:
+        dispatch({
+          type: SET_NOTICE,
+          payload: {
+            message:
+              response?.data?.message || response?.message || 'Insufficient access',
+            variant: 'error',
+          },
+        });
+        dispatch({ type: SUCCESS_NOCHANGE });
+        break;
+
       case 401:
         dispatch({
           type: SET_NOTICE,
