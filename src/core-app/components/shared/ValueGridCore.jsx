@@ -136,7 +136,7 @@ const ValueGridCore = ({
   const [sortModel, setSortModel] = useState(() => sortModelProp);
 
   // Memoize the filter object
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  /* eslint-disable-next-line */
   const filter = useSelectMemoization(filterProp, ['null-value-expansion']);
 
   /** --------------------------------------------------------------------------

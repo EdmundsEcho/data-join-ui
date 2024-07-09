@@ -8,7 +8,7 @@
 ################################################################################
 # react-build environment
 ################################################################################
-FROM node:18.10-alpine3.15 as react-build
+FROM node:18.10-alpine3.15 AS react-build
 
 # Stage 1 build dependencies
 COPY patches /frontend/patches
