@@ -3,7 +3,8 @@
  *
  * @description
  * This module provides a function to create a new selection model object.
- * Todo: move the definitions from xstate-machine to here.  Have xstate-machine
+ *
+ * TODO: move the definitions from xstate-machine to here.  Have xstate-machine
  * depend on this module (not the other way around).
  *
  */
@@ -171,7 +172,11 @@ export const includeCompInSelectFields = (selectionModel) => {
 };
 
 /**
+ * 📌
  * Transform the selection model to a graphql matrix request.
+ *
+ * The transform is only mildly different than the selection model. It removes the
+ * __ALL__ key and converts some of the enums to bool values.
  *
  * endpoint
  * @function

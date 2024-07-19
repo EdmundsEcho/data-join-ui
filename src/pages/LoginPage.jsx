@@ -3,7 +3,8 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
 import { Box, Divider, IconButton, Paper, Typography } from '@mui/material';
-import { Google, GitHub, Twitter } from '@mui/icons-material';
+// import { Google, GitHub, Twitter } from '@mui/icons-material';
+import { Google } from '@mui/icons-material';
 
 // import { persistConfig } from '../core-app/redux-persist-cfg';
 import { Copyright } from '../components/shared/Copyright';
@@ -126,12 +127,14 @@ export const LoginPage = ({ logout: logoutProp }) => {
             <AuthButton onClick={handleAuth('azure')} disabled={isLoading}>
               <span className='iconify' data-icon='mdi:microsoft-azure'></span>
             </AuthButton>
+            {/*
             <AuthButton onClick={handleAuth('github')} disabled={isLoading}>
               <GitHub />
             </AuthButton>
             <AuthButton onClick={handleAuth('twitter')} disabled={isLoading}>
               <Twitter />
             </AuthButton>
+              */}
           </div>
         </Box>
       </Paper>
