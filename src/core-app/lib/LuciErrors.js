@@ -7,6 +7,11 @@
  * A set of custom Errors that should describe all of the errors raised
  * by this application.
  *
+ * constructor(message) {
+ *   super(message);
+ *   Object.setPrototypeOf(this, LuciError.prototype);
+ * }
+ *
  */
 import { colors } from '../constants/variables';
 

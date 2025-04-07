@@ -36,11 +36,7 @@ const Menu = (props) => {
   return options.length === 0 ? null : (
     <>
       {children(handleClick)}
-      <MaterialMenu
-        anchorEl={anchorEl}
-        open={isOpen}
-        onClose={() => setOpen(false)}
-      >
+      <MaterialMenu anchorEl={anchorEl} open={isOpen} onClose={() => setOpen(false)}>
         {options &&
           options.map((option, idx) => (
             <MenuItem key={option} onClick={() => handleItemClick(option, idx)}>
