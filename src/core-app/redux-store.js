@@ -115,26 +115,13 @@ const configureStoreProd = (preloadedState) => {
     saveMiddleware, // ⚠️  must be last in the sequence
   ];
 
-  console.assert(
-    typeof appReducers === 'function',
-    `appReducers: ${typeof appReducers}`,
-  );
+  const isDebugEnabled = process.env.REACT_APP_DEBUG_TOOLS === 'true';
 
-  // const persistedReducer = persistReducer(persistConfig, appReducers);
+  const enhancer = isDebugEnabled
+    ? composeWithDevTools(devToolOptions)(applyMiddleware(...middlewares))
+    : applyMiddleware(...middlewares);
 
-  const store = configureStore({
-    reducer: appReducers,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        thunk: false,
-        serializableCheck: false,
-        immutableCheck: false,
-      }).prepend(middlewares),
-    preloadedState,
-  });
-
-  // register as a listener
-  // const persistor = persistStore(store);
+  const store = createStore(appReducers, preloadedState, enhancer);
 
   // fire-up sagas,
   sagaMiddleware.run(rootSaga);
