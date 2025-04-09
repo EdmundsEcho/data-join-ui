@@ -64,8 +64,7 @@ export { filterOperators, ROW_HEIGHT };
 export { SERVICES };
 
 //-----------------------------------------------------------------------------
-//const DEBUG_MODULE = process.env.REACT_APP_DEBUG_LEVELS === 'true';
-const DEBUG_MODULE = true;
+const DEBUG_MODULE = process.env.REACT_APP_DEBUG_LEVELS === 'true';
 //-----------------------------------------------------------------------------
 /* eslint-disable no-console */
 
