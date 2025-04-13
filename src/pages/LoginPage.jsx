@@ -75,16 +75,7 @@ export const LoginPage = ({ logout: logoutProp }) => {
   });
   useEffect(() => {
     if (logoutRequest) {
-      logout()
-        .then(() => {
-          sessionStorage.clear();
-          window.location.replace('/login');
-        })
-        .catch((error) => {
-          console.error('Logout failed:', error);
-          sessionStorage.clear();
-          window.location.replace('/login');
-        });
+      logout();
     }
     return cancel;
   }, [logoutRequest, logout, cancel]);
