@@ -142,7 +142,7 @@ function HorizontalLayout({
   // AppBar link
   const handleLogout = (event) => {
     event.preventDefault();
-    navigate('/login?logout=true');
+    navigate('/logout');
     try {
       enqueueSnackbar('Succesfully logged out', {
         variant: 'info',
