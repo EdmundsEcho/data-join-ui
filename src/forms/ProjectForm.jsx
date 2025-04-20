@@ -103,9 +103,7 @@ const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
             {...Form.propsFromField('description')}
             multiline
             rows={3}
-            error={
-              formik.touched.description && Boolean(formik.errors.description)
-            }
+            error={formik.touched.description && Boolean(formik.errors.description)}
             helperText={formik.touched.description && formik.errors.description}
             onChange={formik.handleChange}
             value={formik.values.description || ''}
@@ -123,7 +121,7 @@ const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
               />
             }
             label='Include test data'
-           />
+          />
         </div>
 
         {apiAction === 'UPDATE' && (
@@ -140,11 +138,7 @@ const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
             size='small'
             color='primary'
             type={formik.isSubmitting ? 'button' : 'submit'}>
-            {formik.isSubmitting ? (
-              <span className='spinner' />
-            ) : (
-              'Create project'
-            )}
+            {formik.isSubmitting ? <span className='spinner' /> : 'Create project'}
           </Button>
         )}
         {apiAction === 'UPDATE' && (
@@ -159,7 +153,7 @@ const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
           </Button>
         )}
       </form>
-    </FormControlLabel>
+    </div>
   );
 };
 
