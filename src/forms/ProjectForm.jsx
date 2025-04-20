@@ -7,6 +7,9 @@ import { useFormik } from 'formik';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import { LuciInput } from '../components/shared';
 
 // 📖 new project
@@ -108,6 +111,20 @@ const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
             value={formik.values.description || ''}
           />
         </div>
+        <div className='input-row-group withTestData'>
+          <FormControlLabel
+            control={
+              <Checkbox
+                name='withTestData'
+                checked={formik.values.withTestData}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                color='primary'
+              />
+            }
+            label='Include test data'
+           />
+        </div>
 
         {apiAction === 'UPDATE' && (
           <div className='input-row-group description'>
@@ -142,7 +159,7 @@ const ProjectForm = ({ data: dataFromProp, parentSubmit, formRef }) => {
           </Button>
         )}
       </form>
-    </div>
+    </FormControlLabel>
   );
 };
 

@@ -47,6 +47,14 @@ const config = {
       placeholder: '',
       required: false,
     },
+    withTestData: {
+      id: 'withTestData',
+      name: 'withTestData',
+      label: 'include test data',
+      type: 'checkbox',
+      placeholder: false,
+      required: false,
+    },
   },
 };
 
