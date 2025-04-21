@@ -53,7 +53,23 @@ export const apiInstance = axios.create({
   },
   withCredentials: true,
 });
-apiInstance.interceptors.response.use(stdApiResponse, stdApiResponse);
+apiInstance.interceptors.response.use(stdApiResponse, (err) => {
+  if (err.response?.status === 401) {
+    window.location.href = 'https://app.data-join.com/logout';
+    // return a promise that never resolves so the caller doesn’t continue
+    return new Promise(() => {});
+  }
+  // otherwise pass the error along in your stdApiResponse shape
+  return Promise.reject(
+    stdApiResponse({
+      response: err.response,
+      request: err.request,
+      data: err.response?.data,
+      status: err.response?.status,
+      statusText: err.response?.statusText,
+    }),
+  );
+});
 
 export const gqlInstance = axios.create({
   baseURL: GQL_BASE_URL,
